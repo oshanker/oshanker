@@ -53,7 +53,7 @@ public class GSeriesTest {
 	@Test
 	public void testGSeries() {
 		int k0 = 10, k1=100;
-		GSeries x = new GSeries(k0, k1);
+		GSeries x = new GSeries(k0, k1, 5, 16);
 		double tau = Math.log(k1/k0)/2.0;
 		double lambda = 2.0d;
 		double beta = lambda*tau;;
@@ -63,22 +63,21 @@ public class GSeriesTest {
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*spacing;
 		System.out.println("pi/beta " + spacing);
-		double[] sum = new double[]{0,0};
+		double[] gFromBLFI = new double[]{0,0};
 		for (int i = 0; i < N; i++) {
 			double t = (i+minIndex)*spacing;
-			double[] val = x.gSeries(t);
 			double M = 2;
 			double harg = gamma*(t0-t)/M ;
 			double h = Math.pow( Math.sin(harg)/harg, M);
 			double sarg = beta*(t0-t) ;
 			double sin = Math.sin(sarg)/sarg;
-			sum[0] += val[0]*h*sin;
-			sum[1] += val[1]*h*sin;
-			System.out.println((i+minIndex) + "; " + t + ": " + Arrays.toString(val) );
+			gFromBLFI[0] += x.gAtBeta[i][0]*h*sin;
+			gFromBLFI[1] += x.gAtBeta[i][1]*h*sin;
+			System.out.println((i+minIndex) + "; " + t + ": " + Arrays.toString(x.gAtBeta[i]) );
 		}
 		double[] directEval = x.gSeries(t0);
-		assertTrue(Math.abs(sum[0] - directEval[0]) + Math.abs(sum[1] - directEval[1]) < 0.005);
-		System.out.println(t0 + " sum " + sum[0] + ", " + sum[1] + ": " + Arrays.toString(directEval));
+		assertTrue(Math.abs(gFromBLFI[0] - directEval[0]) + Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
+		System.out.println(t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ": " + Arrays.toString(directEval));
 	}
 
 }

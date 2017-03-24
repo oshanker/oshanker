@@ -14,6 +14,7 @@ import java.util.Arrays;
  */
 public class GSeries {
 	final int k0, k1;
+	final int n0, n1;
 	/**
 	 * The coefficients in the g series.
 	 * stores from k0 to k1
@@ -33,7 +34,7 @@ public class GSeries {
 	/**
 	 * Store g at n*beta, for n from n0 to n1 (k is k0 to k1)
 	 */
-	double[][] gAtBeta;
+	final double[][] gAtBeta;
 
 	/**
 	 * initialize the g-series for the given range of terms.
@@ -41,16 +42,28 @@ public class GSeries {
 	 * @param k0
 	 * @param k1
 	 */
-	public GSeries(int k0, int k1) {
+	public GSeries(int k0, int k1, int n0, int n1) {
 		this.k0 = k0;
 		this.k1 = k1;
+		this.n0 = n0;
+		this.n1 = n1;
 		coeff = new double[k1-k0+1];
+		int N = n1-n0+1;
+		gAtBeta = new double[N][2];
 		ln = new double[k1-k0+1];
 		for (int i = k0; i <= k1; i++) {
 			coeff[i-k0] = 1.0/Math.sqrt(i);
 			ln[i-k0] = Math.log(i);
 		}
 		alpha = (Math.log(k0)+ Math.log(k1))/2.0;
+		double tau = Math.log(k1/k0)/2.0;
+		double lambda = 2.0d;
+		double beta = lambda*tau;
+		double spacing = Math.PI/beta;
+		for (int i = 0; i < N; i++) {
+			double t = (i+n0)*spacing;
+			gAtBeta[i] = gSeries(t);
+		}
 	}
 	
 	/**
@@ -72,7 +85,7 @@ public class GSeries {
 	
 	public static void main(String[] args){
 		int k0 = 10, k1=100;
-		GSeries x = new GSeries(k0, k1);
+		GSeries x = new GSeries(k0, k1,5, 16);
 		double tau = Math.log(k1/k0)/2.0;
 		double lambda = 2.0d;
 		double beta = lambda*tau;
@@ -82,30 +95,19 @@ public class GSeries {
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*spacing;
 		System.out.println("pi/beta " + spacing);
-		double sum0 = 0;
-		double sum1 = 0;
-		//slope(x);
+		double[] sum = new double[]{0,0};
 		for (int i = 0; i < N; i++) {
 			double t = (i+minIndex)*spacing;
-			double[] val = x.gSeries(t);
 			double M = 2;
 			double harg = gamma*(t0-t)/M ;
 			double h = Math.pow( Math.sin(harg)/harg, M);
 			double sarg = beta*(t0-t) ;
 			double sin = Math.sin(sarg)/sarg;
-			sum0 += val[0]*h*sin;
-			sum1 += val[1]*h*sin;
-			System.out.println((i+minIndex) + "; " + t + ": " + Arrays.toString(val) );
+			sum[0] += x.gAtBeta[i][0]*h*sin;
+			sum[1] += x.gAtBeta[i][1]*h*sin;
+			System.out.println((i+minIndex) + "; " + t + ": " + Arrays.toString(x.gAtBeta[i]) );
 		}
-		System.out.println(t0 + " sum " + sum0 + ", " + sum1 + ": " + Arrays.toString(x.gSeries(t0)));
-	}
-	private static void slope(GSeries x) {
-		double[] t = new double[]{0, 0.025, 0.05, 0.1};
-		for (int i = 0; i < t.length; i++) {
-			double[] val = x.gSeries(t[i]);
-			System.out.println(t[i] + ": " + Arrays.toString(val) + ", " 
-			   +  (i>0?(13.884833691508327 - val[0])/(t[i]*t[i]):0) + ", "  + (i>0?(val[1]/t[i]):0));
-		}
+		System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeries(t0)));
 	}
 
 }
