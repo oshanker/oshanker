@@ -35,6 +35,9 @@ public class GSeries {
 	 * Store g at n*beta, for n from n0 to n1 (k is k0 to k1)
 	 */
 	final double[][] gAtBeta;
+	private final double beta;
+	private final double spacing;
+	private final double gamma;
 
 	/**
 	 * initialize the g-series for the given range of terms.
@@ -58,8 +61,9 @@ public class GSeries {
 		alpha = (Math.log(k0)+ Math.log(k1))/2.0;
 		double tau = Math.log(k1/k0)/2.0;
 		double lambda = 2.0d;
-		double beta = lambda*tau;
-		double spacing = Math.PI/beta;
+		beta = lambda*tau;
+		spacing = Math.PI/beta;
+		gamma = beta -tau;
 		for (int i = 0; i < N; i++) {
 			double t = (i+n0)*spacing;
 			gAtBeta[i] = gSeries(t);
@@ -85,29 +89,30 @@ public class GSeries {
 	
 	public static void main(String[] args){
 		int k0 = 10, k1=100;
-		GSeries x = new GSeries(k0, k1,5, 16);
-		double tau = Math.log(k1/k0)/2.0;
-		double lambda = 2.0d;
-		double beta = lambda*tau;
-		double spacing = Math.PI/beta;
-		double gamma = beta -tau;
 		int N = 12;
 		int minIndex = 5;
-		double t0 = (minIndex+N/2+0.5)*spacing;
-		System.out.println("pi/beta " + spacing);
+		GSeries x = new GSeries(k0, k1,minIndex, minIndex+N-1);
+		double t0 = (minIndex+N/2+0.5)*x.spacing;
+		System.out.println("pi/beta " + x.spacing);
+		double[] sum = x.blfiSum( t0);
+		System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeries(t0)));
+	}
+
+	public  double[] blfiSum( double t0) {
 		double[] sum = new double[]{0,0};
+		int N = n1-n0+1;
 		for (int i = 0; i < N; i++) {
-			double t = (i+minIndex)*spacing;
+			double t = (i+n0)*spacing;
 			double M = 2;
 			double harg = gamma*(t0-t)/M ;
 			double h = Math.pow( Math.sin(harg)/harg, M);
 			double sarg = beta*(t0-t) ;
 			double sin = Math.sin(sarg)/sarg;
-			sum[0] += x.gAtBeta[i][0]*h*sin;
-			sum[1] += x.gAtBeta[i][1]*h*sin;
-			System.out.println((i+minIndex) + "; " + t + ": " + Arrays.toString(x.gAtBeta[i]) );
+			sum[0] += gAtBeta[i][0]*h*sin;
+			sum[1] += gAtBeta[i][1]*h*sin;
+			System.out.println((i+n0) + "; " + t + ": " + Arrays.toString(gAtBeta[i]) );
 		}
-		System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeries(t0)));
+		return sum;
 	}
 
 }
