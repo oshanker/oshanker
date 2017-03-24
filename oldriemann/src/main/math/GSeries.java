@@ -5,6 +5,10 @@ import java.util.Arrays;
 /**
  * Calculates the G-series useful in the study of Riemann zeta
  * function.
+ * zeta(1/2 + it) = exp(−i*theta(t))Z(t)
+ * tau = sqrt(t/(2*pi))
+ * Z(t) = Real(exp(−i*theta(t))F(1,floor(tau); t)) + R(t)
+ * 
  * @author oshanker
  *
  */
@@ -12,13 +16,24 @@ public class GSeries {
 	final int k0, k1;
 	/**
 	 * The coefficients in the g series.
+	 * stores from k0 to k1
 	 */
 	final double[] coeff;
 	/**
 	 * The ln term in the g series.
+	 * stores from k0 to k1
 	 */
 	final double[] ln;
+	/**
+	 * rotation from F to G:
+	 * G(t) = exp(−i*alpha*t)F(t)
+	 */
 	final double alpha;
+	
+	/**
+	 * Store g at n*beta, for n from n0 to n1 (k is k0 to k1)
+	 */
+	double[][] gAtBeta;
 
 	/**
 	 * initialize the g-series for the given range of terms.
@@ -60,7 +75,7 @@ public class GSeries {
 		GSeries x = new GSeries(k0, k1);
 		double tau = Math.log(k1/k0)/2.0;
 		double lambda = 2.0d;
-		double beta = lambda*tau;;
+		double beta = lambda*tau;
 		double spacing = Math.PI/beta;
 		double gamma = beta -tau;
 		int N = 12;
