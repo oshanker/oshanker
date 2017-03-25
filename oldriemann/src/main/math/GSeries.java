@@ -36,7 +36,7 @@ public class GSeries {
 	 */
 	final double[][] gAtBeta;
 	private final double beta;
-	private final double spacing;
+	final double spacing;
 	private final double gamma;
 
 	/**
@@ -89,7 +89,7 @@ public class GSeries {
 	
 	public static void main(String[] args){
 		int k0 = 10, k1=100;
-		int N = 12;
+		int N = 19;
 		int minIndex = 5;
 		GSeries x = new GSeries(k0, k1,minIndex, minIndex+N-1);
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
@@ -100,18 +100,45 @@ public class GSeries {
 
 	public  double[] blfiSum( double t0) {
 		double[] sum = new double[]{0,0};
-		int N = n1-n0+1;
-		for (int i = 0; i < N; i++) {
-			double t = (i+n0)*spacing;
-			double M = 2;
-			double harg = gamma*(t0-t)/M ;
-			double h = Math.pow( Math.sin(harg)/harg, M);
-			double sarg = beta*(t0-t) ;
-			double sin = Math.sin(sarg)/sarg;
-			sum[0] += gAtBeta[i][0]*h*sin;
-			sum[1] += gAtBeta[i][1]*h*sin;
-			System.out.println((i+n0) + "; " + t + ": " + Arrays.toString(gAtBeta[i]) );
+		int midIdx = (int) (t0/spacing);
+		System.out.println("midIdx "+ midIdx);
+		double M = 2;
+		SUM:
+		for (int term = 0; term < 7; term++) {
+			for (int j = 0; j < 2; j++) {
+				int i = midIdx + (j==0?-term:(term+1));
+				if(i>n1 || i < 0){break SUM;}
+				double t = (i)*spacing;
+				double harg = gamma*(t0-t)/M ;
+				double h = Math.pow( Math.sin(harg)/harg, M);
+				double sarg = beta*(t0-t) ;
+				double sin = Math.sin(sarg)/sarg;
+				sum[0] += gAtBeta[i-n0][0]*h*sin;
+				sum[1] += gAtBeta[i-n0][1]*h*sin;
+			}
+			System.out.println((term) + " : " + Arrays.toString(sum) );
 		}
+//		int N = n1-n0+1;
+//		for (int i = midIdx; i >= n0; i--) {
+//			double t = (i)*spacing;
+//			double harg = gamma*(t0-t)/M ;
+//			double h = Math.pow( Math.sin(harg)/harg, M);
+//			double sarg = beta*(t0-t) ;
+//			double sin = Math.sin(sarg)/sarg;
+//			sum[0] += gAtBeta[i][0]*h*sin;
+//			sum[1] += gAtBeta[i][1]*h*sin;
+//			System.out.println("* " +(i) + "; " + t + ": " + Arrays.toString(gAtBeta[i]) );
+//		}
+//		for (int i = midIdx+1; i < n1; i++) {
+//			double t = (i)*spacing;
+//			double harg = gamma*(t0-t)/M ;
+//			double h = Math.pow( Math.sin(harg)/harg, M);
+//			double sarg = beta*(t0-t) ;
+//			double sin = Math.sin(sarg)/sarg;
+//			sum[0] += gAtBeta[i][0]*h*sin;
+//			sum[1] += gAtBeta[i][1]*h*sin;
+//			System.out.println("# " +(i) + "; " + t + ": " + Arrays.toString(gAtBeta[i]) );
+//		}
 		return sum;
 	}
 
