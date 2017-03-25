@@ -53,8 +53,8 @@ public class GSeriesTest {
 	@Test
 	public void testGSeries() {
 		int k0 = 10, k1=100;
-		GSeries x = new GSeries(k0, k1, 5, 18);
-		int N = 12;
+		int N = 19;
+		GSeries x = new GSeries(k0, k1, 5, 5+N-1);
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
 		System.out.println("pi/beta " + x.spacing);
