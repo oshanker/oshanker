@@ -89,13 +89,39 @@ public class GSeries {
 	
 	public static void main(String[] args){
 		int k0 = 10, k1=100;
-		int N = 19;
+		int N = 25;
 		int minIndex = 5;
 		GSeries x = new GSeries(k0, k1,minIndex, minIndex+N-1);
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
 		System.out.println("pi/beta " + x.spacing);
-		double[] sum = x.blfiSum( t0);
+		double[] sum = x.testblfiSum( t0);
 		System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeries(t0)));
+	}
+
+	public  double[] testblfiSum( double t0) {
+		double[] directEval = gSeries(t0);
+		double[] sum = new double[]{0,0};
+		int midIdx = (int) (t0/spacing);
+		double M = 2;
+		SUM:
+		for (int term = 0; term < 100; term++) {
+			for (int j = 0; j < 2; j++) {
+				int i = midIdx + (j==0?-term:(term+1));
+				if(i>n1 || i < n0){
+					System.out.println("breaking " + i);
+					break SUM;}
+				double t = (i)*spacing;
+				double harg = gamma*(t0-t)/M ;
+				double h = Math.pow( Math.sin(harg)/harg, M);
+				double sarg = beta*(t0-t) ;
+				double sin = Math.sin(sarg)/sarg;
+				sum[0] += gAtBeta[i-n0][0]*h*sin;
+				sum[1] += gAtBeta[i-n0][1]*h*sin;
+			}
+			System.out.println((term) + " : " + Arrays.toString(sum) 
+			   + " : " + (Math.abs(sum[0] - directEval[0]) + " : " + Math.abs(sum[1] - directEval[1])));
+		}
+		return sum;
 	}
 
 	public  double[] blfiSum( double t0) {
@@ -115,7 +141,6 @@ public class GSeries {
 				sum[0] += gAtBeta[i-n0][0]*h*sin;
 				sum[1] += gAtBeta[i-n0][1]*h*sin;
 			}
-			System.out.println((term) + " : " + Arrays.toString(sum) );
 		}
 		return sum;
 	}
