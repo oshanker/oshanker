@@ -87,6 +87,7 @@ public class Riemann {
 
 	}
 
+	/** calculate zeta function for (t+offset) */
 	public static double riemann(double t, long offset) {
 
 		BigDecimal[] bdtz;
@@ -102,26 +103,26 @@ public class Riemann {
 		return riemann(bdtz, Gram.mc)[0];
 	}
 
-	public static double[] riemann(BigDecimal[] grampts, MathContext mc) {
-		double[] riemann = new double[grampts.length];
+	/** calculate zeta function for set of arguments. */
+	public static double[] riemann(BigDecimal[] t, MathContext mc) {
+		double[] riemann = new double[t.length];
 		for (int j = 0; j < riemann.length; j++) {
-			BigDecimal t = grampts[j];
-			BigDecimal t2 = t.divide(Gram.bdTWO, mc);
+			BigDecimal tval = t[j];
+			BigDecimal t2 = tval.divide(Gram.bdTWO, mc);
 			BigDecimal arg1 = t2.divide(Gram.pi, mc);
 			BigDecimal sqrtArg1 = Gram.sqrt(arg1, Gram.mc, 1.0E-21);
-			double theta = t.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
+			double theta = tval.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
 					.subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
-			System.out.println("theta "+ theta+ " t "  + t);
 			int N = sqrtArg1.intValue();
 			double R = rTerm(mc, sqrtArg1, N);
 			double sum = 0;
 			if (oldN != N) {
-				initN(mc, t, N);
+				initN(mc, tval, N);
 				for (int i = 1; i <= N; i++) {
 					sum += Math.cos(theta - oldargi[i - 1]) / Math.sqrt(i );
 				}
 			} else {
-				double del = t.subtract(oldt, mc).doubleValue();
+				double del = tval.subtract(oldt, mc).doubleValue();
 				for (int i = 1; i <= N; i++) {
 					double argi = oldargi[i - 1] + del * Gram.logdbl(i);
 					double rcos = Math.cos(theta - argi) / Math.sqrt(i );
