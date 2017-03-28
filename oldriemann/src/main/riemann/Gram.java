@@ -44,7 +44,9 @@ public class Gram {
 	static BigDecimal pi4 = pi.divide(BigDecimal.valueOf(4), mc);
 	public static BigDecimal pi_2 = pi.multiply(bdTWO, mc);	
 	
-	
+	/**
+	 * High precision log values for the integers.
+	 */
 	static BigDecimal[] logVals = {
 			BigDecimal.ZERO,
 		      new BigDecimal("0.693147180559945309417232121458176568075500134360255254120680009493393", mc),
@@ -253,6 +255,13 @@ public class Gram {
 		return RZGram(BigDecimal.valueOf(n1), count, mc);
 	}
 	
+	/**
+	 * find  sequential gram points beginning with the one just preceding the first parameter.
+	 * @param idx1
+	 * @param count
+	 * @param mc
+	 * @return
+	 */
 	public static GramInfo[] RZGram(BigDecimal idx1, int count, MathContext mc) {
 		BigDecimal idx = idx1.divideToIntegralValue(BigDecimal.ONE);
 	    GramInfo[] grampts = new GramInfo[count];

@@ -40,9 +40,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Riemann {
 
 	static boolean verbose = true;
-	static double[] oldargi = null;
+	static double[] baseArgI = null;
 	static int oldN = 0;
-	static BigDecimal oldt = null;
+	static BigDecimal baseT = null;
 
 	final static Map<String, BigDecimal> offsets = new ConcurrentHashMap<String, BigDecimal>();
 
@@ -81,97 +81,26 @@ public class Riemann {
 		offsets.put("Z4b", BigDecimal.valueOf(1674556748200L));
 		offsets.put("Z5", BigDecimal.valueOf(  935203331160L));
 	}
-	public static void main(String[] args) throws Exception {
-//		bracketZeros(offsets.get("12"));
-		bracketZeros(new BigDecimal("1000000000000"));
-
-	}
-
-	/** calculate zeta function for (t+offset) */
-	public static double riemann(double t, long offset) {
-
-		BigDecimal[] bdtz;
-		try {
-			bdtz = new BigDecimal[] { new BigDecimal(t, Gram.mc).add(
-					BigDecimal.valueOf(offset), Gram.mc) };
-
-		} catch (Exception e) {
-			System.out.println("t " + t + ", " + e.getMessage());
-			throw new RuntimeException(e);
-		}
-
-		return riemann(bdtz, Gram.mc)[0];
-	}
-
-	/** calculate zeta function for set of arguments. */
-	public static double[] riemann(BigDecimal[] t, MathContext mc) {
-		double[] riemann = new double[t.length];
-		for (int j = 0; j < riemann.length; j++) {
-			BigDecimal tval = t[j];
-			BigDecimal t2 = tval.divide(Gram.bdTWO, mc);
-			BigDecimal arg1 = t2.divide(Gram.pi, mc);
-			BigDecimal sqrtArg1 = Gram.sqrt(arg1, Gram.mc, 1.0E-21);
-			double theta = tval.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
-					.subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
-			int N = sqrtArg1.intValue();
-			double R = rTerm(mc, sqrtArg1, N);
-			double sum = 0;
-			if (oldN != N) {
-				initN(mc, tval, N);
-				for (int i = 1; i <= N; i++) {
-					sum += Math.cos(theta - oldargi[i - 1]) / Math.sqrt(i );
-				}
-			} else {
-				double del = tval.subtract(oldt, mc).doubleValue();
-				for (int i = 1; i <= N; i++) {
-					double argi = oldargi[i - 1] + del * Gram.logdbl(i);
-					double rcos = Math.cos(theta - argi) / Math.sqrt(i );
-					sum += rcos;
-				}
-			}
-			sum = 2 * sum;
-
-			riemann[j] = sum + R;
-		}
-		return riemann;
-	}
 
 	private static void initN(MathContext mc, BigDecimal t, int N) {
 		if(N == oldN) { return; }
 		oldN = N;
 		Gram.initLogVals(N);
-		oldargi = new double[N];
-		oldt = t;
+		baseArgI = new double[N];
+		baseT = t;
 		for (int i = 1; i <= N; i++) {
-			oldargi[i - 1] = (t.multiply(Gram.log(i), mc)).remainder(Gram.pi_2)
+			baseArgI[i - 1] = (t.multiply(Gram.log(i), mc)).remainder(Gram.pi_2)
 					.doubleValue();
 		}
 	}
 
-	public static double riemannTestEval(BigDecimal t, MathContext mc) {
-		BigDecimal t2 = t.divide(Gram.bdTWO, mc);
-		BigDecimal arg1 = t2.divide(Gram.pi, mc);
-		BigDecimal sqrtArg1 = Gram.sqrt(arg1, Gram.mc, 1.0E-18);
-		int N = sqrtArg1.intValue();
-		double R = rTerm(mc, sqrtArg1, N);
-		//initSqrt(N);
-		Gram.initLogVals(N);
-		BigDecimal term = BigDecimal.ONE.divide(
-				t.multiply(BigDecimal.valueOf(48), mc), mc);
-		BigDecimal theta = t.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
-				.subtract(Gram.pi8, mc).add(term, mc);
-		double sum = 0;
-		for (int i = 1; i <= N; i++) {
-			double arg = theta.subtract(t.multiply(Gram.log(i), mc), mc)
-					.remainder(Gram.pi_2).doubleValue();
-			sum += Math.cos(arg) / Math.sqrt(i );
-		}
-		sum = 2 * sum;
-
-		double riemann = sum + R;
-		return riemann;
-	}
-
+	/**
+	 * The correction term in the Riemann Siegel series.
+	 * @param mc
+	 * @param sqrtArg1
+	 * @param N
+	 * @return
+	 */
 	private static double rTerm(MathContext mc, BigDecimal sqrtArg1, int N) {
 		double p = sqrtArg1.remainder(BigDecimal.ONE).doubleValue();
 		double fourthRoot = Gram.sqrt(sqrtArg1, mc, 1.0E-18).doubleValue();
@@ -184,28 +113,6 @@ public class Riemann {
 		}
 		return R;
 	}
-
-	private static double c1coeff(double fourthRoot, double p) {
-		double mult = (2 * p - 1);
-		double term = mult;
-		double c1 = 0;
-		mult = mult * mult;
-		for (int i = 0; i < c1coeff.length; i++) {
-			c1 += c1coeff[i] * term;
-			term *= mult;
-		}
-		c1 /= Math.pow(fourthRoot, 3);
-		return c1;
-	}
-
-	static BigDecimal myBigTheta(BigDecimal t, MathContext mc) {
-		BigDecimal arg1 = Gram.sqrt(t.divide(Gram.pie2, mc), mc, 1.0E-15);
-		BigDecimal arg2 = Gram.sqrt(arg1, mc, 1.0E-15);
-		Gram.initLogVals(arg2.intValue());
-		BigDecimal theta = t.multiply(Gram.log(arg2,mc),mc).multiply(Gram.bdTWO)
-				.subtract(Gram.pi8 ,mc);
-		return theta;
-	}	
 
 	private static void bracketZeros(BigDecimal offset) {
 		double[] vals = new double[] { 
@@ -254,6 +161,113 @@ public class Riemann {
 		}
 		long end = System.currentTimeMillis();
 		System.out.println("calc for " + riemann.length + " " + (end - init) + "ms");
+	}
+
+	/**
+	 * The c1 correction term in the Riemann Siegel series.
+	 * @param fourthRoot
+	 * @param p
+	 * @return
+	 */
+	private static double c1coeff(double fourthRoot, double p) {
+		double mult = (2 * p - 1);
+		double term = mult;
+		double c1 = 0;
+		mult = mult * mult;
+		for (int i = 0; i < c1coeff.length; i++) {
+			c1 += c1coeff[i] * term;
+			term *= mult;
+		}
+		c1 /= Math.pow(fourthRoot, 3);
+		return c1;
+	}
+
+	static BigDecimal myBigTheta(BigDecimal t, MathContext mc) {
+		BigDecimal arg1 = Gram.sqrt(t.divide(Gram.pie2, mc), mc, 1.0E-15);
+		BigDecimal arg2 = Gram.sqrt(arg1, mc, 1.0E-15);
+		Gram.initLogVals(arg2.intValue());
+		BigDecimal theta = t.multiply(Gram.log(arg2,mc),mc).multiply(Gram.bdTWO)
+				.subtract(Gram.pi8 ,mc);
+		return theta;
+	}	
+	
+	public static void main(String[] args) throws Exception {
+//		bracketZeros(offsets.get("12"));
+		bracketZeros(new BigDecimal("1000000000000"));
+
+	}
+
+	/** calculate zeta function for (t+offset) */
+	public static double riemann(double t, long offset) {
+
+		BigDecimal[] bdtz;
+		try {
+			bdtz = new BigDecimal[] { new BigDecimal(t, Gram.mc).add(
+					BigDecimal.valueOf(offset), Gram.mc) };
+
+		} catch (Exception e) {
+			System.out.println("t " + t + ", " + e.getMessage());
+			throw new RuntimeException(e);
+		}
+
+		return riemann(bdtz, Gram.mc)[0];
+	}
+
+	/** calculate zeta function for set of arguments. */
+	public static double[] riemann(BigDecimal[] t, MathContext mc) {
+		double[] riemann = new double[t.length];
+		for (int j = 0; j < riemann.length; j++) {
+			BigDecimal tval = t[j];
+			BigDecimal t2 = tval.divide(Gram.bdTWO, mc);
+			//BigDecimal arg1 = t2.divide(Gram.pi, mc);
+			BigDecimal sqrtArg1 = Gram.sqrt(t2.divide(Gram.pi, mc), Gram.mc, 1.0E-21);
+			double theta = tval.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
+					.subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
+			int N = sqrtArg1.intValue();
+			double R = rTerm(mc, sqrtArg1, N);
+			double sum = 0;
+			if (oldN != N) {
+				initN(mc, tval, N);
+				for (int i = 1; i <= N; i++) {
+					sum += Math.cos(theta - baseArgI[i - 1]) / Math.sqrt(i );
+				}
+			} else {
+				double del = tval.subtract(baseT, mc).doubleValue();
+				for (int i = 1; i <= N; i++) {
+					double argi = baseArgI[i - 1] + del * Gram.logdbl(i);
+					double rcos = Math.cos(theta - argi) / Math.sqrt(i );
+					sum += rcos;
+				}
+			}
+			sum = 2 * sum;
+
+			riemann[j] = sum + R;
+		}
+		return riemann;
+	}
+
+	public static double riemannTestEval(BigDecimal t, MathContext mc) {
+		BigDecimal t2 = t.divide(Gram.bdTWO, mc);
+		BigDecimal arg1 = t2.divide(Gram.pi, mc);
+		BigDecimal sqrtArg1 = Gram.sqrt(arg1, Gram.mc, 1.0E-18);
+		int N = sqrtArg1.intValue();
+		double R = rTerm(mc, sqrtArg1, N);
+		//initSqrt(N);
+		Gram.initLogVals(N);
+		BigDecimal term = BigDecimal.ONE.divide(
+				t.multiply(BigDecimal.valueOf(48), mc), mc);
+		BigDecimal theta = t.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
+				.subtract(Gram.pi8, mc).add(term, mc);
+		double sum = 0;
+		for (int i = 1; i <= N; i++) {
+			double arg = theta.subtract(t.multiply(Gram.log(i), mc), mc)
+					.remainder(Gram.pi_2).doubleValue();
+			sum += Math.cos(arg) / Math.sqrt(i );
+		}
+		sum = 2 * sum;
+
+		double riemann = sum + R;
+		return riemann;
 	}
 
 	/**
