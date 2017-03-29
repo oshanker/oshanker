@@ -40,7 +40,7 @@ public class RiemannTest {
 			if(i==0){init = System.currentTimeMillis();}
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("calc for " + (args.length-1) + " " + (end - init) + "ms");
+		System.out.println("N " + Riemann.oldN + " calc for " + (args.length-1) + " " + (end - init) + "ms");
 	}
 
 }

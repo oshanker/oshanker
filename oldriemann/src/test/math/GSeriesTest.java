@@ -5,6 +5,7 @@ package math;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.junit.After;
@@ -12,6 +13,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import riemann.Gram;
 
 /**
  * @author oshanker
@@ -51,6 +54,21 @@ public class GSeriesTest {
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
 	@Test
+	public void testLargeOffset() {
+		int k0 = 1, k1=206393;
+		int R = 10000;
+		long init= System.currentTimeMillis();
+		BigDecimal offset = BigDecimal.valueOf(267653395647L);
+		double begin = 1.87383225;
+		double[][] gAtBeta = GSeries.evaluateWithOffset(k0, k1, offset,  begin,  0.25671765, R);
+		long end = System.currentTimeMillis();
+		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
+	}
+
+	/**
+	 * Test method for {@link math.GSeries#gSeries(double)}.
+	 */
+	@Test
 	public void testEvaluateWithOffset() {
 		int k0 = 10, k1=100;
 		int N = 30;
@@ -59,8 +77,8 @@ public class GSeriesTest {
 		GSeries x = new GSeries(k0, k1, minIndex, minIndex+N-1);
 		long end = System.currentTimeMillis();
 		System.out.println("calc for " + N + ": " + (end - init) + "ms");
-		double offset = 5.0;
-		double begin = minIndex*x.spacing - offset;
+		BigDecimal offset = BigDecimal.valueOf(5);
+		double begin = minIndex*x.spacing - offset.doubleValue();
 		init= System.currentTimeMillis();
 		double[][] gAtBeta = GSeries.evaluateWithOffset(k0, k1, offset,  begin,  x.spacing, N);
 		end = System.currentTimeMillis();

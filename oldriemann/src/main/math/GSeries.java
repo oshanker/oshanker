@@ -1,6 +1,9 @@
 package math;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+
+import riemann.Gram;
 
 /**
  * Calculates the G-series useful in the study of Riemann zeta
@@ -83,14 +86,16 @@ public class GSeries {
 	 * @param R
 	 * @return
 	 */
-	public static double[][] evaluateWithOffset(int k0, int k1, double offset, double begin, double incr, int R){
+	public static double[][] evaluateWithOffset(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
 		double[][] gAtBeta = new double[R][2];
-		double tBase = offset + begin;
+		BigDecimal tBase = new BigDecimal(begin, Gram.mc).add(
+				offset, Gram.mc);
 		for (int i = k0; i <= k1; i++) {
 			//evaluate one term in the series, for all t.
-			double coeff = 1/Math.sqrt(i);
-			double costlni = Math.cos(tBase*Math.log(i));
-			double sintlni = Math.sin(tBase*Math.log(i));
+			double coeff = 1/Math.sqrt(i);;
+			double argi = tBase.multiply(Gram.log(i), Gram.mc).remainder(Gram.pi_2).doubleValue();
+			double costlni = Math.cos(argi);
+			double sintlni = Math.sin(argi);
 			double cosdlni = Math.cos(incr*Math.log(i));
 			double sindlni = Math.sin(incr*Math.log(i));
 			for (int j = 0; j < R; j++) {
@@ -102,11 +107,12 @@ public class GSeries {
 				costlni = tmpCos;
 			}
 		}
-		double alpha = (Math.log(k0)+ Math.log(k1))/2.0;
-		double costalpha = Math.cos(tBase*alpha);
-		double sintalpha = Math.sin(tBase*alpha);
-		double cosdalpha = Math.cos(incr*alpha);
-		double sindalpha = Math.sin(incr*alpha);
+		BigDecimal alpha = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
+		double argalpha = tBase.multiply(alpha, Gram.mc).remainder(Gram.pi_2).doubleValue();
+		double costalpha = Math.cos(argalpha);
+		double sintalpha = Math.sin(argalpha);
+		double cosdalpha = Math.cos(incr*alpha.doubleValue());
+		double sindalpha = Math.sin(incr*alpha.doubleValue());
 		for (int j = 0; j < R; j++) {
 			double tmp = gAtBeta[j][0]*costalpha + gAtBeta[j][1]*sintalpha;
 			gAtBeta[j][1] = -gAtBeta[j][0]*sintalpha + gAtBeta[j][1]*costalpha;
