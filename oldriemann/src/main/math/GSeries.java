@@ -1,7 +1,6 @@
 package math;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Arrays;
 
 import riemann.Gram;
@@ -24,12 +23,12 @@ public class GSeries {
 	 * The coefficients in the g series.
 	 * stores from k0 to k1
 	 */
-	final double[] coeff;
+	//final double[] coeff;
 	/**
 	 * The ln term in the g series.
 	 * stores from k0 to k1
 	 */
-	final double[] ln;
+	//final double[] ln;
 	/**
 	 * rotation from F to G:
 	 * G(t) = exp(−i*alpha*t)F(t)
@@ -55,22 +54,16 @@ public class GSeries {
 		this.k1 = k1;
 		this.r0 = n0;
 		this.r1 = n1;
-		coeff = new double[k1-k0+1];
 		int R = n1-n0+1;
 		gAtBeta = new double[R][2];
-		ln = new double[k1-k0+1];
-		for (int i = k0; i <= k1; i++) {
-			coeff[i-k0] = 1.0/Math.sqrt(i);
-			ln[i-k0] = Math.log(i);
-		}
 		alpha = (Math.log(k0)+ Math.log(k1))/2.0;
 		double tau = (Math.log(k1) - Math.log(k0))/2.0;
 		double lambda = 2.0d;
 		beta = lambda*tau;
 		spacing = Math.PI/beta;
 		gamma = beta -tau;
-		for (int i = 0; i < R; i++) {
-			double t = (i+n0)*spacing;
+		for (int i = 0; i < n1-n0+1; i++) {
+			double t = (i+r0)*spacing;
 			gAtBeta[i] = gSeries(t);
 		}
 	}
@@ -157,8 +150,8 @@ public class GSeries {
 		double[] g = new double[2];
 		double f0 = 0, f1 = 0;
 		for (int i = k0; i <= k1; i++) {
-			f0 += coeff[i-k0]*Math.cos(t*ln[i-k0]);
-			f1 += coeff[i-k0]*Math.sin(t*ln[i-k0]);
+			f0 += Math.cos(t*Math.log(i))/Math.sqrt(i);
+			f1 += Math.sin(t*Math.log(i))/Math.sqrt(i);
 		}
 		g[0] = Math.cos(alpha*t)*f0 + Math.sin(alpha*t)*f1;
 		g[1] = Math.cos(alpha*t)*f1 - Math.sin(alpha*t)*f0;
