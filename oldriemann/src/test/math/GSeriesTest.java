@@ -56,6 +56,7 @@ public class GSeriesTest {
 	@Test
 	public void testLargeOffset() {
 		int k0 = 1, k1=206393;
+		Gram.initLogVals(k1);
 		int R = 10000;
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(267653395647L);
