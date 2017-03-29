@@ -1,9 +1,11 @@
 package math;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Arrays;
 
 import riemann.Gram;
+import riemann.Riemann;
 
 /**
  * Calculates the G-series useful in the study of Riemann zeta
@@ -62,7 +64,7 @@ public class GSeries {
 			ln[i-k0] = Math.log(i);
 		}
 		alpha = (Math.log(k0)+ Math.log(k1))/2.0;
-		double tau = Math.log(k1/k0)/2.0;
+		double tau = (Math.log(k1) - Math.log(k0))/2.0;
 		double lambda = 2.0d;
 		beta = lambda*tau;
 		spacing = Math.PI/beta;
@@ -72,6 +74,19 @@ public class GSeries {
 			gAtBeta[i] = gSeries(t);
 		}
 	}
+	
+	public static double correction(double p, double sqrtArg1, int N) {
+		double fourthRoot = Math.sqrt(sqrtArg1);
+		double c0formula = Math.cos(2 * Math.PI * (p * p - p - 1.0 / 16))
+				/ (fourthRoot * Math.cos(2 * Math.PI * p));
+		double c1 = Riemann.c1coeff(fourthRoot, p);
+		double R = c0formula + c1;
+		if (N % 2 == 0) {
+			R = -R;
+		}
+		return R;
+	}
+
 	
 	/**
 	 * Evaluate gSeries without calling cos and sin functions more often than
@@ -87,26 +102,9 @@ public class GSeries {
 	 * @return
 	 */
 	public static double[][] evaluateWithOffset(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
-		double[][] gAtBeta = new double[R][2];
 		BigDecimal tBase = new BigDecimal(begin, Gram.mc).add(
 				offset, Gram.mc);
-		for (int i = k0; i <= k1; i++) {
-			//evaluate one term in the series, for all t.
-			double coeff = 1/Math.sqrt(i);;
-			double argi = tBase.multiply(Gram.log(i), Gram.mc).remainder(Gram.pi_2).doubleValue();
-			double costlni = Math.cos(argi);
-			double sintlni = Math.sin(argi);
-			double cosdlni = Math.cos(incr*Math.log(i));
-			double sindlni = Math.sin(incr*Math.log(i));
-			for (int j = 0; j < R; j++) {
-				gAtBeta[j][0] += coeff*costlni;
-				gAtBeta[j][1] += coeff*sintlni;
-				//now set values for next t
-				double tmpCos = costlni*cosdlni - sintlni*sindlni;
-				sintlni = sintlni*cosdlni + costlni*sindlni;
-				costlni = tmpCos;
-			}
-		}
+		double[][] gAtBeta = fSeries(k0, k1, incr, R, tBase);
 		BigDecimal alpha = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
 		double argalpha = tBase.multiply(alpha, Gram.mc).remainder(Gram.pi_2).doubleValue();
 		double costalpha = Math.cos(argalpha);
@@ -124,6 +122,30 @@ public class GSeries {
 		}
 		
 		return gAtBeta;
+	}
+
+	static double[][] fSeries(int k0, int k1, double incr, int R, BigDecimal tBase) {
+		double[][] fAtBeta = new double[R][2];
+		for (int i = k0; i <= k1; i++) {
+			//evaluate one term in the series, for all t.
+			double coeff = 1/Math.sqrt(i);;
+			double argi = tBase.multiply(Gram.log(i), Gram.mc).remainder(Gram.pi_2).doubleValue();
+			double costlni = Math.cos(argi);
+			double sintlni = Math.sin(argi);
+			//this speeds up, but do we lose accuracy?
+			// no, that is not culprit: R costlni -0.9949659697160186, cf -0.9949659697160186
+			double cosdlni = Math.cos(incr*Math.log(i));
+			double sindlni = Math.sin(incr*Math.log(i));
+			for (int j = 0; j < R; j++) {
+				fAtBeta[j][0] += coeff*costlni;
+				fAtBeta[j][1] += coeff*sintlni;
+				//now set values for next t
+				double tmpCos = costlni*cosdlni - sintlni*sindlni;
+				sintlni = sintlni*cosdlni + costlni*sindlni;
+				costlni = tmpCos;
+			}
+		}
+		return fAtBeta;
 	}
 	
 	/**

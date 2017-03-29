@@ -101,7 +101,7 @@ public class Riemann {
 	 * @param N
 	 * @return
 	 */
-	private static double rTerm(MathContext mc, BigDecimal sqrtArg1, int N) {
+	public static double rTerm(MathContext mc, BigDecimal sqrtArg1, int N) {
 		double p = sqrtArg1.remainder(BigDecimal.ONE).doubleValue();
 		double fourthRoot = Gram.sqrt(sqrtArg1, mc, 1.0E-18).doubleValue();
 		double c0formula = Math.cos(2 * Math.PI * (p * p - p - 1.0 / 16))
@@ -169,7 +169,7 @@ public class Riemann {
 	 * @param p
 	 * @return
 	 */
-	private static double c1coeff(double fourthRoot, double p) {
+	public static double c1coeff(double fourthRoot, double p) {
 		double mult = (2 * p - 1);
 		double term = mult;
 		double c1 = 0;
@@ -224,7 +224,7 @@ public class Riemann {
 			double theta = tval.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
 					.subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
 			int N = sqrtArg1.intValue();
-			double R = rTerm(mc, sqrtArg1, N);
+			double correction = rTerm(mc, sqrtArg1, N);
 			double sum = 0;
 			if (oldN != N) {
 				initN(mc, tval, N);
@@ -241,7 +241,7 @@ public class Riemann {
 			}
 			sum = 2 * sum;
 
-			riemann[j] = sum + R;
+			riemann[j] = sum + correction;
 		}
 		return riemann;
 	}

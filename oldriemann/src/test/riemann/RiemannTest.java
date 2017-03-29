@@ -29,9 +29,9 @@ public class RiemannTest {
 	@Test
 	public void testRiemannDoubleLong() {
 		double[] args = {1.87383225, 2.13054990,        
-		        2.38726754,   2.64398519        };
+		        2.38726754,   2.64398519, 1.8475231278        };
 		double[] vals = {4.023671,42.85232072, -4.52434707, 
-				-2.84388877};
+				-2.84388877, 0};
 		long init = 0;
 		for (int i = 0; i < args.length; i++) {
 			double zeta = Riemann.riemann(args[i], 267653395647L);

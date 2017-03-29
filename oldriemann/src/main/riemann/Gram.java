@@ -39,7 +39,7 @@ public class Gram {
 	static BigDecimal e           = new BigDecimal("2.718281828459045235360287471352662497757247094");
 	public static BigDecimal pie2 = new BigDecimal("17.07946844534713413092710173909314899006977707");
 	public static BigDecimal bdTWO = BigDecimal.valueOf(2);
-	static BigDecimal pi8 = pi.divide(BigDecimal.valueOf(8), mc);
+	public static BigDecimal pi8 = pi.divide(BigDecimal.valueOf(8), mc);
 	static BigDecimal pi2 = pi.divide(bdTWO, mc);
 	static BigDecimal pi4 = pi.divide(BigDecimal.valueOf(4), mc);
 	public static BigDecimal pi_2 = pi.multiply(bdTWO, mc);	
