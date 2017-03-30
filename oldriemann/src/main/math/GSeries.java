@@ -20,16 +20,6 @@ public class GSeries {
 	final int k0, k1;
 	final int r0, r1;
 	/**
-	 * The coefficients in the g series.
-	 * stores from k0 to k1
-	 */
-	//final double[] coeff;
-	/**
-	 * The ln term in the g series.
-	 * stores from k0 to k1
-	 */
-	//final double[] ln;
-	/**
 	 * rotation from F to G:
 	 * G(t) = exp(−i*alpha*t)F(t)
 	 */
@@ -42,6 +32,28 @@ public class GSeries {
 	private final double beta;
 	final double spacing;
 	private final double gamma;
+	private double argalphaBase;
+	private final double begin;
+	
+	public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
+		this.k0 = k0;
+		this.k1 = k1;
+		this.r0 = 0;
+		this.r1 = R;
+		this.begin = begin;
+		this.spacing = incr;
+		beta = Math.PI/spacing;
+		BigDecimal tBase = new BigDecimal(begin, Gram.mc).add(
+				offset, Gram.mc);
+		BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
+		alpha = alphaBD.doubleValue();
+		argalphaBase = tBase.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
+		gAtBeta = evaluateWithOffset(k0, k1, begin, incr, R, tBase);
+		
+		/////
+		double tau = (Math.log(k1) - Math.log(k0))/2.0;
+		gamma = beta -tau;
+	}
 
 	/**
 	 * initialize the g-series for the given range of terms.
@@ -61,6 +73,7 @@ public class GSeries {
 		double lambda = 2.0d;
 		beta = lambda*tau;
 		spacing = Math.PI/beta;
+		this.begin = spacing*n0;
 		gamma = beta -tau;
 		for (int i = 0; i < n1-n0+1; i++) {
 			double t = (i+r0)*spacing;
@@ -96,16 +109,12 @@ public class GSeries {
 	 * @param R
 	 * @return
 	 */
-	public static double[][] evaluateWithOffset(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
-		BigDecimal tBase = new BigDecimal(begin, Gram.mc).add(
-				offset, Gram.mc);
+	private final  double[][] evaluateWithOffset(int k0, int k1, double begin, double incr, int R, BigDecimal tBase){
 		double[][] gAtBeta = fSeries(k0, k1, incr, R, tBase);
-		BigDecimal alpha = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
-		double argalpha = tBase.multiply(alpha, Gram.mc).remainder(Gram.pi_2).doubleValue();
-		double costalpha = Math.cos(argalpha);
-		double sintalpha = Math.sin(argalpha);
-		double cosdalpha = Math.cos(incr*alpha.doubleValue());
-		double sindalpha = Math.sin(incr*alpha.doubleValue());
+		double costalpha = Math.cos(argalphaBase);
+		double sintalpha = Math.sin(argalphaBase);
+		double cosdalpha = Math.cos(incr*alpha);
+		double sindalpha = Math.sin(incr*alpha);
 		for (int j = 0; j < R; j++) {
 			double tmp = gAtBeta[j][0]*costalpha + gAtBeta[j][1]*sintalpha;
 			gAtBeta[j][1] = -gAtBeta[j][0]*sintalpha + gAtBeta[j][1]*costalpha;
@@ -163,21 +172,22 @@ public class GSeries {
 	public  double[] testblfiSum( double t0, int M) {
 		double[] directEval = gSeries(t0);
 		double[] sum = new double[]{0,0};
-		int midIdx = (int) (t0/spacing);
+		//int midIdx = (int) (t0/spacing);
+		int midIdx = (int) ((t0-begin)/spacing);
 		SUM:
 		for (int term = 0; term < 100; term++) {
 			for (int j = 0; j < 2; j++) {
 				int i = midIdx + (j==0?-term:(term+1));
-				if(i>r1 || i < r0){
+				if(i>=gAtBeta.length || i < 0){
 					System.out.println("breaking " + i);
 					break SUM;}
-				double t = (i)*spacing;
+				double t = begin + (i)*spacing;
 				double harg = gamma*(t0-t)/M ;
 				double h = Math.pow( Math.sin(harg)/harg, M);
 				double sarg = beta*(t0-t) ;
 				double sin = Math.sin(sarg)/sarg;
-				sum[0] += gAtBeta[i-r0][0]*h*sin;
-				sum[1] += gAtBeta[i-r0][1]*h*sin;
+				sum[0] += gAtBeta[i][0]*h*sin;
+				sum[1] += gAtBeta[i][1]*h*sin;
 			}
 			System.out.println((term) + " : " + Arrays.toString(sum) 
 			   + " : " + (Math.abs(sum[0] - directEval[0]) + " : " + Math.abs(sum[1] - directEval[1])));
@@ -185,26 +195,26 @@ public class GSeries {
 		return sum;
 	}
 
-	public  double[] blfiSum( double t0, int M) {
+	public  double[] blfiSumWithOffset( double t0, int M) {
 		double[] sum = new double[]{0,0};
-		int midIdx = (int) (t0/spacing);
+		int midIdx = (int) ((t0-begin)/spacing);
 		SUM:
 		for (int term = 0; term < 8; term++) {
 			for (int j = 0; j < 2; j++) {
 				int i = midIdx + (j==0?-term:(term+1));
-				if(i>r1 || i < r0){break SUM;}
-				double t = (i)*spacing;
+				if(i>=gAtBeta.length || i < 0){break SUM;}
+				double t = begin + (i)*spacing;
 				double harg = gamma*(t0-t)/M ;
 				double h = Math.pow( Math.sin(harg)/harg, M);
 				double sarg = beta*(t0-t) ;
 				double sin = Math.sin(sarg)/sarg;
-				sum[0] += gAtBeta[i-r0][0]*h*sin;
-				sum[1] += gAtBeta[i-r0][1]*h*sin;
+				sum[0] += gAtBeta[i][0]*h*sin;
+				sum[1] += gAtBeta[i][1]*h*sin;
 			}
 		}
 		return sum;
 	}
-	
+
 	public static void main(String[] args){
 		int k0 = 10, k1=100;
 		int N = 25;

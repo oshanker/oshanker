@@ -62,7 +62,7 @@ public class GSeriesTest {
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(267653395647L);
 		double begin = 1.87383225;
-		double[][] gAtBeta = GSeries.evaluateWithOffset(k0, k1, offset,  begin,  0.25671765, R);
+		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI))), R);
 		long end = System.currentTimeMillis();
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
 	}
@@ -142,11 +142,11 @@ public class GSeriesTest {
 		BigDecimal offset = BigDecimal.valueOf(5);
 		double begin = minIndex*x.spacing - offset.doubleValue();
 		init= System.currentTimeMillis();
-		double[][] gAtBeta = GSeries.evaluateWithOffset(k0, k1, offset,  begin,  x.spacing, N);
+		GSeries g = new GSeries(k0, k1, offset,  begin,  x.spacing, N);
 		end = System.currentTimeMillis();
 		System.out.println("evaluateWithOffset calc for " + N + ": " + (end - init) + "ms");
-		for (int i = 0; i < gAtBeta.length; i++) {
-			assertTrue(Math.abs(gAtBeta[i][0] - x.gAtBeta[i][0]) + Math.abs(gAtBeta[i][1] - x.gAtBeta[i][1]) < 0.00001);
+		for (int i = 0; i < g.gAtBeta.length; i++) {
+			assertTrue(Math.abs(g.gAtBeta[i][0] - x.gAtBeta[i][0]) + Math.abs(g.gAtBeta[i][1] - x.gAtBeta[i][1]) < 0.00001);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class GSeriesTest {
 		System.out.println("calc for " + N + ": " + (end - init) + "ms");
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
-		double[] gFromBLFI = x.blfiSum( t0, 2);
+		double[] gFromBLFI = x.blfiSumWithOffset( t0, 2);
 		double[] directEval = x.gSeries(t0);
 		assertTrue(Math.abs(gFromBLFI[0] - directEval[0]) + Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
 		System.out.println(t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ": " + Arrays.toString(directEval));
