@@ -77,49 +77,54 @@ public class GSeriesTest {
 	public void testZeroLargeOffset() {
 		double[][] fAtBeta = null;
 		double[] begin = {1.8475231278, 2825.313092773894};
-		//double begin = 2.3623669687;
-		//double begin = 2.6816309165;
 		int k0 = 1, k1=206393;
 		Gram.initLogVals(206393);
 		int R = 2;
-		BigDecimal lnsqrtarg1 = null;
-		double[] theta = {0,0};
+		double lnsqrtArg1 = 0;
+		double basetheta = 0;
+		double dsqrtArg1 = 0;
+		double tbase = 0;
+		double basesqrtArg1 = 0;
 		for (int i = 0; i < begin.length; i++) {
+			double tincr =  (begin[i]-begin[0]) ; 
 			BigDecimal tval = new BigDecimal(begin[i], Gram.mc).add(
 					BigDecimal.valueOf(267653395647L), Gram.mc);
+			double predictedSqrtArg1 = 0;
+			double theta = 0;
 			if(i == 0 ){
 				fAtBeta = GSeries.fSeries(k0, k1, begin[1]-begin[0], R, tval);
+				dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tval.doubleValue()));
+				tbase = tval.doubleValue();
+				BigDecimal t2 = tval.divide(Gram.bdTWO);
+				// 206393.703762602395481916695731615017994489594 from riemann,
+				BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
+				basesqrtArg1 = sqrtArg1.doubleValue();
+				BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, Gram.mc);
+				lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
+				//theta should be 2.819633653651107
+				theta = tval.multiply(lnsqrtArg1BD, Gram.mc).subtract(t2, Gram.mc)
+						.subtract(Gram.pi8, Gram.mc).remainder(Gram.pi_2).doubleValue();
+				basetheta = theta;
+				predictedSqrtArg1 = basesqrtArg1 ;
+			} else {
+				theta = (basetheta + lnsqrtArg1*tincr
+						+tincr*tincr/(4*tbase))%(2*Math.PI);
+				predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
 			}
-			
-			BigDecimal t2 = tval.divide(Gram.bdTWO);
-			// 206393.703762602395481916695731615017994489594 from riemann,
-			BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
-			lnsqrtarg1 = Gram.log(sqrtArg1, Gram.mc);
-			System.out.println("lnsqrtarg1 " + lnsqrtarg1);
-			//theta should be 2.819633653651107
-			theta[i] = tval.multiply(lnsqrtarg1, Gram.mc).subtract(t2, Gram.mc)
-					.subtract(Gram.pi8, Gram.mc).remainder(Gram.pi_2).doubleValue();
-			double rotatedSum = 2*( Math.cos(theta[i])*fAtBeta[i][0]+Math.sin(theta[i])*fAtBeta[i][1]);
+			double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
 			//0.0010100624905039076
-			double p = sqrtArg1.doubleValue()-k1;
-			double correction = GSeries.correction(p, sqrtArg1.doubleValue(), k1);
-			//sum should be -0.0010102280025219446, cf -0.0010102280024559818
+			//0.0010119426112025 for i = last
+			double correction = GSeries.correction( predictedSqrtArg1);
 			double zeta = rotatedSum + correction;
 			System.out.println("f  : " + Arrays.toString(fAtBeta[i])
-			   + " theta " + theta[i] + " rotatedSum " + rotatedSum
+			   + " theta " + theta + " rotatedSum " + rotatedSum
 			   + " zeta " + zeta);
-			System.out.println("correction " + correction );
 			double zetaFromRiemann = Riemann.riemann(begin[i], 267653395647L);
 			System.out.println("zetaFromRiemann " + zetaFromRiemann);
-			assertTrue(i + " ", Math.abs(zeta)  < 0.00001);
-			assertTrue(i + " ", Math.abs(zeta-zetaFromRiemann)  < 1.0E-10);
+			System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
+			assertTrue(i + " ", Math.abs(zeta)  < 1.0E-6);
+			assertTrue(i + " ", Math.abs(zeta-zetaFromRiemann)  < 1.0E-11);
 		}
-		double dtheta = theta[1]-theta[0];
-		double calculatedtheta = (BigDecimal.valueOf(begin[1]-begin[0]).multiply(lnsqrtarg1).remainder(Gram.pi_2)).doubleValue();
-		System.out.println( " (begin[1]-begin[0]) " + (begin[1]-begin[0]) 
-				+ " dtheta / (dt*(ln(t/(2pi))/2)) " 
-		+ (dtheta) + "/" + calculatedtheta);
-		assertTrue((dtheta) + "/" + calculatedtheta, Math.abs(dtheta-calculatedtheta)  < 1.0E-5);
 	}
 
 	/**
