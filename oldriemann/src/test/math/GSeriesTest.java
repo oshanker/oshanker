@@ -65,6 +65,11 @@ public class GSeriesTest {
 		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI))), R);
 		long end = System.currentTimeMillis();
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
+		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
+		double[] gFromBLFI = gAtBeta.blfiSumWithOffset( 1287.5146091794, 4);
+		System.out.println("g  : " + Arrays.toString(gFromBLFI));
+		assertTrue(Math.abs(gFromBLFI[0] - (-0.33143958775035764)) + Math.abs(gFromBLFI[1] - 0.0733285174786178) < 0.000005);
+
 	}
 
 
@@ -76,7 +81,7 @@ public class GSeriesTest {
 	@Test
 	public void testZeroLargeOffset() {
 		double[][] fAtBeta = null;
-		double[] begin = {1.8475231278, 2825.313092773894};
+		double[] begin = {1.8475231278, 1287.5146091794};
 		int k0 = 1, k1=206393;
 		Gram.initLogVals(206393);
 		int R = 2;
@@ -110,6 +115,16 @@ public class GSeriesTest {
 				theta = (basetheta + lnsqrtArg1*tincr
 						+tincr*tincr/(4*tbase))%(2*Math.PI);
 				predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
+				
+//				BigDecimal tBase = new BigDecimal(begin[i], Gram.mc).add(
+//						BigDecimal.valueOf(267653395647L), Gram.mc);
+//				BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
+//				double argalphaBase = tBase.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
+//				double[] g = new double[2];
+//				g[0] = Math.cos(argalphaBase)*fAtBeta[i][0] + Math.sin(argalphaBase)*fAtBeta[i][1];
+//				g[1] = Math.cos(argalphaBase)*fAtBeta[i][1] - Math.sin(argalphaBase)*fAtBeta[i][0];
+//				System.out.println("g  : " + Arrays.toString(g));
+				
 			}
 			double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
 			//0.0010100624905039076

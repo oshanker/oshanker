@@ -18,7 +18,6 @@ import riemann.Riemann;
  */
 public class GSeries {
 	final int k0, k1;
-	final int r0, r1;
 	/**
 	 * rotation from F to G:
 	 * G(t) = exp(−i*alpha*t)F(t)
@@ -26,7 +25,7 @@ public class GSeries {
 	final double alpha;
 	
 	/**
-	 * Store g at n*beta, for n from n0 to n1 (k is k0 to k1)
+	 * Store g at n*beta (k is k0 to k1)
 	 */
 	final double[][] gAtBeta;
 	private final double beta;
@@ -38,8 +37,6 @@ public class GSeries {
 	public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
 		this.k0 = k0;
 		this.k1 = k1;
-		this.r0 = 0;
-		this.r1 = R;
 		this.begin = begin;
 		this.spacing = incr;
 		beta = Math.PI/spacing;
@@ -64,8 +61,6 @@ public class GSeries {
 	public GSeries(int k0, int k1, int n0, int n1) {
 		this.k0 = k0;
 		this.k1 = k1;
-		this.r0 = n0;
-		this.r1 = n1;
 		int R = n1-n0+1;
 		gAtBeta = new double[R][2];
 		alpha = (Math.log(k0)+ Math.log(k1))/2.0;
@@ -76,7 +71,7 @@ public class GSeries {
 		this.begin = spacing*n0;
 		gamma = beta -tau;
 		for (int i = 0; i < n1-n0+1; i++) {
-			double t = (i+r0)*spacing;
+			double t = (i+n0)*spacing;
 			gAtBeta[i] = gSeries(t);
 		}
 	}
@@ -111,6 +106,7 @@ public class GSeries {
 	 */
 	private final  double[][] evaluateWithOffset(int k0, int k1, double begin, double incr, int R, BigDecimal tBase){
 		double[][] gAtBeta = fSeries(k0, k1, incr, R, tBase);
+		//now ratate the f to g.
 		double costalpha = Math.cos(argalphaBase);
 		double sintalpha = Math.sin(argalphaBase);
 		double cosdalpha = Math.cos(incr*alpha);
