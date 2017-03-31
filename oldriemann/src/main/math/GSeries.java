@@ -100,24 +100,12 @@ public class GSeries {
 		double argalphat = (argalphaBase + alpha*tincr)%(2*Math.PI);
 		double cos = Math.cos(argalphat);
 		double sin = Math.sin(argalphat);
-		System.out.println("g  : " + Arrays.toString(g) + " argalphat " + argalphat);
-		//calculate f from g    how to get alpha
+		//calculate f from g    
 		fAtBeta[0] = cos*g[0] - sin*g[1];
 		fAtBeta[1] = sin*g[0] + cos*g[1];
-		/**
-		 * f  : [0.005439783736668435, 0.3394107843846999] theta 3.1270559192501537 rotatedSum -0.0010109167039567823 zeta 4.456963190440505E-10
-zetaFromRiemann 4.4939944365655904E-10
-sqrtArg1[i].doubleValue() 206393.70425830616 correction 0.0010109171496531014
-g  : [-0.33143958775035764, 0.0733285174786178] argalphaBase 4.914098332608756
-
-		 */
 		double rotatedSum = 2*( Math.cos(theta)*fAtBeta [0]+Math.sin(theta)*fAtBeta[1]);
 		double correction = GSeries.correction( predictedSqrtArg1);
 		double zeta = rotatedSum + correction;
-		System.out.println("f  : " + Arrays.toString(fAtBeta)
-		   + " theta " + theta + " rotatedSum " + rotatedSum
-		   + " zeta " + zeta);
-		System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
 		return zeta;
 	}
 	

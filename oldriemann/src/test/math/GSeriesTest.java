@@ -5,10 +5,6 @@ package math;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -66,29 +62,11 @@ public class GSeriesTest {
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(267653395647L);
 		double begin = 1.87383225;
-		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI))), R);
+		double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
+		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, R);
 		long end = System.currentTimeMillis();
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
 		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[0], begin));
-//		File file = new File("data/zeta12.csv");
-//		if (!file.exists()) {
-//			try {
-//				file.createNewFile();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		PrintStream store = null;
-//		try {
-//			store = new PrintStream(file);
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		store.println(   "n-999999999999, " + " zeta ");
-//		for (int i = 0; i < gAtBeta.gAtBeta.length; i++) {
-//			store.println(   "n-999999999999, " + " zeta ");
-//		}
-//		store.close();
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
 		double[] gFromBLFI = gAtBeta.blfiSumWithOffset( 1287.5146091794, 4);
 		double zeta = gAtBeta.riemannZeta(gFromBLFI, 1287.5146091794);
