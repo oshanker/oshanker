@@ -33,6 +33,11 @@ public class GSeries {
 	private final double gamma;
 	private double argalphaBase;
 	private final double begin;
+	final double  dsqrtArg1;
+	double tbase;
+	double basesqrtArg1;
+	double lnsqrtArg1;
+	double basetheta;
 	
 	public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
 		this.k0 = k0;
@@ -40,14 +45,23 @@ public class GSeries {
 		this.begin = begin;
 		this.spacing = incr;
 		beta = Math.PI/spacing;
-		BigDecimal tBase = new BigDecimal(begin, Gram.mc).add(
+		BigDecimal tBaseBD = new BigDecimal(begin, Gram.mc).add(
 				offset, Gram.mc);
 		BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
 		alpha = alphaBD.doubleValue();
-		argalphaBase = tBase.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
-		gAtBeta = evaluateWithOffset(k0, k1, begin, incr, R, tBase);
+		argalphaBase = tBaseBD.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
+		gAtBeta = evaluateWithOffset(k0, k1, begin, incr, R, tBaseBD);
 		
 		/////
+		dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tBaseBD.doubleValue()));
+		tbase = tBaseBD.doubleValue();
+		BigDecimal t2 = tBaseBD.divide(Gram.bdTWO);
+		BigDecimal sqrtArg1 = Gram.sqrt(tBaseBD.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
+		basesqrtArg1 = sqrtArg1.doubleValue();
+		BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, Gram.mc);
+		lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
+		basetheta = tBaseBD.multiply(lnsqrtArg1BD, Gram.mc).subtract(t2, Gram.mc)
+				.subtract(Gram.pi8, Gram.mc).remainder(Gram.pi_2).doubleValue();
 		double tau = (Math.log(k1) - Math.log(k0))/2.0;
 		gamma = beta -tau;
 	}
@@ -70,10 +84,41 @@ public class GSeries {
 		spacing = Math.PI/beta;
 		this.begin = spacing*n0;
 		gamma = beta -tau;
+		dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*n0*spacing));
 		for (int i = 0; i < n1-n0+1; i++) {
 			double t = (i+n0)*spacing;
 			gAtBeta[i] = gSeries(t);
 		}
+	}
+	
+	public double riemannZeta(double[] g, double tincr){
+		tincr -= begin;
+		double theta = (basetheta + lnsqrtArg1*tincr
+				+tincr*tincr/(4*tbase))%(2*Math.PI);
+		double predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
+		double[] fAtBeta = new double[2];
+		double argalphat = (argalphaBase + alpha*tincr)%(2*Math.PI);
+		double cos = Math.cos(argalphat);
+		double sin = Math.sin(argalphat);
+		System.out.println("g  : " + Arrays.toString(g) + " argalphat " + argalphat);
+		//calculate f from g    how to get alpha
+		fAtBeta[0] = cos*g[0] - sin*g[1];
+		fAtBeta[1] = sin*g[0] + cos*g[1];
+		/**
+		 * f  : [0.005439783736668435, 0.3394107843846999] theta 3.1270559192501537 rotatedSum -0.0010109167039567823 zeta 4.456963190440505E-10
+zetaFromRiemann 4.4939944365655904E-10
+sqrtArg1[i].doubleValue() 206393.70425830616 correction 0.0010109171496531014
+g  : [-0.33143958775035764, 0.0733285174786178] argalphaBase 4.914098332608756
+
+		 */
+		double rotatedSum = 2*( Math.cos(theta)*fAtBeta [0]+Math.sin(theta)*fAtBeta[1]);
+		double correction = GSeries.correction( predictedSqrtArg1);
+		double zeta = rotatedSum + correction;
+		System.out.println("f  : " + Arrays.toString(fAtBeta)
+		   + " theta " + theta + " rotatedSum " + rotatedSum
+		   + " zeta " + zeta);
+		System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
+		return zeta;
 	}
 	
 	public static double correction( double sqrtArg1 ) {

@@ -5,6 +5,10 @@ package math;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -65,9 +69,30 @@ public class GSeriesTest {
 		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI))), R);
 		long end = System.currentTimeMillis();
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
+		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[0], begin));
+//		File file = new File("data/zeta12.csv");
+//		if (!file.exists()) {
+//			try {
+//				file.createNewFile();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		PrintStream store = null;
+//		try {
+//			store = new PrintStream(file);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		store.println(   "n-999999999999, " + " zeta ");
+//		for (int i = 0; i < gAtBeta.gAtBeta.length; i++) {
+//			store.println(   "n-999999999999, " + " zeta ");
+//		}
+//		store.close();
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
 		double[] gFromBLFI = gAtBeta.blfiSumWithOffset( 1287.5146091794, 4);
-		System.out.println("g  : " + Arrays.toString(gFromBLFI));
+		double zeta = gAtBeta.riemannZeta(gFromBLFI, 1287.5146091794);
+		System.out.println("g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
 		assertTrue(Math.abs(gFromBLFI[0] - (-0.33143958775035764)) + Math.abs(gFromBLFI[1] - 0.0733285174786178) < 0.000005);
 
 	}
@@ -116,14 +141,14 @@ public class GSeriesTest {
 						+tincr*tincr/(4*tbase))%(2*Math.PI);
 				predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
 				
-//				BigDecimal tBase = new BigDecimal(begin[i], Gram.mc).add(
-//						BigDecimal.valueOf(267653395647L), Gram.mc);
-//				BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
-//				double argalphaBase = tBase.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
-//				double[] g = new double[2];
-//				g[0] = Math.cos(argalphaBase)*fAtBeta[i][0] + Math.sin(argalphaBase)*fAtBeta[i][1];
-//				g[1] = Math.cos(argalphaBase)*fAtBeta[i][1] - Math.sin(argalphaBase)*fAtBeta[i][0];
-//				System.out.println("g  : " + Arrays.toString(g));
+				BigDecimal tBase = new BigDecimal(begin[i], Gram.mc).add(
+						BigDecimal.valueOf(267653395647L), Gram.mc);
+				BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
+				double argalphaBase = tBase.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
+				double[] g = new double[2];
+				g[0] = Math.cos(argalphaBase)*fAtBeta[i][0] + Math.sin(argalphaBase)*fAtBeta[i][1];
+				g[1] = Math.cos(argalphaBase)*fAtBeta[i][1] - Math.sin(argalphaBase)*fAtBeta[i][0];
+				System.out.println("g  : " + Arrays.toString(g) + " argalphaBase " + argalphaBase);
 				
 			}
 			double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
