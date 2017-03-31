@@ -145,28 +145,6 @@ public class GSeriesTest {
 		}
 	}
 
-	/**
-	 * Test method for {@link math.GSeries#gSeries(double)}.
-	 */
-	@Test
-	public void testEvaluateWithOffset() {
-		int k0 = 10, k1=100;
-		int N = 30;
-		int minIndex = 5;
-		long init= System.currentTimeMillis();
-		GSeries x = new GSeries(k0, k1, minIndex, minIndex+N-1);
-		long end = System.currentTimeMillis();
-		System.out.println("calc for " + N + ": " + (end - init) + "ms");
-		BigDecimal offset = BigDecimal.valueOf(5);
-		double begin = minIndex*x.spacing - offset.doubleValue();
-		init= System.currentTimeMillis();
-		GSeries g = new GSeries(k0, k1, offset,  begin,  x.spacing, N);
-		end = System.currentTimeMillis();
-		System.out.println("evaluateWithOffset calc for " + N + ": " + (end - init) + "ms");
-		for (int i = 0; i < g.gAtBeta.length; i++) {
-			assertTrue(Math.abs(g.gAtBeta[i][0] - x.gAtBeta[i][0]) + Math.abs(g.gAtBeta[i][1] - x.gAtBeta[i][1]) < 0.00001);
-		}
-	}
 
 	/**
 	 * Test method for {@link math.GSeries#gSeries(double)}.
