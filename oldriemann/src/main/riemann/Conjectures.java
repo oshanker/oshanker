@@ -56,11 +56,6 @@ public class Conjectures {
 		System.out.println(Arrays.toString(signumSet));
 		//[6701, 7926, 27342, 8001, 7926, 27417, 8000, 6684]
 		//[14627, 35343, 35343, 14685]
-		for (int i = 0; i < signumSet.length; i++) {
-			for (int j = 0; j < sampleLength; j++) {
-				
-			}
-		}
 	}
 
 }
