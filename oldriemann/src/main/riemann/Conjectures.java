@@ -15,6 +15,7 @@ public class Conjectures {
 		BufferedReader zeroIn = new BufferedReader(new FileReader(filename));
 		int count = 0;
 		int[] signumSet = new int[1<<sampleLength];
+		boolean[] printed = new boolean[1<<sampleLength];
 		int[] signum = new int[sampleLength];
 		while (count < N) {
 			String input = null;;
@@ -34,9 +35,13 @@ public class Conjectures {
 				if(count>=sampleLength){
 					int idx = 0;
 					for (int i = 0; i < signum.length; i++) {
-						idx += signum[i]*(1<<(signum.length-1-i));
+						idx += signum[i]<<(signum.length-1-i);
 					}
 					signumSet[idx]++;
+					if(!printed[idx]){
+						System.out.println(idx + ":" + Arrays.toString(signum));
+						printed[idx] = true;
+					}
 				}
 				count++;
 			}
@@ -46,10 +51,16 @@ public class Conjectures {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int[] signumSet = readItems("data/zeta12.csv", 3, 100000);
+		int sampleLength = 3;
+		int[] signumSet = readItems("data/zeta12.csv", sampleLength, 100000);
 		System.out.println(Arrays.toString(signumSet));
 		//[6701, 7926, 27342, 8001, 7926, 27417, 8000, 6684]
 		//[14627, 35343, 35343, 14685]
+		for (int i = 0; i < signumSet.length; i++) {
+			for (int j = 0; j < sampleLength; j++) {
+				
+			}
+		}
 	}
 
 }
