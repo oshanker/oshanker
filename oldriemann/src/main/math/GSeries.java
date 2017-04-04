@@ -224,6 +224,38 @@ public class GSeries {
 		return sum;
 	}
 
+	public  double[] diagnosticBLFISumWithOffset( double t0, int M, int terms, double tolerance) {
+		double[] sum = new double[]{0,0};
+		double[] oldSum = new double[]{0,0};
+		int midIdx = (int) ((t0-begin)/spacing);
+		SUM:
+		for (int term = 0; term < terms; term++) {
+			oldSum[0] = sum[0];
+			oldSum[1] = sum[1];
+			for (int j = 0; j < 2; j++) {
+				int i = midIdx + (j==0?-term:(term+1));
+				if(i>=gAtBeta.length || i < 0){
+					System.out.println("breaking " + i);
+					break SUM;
+				}
+				double t = begin + (i)*spacing;
+				double harg = gamma*(t0-t)/M ;
+				double h = Math.pow( Math.sin(harg)/harg, M);
+				double sarg = beta*(t0-t) ;
+				double sin = Math.sin(sarg)/sarg;
+				sum[0] += gAtBeta[i][0]*h*sin;
+				sum[1] += gAtBeta[i][1]*h*sin;
+			}
+			double change = Math.abs(sum[0] - oldSum[0]) +  Math.abs(sum[1] - oldSum[1]);	
+			if(term%5==0 ||(change < tolerance)){
+				System.out.println((term) + " : " + Arrays.toString(sum) 
+				   + " : " + (Math.abs(sum[0] - oldSum[0]) + " : " + Math.abs(sum[1] - oldSum[1])));
+			}
+			if(change < tolerance){break;}
+		}
+		return sum;
+	}
+
 	public  double[] blfiSumWithOffset( double t0, int M) {
 		double[] sum = new double[]{0,0};
 		int midIdx = (int) ((t0-begin)/spacing);
