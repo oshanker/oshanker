@@ -11,6 +11,7 @@
 \long\def\symbolfootnote[#1]#2{\begingroup%
 \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
 
+\newtheorem{mydef}{Conjecture}
 
 \setcounter{page}{1}
 \begin{document}
@@ -62,7 +63,15 @@ regions where the hypothesis is almost violated, but no counter-example has
 been found. The numerical evaluation of the zeros is time-consuming, and the values of the 
 zeta function at Gram Points plays an important role in the computations. In 
 this work we present two conjectures about the distribution of zeta values at the 
-the Gram Points. We present quantitative evidence for the conjectures. The paper is organized as follows.
+the Gram Points. We present quantitative evidence for the conjectures. 
+\begin{mydef}\label{antisymmetry}
+(even-odd antisymmetry): The distribution of the zeta values for odd gram points is the negative of the distribution of zeta values for the even zeta points.
+\end{mydef}
+\begin{mydef}\label{symmetry}
+(forward-backward symmetry): When we consider a sequence of zeta values at consecutive gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order or in decreasing order).
+\end{mydef}
+
+The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function. 
 Section~\ref{sec3} describes the numerical evaluation of the Riemann zeta function. 
@@ -81,7 +90,7 @@ gives a brief summary of the results.
 \label{ZGram}
 \end{figure}
 
-
+Reference to Conjecture \ref{antisymmetry}.
 In this section we  establish the required notation for the 
 Riemann Zeta Function. 
 The Riemann Zeta function is defined for $\mathrm{Re} (s) > 1$ by
@@ -135,7 +144,7 @@ spacings using Rescaled Range Analysis~\cite{os6}.
 
 The next section gives the details of the numerical calculations.
 
-\section{\label{sec3}Empirical Calculations}
+\section{\label{sec3}Numerical Calculations}
 
 
 \begin{figure}
