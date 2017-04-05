@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 public class Conjectures {
 	int[] signumCounts;
+	private int sampleSize;
 	
 	public static int[] reverse(int[] data) {
 		int[] reversed = new int[data.length];
@@ -58,6 +59,7 @@ public class Conjectures {
 						idx += signumPoints[count+1-sampleLength+i]<<(sampleLength-1-i);
 					}
 					signumCounts[idx]++;
+					sampleSize++;
 //					if(!printed[idx]){
 //						System.out.println(idx + ":" + Arrays.toString(signum));
 //						printed[idx] = true;
@@ -69,20 +71,50 @@ public class Conjectures {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int sampleLength = 3;
-		int sampleOffset = 1; 
+		int sampleLength = 1;
+		int sampleOffset = 0; 
 		int sampleIncrement = 2;
 		int N = 100000;
+		String[][] descriptions = {
+				{"-", "+"},
+				{"--", "-+", "+-", "++"},
+				{ "---", "--+", "-+-", "-++", "+--", "+-+", "++-", "+++"}
+		};
+		String[] parity = {"odd", "even"};
+		double[][] prob = new double[2][2];
+		int maxSampleLength = 3;
+		Conjectures[][] instances = new Conjectures[maxSampleLength-1][2]; 
 		int[] signumPoints = readItems("data/zeta12.csv", N);
-		int[] reversedPoints = reverse(signumPoints);
-		Conjectures instance = new Conjectures();
-		instance.calculateDistribution(signumPoints, sampleLength, sampleOffset, sampleIncrement,
-				N);
-		System.out.println(Arrays.toString(instance.signumCounts));
-		Conjectures reversed = new Conjectures();
-		reversed.calculateDistribution(reversedPoints, sampleLength, sampleOffset+1, sampleIncrement,
-				N);
-		System.out.println(Arrays.toString(reversed.signumCounts));
+		for ( sampleLength = 1; sampleLength < maxSampleLength; sampleLength++) {
+			System.out.println(Arrays.toString(descriptions[sampleLength-1]));
+			for (sampleOffset = 0; sampleOffset < 2; sampleOffset++) {
+				instances[sampleLength-1][sampleOffset] = new Conjectures();
+				instances[sampleLength-1][sampleOffset].calculateDistribution(signumPoints, 
+						sampleLength, sampleOffset, sampleIncrement, N);
+				System.out.println(Arrays.toString(instances[sampleLength-1][sampleOffset].signumCounts) 
+						+ " " + parity[sampleOffset] + " " + instances[sampleLength-1][sampleOffset].sampleSize);
+			}
+			if(sampleLength==2){
+				for (int parityIndex = 0; parityIndex < parity.length; parityIndex++) {
+					double sum = instances[0][parityIndex].sampleSize;
+					for (int firstGram = 0; firstGram < 2; firstGram++) {
+						prob[parityIndex][firstGram] = instances[0][parityIndex].signumCounts[firstGram]/sum;
+					}
+				}
+				for (int parityIndex = 0; parityIndex < parity.length; parityIndex++) {
+					
+					for (int firstGram = 0; firstGram < 2; firstGram++) {
+						for (int secondGram = 0; secondGram < 2; secondGram++) {
+							int idx = firstGram*2 + secondGram;
+							double calculated = prob[parityIndex][firstGram]* prob[(parityIndex+1)%2][secondGram]
+									*instances[1][parityIndex].sampleSize;
+							System.out.print( calculated + " ");
+						}
+					}
+					System.out.println(parity[parityIndex]);
+				}
+			}
+		}
 		//[ -,     +   ] 
 		//[49970, 50030]
 		//[39945, 10055]
