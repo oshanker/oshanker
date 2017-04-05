@@ -6,6 +6,7 @@
 \usepackage{amsmath,amsthm,amssymb,verbatim}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+\usepackage{url}
 
 \def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
 \long\def\symbolfootnote[#1]#2{\begingroup%
@@ -61,7 +62,7 @@ There is an impressive body of empirical evidence for his hypothesis,
 but a formal proof has been elusive. The numerical studies have found
 regions where the hypothesis is almost violated, but no counter-example has
 been found. The numerical evaluation of the zeros is time-consuming, and the values of the 
-zeta function at Gram Points plays an important role in the computations. In 
+zeta function at Gram Points plays an important role in the computations~\cite{korolev1,korolev2}. In 
 this work we present two conjectures about the distribution of zeta values at the 
 the Gram Points. We present quantitative evidence for the conjectures. 
 \begin{mydef}\label{antisymmetry}
@@ -83,12 +84,31 @@ gives a brief summary of the results.
 
 \begin{figure}
 \centering
+\includegraphics[width=0.8\textwidth]{rzeta.jpg}
+\caption[]{ 
+ Distribution of zeta values at a million Gram Points starting at $t = 10^{12}$.
+  }
+\label{ZeroDifferences}
+\end{figure}
+
+\begin{figure}
+\centering
 \includegraphics[width=0.8\textwidth]{ezeta.jpg}
 \caption[]{ 
- Riemann-Siegal function $Z(g_n)$ evaluated at $500$ Gram points.
- X-axis is $t-267653395647$.}
+   Distribution of zeta values at 500000 even Gram Points starting at $t = 10^{12}$.
+ }
 \label{ZGram}
 \end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{ozeta.jpg}
+\caption[]{ 
+  Distribution of zeta values at 500000 odd Gram Points starting at $t = 10^{12}$.
+ }
+\label{NextZero}
+\end{figure}
+
 
 Reference to Conjecture \ref{antisymmetry}.
 In this section we  establish the required notation for the 
@@ -138,25 +158,12 @@ study the spacings because of its applications to analytic number theory,
 while physicists study it because of its  relation 
 to the theory of the spectra of random matrix theories (RMT) 
 and the spectra of classically chaotic quantum systems. 
-The author of this work studied the distributions of the zero 
-spacings using Rescaled Range Analysis~\cite{os6}.
+Many remarkable properties of the Riemann zeta function keep turning up in the literature~\cite{os6,Matiyasevich}.
 
 
 The next section gives the details of the numerical calculations.
 
 \section{\label{sec3}Numerical Calculations}
-
-
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{ozeta.jpg}
-\caption[]{ 
- Comparision of neural network prediction vs actual value
- for the distance from a Gram point to the next zero.
- The x axis shows $50$ Gram points beginning at index $1000000008584$.
- }
-\label{NextZero}
-\end{figure}
 
 In this section we discuss the details of the numerical work. 
 The numerical analysis takes advantage of the functional 
@@ -167,7 +174,7 @@ One defines
 \label{eq:theta}
 \end{equation}
 where the argument is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
-For large $t$ $\theta$ has the aymptotic expansion
+For large $t$ $\theta$ has the asymptotic expansion
 \begin{equation}
 \theta(t) = \frac{t}{2}\ln (\frac{t}{2\pi}) - \frac{t}{2} - \frac{\pi}{8} + \frac{1}{48t} - \frac{1}{5760t^3}. 
 \label{eq:thetaAsymptotic}
@@ -206,23 +213,12 @@ term which can be evaluated to the desired level of accuracy. The most important
 source for loss of accuracy at large heights is the cancellation between
 large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS}). We 
 use a high precision module to evaluate the arguments. The rest of the calculation
-is done using regular double precision accuracy. 
+is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to
+efficiently evaluate the zeta function at large t.
 We calculated the zeta function at a million gram points starting at $t = 10^{12}$.
 
 In the next section we discuss the application of neural network regression to aid
 the location of the zeros. 
-
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{rzeta.jpg}
-\caption[]{ 
- Comparision of neural network prediction vs actual value
- for the smallest zero difference in the Gram interval
- (the left hand zero lies in the Gram interval).
- The x axis shows $50$ Gram points beginning at index $1000000008584$.
- }
-\label{ZeroDifferences}
-\end{figure}
 
 
 \begin{table}
@@ -278,19 +274,21 @@ with the left hand zero lying in the Gram interval.} \label{tab:zeroDiff}
 
 \section{\label{conclusions}Conclusions}
 
-We studied the Riemann zeta function for the range of t from $267653395648.87$ to $267653398472.51$.
-We trained neural networks to predict the distance from a 
-Gram point to the next zero, and the smallest zero difference in the Gram interval
-with the left hand zero lying in the Gram interval.
-In both cases, the neural network gives fairly good predictions. 
-It follows the peaks and dips of the output function faithfully. It is
-successful in reproducing the mean value as well as the variation of the
-output it is attempting to predict. Given this encouraging result,
-it seems worthwhile to consider using more features in the input layer
-and more neurons in the hidden layer to increase the fidelity of the predictions.
-The use of neural networks should also be extended to the Generalised zeta functions.
+xxx
+
+\clearpage
  
 \begin{thebibliography}{10} 
+
+\bibitem{korolev1} Maxim Korolev,
+"GRAM'S LAW AND THE ARGUMENT
+OF THE RIEMANN ZETA FUNCTION", PUBLICATIONS DE L'INSTITUT MATHÉMATIQUE,
+\url{http://elib.mi.sanu.ac.rs/files/journals/publ/112/n106p053.pdf}, (2012)
+
+\bibitem{korolev2} Maxim Korolev,
+"On small values of the Riemann zeta-function at Gram points", Sbornik: Mathematics,
+\url{http://iopscience.iop.org/article/10.1070/SM2014v205n01ABEH004367/meta},
+{\bf205}, (2014)
 
 \bibitem {Riemann(1858)} B. Riemann, ``\"{U}ber die Anzahl der Primzahlen uter
 Einer Gegebenen Gr\"{o}be,'' {\it Montasb. der Berliner Akad.}, (1858),
@@ -305,9 +303,25 @@ Function,'' Oxford University Press, Second Edition, (1986).
 Academic Press,  (1974).
 
 \bibitem{os6} O. Shanker, 
-Generalised Zeta Functions and Self-Similarity of Zero Distributions,
+"Generalised Zeta Functions and Self-Similarity of Zero Distributions",
 {\it J.  Phys. A} {\bf39}(2006), 13983-13997.
 
+\bibitem {Matiyasevich} Y. Matiyasevich, 
+"An artless method for calculating approximate values of
+zeros of Riemann zeta function",
+Web report, \url{http://logic.pdmi.ras.ru/~yumat/
+personaljournal/artlessmethod/artlessmethodtexts.php}, (2013)
+
+\bibitem{hiary} G. A. Hiary,
+"METHODS TO COMPUTE THE RIEMANN ZETA
+FUNCTION", arxiv.org, math.NT, 0711.5005v4, (2011).
+
+\bibitem{gourdon} Xavier Gourdon,
+"The $10^{13}$ first zeros of the Riemann Zeta function,and zeros computation at very large height", report,
+\url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
+
+\bibitem {Odlyzko(1989)} A. Odlyzko, ``The $10^{20}$-th Zero of the Riemann Zeta
+Function and 70 Million of its Neighbors,'' (preprint), A.T.T., (1989).
 
 \end{thebibliography} 
 
