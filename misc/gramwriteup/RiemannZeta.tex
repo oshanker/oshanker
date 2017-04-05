@@ -1,19 +1,35 @@
-\documentclass[12pt]{article}
-\usepackage{fancyhdr}
-\usepackage{cite}
+%%%%%%%%%%%%%%%Conjectures regarding values of Riemann zeta function at Gram Points%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\documentclass[twoside]{article}
 \usepackage{graphicx}
 \usepackage{amsmath,amsthm,amssymb,verbatim}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
 
 
-\title{Conjectures regarding values of Riemann zeta function at Gram Points}
-
+\setcounter{page}{1}
 \begin{document}
 
-\author{O. Shanker 
-\protect\footnote{oshanker@gmail.com}}.
+\date{}
+\lhead[]{}
+\chead[\underline{xxx}]{\it{AMO - Advanced Modeling and Optimization, Volume xx, Number xx, 2017}}
+\rhead[]{}
 
+\title{\bf{Conjectures regarding Riemann zeta function at Gram Points}}
+
+
+\author{O. Shanker 
+ \thanks{Mountain View, CA 94041, U. S. A. Email: oshanker@gmail.com
+ }
+}
 
 \maketitle
+\thispagestyle{fancy}
 
 \begin{abstract}
 Riemann's hypothesis is one of the key unsolved problems which is attracting
@@ -27,6 +43,12 @@ this work we present two conjectures about the distribution of zeta values at th
 the Gram Points. We present quantitative evidence for the conjectures.
 \end{abstract}
 
+
+\symbolfootnote[0]{\bf{*AMO - Advanced Modeling and Optimization. ISSN: xxx}}
+
+
+\clearpage
+\chead[\underline{O. Shanker}]{\underline{Conjectures regarding Riemann zeta function at Gram Points}}
 
 
 \section{Introduction}
@@ -258,9 +280,6 @@ output it is attempting to predict. Given this encouraging result,
 it seems worthwhile to consider using more features in the input layer
 and more neurons in the hidden layer to increase the fidelity of the predictions.
 The use of neural networks should also be extended to the Generalised zeta functions.
-
-
-
  
 \begin{thebibliography}{10} 
 
