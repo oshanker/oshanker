@@ -248,13 +248,14 @@ Figure~\ref{allhist} shows the histogram of zeta values for all Gram Points. It 
 
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram Points. We will look at the evidence for Conjecture \ref{antisymmetry}. 
 
-Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram Points and even Gram Points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a positive zeta value, while the notation '$+-$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram Points will match count for '$--$' from the distribution for even Gram Points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations.
+Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram Points and even Gram Points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a positive zeta value, while the notation '$+-$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram Points will match count for '$--$' from the distribution for even Gram Points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
+
+Conjecture \ref{symmetry} predicts that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$+-$' will match count for '$-+$'). To get the all Gram points distribution we have to add the odd and even rows in Table~\ref{tab:pairraw}. We find that the count for '$-+$' is $353170$, while the count for '$+-$' is $353169$, which is an excellent agreement.
 
 \begin{table}
 \centering \(\begin{array}{ccccc}
 \hline
- Gram &   --   & -+   & +-   & ++  \\
- type &        \\
+ Gram~type&   --   & -+   & +-   & ++  \\
 \hline
 Odd&  73108& 324798& 28601& 73494 \\
 Even&  73337& 28372& 324568& 73723 \\
@@ -282,7 +283,7 @@ Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 In this section we will consider the statistics of zeta values for triples of consecutive Gram Points. We will look at the evidence for  Conjecture \ref{symmetry}. For testing Conjecture \ref{symmetry} it is easier to consider the triple statistics for all Gram Points, rather than separating into even and odd Gram Points. 
 
 \begin{table}
-\centering \(\begin{array}{ccccccccc}
+\centering \(\begin{array}{c|cccccccc}
 \hline
  Gram~type&   ---   & --+       & -+-      & -++   &   +--      & +-+   & ++-   & +++ \\
 \hline
@@ -295,6 +296,7 @@ prediction                            &  ---    & +--    & -+-       & ++-  & --
 \caption{Test of prediction of Conjecture \ref{symmetry}. Row $2$  matches row $1$ exactly.} \label{tab:tripletest}
 \end{table}
 
+Conjecture \ref{symmetry} predicts that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). Table~\ref{tab:tripletest} tests this prediction. The agreement is excellent.
 
 \section{\label{conclusions}Conclusions}
 
