@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%Conjectures regarding values of Riemann zeta function at Gram Points%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 
-\documentclass[twoside]{article}
+\documentclass[12pt]{article}
 \usepackage{graphicx}
 \usepackage{amsmath,amsthm,amssymb,verbatim}
 \usepackage{fancyhdr}
@@ -65,52 +65,25 @@ been found. The numerical evaluation of the zeros is time-consuming, and the val
 zeta function at Gram Points plays an important role in the computations~\cite{korolev1,korolev2}. In 
 this work we present two conjectures about the distribution of zeta values at the 
 the Gram Points. We present quantitative evidence for the conjectures. 
+
 \begin{mydef}\label{antisymmetry}
-(even-odd antisymmetry): The distribution of the zeta values for odd gram points is the negative of the distribution of zeta values for the even zeta points.
+(even-odd antisymmetry): The distribution of the zeta values for odd Gram Points is the negative of the distribution of zeta values for the even Gram Points.
 \end{mydef}
 \begin{mydef}\label{symmetry}
-(forward-backward symmetry): When we consider a sequence of zeta values at consecutive gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order or in decreasing order).
+(forward-backward symmetry): When we consider a sequence of zeta values at consecutive Gram Points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram Points (i.e., the sequence behaves similarly whether we consider the points in increasing order or in decreasing order).
 \end{mydef}
 
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function. 
 Section~\ref{sec3} describes the numerical evaluation of the Riemann zeta function. 
+Section~\ref{sec4} presents the statistics of the zeta value distributions for different types of Gram Points and compares the predictions of the two conjectures with the actual results from the numerical evaluations.. 
 Section~\ref{conclusions}
 gives a brief summary of the results. 
 
 
 \section{\label{sec2}Theory of zero distributions of Riemann zeta function }
 
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{rzeta.jpg}
-\caption[]{ 
- Distribution of zeta values at a million Gram Points starting at $t = 10^{12}$.
-  }
-\label{ZeroDifferences}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{ezeta.jpg}
-\caption[]{ 
-   Distribution of zeta values at 500000 even Gram Points starting at $t = 10^{12}$.
- }
-\label{ZGram}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{ozeta.jpg}
-\caption[]{ 
-  Distribution of zeta values at 500000 odd Gram Points starting at $t = 10^{12}$.
- }
-\label{NextZero}
-\end{figure}
-
-
-Reference to Conjecture \ref{antisymmetry}.
 In this section we  establish the required notation for the 
 Riemann Zeta Function. 
 The Riemann Zeta function is defined for $\mathrm{Re} (s) > 1$ by
@@ -198,8 +171,6 @@ $G_n = [g_n,g_{n+1})$.
 This law fails infinitely often, but it is true in a large proportion of cases.
 The average value of $Z(g_n)$ is $2$ for even $n$ and $-2$ for odd $n$~\cite{Titchmarsh(1986)},
 and hence $Z(g_n)$ undergoes an infinite number of sign changes.
-Figure~\ref{ZGram} shows the Riemann-Siegal function $Z(g_n)$ . Given the desirable properties of the Gram points, it seems 
-natural to use the values at these points as the feature set for the neural network regression.
 
 
 The Riemann-Siegel Z-function is evaluated using the Riemann-Siegal series
@@ -212,85 +183,129 @@ term which can be evaluated to the desired level of accuracy. The most important
 source for loss of accuracy at large heights is the cancellation between
 large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS}). We 
 use a high precision module to evaluate the arguments. The rest of the calculation
-is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to
-efficiently evaluate the zeta function at large t.
+is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to efficiently evaluate the zeta function at large t.
 We calculated the zeta function at a million gram points starting at $t = 10^{12}$.
 
-In the next section we discuss the application of . 
+In the next section we present the statistics of the zeta value distributions for different types of Gram Points. We compare the predictions of the two conjectures with the actual results from the numerical evaluations.
 
 \section{\label{sec4}Statistics of the distribution}
-Describe the statistics.
+
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.62\textwidth]{rzeta.jpg}
+\caption[]{ 
+ Distribution of zeta values at a million Gram Points starting at $t = 10^{12}$.
+  }
+\vspace{1mm}
+\label{allhist}
+
+\includegraphics[width=0.62\textwidth]{qqr.jpg}
+\caption[]{ 
+ QQ plot of zeta values at a million Gram Points starting at $t = 10^{12}$.
+  }
+\vspace{1mm}
+\label{qqr}
+\end{figure*}
+
+\begin{table}
+\centering \(\begin{array}{ccccccc}
+\hline
+ Gram &     Min.   & 1st    &  Median    &   Mean   & 3rd    &   Max. \\
+ type &              & Quantile   &            &              & Quantile.    &   \\
+\hline
+All& -160.90 &   -1.17 &    0.00106 &   0.00  &  1.172 &165.10\\
+Odd&-160.90 &   -2.526 &   -0.8471  & -2.00 &   -0.1121 &  69.41 \\
+Even&-68.63 &   0.1139 &  0.8526  & 2.00 &   2.541 & 165.10 \\
+\hline
+\end{array}\)
+\caption{Quantiles and mean for zeta values at Gram Points of different types.} \label{tab:quantiles}
+\end{table}
+
+In this section we present the statistics of the zeta value distributions for different types of Gram Points (all Gram Points, odd Gram Points and even Gram Points). We present the relationships between the statistics that would be implied by Conjectures \ref{antisymmetry} and \ref{symmetry}, and we compare the predictions of the two conjectures with the actual results from the numerical evaluations. 
+
+Figure~\ref{allhist} shows the histogram of zeta values for all Gram Points. It  is symmetric around $0$. However, Figure~\ref{qqr}, the QQ plot, shows that the distribution is not normal. The distribution has a sharp peak and a long tail at extreme values of the zeta function. For even Gram Points $80\%$ of the zeta values are positive, while for odd Gram Points $80\%$ of the zeta values are negative. Table~\ref{tab:quantiles} presents the quantiles and mean for zeta values at Gram Points of different types.  One can see good evidence that the odd and even distributions are mirror images of each other within expected statistical significance. In sections 
+\ref{sec4a} and \ref{sec4b} we will present further statistical properties of zeta values at pairs and triples of consecutive Gram Points. These will help to validate Conjectures  \ref{antisymmetry} and  \ref{symmetry}.
 
 \subsection{\label{sec4a}Conjecture 1}
-Reference to Conjecture \ref{antisymmetry}.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.62\textwidth]{ozeta.jpg}
+\caption[]{ 
+  Distribution of zeta values at 500000 odd Gram Points starting at $t = 10^{12}$.
+ }
+\vspace{1mm}
+\label{oddhist}
+
+\includegraphics[width=0.62\textwidth]{ezeta.jpg}
+\caption[]{ 
+   Distribution of zeta values at 500000 even Gram Points starting at $t = 10^{12}$.
+ }
+\label{evenhist}
+\vspace{1mm}
+\end{figure*}
+
+In this section we will consider the statistics of zeta values at pairs of consecutive Gram Points. We will look at the evidence for Conjecture \ref{antisymmetry}. 
+
+Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram Points and even Gram Points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a positive zeta value, while the notation '$+-$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram Points will match count for '$--$' from the distribution for even Gram Points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations.
+
+\begin{table}
+\centering \(\begin{array}{ccccc}
+\hline
+ Gram &   --   & -+   & +-   & ++  \\
+ type &        \\
+\hline
+Odd&  73108& 324798& 28601& 73494 \\
+Even&  73337& 28372& 324568& 73723 \\
+\hline
+\end{array}\)
+\caption{Counts of different configurations of zeta values for pairs of consecutive Gram Points.} \label{tab:pairraw}
+\end{table}
+
+\begin{table}
+\centering \(\begin{array}{ccccc}
+\hline
+ Gram~type&   --   & -+   & +-   & ++  \\
+\hline
+Odd& 73108& 324798& 28601& 73494 \\
+\hline
+Corresponding& 73723 & 324568 & 28372& 73337\\ 
+Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
+\hline
+\end{array}\)
+\caption{Test of prediction of Conjecture \ref{antisymmetry}. Row $2$  matches row $1$ within expected statistical variation.} \label{tab:pairtest}
+\end{table}
+
 
 \subsection{\label{sec4b}Conjecture 2}
-Reference to Conjecture \ref{symmetry}.
+In this section we will consider the statistics of zeta values for triples of consecutive Gram Points. We will look at the evidence for  Conjecture \ref{symmetry}. For testing Conjecture \ref{symmetry} it is easier to consider the triple statistics for all Gram Points, rather than separating into even and odd Gram Points. 
 
 \begin{table}
-\centering \(\begin{array}{c|c|c}
- Next~zero & Mean & Std. Deviation \\
+\centering \(\begin{array}{ccccccccc}
 \hline
-Training~set \\
+ Gram~type&   ---   & --+       & -+-      & -++   &   +--      & +-+   & ++-   & +++ \\
 \hline
-Acutal       & 0.579 & 0.41 \\
-Predicted     & 0.579 & 0.37 \\
+All               &  66332&80113& 272674& 80495&80113& 273056& 80495& 66722\\
 \hline
-Validation~set \\
+Conjecture~\ref{symmetry}&66332&80113& 272674& 80495&80113& 273056& 80495& 66722 \\ 
+prediction                            &  ---    & +--    & -+-       & ++-  & --+  & +-+ & -++ & +++  \\
 \hline
-Acutal       & 0.599 & 0.42 \\
-Predicted     & 0.590 & 0.38 \\
-\hline
-Test~set \\
-\hline
-Acutal       & 0.576& 0.43 \\
-Predicted     & 0.581 & 0.39 \\
-
 \end{array}\)
-\caption{Prediction of the distance from a 
-Gram point to the next zero.} \label{tab:nextZero}
+\caption{Test of prediction of Conjecture \ref{symmetry}. Row $2$  matches row $1$ exactly.} \label{tab:tripletest}
 \end{table}
-
-\begin{table}
-\centering \(\begin{array}{ccc}
-\hline
-Smallest~zero  & Mean & Std. Deviation \\
-difference  &  &  \\
-\hline
-Training~set &\\
-\hline
-Acutal       & 0.965 &  0.41 \\
-Predicted     & 0.926 & 0.39 \\
-\hline
-Validation~set \\
-\hline
-Acutal       & 0.959 & 0.41 \\
-Predicted     & 0.926 & 0.39 \\
-\hline
-Test~set \\
-\hline
-Acutal       & 0.972 & 0.43 \\
-Predicted     & 0.934 & 0.42 \\
-\hline
-
-\end{array}\)
-\caption{Prediction of the smallest zero difference in the Gram interval
-with the left hand zero lying in the Gram interval.} \label{tab:zeroDiff}
-\end{table}
-
 
 
 \section{\label{conclusions}Conclusions}
 
-xxx
+In this work we presented two conjectures regarding the distribution of zeta function values at Gram Points. The conjectures refer to the even-odd Gram Point antisymmetry and the forward-backward symmetry ("time reversal" symmetry, if we think of the zeta values at Gram Points as being a time series). After briefly describing the theory of the Riemann zeta function and the numerical evaluation, we presented statistics of the zeta function values. The statistics provide validation for the two conjectures.
 
-\clearpage
  
 \begin{thebibliography}{10} 
 
 \bibitem{korolev1} Maxim Korolev,
 "GRAM'S LAW AND THE ARGUMENT
-OF THE RIEMANN ZETA FUNCTION", PUBLICATIONS DE L'INSTITUT MATHÉMATIQUE,
+OF THE RIEMANN ZETA FUNCTION", Publications de Institut Mathmatique,
 \url{http://elib.mi.sanu.ac.rs/files/journals/publ/112/n106p053.pdf}, (2012)
 
 \bibitem{korolev2} Maxim Korolev,
