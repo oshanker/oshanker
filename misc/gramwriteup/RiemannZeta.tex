@@ -150,7 +150,7 @@ is~\cite{Edwards(1974)}
 \end{equation}
 Thus, the mean spacing of the zeros at height $\gamma$ is 
 $2\pi(\ln (\gamma/2\pi))^{-1}$. For the range of $t$ values
-studied by us this spacing is essentially constant at $0.2567$.
+studied by us this spacing is essentially constant at $0.2436$.
 
 The study of the zeroes of the Riemann zeta function and Generalized 
 Zeta functions is of interest to mathematicians and physicists. Mathematicians 
@@ -198,8 +198,7 @@ $G_n = [g_n,g_{n+1})$.
 This law fails infinitely often, but it is true in a large proportion of cases.
 The average value of $Z(g_n)$ is $2$ for even $n$ and $-2$ for odd $n$~\cite{Titchmarsh(1986)},
 and hence $Z(g_n)$ undergoes an infinite number of sign changes.
-Figure~\ref{ZGram} shows the Riemann-Siegal function $Z(g_n)$ evaluated at 500 Gram points
-starting at $n=99999999999$. Given the desirable properties of the Gram points, it seems 
+Figure~\ref{ZGram} shows the Riemann-Siegal function $Z(g_n)$ . Given the desirable properties of the Gram points, it seems 
 natural to use the values at these points as the feature set for the neural network regression.
 
 
@@ -217,9 +216,16 @@ is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzk
 efficiently evaluate the zeta function at large t.
 We calculated the zeta function at a million gram points starting at $t = 10^{12}$.
 
-In the next section we discuss the application of neural network regression to aid
-the location of the zeros. 
+In the next section we discuss the application of . 
 
+\section{\label{sec4}Statistics of the distribution}
+Describe the statistics.
+
+\subsection{\label{sec4a}Conjecture 1}
+Reference to Conjecture \ref{antisymmetry}.
+
+\subsection{\label{sec4b}Conjecture 2}
+Reference to Conjecture \ref{symmetry}.
 
 \begin{table}
 \centering \(\begin{array}{c|c|c}
@@ -246,11 +252,12 @@ Gram point to the next zero.} \label{tab:nextZero}
 \end{table}
 
 \begin{table}
-\centering \(\begin{array}{c|c|c}
+\centering \(\begin{array}{ccc}
+\hline
 Smallest~zero  & Mean & Std. Deviation \\
 difference  &  &  \\
 \hline
-Training~set \\
+Training~set &\\
 \hline
 Acutal       & 0.965 &  0.41 \\
 Predicted     & 0.926 & 0.39 \\
@@ -264,6 +271,7 @@ Test~set \\
 \hline
 Acutal       & 0.972 & 0.43 \\
 Predicted     & 0.934 & 0.42 \\
+\hline
 
 \end{array}\)
 \caption{Prediction of the smallest zero difference in the Gram interval
@@ -317,7 +325,8 @@ personaljournal/artlessmethod/artlessmethodtexts.php}, (2013)
 FUNCTION", arxiv.org, math.NT, 0711.5005v4, (2011).
 
 \bibitem{gourdon} Xavier Gourdon,
-"The $10^{13}$ first zeros of the Riemann Zeta function,and zeros computation at very large height", report,
+"The $10^{13}$ first zeros of the Riemann Zeta function,
+and zeros computation at very large height", report,
 \url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
 
 \bibitem {Odlyzko(1989)} A. Odlyzko, ``The $10^{20}$-th Zero of the Riemann Zeta
