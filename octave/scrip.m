@@ -1,13 +1,19 @@
 function [zeroDiffValues] = scrip
 # Knowing some diffs, predict next diff.
 # http://www.opengardensblog.futuretext.com/wp-content/uploads/2014/03/OctaveTutorialAndrewNg.pdf 
+#http://www.holehouse.org/mlclass/
 
+#need data, randInit, learningcurve, trainNeuralNet, fmincg
+#nnCostFunction, sigmoid, predict
+
+warning('off', 'Octave:possible-matlab-short-circuit-operator');
 id = fopen('data/zeros12.txt');
 [rzeros] = fscanf(id, '%f');
 offset = 267653395647;
 
 norm = 2*pi*3;
 factor = log(offset+rzeros(1)/(2*pi))/(norm);
+#find zero diffs, normalized
 j = 0;
 max = 0.015/factor;
 for i = 1:(size(rzeros, 1)-1)
@@ -18,6 +24,9 @@ for i = 1:(size(rzeros, 1)-1)
    j++;
    zeroDiffValues(j, 1:3) = [(diff)*factor, rzeros(i), rzeros(i+1)];
 end
+# minimum, first quartile, median, third
+# quartile, maximum, mean, standard deviation, skewness, and kurtosis
+# of the columns.
 statistics(zeroDiffValues)'
 save(['data/yt' int2str(offset) '.txt'], 'zeroDiffValues');
 return;
