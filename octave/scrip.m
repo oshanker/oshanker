@@ -80,12 +80,12 @@ pause;
 [pred ] = predictLocal(Xtest, Theta1, Theta2);
 disp('pred(1), pred(2), y(1) y(2)');
 disp([pred(1:10,:), ytest(1:10,:)])
-plot(1:size(pred, 1), pred(:,1), 'r', 1:size(pred, 1), ytest(:,1))
-legend('pred', 'actual');
+#plot(1:size(pred, 1), pred(:,1), 'r', 1:size(pred, 1), ytest(:,1))
+#legend('pred', 'actual');
 
 fprintf('Program paused (predict). Press enter to continue.\n');
 pause;
-close all;
+#close all;
 
 %{
 disp("forward")
@@ -126,6 +126,7 @@ end
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 %}
+fprintf('done.\n');
 
 end;
 
