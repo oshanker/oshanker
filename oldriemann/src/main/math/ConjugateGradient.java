@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class ConjugateGradient {
 	public static interface Function{
-		double[] eval(double[] args);
+		double[] evaluate(double[] args);
 	}
 	static final double realmin = 2.2251e-308;
 	
@@ -66,12 +66,18 @@ public class ConjugateGradient {
 			// 2) Output display
 			//
 	
-	public static double[] fmincg(Function f, double[] X, HashMap<String, String> options) {
+	public static int fmincg(Function f, double[] X, HashMap<String, String> options, ArrayList<Double> fX) {
 		int length = 100;
+		double red = 1; 
 
 			// Read options
-		if (options != null && options.containsKey("MaxIter")){
-			 length = Integer.parseInt(options.get("MaxIter"));
+		if (options != null  ){
+			if(options.containsKey("MaxIter")) {
+			    length = Integer.parseInt(options.get("MaxIter"));
+			}
+			if(options.containsKey("red")) {
+			    red = Double.parseDouble(options.get("red"));
+			}
 	    }
 		double RHO = 0.01;                            // a bunch of constants for line searches
 		double SIG = 0.5;       // RHO and SIG are the constants in the Wolfe-Powell conditions
@@ -79,18 +85,17 @@ public class ConjugateGradient {
 		double EXT = 3.0;                    // extrapolate maximum 3 times the current bracket
 		int MAX = 20;                         // max 20 function evaluations per line search
 		double RATIO = 100;                                      // maximum allowed slope ratio
-		double red = 1; 
 		String S="Iteration";
-		ArrayList<Double> fX = new ArrayList<>();
 
 		int i = 0;                                            // zero the run length counter
 		boolean ls_failed = false;                             // no previous line search has failed
 		//fX = [];
-		double[] f1df1 = f.eval(X); 
+		double[] f1df1 = f.evaluate(X); 
 		// get function value and gradient
 		double f1 = f1df1[0];
 		double[] df1 = new double[f1df1.length-1];
 		System.arraycopy(f1df1, 1, df1, 0, df1.length);
+		if(fX != null) { fX.add(f1);}
 		if(length<0){i++;}                                            // count epochs?!
 		double[] s = new double[df1.length];
 		System.arraycopy(df1, 0, s, 0, df1.length);
@@ -115,7 +120,7 @@ public class ConjugateGradient {
 				X[j] += z1 *s[j];
 			}
 			// begin line search
-			double[] f2df2 = f.eval(X); 
+			double[] f2df2 = f.evaluate(X); 
 			// get function value and gradient
 			double f2 = f2df2[0];
 			double[] df2 = new double[f2df2.length-1];
@@ -149,7 +154,7 @@ public class ConjugateGradient {
 					for (int j = 0; j < X.length; j++) {
 						X[j] = X[j] + z2*s[j];
 					}
-					f2df2 = f.eval(X); 
+					f2df2 = f.evaluate(X); 
 					// get function value and gradient
 					f2 = f2df2[0];
 					//df2 = new double[f2df2.length-1];
@@ -191,7 +196,7 @@ public class ConjugateGradient {
 				for (int j = 0; j < X.length; j++) {
 					X[j] = X[j] + z2*s[j];
 				}
-				f2df2 = f.eval(X); // get function value and gradient
+				f2df2 = f.evaluate(X); // get function value and gradient
 				f2 = f2df2[0];
 				//df2 = new double[f2df2.length-1];
 				System.arraycopy(f2df2, 1, df2, 0, df2.length);
@@ -201,7 +206,7 @@ public class ConjugateGradient {
 			}//end  while true // end of line search
 
 			if (success){                 // if line search succeeded
-				f1 = f2; fX.add(f1);
+				f1 = f2; if(fX != null) { fX.add(f1);}
 				double tmp = (arrayProduct(df2, df2)-arrayProduct(df1, df2))/arrayProduct(df1, df1);
 				for (int j = 0; j < df2.length; j++) {
 					s[j] = tmp*s[j] - df2[j]; // Polack-Ribiere direction
@@ -241,7 +246,7 @@ public class ConjugateGradient {
 			}//end
 		}//end while i  < Math.abs(length)
 		//fprintf('\n');
-		return X;
+		return i;
     }
 
 	private static double arrayProduct(double[] s, double[] df2) {
@@ -264,7 +269,7 @@ public class ConjugateGradient {
 	 */
 	public static void main(String[] args) {
 		Function f = new Function() {
-			public double[] eval(double[] args) {
+			public double[] evaluate(double[] args) {
 				double[] ret = new double[args.length+1];
 				for (int i = 0; i < args.length; i++) {
 					ret[0] += (args[i]-1)*(args[i]-1);
@@ -274,8 +279,11 @@ public class ConjugateGradient {
 			}
 		};
 		double[] X = {1,2};
-		double[] ans = fmincg(f, X , null);
-		System.out.println(Arrays.toString(ans));
+		ArrayList<Double> fX = new ArrayList<>();
+		HashMap<String, String> options = null;
+		int ans = fmincg(f, X , options , fX);
+		System.out.println("i " + ans + " " + Arrays.toString(X));
+		System.out.println(fX);
 	}
 
 }
