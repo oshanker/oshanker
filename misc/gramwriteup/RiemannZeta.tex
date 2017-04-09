@@ -64,7 +64,7 @@ regions where the hypothesis is almost violated, but no counter-example has
 been found. The numerical evaluation of the zeros is time-consuming, and the values of the 
 zeta function at Gram Points plays an important role in the computations~\cite{korolev1,korolev2}.  The behavior at the Gram Points also provides good features for  Machine Learning applications to the study of the Riemann zeta zeros \cite{osneural,osentropy}.  In 
 this work we present two conjectures about the distribution of zeta values at the 
-the Gram Points. We present quantitative evidence for the conjectures. 
+the Gram Points. These conjectures are most likely related to the symmetry properties of the rotated zeta function (Hardy's function) under inversion around the origin. We present quantitative evidence for the conjectures. 
 
 \begin{mydef}\label{antisymmetry}
 (even-odd antisymmetry): The distribution of the zeta values for odd Gram Points is the negative of the distribution of zeta values for the even Gram Points.
@@ -225,7 +225,7 @@ Even&-68.63 &   0.1139 &  0.8526  & 2.00 &   2.541 & 165.10 \\
 In this section we present the statistics of the zeta value distributions for different types of Gram Points (all Gram Points, odd Gram Points and even Gram Points). We present the relationships between the statistics that would be implied by Conjectures \ref{antisymmetry} and \ref{symmetry}, and we compare the predictions of the two conjectures with the actual results from the numerical evaluations. 
 
 Figure~\ref{allhist} shows the histogram of zeta values for all Gram Points. It  is symmetric around $0$. However, Figure~\ref{qqr}, the QQ plot, shows that the distribution is not normal. The distribution has a sharp peak and a long tail at extreme values of the zeta function. For even Gram Points $80\%$ of the zeta values are positive, while for odd Gram Points $80\%$ of the zeta values are negative. Table~\ref{tab:quantiles} presents the quantiles and mean for zeta values at Gram Points of different types.  One can see good evidence that the odd and even distributions are mirror images of each other within expected statistical significance. In sections 
-\ref{sec4a} and \ref{sec4b} we will present further statistical properties of zeta values at pairs and triples of consecutive Gram Points. These will help to validate Conjectures  \ref{antisymmetry} and  \ref{symmetry}.
+\ref{sec4a} and \ref{sec4b} we will present further statistical properties of zeta values at pairs and triples of consecutive Gram Points. These will help to validate Conjectures  \ref{antisymmetry} and  \ref{symmetry}. In Section~\ref{sec4c} we present evidence for  Conjecture  \ref{isymmetry} from Gram block counts.
 
 \subsection{\label{sec4a}Conjecture 1}
 
@@ -297,6 +297,34 @@ prediction                            &  ---    & +--    & -+-       & ++-  & --
 \end{table}
 
 Conjecture \ref{symmetry} predicts that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). Table~\ref{tab:tripletest} tests this prediction. The agreement is excellent.
+
+\subsection{\label{sec4c}Conjecture 2 and Gram Block}
+In this section we present the prediction of  Conjecture \ref{symmetry} on the distribution of different types of Gram blocks. We will follow the notation of  \cite{gourdon}.
+A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise. A Gram block is an interval [gn, gn+k) such that $g_n$  and $g_{n+k}$ are good Gram points 
+and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where k is called the length of the Gram block, and $a_i$ denote the number of roots of Z(t) in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous.
+
+A Gram block of length k which contains exactly k roots of Z[t) is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
+Thus, Regular Gram blocks must have a pattern of one of the following three forms:
+$21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
+where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Gourdon~\cite{gourdon} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture \ref{symmetry} above predicts that the number of Type I and Type II Gram blocks up to a given large height must be equal to each other (except for Type I Gram blocks of length one, which only have the pattern 1).  Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of counts of Gram Blocks of Type II to Type I, found up to $t = 10^{13}$. The prediction of Conjecture 2 is borne out to a remarkable degree. Further validation comes from a consideration of the different types of violations of Rosser's rule, which also show the forward-backward symmetry. Rosser's rule states that Gram blocks of length k contain at least k zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram Blocks.
+
+\begin{table}
+\centering \(\begin{array}{cc}
+\hline
+Length~of 	& Ratio  \\Gram~block	& Type~II/Type~I \\\hline
+2& 0.999966866\\
+3& 0.999941442\\
+4& 0.999913803\\
+5& 0.999871412\\
+6& 0.999822002\\
+7& 0.999594807\\
+8& 0.999257121\\
+9& 1.001677139\\
+10& 0.992668154\\
+\hline
+\end{array}\)
+\caption{Test of prediction of Conjecture \ref{symmetry} from Gram block counts.} \label{tab:rosser}
+\end{table}
 
 \section{\label{conclusions}Conclusions}
 
