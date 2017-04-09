@@ -47,7 +47,7 @@ public class Rosser {
 			input = zeroIn.readLine();
 		}
 		if(input == null){
-			return new ZeroInfo(input,countZeros);
+			return null;
 		}
 		double zero = 0;
 		while (zero < upperLimit ) {
@@ -66,31 +66,23 @@ public class Rosser {
 		return new ZeroInfo(input,countZeros);
 	}
 	
-	public static void readItems(String filename,  int N, PrintStream out)
+	public static void readItems( int N, PrintStream out)
 			throws FileNotFoundException, IOException {
+		//assuming that we start at a good regular odd Gram Point
 		println(out, "n-3945951431270L,good");
 		BufferedReader zeroIn = new BufferedReader(new FileReader("data/zerosE12.csv"));
-		BufferedReader gramIn = new BufferedReader(new FileReader(filename));
 		int count = 0;
-		String input = null;
-		double upperLimit = 244.02115917156451839965694310614387;
+		double baseLimit = 244.02115917156451839965694310614387;
 		double gramIncr = 0.24359904690398668;
 		ZeroInfo zeroInput = new ZeroInfo(null,0);
 		boolean oldGood = true;
 		boolean good = false;
 		boolean inGramBlock = false;
 		String interval = null;
-		while (count < N && (input = gramIn.readLine()) != null) {
-			if(input == null || input.trim().length()==0){
-				break;
-			}
-			if(input.startsWith("#") || input.startsWith("n")){
-				continue;
-			}
-			String[] parsed = input.trim().split(",");
-			int n = Integer.parseInt(parsed[0].trim());
-			double zeta = Double.parseDouble(parsed[1].trim());
-			if((n%2 == 1 && zeta <= 0) || (n%2 == 0 && zeta > 0)){
+		int signumGram = -1;
+		while (count < N  ) {
+			int n = count+1;
+			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
 				print(out, n + ",1" );
 				good = true;
 			} else {
@@ -117,12 +109,17 @@ public class Rosser {
 				}
 				inGramBlock = !inGramBlock;
 			}
-			zeroInput = readZeros(upperLimit, out, zeroIn, zeroInput.zeroInput);
+			double upperLimit = baseLimit + (n-1)* gramIncr;
+			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput);
+			if (zeroInput==null) {
+				break;
+			}
+			if(zeroInput.countZeros%2 == 1){
+				signumGram = signumGram==-1?1:-1;
+			}
 			oldGood = good;
-			upperLimit += gramIncr;
 			count++;
 		}
-		gramIn.close();
 		zeroIn.close();
 	}
 
@@ -146,7 +143,7 @@ public class Rosser {
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //		}
-		readItems("data/zetaE12.csv", 1002, null);
+		readItems(1002, null);
 		System.out.println(rosser);
 //		out.close();
 	}
