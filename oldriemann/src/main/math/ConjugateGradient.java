@@ -146,7 +146,7 @@ public class ConjugateGradient {
 						z2 = (Math.sqrt(B*B-A*d2*z3*z3)-B)/A;       // numerical error possible - ok!
 					} //end
 					//Double.
-					if( Double.isFinite(z2) ) {
+					if(! Double.isFinite(z2) ) {
 						z2 = z3/2;                  // if we had a numerical problem then bisect
 					}
 					z2 = Math.max(Math.min(z2, INT*z3),(1-INT)*z3);  // don't accept too close to limits
@@ -176,7 +176,7 @@ public class ConjugateGradient {
 				A = 6*(f2-f3)/z3+3*(d2+d3);                      // make cubic extrapolation
 				B = 3*(f3-f2)-z3*(d3+2*d2);
 				z2 = -d2*z3*z3/(B+Math.sqrt(B*B-A*d2*z3*z3));        // num. error possible - ok!
-				if (Double.isFinite(z2) | z2 < 0 ) {  // num prob or wrong sign?
+				if ((!Double.isFinite(z2)) | z2 < 0 ) {  // num prob or wrong sign?
 					if (limit < -0.5 ) {                             // if we have no upper limit
 						z2 = z1 * (EXT-1);                 // the extrapolate the maximum amount
 					} else {
