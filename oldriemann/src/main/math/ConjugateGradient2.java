@@ -109,90 +109,100 @@ public class ConjugateGradient2 {
 		//fX = [];
 		double[] f0df0_new = f.evaluate(X); 
 		// get function value and gradient
-		double f0_new = f0df0_new[0];
-		double[] df0_new = new double[f0df0_new.length-1];
-		System.arraycopy(f0df0_new, 1, df0_new, 0, df0_new.length);
-		if(fX != null) { fX.add(f0_new);}
+		double f0 = f0df0_new[0];
+		double[] df0 = new double[f0df0_new.length-1];
+		System.arraycopy(f0df0_new, 1, df0, 0, df0.length);
+		if(fX != null) { fX.add(f0);}
 		if(length<0){i++;}                                            // count epochs?!
-		double[] s = new double[df0_new.length];
-		System.arraycopy(df0_new, 0, s, 0, df0_new.length);
+		double[] s = new double[df0.length];
+		System.arraycopy(df0, 0, s, 0, df0.length);
 		// search direction is steepest
 		for (int j = 0; j < s.length; j++) {
 			s[i] = -s[i];
 		}
-		double d0_new = -arrayProduct(s, s);
+		double d0 = -arrayProduct(s, s);
 		// this is the slope
-		double x3_new = red/(1-d0_new);                                  // initial step is red/(|s|+1)
+		double x3 = red/(1-d0);                                  // initial step is red/(|s|+1)
+		double d3 = 0;
+		double f3 = 0;
+	    double x2 = 0; double f2 = f3; double d2 = d3;      // point 2
+	    double x4 = 0; double f4 = f3; double d4 = d3;     // point 4
 		while( i < Math.abs(length)){      // while not finished
 			if(length>0){ i++ ;   }        // count iterations?!
 			double[] X0 = new double[X.length];
 			System.arraycopy(X, 0, X0, 0, X.length);
 
-			double F0_new = f0_new; 
-			double[] dF0_new = new double[df0_new.length];
-			System.arraycopy(df0_new, 0, dF0_new, 0, df0_new.length);
+			double F0 = f0; 
+			double[] dF0 = new double[df0.length];
+			System.arraycopy(df0, 0, dF0, 0, df0.length);
 			// make a copy of current values (line 79)
 			int M;
 			if (length>0){ M = MAX;} else{ M = Math.min(MAX, -length-i);}
 			boolean success = false; 
 			while (true){ //keep extrapolating as long as necessary 82
-			    //x2 = 0; f2 = f0; d2 = d0; f3 = f0; df3 = df0; TODO 83
+			    x2 = 0;  f2 = f0;  d2 = d0; f3 = f0; 
+			    double[] df3 = new double[df0.length]; // 83
+				System.arraycopy(f0, 0, df3, 0, df3.length);
 				success = false; 
 				double A;
 				double B;
 				while (!success && (M > 0)) {
-					M = M - 1; if(length<0){i++;}   // count epochs?!
+					M = M - 1; if(length<0){i++;}   // 87 count epochs?!
+					//TODO 88-93
 				}//end while !success && (M > 0)
-			}//end  while true // end extrapolation
+				boolean removeMe = true;
+				if(removeMe){break;}
+			}//end  while true //112 end extrapolation
 			
-			/*
+			while ((Math.abs(d3) > -SIG*d0 || f3 > f0+x3*RHO*d0) && M > 0){  // 114 keep interpolating
+				if (d3 > 0 || f3 > f0+x3*RHO*d0) {        //115 choose subinterval
+					/**/
+					x4 = x3; f4 = f3; d4 = d3;     // move point 3 to point 4
+				} else {
+					x2 = x3; f2 = f3; d2 = d3;      // move point 3 to point 2
 
-  while (abs(d3) > -SIG*d0 || f3 > f0+x3*RHO*d0) && M > 0  % keep interpolating
-    if d3 > 0 || f3 > f0+x3*RHO*d0                         % choose subinterval
-      x4 = x3; f4 = f3; d4 = d3;                      % move point 3 to point 4
-    else
-      x2 = x3; f2 = f3; d2 = d3;                      % move point 3 to point 2
-    end
-    if f4 > f0           
-      x3 = x2-(0.5*d2*(x4-x2)^2)/(f4-f2-d2*(x4-x2));  % quadratic interpolation
-    else
-      A = 6*(f2-f4)/(x4-x2)+3*(d4+d2);                    % cubic interpolation
-      B = 3*(f4-f2)-(2*d2+d4)*(x4-x2);
-      x3 = x2+(sqrt(B*B-A*d2*(x4-x2)^2)-B)/A;        % num. error possible, ok!
-    end
-    if isnan(x3) || isinf(x3)
-      x3 = (x2+x4)/2;               % if we had a numerical problem then bisect
-    end
-    x3 = max(min(x3, x4-INT*(x4-x2)),x2+INT*(x4-x2));  % don't accept too close
-    [f3 df3] = feval(f, X+x3*s, varargin{:});
-    if f3 < F0, X0 = X+x3*s; F0 = f3; dF0 = df3; end         % keep best values
-    M = M - 1; i = i + (length<0);                             % count epochs?!
-    d3 = df3'*s;                                                    % new slope
-  end                                                       % end interpolation
-
-  if abs(d3) < -SIG*d0 && f3 < f0+x3*RHO*d0          % if line search succeeded
-    X = X+x3*s; f0 = f3; fX = [fX' f0]';                     % update variables
-    fprintf('%s %6i;  Value %4.6e\r', S, i, f0);
-    s = (df3'*df3-df0'*df3)/(df0'*df0)*s - df3;   % Polack-Ribiere CG direction
-    df0 = df3;                                               % swap derivatives
-    d3 = d0; d0 = df0'*s;
-    if d0 > 0                                      % new slope must be negative
-      s = -df0; d0 = -s'*s;                  % otherwise use steepest direction
-    end
-    x3 = x3 * min(RATIO, d3/(d0-realmin));          % slope ratio but max RATIO
-    ls_failed = 0;                              % this line search did not fail
-  else
-    X = X0; f0 = F0; df0 = dF0;                     % restore best point so far
-    if ls_failed || i > abs(length)         % line search failed twice in a row
-      break;                             % or we ran out of time, so we give up
-    end
-    s = -df0; d0 = -s'*s;                                        % try steepest
-    x3 = 1/(1-d0);                     
-    ls_failed = 1;                                    % this line search failed
-  end
-
-			
+				} //119
+					   
+					   /*
+				    if f4 > f0           
+				      x3 = x2-(0.5*d2*(x4-x2)^2)/(f4-f2-d2*(x4-x2));  % quadratic interpolation
+				    else
+				      A = 6*(f2-f4)/(x4-x2)+3*(d4+d2);                    % cubic interpolation
+				      B = 3*(f4-f2)-(2*d2+d4)*(x4-x2);
+				      x3 = x2+(sqrt(B*B-A*d2*(x4-x2)^2)-B)/A;        % num. error possible, ok!
+				    end
+				    if isnan(x3) || isinf(x3)
+				      x3 = (x2+x4)/2;               % if we had a numerical problem then bisect
+				    end
+				    x3 = max(min(x3, x4-INT*(x4-x2)),x2+INT*(x4-x2));  % don't accept too close
+				    [f3 df3] = feval(f, X+x3*s, varargin{:});
+				    if f3 < F0, X0 = X+x3*s; F0 = f3; dF0 = df3; end         % keep best values
+				    M = M - 1; i = i + (length<0);                             % count epochs?!
+				    d3 = df3'*s;                                                    % new slope
+*/ 
+			} //end  //135 end interpolation
+			if (Math.abs(d3) < -SIG*d0 && f3 < f0+x3*RHO*d0) {          // if line search succeeded
+			  /*
+			    X = X+x3*s; f0 = f3; fX = [fX' f0]';                     % update variables
+			    fprintf('%s %6i;  Value %4.6e\r', S, i, f0);
+			    s = (df3'*df3-df0'*df3)/(df0'*df0)*s - df3;   % Polack-Ribiere CG direction
+			    df0 = df3;                                               % swap derivatives
+			    d3 = d0; d0 = df0'*s;
+			    if d0 > 0                                      % new slope must be negative
+			      s = -df0; d0 = -s'*s;                  % otherwise use steepest direction
+			    end
+			    x3 = x3 * min(RATIO, d3/(d0-realmin));          % slope ratio but max RATIO
+			    ls_failed = 0;                              % this line search did not fail
+			  else
+			    X = X0; f0 = F0; df0 = dF0;                     % restore best point so far
+			    if ls_failed || i > abs(length)         % line search failed twice in a row
+			      break;                             % or we ran out of time, so we give up
+			    end
+			    s = -df0; d0 = -s'*s;                                        % try steepest
+			    x3 = 1/(1-d0);                     
+			    ls_failed = 1;                                    % 155 this line search failed
 		*/
+			} // end if
 		}//end while i  < Math.abs(length)
 		//fprintf('\n');
 		return i;
