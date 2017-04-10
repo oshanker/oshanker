@@ -10,12 +10,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @author oshanker
  *
  */
 public class Rosser {
+	static boolean hiary = false;
 	static HashMap<String, Integer> rosser = new HashMap<>();
 	static class ZeroInfo{
 		String zeroInput;
@@ -54,7 +57,16 @@ public class Rosser {
 			if(input == null || input.trim().length()==0){
 				break;
 			}
-			zero = Double.parseDouble(input.trim());
+			input = input.trim();
+			if(hiary){
+				String[] parsed = input.split("\\s+");
+				if(parsed.length<2){
+					break;
+				}
+				zero = Integer.parseInt(parsed[0]) + Double.parseDouble(parsed[1]);
+			} else {
+			    zero = Double.parseDouble(input);
+			}
 			if(zero >= upperLimit){
 				break;
 			}
@@ -68,9 +80,12 @@ public class Rosser {
 	
 	public static void readItems( int N, PrintStream out)
 			throws FileNotFoundException, IOException {
+		String zerosFile =hiary?"/Users/oshanker/Google Drive/Documents/Riemann/riemann/1e12.zeros.1001_10001002.txt":"data/zerosE12.csv";
 		//assuming that we start at a good regular odd Gram Point
-		println(out, "n-3945951431270L,good");
-		BufferedReader zeroIn = new BufferedReader(new FileReader("data/zerosE12.csv"));
+//		BufferedReader zeroIn = new BufferedReader(
+//				new FileReader("/Users/oshanker/Google Drive/Documents/Riemann/riemann/1e12.zeros.1001_10001002.txt"));
+		BufferedReader zeroIn = new BufferedReader(
+				new FileReader(zerosFile));
 		int count = 0;
 		double baseLimit = 244.02115917156451839965694310614387;
 		double gramIncr = 0.24359904690398668;
@@ -79,9 +94,17 @@ public class Rosser {
 		boolean good = false;
 		boolean inGramBlock = false;
 		String interval = null;
-		int signumGram = -1;
+		int signumGram = hiary?1:-1;
+		if(hiary){
+			//baseLimit += gramIncr; 
+			good = true;
+			println(out, "n-3945951431270L,good");
+		} else {
+			println(out, "n-3945951431270L,good");
+		}
 		while (count < N  ) {
-			int n = count+1;
+			int n = count + (hiary?2:1);
+			double upperLimit = baseLimit + (n-1)* gramIncr;
 			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
 				print(out, n + ",1" );
 				good = true;
@@ -109,7 +132,6 @@ public class Rosser {
 				}
 				inGramBlock = !inGramBlock;
 			}
-			double upperLimit = baseLimit + (n-1)* gramIncr;
 			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput);
 			if (zeroInput==null) {
 				break;
@@ -129,6 +151,7 @@ public class Rosser {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws Exception {
+		PrintStream out = null;
 //		File file = new File("data/rosserE12.csv");
 //		if (!file.exists()) {
 //			try {
@@ -137,15 +160,32 @@ public class Rosser {
 //				e.printStackTrace();
 //			}
 //		}
-//		PrintStream out = null;
 //		try {
 //			out = new PrintStream(file);
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //		}
-		readItems(1002, null);
-		System.out.println(rosser);
-//		out.close();
+		
+		readItems(1000002, out);
+		TreeSet<String>[] stats = new TreeSet[10];
+		for (int i = 0; i < stats.length; i++) {
+			stats[i] = new TreeSet<String>();
+		}
+		
+		for (String key : rosser.keySet()) {
+			//String[] parsed = key.split("=");
+			int idx = key.length()-2;
+			if(idx < stats.length){
+				stats[idx].add(key + " : " + rosser.get(key));
+			} else {
+				System.out.println("* " + key.length());
+			}
+		}
+		for (int i = 0; i < stats.length; i++) {
+			System.out.println(stats[i]);
+		}
+//		System.out.println(rosser);
+		if(out != null){out.close();}
 	}
 
 }
