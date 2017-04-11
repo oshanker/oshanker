@@ -105,7 +105,7 @@ public class Rosser {
 		int S = 0;//starting at regular Gram Point
 		while (count < N  ) {
 			int n = count + (hiary?2:1);
-			double upperLimit = baseLimit + (n-1)* gramIncr;
+			double upperLimit = baseLimit + (n-1)* (gramIncr - 1.0E-9);
 			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
 				print(out, n + ",1, " + S);
 				good = true;
