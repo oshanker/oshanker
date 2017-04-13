@@ -40,7 +40,8 @@ fprintf('Initializing Neural Network Parameters ...\n')
 %wt = 1./(1.0+y);
 
 
-if exist('options', 'var') && ~isempty(options) && isfield(options, 'classEvalRule')
+if exist('options', 'var') && ~isempty(options) && isfield(options, 'classEvalRule') ...
+        && (options.classEvalRule == 1)
     num_labels = max(y)          %  
 	initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
 	initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
