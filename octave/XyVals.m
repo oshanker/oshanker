@@ -36,7 +36,8 @@ function [Xval, yval, izmatch] = XyVals(grampts, zerovals, sample,
 		endif
 		%%}
 		Xval(idxX, 1:input_layer_size) = Xin; 
-        if exist('options', 'var') && ~isempty(options) && isfield(options, 'classEvalRule')
+        if exist('options', 'var') && ~isempty(options) && isfield(options, 'classEvalRule') ...
+        && (options.classEvalRule == 1)
 			if(value < 0.25/options.divnorm)
 			   yval(idxX,1) = 1;
 			elseif(value < 0.35/options.divnorm)

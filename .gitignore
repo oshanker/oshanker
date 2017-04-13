@@ -8,6 +8,7 @@ target
 oldriemann/bin
 oldriemann/out/
 misc/gramwriteup/RiemannZeta.pdf
+octave/octave-workspace
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
