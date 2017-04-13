@@ -30,11 +30,14 @@ function [Xval, yval, izmatch] = XyVals(grampts, zerovals, sample,
 		   continue
 		endif
 		value = min(sample(rangez));
-		%%{
-		if (value > cutoff)
-		   continue
-		endif
-		%%}
+        if exist('options', 'var') && ~isempty(options)  ...
+           && isfield(options, 'ignoreCutoff')  && (options.ignoreCutoff == 1)
+           
+        else
+            if (value > cutoff)
+               continue
+            endif
+        endif
 		Xval(idxX, 1:input_layer_size) = Xin; 
         if exist('options', 'var') && ~isempty(options) && isfield(options, 'classEvalRule') ...
         && (options.classEvalRule == 1)

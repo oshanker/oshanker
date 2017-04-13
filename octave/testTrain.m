@@ -6,7 +6,7 @@ clear ; close all;
 options = struct('mindiff', 1, 'plotx', 1, 'divnorm', 3, ...
      'savex', '',  'offset', 267653395647, ...
       'train', 9500, 'val', 1495, 'readRows', 11000, ...
-     'maxIter', 400, 'classEvalRule', 0); 
+     'maxIter', 400, 'classEvalRule', 0, 'ignoreCutoff', 1); 
 
     fid = fopen('data/gram12.txt');
     [grampts] = fscanf(fid, '%f',[22, options.readRows])';
@@ -131,18 +131,20 @@ fprintf('final rms %g final cost %g\n', rms, finalCost);
 [rms, predval] = predict(Theta1, Theta2, Xval, yval, excite);
 fprintf('val rms %g count %d\n', rms, size(yval,1));
 %a= [yval(1:10), predval(1:10)]
+disp('plot  (+ actual, * validate');
 figure;
 hold on;
 yvalactual = options.divnorm*(yval);
 predvalactual = options.divnorm*(predval);
-plot(yvalactual, predvalactual,'r*')
-disp('Press return to continue');
-pause;
-
 yactual = options.divnorm*(y);
 predactual = options.divnorm*(pred);
+plot(yactual, predactual,'k+', yvalactual, predvalactual,'r*')
 
-plot( yactual, predactual,'k+')
+disp('Press return to see small values (+ actual, * validate');
+pause;
+
+
+%plot( yactual, predactual,'k+')
 validx = find(yvalactual<0.2);
 yidx = find(yactual<0.2);
 %%{
