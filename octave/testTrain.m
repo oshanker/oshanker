@@ -4,7 +4,8 @@ warning('off', 'Octave:possible-matlab-short-circuit-operator');
 clear ; close all;
 
 options = struct('mindiff', 1, 'plotx', 1, 'divnorm', 3, ...
-     'savex', '',  'offset', 267653395647, ...
+     'savex', 'data/weights-riemannRegressiondiff.mat', 'load', 'data/weights-riemannRegressiondiff.mat',  ...
+     'offset', 267653395647, ...
       'train', 9500, 'val', 1495, 'readRows', 11000, ...
      'maxIter', 400, 'classEvalRule', 0, 'ignoreCutoff', 1); 
 
@@ -34,6 +35,8 @@ options = struct('mindiff', 1, 'plotx', 1, 'divnorm', 3, ...
     [Xval, yval, izmatch] = XyVals(grampts, zerovals, sample, 1, options.val, options, izmatch);
     [X, y] = XyVals(grampts, zerovals, sample, options.val+1, ...
                  options.train+options.val, options, izmatch);
+    clear grampts zerovals fid;
+
     
 fprintf('Initializing Neural Network Parameters ...\n')
  input_layer_size = size(X, 2);
@@ -87,16 +90,26 @@ if exist('options', 'var') && ~isempty(options) && isfield(options, 'classEvalRu
 	disp(confusion)  
    return;
 endif
-initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
-initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
-% Unroll parameters
-initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
-wt = 1 + 3*(y<0.15) + 3*(y<0.1) + 3*(y<0.05) + 5*(y<0.007);
-excite = @(p) sigmoid(p);
-costFunction = @(p) nnCostFunction(p, ...
-                                   input_layer_size, ...
-                                   hidden_layer_size, ...
-                                    X, y, lambda, wt);
+    if isfield(options, 'load')
+		load(options.load);
+        initial_Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
+                         hidden_layer_size, (input_layer_size + 1));
+
+        initial_Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
+                         num_labels, (hidden_layer_size + 1));
+	else
+        initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
+        initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
+        iterations = 0;
+    endif
+    % Unroll parameters
+    initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
+    wt = 1 + 3*(y<0.15) + 3*(y<0.1) + 3*(y<0.05) + 5*(y<0.007);
+    excite = @(p) sigmoid(p);
+    costFunction = @(p) nnCostFunction(p, ...
+                                       input_layer_size, ...
+                                       hidden_layer_size, ...
+                                        X, y, lambda, wt);
 %{
 wt = [];
 excite = @(p) tanh(p);
@@ -114,7 +127,7 @@ train_options = optimset('MaxIter', options.maxIter, 'GradObj', 'on');
 
 % Minimize using fmincg
 [nn_params, fx, it] = fmincg(costFunction, initial_nn_params, train_options);
-
+iterations = iterations + it;
 
 % Obtain Theta1 and Theta2 back from nn_params
 Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
@@ -130,7 +143,9 @@ finalCost = costFunction(nn_params);
 fprintf('final rms %g final cost %g\n', rms, finalCost);
 [rms, predval] = predict(Theta1, Theta2, Xval, yval, excite);
 fprintf('val rms %g count %d\n', rms, size(yval,1));
-%a= [yval(1:10), predval(1:10)]
+if isfield(options, 'save')
+    save ( options.save, 'nn_params', 'iterations');
+endif
 disp('plot  (+ actual, * validate');
 figure;
 hold on;
