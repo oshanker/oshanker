@@ -1,6 +1,7 @@
 function [Xval, yval, izmatch] = XyVals(grampts, zerovals, sample,  
   beginIdx, endIdx, options, izmatch)
     cutoff = 1.0/options.divnorm;
+    % determines number of neighbours 
     pts = 2;
     if(beginIdx <= pts)
        beginIdx = pts+1;
@@ -14,6 +15,7 @@ function [Xval, yval, izmatch] = XyVals(grampts, zerovals, sample,
     input_layer_size = 3*(3+2*pts);
     idxX = 1;
     idxToGram = beginIdx; 
+    % each iteration of loop determines several rows
     while idxToGram <= endIdx;
         Xin = [grampts((idxToGram-pts):(idxToGram+2+pts), 2) ...
                ; grampts((idxToGram-pts):(idxToGram+2+pts), 4) ... 

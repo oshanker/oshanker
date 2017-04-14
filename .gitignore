@@ -9,6 +9,7 @@ oldriemann/bin
 oldriemann/out/
 misc/gramwriteup/RiemannZeta.pdf
 octave/octave-workspace
+octave/out
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
