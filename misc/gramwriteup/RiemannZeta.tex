@@ -225,7 +225,7 @@ Even&-68.63 &   0.1139 &  0.8526  & 2.00 &   2.541 & 165.10 \\
 In this section we present the statistics of the zeta value distributions for different types of Gram Points (all Gram Points, odd Gram Points and even Gram Points). We present the relationships between the statistics that would be implied by Conjectures \ref{antisymmetry} and \ref{symmetry}, and we compare the predictions of the two conjectures with the actual results from the numerical evaluations. 
 
 Figure~\ref{allhist} shows the histogram of zeta values for all Gram Points. It  is symmetric around $0$. However, Figure~\ref{qqr}, the QQ plot, shows that the distribution is not normal. The distribution has a sharp peak and a long tail at extreme values of the zeta function. For even Gram Points $80\%$ of the zeta values are positive, while for odd Gram Points $80\%$ of the zeta values are negative. Table~\ref{tab:quantiles} presents the quantiles and mean for zeta values at Gram Points of different types.  One can see good evidence that the odd and even distributions are mirror images of each other within expected statistical significance. In sections 
-\ref{sec4a} and \ref{sec4b} we will present further statistical properties of zeta values at pairs and triples of consecutive Gram Points. These will help to validate Conjectures  \ref{antisymmetry} and  \ref{symmetry}. In Section~\ref{sec4c} we present evidence for  Conjecture  \ref{isymmetry} from Gram block counts.
+\ref{sec4a} and \ref{sec4b} we will present further statistical properties of zeta values at pairs and triples of consecutive Gram Points. These will help to validate Conjectures  \ref{antisymmetry} and  \ref{symmetry}. In Section~\ref{sec4c} we present evidence for  Conjecture  \ref{symmetry} from Gram block counts.
 
 \subsection{\label{sec4a}Conjecture 1}
 
@@ -296,7 +296,39 @@ prediction                            &  ---    & +--    & -+-       & ++-  & --
 \caption{Test of prediction of Conjecture \ref{symmetry}. Row $2$  matches row $1$ exactly.} \label{tab:tripletest}
 \end{table}
 
-Conjecture \ref{symmetry} predicts that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). Table~\ref{tab:tripletest} tests this prediction. The agreement is excellent.
+\begin{table}
+\centering \(\begin{array}{c|cccccccc}
+\hline
+ Gram~type&   ---        & --+       & -+-          & -++          &   +--           & +-+   & ++-   & +++ \\
+\hline
+All               &  66332   & 80113 &  272674   & 80495.  & 80113   & 273056 & 80495 & 66722\\
+\hline
+                   & maps~to  & 80113 & maps~to & 80495  & 80113 & maps~to & 80495 & maps~to \\ 
+prediction   &  self         & +--       &  self       & ++-        & --+       & self         & -++      & self  \\
+\hline
+\hline
+odd               & 52710    & 20398 & 	264767 & 60030 & 20627 & 7974      &  59801 &  13693\\
+\hline
+                   & maps~to  & 20627 & maps~to & 59801  & 20398 & maps~to & 60030 & maps~to \\ 
+prediction   &  self         & +--       &  self        & ++-       & --+       & self        & -++      & self  \\
+\hline
+\hline
+even               & 13622 & 59715  & 7907      & 20465    & 59486 & 265082 & 20694 &  53029\\
+\hline
+                   & maps~to  & 59486 & maps~to & 20694  & 59715 & maps~to & 20465 & maps~to \\ 
+prediction   &  self         & +--       &  self        & ++-       & --+       & self        & -++      & self  \\
+\hline
+even + odd               &  66332   & 80113 &  272674   & 80495.  & 80113   & 273056 & 80495 & 66722\\
+\hline
+\end{array}\)
+\caption{The agreement with the Conjecture~\ref{symmetry} prediction in Table~\ref{tab:tripletest} is a result of complex compensations between even and odd Gram points.} \label{tab:tripletestcomplexity}
+\end{table}
+
+
+Conjecture~\ref{symmetry} predicts that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). Table~\ref{tab:tripletest} tests this prediction. The agreement is excellent.
+
+The agreement with the Conjecture~\ref{symmetry} prediction in Table~\ref{tab:tripletest} is a result of complex compensations between even and odd Gram points.
+Table~\ref{tab:tripletestcomplexity} shows that for the even and odd Gram points separately the agreement with the prediction of Conjecture~\ref{symmetry} is at the $1\%$ level. But when they are added together, the agreement with the prediction is perfect! Thus, the mechanism underlying the symmetry seems to be involve complex interactions.
 
 \subsection{\label{sec4c}Conjecture 2 and Gram Block}
 In this section we present the prediction of  Conjecture \ref{symmetry} on the distribution of different types of Gram blocks. We will follow the notation of  \cite{gourdon}.
@@ -311,7 +343,9 @@ where the notation $1 . . . 1$ refers to any string of consecutive 1s, including
 \begin{table}
 \centering \(\begin{array}{cc}
 \hline
-Length~of 	& Ratio  \\Gram~block	& Type~II/Type~I \\\hline
+Length~of 	& Ratio  \\
+Gram~block	& Type~II/Type~I \\
+\hline
 2& 0.999966866\\
 3& 0.999941442\\
 4& 0.999913803\\
