@@ -6,8 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.Arrays;
+
+import riemann.Rosser.ZeroInfo;
 
 public class Conjectures {
 	static String[][] descriptions = {
@@ -52,11 +56,22 @@ public class Conjectures {
 	public static int[] readItems(String filename,  int N)
 			throws FileNotFoundException, IOException {
 		int[] signumPoints  = new int[N];
-		BufferedReader zeroIn = new BufferedReader(new FileReader(filename));
+		BufferedReader zetaIn = new BufferedReader(new FileReader(filename));
+		BufferedReader zeroIn1 = new BufferedReader(new FileReader("data/zerosE12.csv"));
 		int count = 0;
+		int signumGram = Rosser.hiary?1:-1;
+		double baseLimit = 244.02115917156451839965694310614387;
+		//the small drifts do add up, at small values of zeta at the gram points.
+		double gramIncr = 0.24359904690398668 - 1.0E-9;
+		ZeroInfo zeroInput = new ZeroInfo(null,0);
+		PrintStream out = null;
+		int mismatch =0;
+		OUT:
 		while (count < N) {
 			String input = null;
-			while ((input = zeroIn.readLine()) != null) {
+			while ((input = zetaIn.readLine()) != null) {
+				int n1 = count + (Rosser.hiary?2:1);
+				double upperLimit = baseLimit + (n1-1)* (gramIncr);
 				if(input == null || input.trim().length()==0){
 					break;
 				}
@@ -66,10 +81,22 @@ public class Conjectures {
 				String[] parsed = input.trim().split(",");
 				double zeta = Double.parseDouble(parsed[1].trim());
 				signumPoints[count] = (int) ((1+Math.signum(zeta))/2);
+				zeroInput = Rosser.readZeros(upperLimit , out, zeroIn1, zeroInput.zeroInput);
+				if((1+signumGram)/2 != signumPoints[count]){
+					System.out.println("signumPoints[" + count + ", " + n1 +" ] " + signumPoints[count] + " signumGram " +signumGram);
+					System.out.println("** mismatch " + ++mismatch + " at " + count + ":" + n1 + ":" + zeroInput + " zeta "+ zeta);
+//					if(Math.abs(zeta) > 5E-4){
+//					   break OUT;
+//					}
+				}
+				if(zeroInput.countZeros%2 == 1){
+					signumGram = signumGram==-1?1:-1;
+				}
 				count++;
 			}
 		}
-		zeroIn.close();
+		zetaIn.close();
+		zeroIn1.close();
 		if(count != N){
 			throw new IllegalStateException("count " + count + ", N " + N);
 		}
@@ -103,9 +130,8 @@ public class Conjectures {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(swapBits(2, 2));
-		System.out.println(swapBits(5, 3));
-		File file = new File("data/statsE12.csv");
+		Files.createDirectories(FileSystems.getDefault().getPath("out"));
+		File file = new File("out/statsE12.csv");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -123,24 +149,6 @@ public class Conjectures {
 		//PrintStream out = System.out;
 		out.println("************** All *************");
 		statistics(out, 0, 1000002);
-		out.println("************** first half *************");
-		statistics(out, 0, 500002);
-		out.println("************** second half *************");
-		statistics(out, 500000, 500002);
-		out.close();
-		//[ -,     +   ] 
-		//[49970, 50030]
-		//[39945, 10055]
-		//[10025, 39975]
-		//[ --,     -+,    +-,    ++ ] 
-		//[14627, 35343, 35343, 14686]
-		//[ 7344,  2681, 32601,  7373]
-		//[ 7283, 32662,  2742,  7313]
-		//[---,   --+,  -+-,  -++,   +--,   +-+,  ++-,   +++] 
-		//[6701, 7926, 27342, 8001,  7926, 27417, 8001, 6684]
-		//[1374, 5970,   730, 1951,  5909, 26692, 2012, 5361] even sampleOffset = 1
-		//[1374, 5909,   730, 2012,  5970, 26692, 1951, 5360] reversed even
-		//[5327, 1956, 26612, 6050,  2017,   725, 5989, 1323] sampleOffset = 0
 		
 	}
 

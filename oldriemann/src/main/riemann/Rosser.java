@@ -30,6 +30,10 @@ public class Rosser {
 			this.zeroInput = zeroInput;
 			this.countZeros = countZeros;
 		}
+		@Override
+		public String toString() {
+			return "ZeroInfo [zeroInput=" + zeroInput + ", countZeros=" + countZeros + "]";
+		}
 		
 	}
 	
@@ -46,7 +50,7 @@ public class Rosser {
 	}
 	
 	public static ZeroInfo readZeros(  double upperLimit, PrintStream out, 
-			BufferedReader zeroIn, String input, int S)
+			BufferedReader zeroIn, String input)
 			throws FileNotFoundException, IOException {
 		ArrayList<Double> countZeros = new ArrayList<>();
 		if(input == null){
@@ -136,7 +140,7 @@ public class Rosser {
 				}
 				inGramBlock = !inGramBlock;
 			}
-			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput, S);
+			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput);
 			if (count==N-1) {
 				System.out.println("final n " + n + " type " + good + " signumGram " + signumGram);
 			}
