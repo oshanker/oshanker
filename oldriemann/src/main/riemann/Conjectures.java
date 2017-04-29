@@ -55,9 +55,10 @@ public class Conjectures {
 	
 	public static int[] readItems(String filename,  int N)
 			throws FileNotFoundException, IOException {
+		Rosser.hiary = true;
 		int[] signumPoints  = new int[N];
-		BufferedReader zetaIn = new BufferedReader(new FileReader(filename));
-		BufferedReader zeroIn1 = new BufferedReader(new FileReader("data/zerosE12.csv"));
+		String zerosFile =Rosser.hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
+		BufferedReader zeroIn1 = new BufferedReader(new FileReader(zerosFile));
 		int count = 0;
 		int signumGram = Rosser.hiary?1:0;
 		double baseLimit = 244.02115917156451839965694310614387;
@@ -65,8 +66,6 @@ public class Conjectures {
 		double gramIncr = 0.24359904690398668 - 1.0E-9;
 		ZeroInfo zeroInput = new ZeroInfo(null,0);
 		PrintStream out = null;
-		int mismatch =0;
-		OUT:
 		while (count < N) {
 			int n1 = count + (Rosser.hiary?2:1);
 			double upperLimit = baseLimit + (n1-1)* (gramIncr);
@@ -77,7 +76,6 @@ public class Conjectures {
 			}
 			count++;
 		}
-		zetaIn.close();
 		zeroIn1.close();
 		if(count != N){
 			throw new IllegalStateException("count " + count + ", N " + N);
@@ -136,7 +134,7 @@ public class Conjectures {
 
 	public static void statistics(PrintStream out, int begin, int N)  {
 		int sampleLength = 1;
-		int sampleOffset = 0; 
+		int sampleOffset1 = 0; 
 		int sampleIncrement = 2;
 		double[][] prob = new double[2][2];
 		int maxSampleLength = 3;
@@ -145,20 +143,25 @@ public class Conjectures {
 		}
 		Conjectures[][] instances = new Conjectures[maxSampleLength][2]; 
 		for ( sampleLength = 1; sampleLength <= maxSampleLength; sampleLength++) {
+			//print order of configs at top
 			out.println(Arrays.toString(descriptions[sampleLength-1]));
-			for (sampleOffset = 0; sampleOffset < 2; sampleOffset++) {
+			for (sampleOffset1 = 0; sampleOffset1 < 2; sampleOffset1++) {
 				Conjectures instance = new Conjectures();
-				instances[sampleLength-1][sampleOffset] = instance;
+				instances[sampleLength-1][sampleOffset1] = instance;
 				
 				instance.calculateDistribution(signumPoints, 
-						sampleLength, sampleOffset, sampleIncrement, N, begin);
+						sampleLength, sampleOffset1, sampleIncrement, N, begin);
 				
 				int length = instance.signumCounts.length;
-				if(sampleOffset == 0){
+				int parityType = Rosser.hiary?(1-sampleOffset1):sampleOffset1;
+				if(sampleOffset1==1){
+				out.println(Arrays.toString(descriptions[sampleLength-1]));
+				}
+				if(parityType == 0){
 					//odd
 					String counts = Arrays.toString(instance.signumCounts);
 					counts = counts.replaceAll("[\\[\\]]", "");
-					out.println(  parity[sampleOffset] + " , " + counts
+					out.println(  parity[parityType] + " , " + counts
 							+ " \\\\, "  + instance.sampleSize);
 					String evencompare = " ,";
 					String c1description = "";
@@ -172,15 +175,14 @@ public class Conjectures {
 						}
 					}
 					if(sampleLength == 3){
-					out.println( evencompare +"\\\\ compare odd   C2 ");
+					out.println( evencompare +"\\\\ compare"+ parity[parityType] + " C2 ");
 					}
 					out.println(c1description + " swap parity:  C1 ");
 				} else {
 					Conjectures instance1 = new Conjectures();
-					out.println(Arrays.toString(descriptions[sampleLength-1]));
 					String counts = Arrays.toString(instance.signumCounts);
 					counts = counts.replaceAll("[\\[\\]]", "");
-					out.println( parity[sampleOffset] + " , " + counts
+					out.println( parity[parityType] + " , " + counts
 							+ " \\\\, "  + instance.sampleSize);
 					instance1.calculateDistribution(signumPoints, 
 							sampleLength, 0, 1, 1000002, 0);
@@ -202,7 +204,7 @@ public class Conjectures {
 						}
 					}
 					if(sampleLength == 3){
-					out.println( evencompare +"\\\\ compare even   C2 ");
+					out.println( evencompare +"\\\\ compare "+ parity[parityType] + "  C2 ");
 					}
 					out.println(" All ,   " + allcounts 
 							+ "\\\\," + instance1.sampleSize);
