@@ -19,7 +19,7 @@ public class Conjectures {
 			{"--   ", "-+   ", "+-   ", "++   "},
 			{ "---  ", "--+  ", "-+-   ", "-++  ", "+--  ", "+-+ ", "++-  ", "+++  "}
 	};
-	static String[] parity = {"odd", "even"};
+	static String[] parity = {"Odd", "Even"};
 	static int[] signumPoints;
 	int[] signumCounts;
 	private int sampleSize;
@@ -59,7 +59,7 @@ public class Conjectures {
 		BufferedReader zetaIn = new BufferedReader(new FileReader(filename));
 		BufferedReader zeroIn1 = new BufferedReader(new FileReader("data/zerosE12.csv"));
 		int count = 0;
-		int signumGram = Rosser.hiary?1:-1;
+		int signumGram = Rosser.hiary?1:0;
 		double baseLimit = 244.02115917156451839965694310614387;
 		//the small drifts do add up, at small values of zeta at the gram points.
 		double gramIncr = 0.24359904690398668 - 1.0E-9;
@@ -68,32 +68,14 @@ public class Conjectures {
 		int mismatch =0;
 		OUT:
 		while (count < N) {
-			String input = null;
-			while ((input = zetaIn.readLine()) != null) {
-				int n1 = count + (Rosser.hiary?2:1);
-				double upperLimit = baseLimit + (n1-1)* (gramIncr);
-				if(input == null || input.trim().length()==0){
-					break;
-				}
-				if(input.startsWith("#") || input.startsWith("n")){
-					continue;
-				}
-				String[] parsed = input.trim().split(",");
-				double zeta = Double.parseDouble(parsed[1].trim());
-				signumPoints[count] = (int) ((1+Math.signum(zeta))/2);
-				zeroInput = Rosser.readZeros(upperLimit , out, zeroIn1, zeroInput.zeroInput);
-				if((1+signumGram)/2 != signumPoints[count]){
-					System.out.println("signumPoints[" + count + ", " + n1 +" ] " + signumPoints[count] + " signumGram " +signumGram);
-					System.out.println("** mismatch " + ++mismatch + " at " + count + ":" + n1 + ":" + zeroInput + " zeta "+ zeta);
-//					if(Math.abs(zeta) > 5E-4){
-//					   break OUT;
-//					}
-				}
-				if(zeroInput.countZeros%2 == 1){
-					signumGram = signumGram==-1?1:-1;
-				}
-				count++;
+			int n1 = count + (Rosser.hiary?2:1);
+			double upperLimit = baseLimit + (n1-1)* (gramIncr);
+			zeroInput = Rosser.readZeros(upperLimit , out, zeroIn1, zeroInput.zeroInput);
+			signumPoints[count] = signumGram;
+			if(zeroInput.countZeros%2 == 1){
+				signumGram = signumGram==0?1:0;
 			}
+			count++;
 		}
 		zetaIn.close();
 		zeroIn1.close();
@@ -147,7 +129,7 @@ public class Conjectures {
 		}
 		signumPoints = readItems("data/zetaE12.csv", 1000002);
 		//PrintStream out = System.out;
-		out.println("************** All *************");
+		out.println("************** " + signumPoints.length + " *************");
 		statistics(out, 0, 1000002);
 		
 	}
@@ -171,26 +153,61 @@ public class Conjectures {
 				instance.calculateDistribution(signumPoints, 
 						sampleLength, sampleOffset, sampleIncrement, N, begin);
 				
-				out.println(Arrays.toString(instance.signumCounts) 
-						+ " " + parity[sampleOffset] + " " + instance.sampleSize);
 				int length = instance.signumCounts.length;
 				if(sampleOffset == 0){
+					//odd
+					String counts = Arrays.toString(instance.signumCounts);
+					counts = counts.replaceAll("[\\[\\]]", "");
+					out.println(  parity[sampleOffset] + " , " + counts
+							+ " \\\\, "  + instance.sampleSize);
+					String evencompare = " ,";
+					String c1description = "";
 					for (int i = 0; i < length; i++) {
-						out.print( descriptions[sampleLength-1][length-i-1] + ", " );
+						c1description += descriptions[sampleLength-1][length-i-1] + ", " ;
+						int idx = swapBits(i, sampleLength);
+						if(i == idx){
+							evencompare += "maps~to, ";
+						} else {
+							evencompare += instance.signumCounts[idx] +", ";
+						}
 					}
-					out.println( " swap parity:  C1 ");
+					if(sampleLength == 3){
+					out.println( evencompare +"\\\\ compare odd   C2 ");
+					}
+					out.println(c1description + " swap parity:  C1 ");
 				} else {
 					Conjectures instance1 = new Conjectures();
 					out.println(Arrays.toString(descriptions[sampleLength-1]));
+					String counts = Arrays.toString(instance.signumCounts);
+					counts = counts.replaceAll("[\\[\\]]", "");
+					out.println( parity[sampleOffset] + " , " + counts
+							+ " \\\\, "  + instance.sampleSize);
 					instance1.calculateDistribution(signumPoints, 
 							sampleLength, 0, 1, 1000002, 0);
-					out.println(Arrays.toString(instance1.signumCounts) 
-							+ " All " + instance1.sampleSize);
+					String allcounts = Arrays.toString(instance1.signumCounts);
+					allcounts = allcounts.replaceAll("[\\[\\]]", "");
+					String evencompare = " ,";
+					String compare = " ,";
+					String c2description = "";
 					for (int i = 0; i < length; i++) {
 						int idx = swapBits(i, sampleLength);
-						out.print( descriptions[sampleLength-1][idx] + ", " );
+						if(i == idx){
+							evencompare += "maps~to, ";
+							compare +=  "maps~to, ";
+							c2description += "   self, " ;
+						} else {
+							evencompare += instance.signumCounts[idx] +", ";
+							compare += instance1.signumCounts[idx] +", ";
+							c2description += descriptions[sampleLength-1][idx] + ", " ;
+						}
 					}
-					out.println( " All parity:  C2 ");
+					if(sampleLength == 3){
+					out.println( evencompare +"\\\\ compare even   C2 ");
+					}
+					out.println(" All ,   " + allcounts 
+							+ "\\\\," + instance1.sampleSize);
+					out.println( compare +"\\\\ compare All   C2 ");
+					out.println( c2description +" All parity:  C2 ");
 					
 				}
 			}
