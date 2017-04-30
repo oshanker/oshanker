@@ -46,7 +46,17 @@ the Gram points. We present quantitative evidence for the conjectures.
 \end{abstract}
 
 
-\symbolfootnote[0]{\bf{April 2017}}
+\symbolfootnote[0]{
+For updates, see 
+
+\url{https://sites.google.com/site/riemannzetazeros/grampoints} 
+
+and
+
+\url{https://docs.google.com/viewer?a=v&pid=sites&srcid=ZGVmYXVsdGRvbWFpbnxvc2hhbmtlcnxneDo0NWRlNjVmMjI4MjhlYjgy}.
+
+\bf{April 2017}
+}
 
 
 \clearpage
@@ -364,13 +374,13 @@ Type~of~violation &Ratio~of~counts\\
 \end{table}
 
 In this section we present the prediction of  Conjecture \ref{symmetry} on the distribution of different types of Gram blocks. We will follow the notation of  \cite{gourdon}.
-A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise. A Gram block is an interval [gn, gn+k) such that $g_n$  and $g_{n+k}$ are good Gram points 
+A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise. A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
 and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where k is called the length of the Gram block, and $a_i$ denote the number of roots of Z(t) in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
 
 A Gram block of length k which contains exactly k roots of Z[t) is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
 Thus, Regular Gram blocks must have a pattern of one of the following three forms:
 $21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
-where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Gourdon~\cite{gourdon} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture \ref{symmetry} above predicts that the number of Type I and Type II Gram blocks up to a given large height must be equal to each other (except for Type I Gram blocks of length one, which only have the pattern 1).  Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of counts of Gram Blocks of Type II to Type I, found up to $t = 10^{13}$. The prediction of Conjecture 2 is borne out to a remarkable degree, While there is very good evidence for the forward-backward symmetry from the ratio of Type II to Type I counts, there is another intriguing pattern: the Type II counts are ever so slightly smaller than the Type I counts. Thus, while we have a symmetry, it is broken very slightly.
+where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Gourdon~\cite{gourdon} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture \ref{symmetry} above predicts that the number of Type I and Type II Gram blocks up to a given large height must be equal to each other (except for Type I Gram blocks of length one, which only have the pattern 1).  Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of counts of Gram Blocks of Type II to Type I, found up to $t = 10^{13}$. The prediction of Conjecture 2 is borne out to a remarkable degree. While there is very good evidence for the forward-backward symmetry from the ratio of Type II to Type I counts, there is another intriguing pattern: the Type II counts are ever so slightly smaller than the Type I counts. Thus, while we have a symmetry, it is broken very slightly.
 
 Further validation comes from a consideration of the different types of violations of Rosser's rule~\cite{gourdon}, which also show the forward-backward symmetry. Rosser's rule states that Gram blocks of length $k$ contain at least $k$ zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram Blocks. A Gram block is either regular, or it has an excess of zeros, or it has fewer zeros than its length. The last type of Gram block violates Rosser's rule. 
 If a Gram block of length k is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Gourdon uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
