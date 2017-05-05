@@ -199,7 +199,23 @@ public class Rosser {
 			}
 		}
 		for (int i = 0; i < stats.length; i++) {
-			System.out.println(stats[i]);
+			char[] typeII = new char[i+2];
+			char[] typeI = new char[i+2];
+			for (int j = 0; j < typeII.length; j++) {
+				if(j==0){typeII[j]='0';}
+				else if(j==typeII.length-1){typeII[j]='2';}
+				else {typeII[j]='1';}
+				
+				if(j==0){typeI[j]='2';}
+				else if(j==typeI.length-1){typeI[j]='0';}
+				else {typeI[j]='1';}
+			}
+			
+			if(rosser.containsKey(new String(typeI)) && rosser.containsKey(new String(typeII))){
+			    System.out.println(stats[i] + " type II/I " + ((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI)));
+			} else {
+				System.out.println(stats[i] );
+			}
 		}
 //		System.out.println(rosser);
 		if(out != null){out.close();}
