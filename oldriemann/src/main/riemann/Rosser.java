@@ -24,6 +24,10 @@ public class Rosser {
 	static HashMap<String, Integer> rosser = new HashMap<>();
 	static int[][] intervalCounts = new int[2][6];
 	private static int maxS = 10;
+	static int pEvenGood = 0, pEvenBad = 0;
+	static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
+	private static int goodCount;
+	private static int badCount;
 	static class ZeroInfo{
 		String zeroInput;
 		int countZeros;
@@ -94,7 +98,7 @@ public class Rosser {
 	public static void readItems( int N, PrintStream out)
 			throws FileNotFoundException, IOException {
 		String zerosFile =hiary?"/Users/oshanker/Google Drive/Documents/Riemann/riemann/1e12.zeros.1001_10001002.txt":"data/zerosE12.csv";
-		//assuming that we start at a good regular odd Gram Point
+		//assuming that we start at a good regular (odd/even-hiary) Gram Point
 		BufferedReader zeroIn = new BufferedReader(
 				new FileReader(zerosFile));
 		int count = 0;
@@ -106,7 +110,8 @@ public class Rosser {
 		boolean inGramBlock = false;
 		String interval = null;
 		int signumGram = hiary?1:-1;
-		int goodCount = 0, badCount = 0;
+		goodCount = 0; badCount = 0;
+		boolean evenInterval = false;
 		println(out, "n-3945951431270L,good, S");
 		int S = 0;//starting at regular Gram Point
 		while (count < N  ) {
@@ -121,27 +126,45 @@ public class Rosser {
 				good = false;
 				badCount++;
 			}
-			if(inGramBlock){
-				interval += zeroInput.countZeros;
-			}
+			//still dealing with old interval ( n)
 			if(!(good ^ oldGood)){
 				//both good or both bad
 				println(out, "" );
+			    if(evenInterval){
+			    	throw new IllegalStateException();
+			    }
+				if(inGramBlock){
+					interval += zeroInput.countZeros;
+					badBad++;
+				} else {
+					goodGood++;
+				}
 			} else {
 				//transition
 				if(inGramBlock){
+					interval += zeroInput.countZeros;
 				    println(out,  ", exited gram Block: config " + interval);
 				    if(rosser.containsKey(interval)){
 				    	rosser.put(interval, rosser.get(interval)+1);
 				    } else {
 				    	rosser.put(interval, 1);
 				    }
+				    if(oldGood || !evenInterval){
+				    	throw new IllegalStateException();
+				    }
+				    
+				    badGood++;
 				} else {
 					interval = Integer.toString(zeroInput.countZeros);
 					println(out, ", entered gram Block" );
+					goodBad++;
+				    if(!oldGood || !evenInterval){
+				    	throw new IllegalStateException();
+				    }
 				}
 				inGramBlock = !inGramBlock;
 			}
+			//fetching zero count for current interval
 			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput);
 			if (count==N-1) {
 				System.out.println("final n " + n + " type " + good + " signumGram " + signumGram);
@@ -149,7 +172,7 @@ public class Rosser {
 			if (zeroInput==null) {
 				break;
 			}
-			//store odd in 0
+			//store odd in 0, this is for current interval
 			intervalCounts[(n+1)%2][zeroInput.countZeros]++;
 			S += zeroInput.countZeros - 1;
 			if(Math.abs(S) > maxS ){
@@ -157,6 +180,9 @@ public class Rosser {
 			}
 			if(zeroInput.countZeros%2 == 1){
 				signumGram = signumGram==-1?1:-1;
+				evenInterval = false;
+			} else {
+				evenInterval = true;
 			}
 			oldGood = good;
 			count++;
@@ -228,6 +254,11 @@ public class Rosser {
 			}
 			System.out.println(" intervalCounts " + j + " "+ Arrays.toString(intervalCounts[j]) + " sum " + sum);
 		}
+		double count = goodCount+badCount;
+		double pGood = ((double)goodCount)/count ;
+		double pBad = ((double)badCount)/count;
+		System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad);
+		System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
 //		System.out.println(rosser);
 		if(out != null){out.close();}
 	}
