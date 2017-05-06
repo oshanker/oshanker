@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -21,6 +22,7 @@ import java.util.TreeSet;
 public class Rosser {
 	static boolean hiary = false;
 	static HashMap<String, Integer> rosser = new HashMap<>();
+	static int[][] intervalCounts = new int[2][6];
 	private static int maxS = 10;
 	static class ZeroInfo{
 		String zeroInput;
@@ -147,6 +149,8 @@ public class Rosser {
 			if (zeroInput==null) {
 				break;
 			}
+			//store odd in 0
+			intervalCounts[(n+1)%2][zeroInput.countZeros]++;
 			S += zeroInput.countZeros - 1;
 			if(Math.abs(S) > maxS ){
 				System.out.println("S " + S + ", n " + n + ", zeroInput.countZeros " + zeroInput.countZeros );
@@ -216,6 +220,13 @@ public class Rosser {
 			} else {
 				System.out.println(stats[i] );
 			}
+		}
+		for (int j = 0; j < intervalCounts.length; j++) {
+			int sum = 0;
+			for (int i = 0; i < intervalCounts[j].length; i++) {
+				sum += i*intervalCounts[j][i];
+			}
+			System.out.println(" intervalCounts " + j + " "+ Arrays.toString(intervalCounts[j]) + " sum " + sum);
 		}
 //		System.out.println(rosser);
 		if(out != null){out.close();}
