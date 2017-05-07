@@ -12,6 +12,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -72,15 +73,14 @@ public class Rosser {
 				return null;
 			}
 			input = input.trim();
-			if(hiary){
-				String[] parsed = input.split("\\s+");
-				if(parsed.length<2){
-					break;
-				}
-				zero = Integer.parseInt(parsed[0]) + Double.parseDouble(parsed[1]);
-			} else {
-			    zero = Double.parseDouble(input);
-			}
+            String[] parsed = input.split("\\s+");
+            zero = Double.parseDouble(parsed[0]);
+            if(zero < 0){
+                break;
+            }
+			if(parsed.length>1){
+				zero += Double.parseDouble(parsed[1]);
+			} 
 			if(zero >= upperLimit){
 				break;
 			}
@@ -95,28 +95,60 @@ public class Rosser {
 		return new ZeroInfo(input,countZeros.size());
 	}
 	
+	public static Map<String,String> readConfig(String configFile) throws IOException{
+	    HashMap<String,String> configParams = new HashMap<>();
+        BufferedReader zeroIn = new BufferedReader(
+                new FileReader(configFile));
+        String input = zeroIn.readLine();
+        boolean inCommentSection = false;
+        while(input != null){
+            input = input.trim();
+            if(input.equals("#endComment")){
+                inCommentSection = false;
+            }
+            if(input.equals("#beginComment")){
+                inCommentSection = true;
+            }
+            if(input.startsWith("#") || inCommentSection || input.length() == 0){
+                input = zeroIn.readLine();
+                continue;
+            }
+            String[] parsed = input.split("=");
+            configParams.put(parsed[0].trim(), parsed[1].trim());
+            input = zeroIn.readLine();
+        }
+	    zeroIn.close();
+        return configParams;
+	}
+	
 	public static void readItems( int N, PrintStream out)
 			throws FileNotFoundException, IOException {
-		String zerosFile =hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
+		//String zerosFile =hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
+	    
+        Map<String,String> configParams = readConfig("data/RosserConfig.txt");
+	    String zerosFile = configParams.get("zerosFile");
+	    zerosFile = zerosFile.substring(1, zerosFile.length()-1);
+	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
+        double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
+        int signumGram = Integer.parseInt(configParams.get("signumGram"));
+        int noffset = Integer.parseInt(configParams.get("noffset"));
+        String header = configParams.get("header");
+        header = header.substring(1, header.length()-1);
 		//assuming that we start at a good regular (odd/even-hiary) Gram Point
-		BufferedReader zeroIn = new BufferedReader(
-				new FileReader(zerosFile));
+		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
 		int count = 0;
-		double baseLimit = 244.02115917156451839965694310614387;
-		double gramIncr = 0.24359904690398668;
 		ZeroInfo zeroInput = new ZeroInfo(null,0);
 		boolean oldGood = true;
 		boolean good = false;
 		boolean inGramBlock = false;
 		String interval = null;
-		int signumGram = hiary?1:-1;
 		goodCount = 0; badCount = 0;
 		boolean evenInterval = false;
-		println(out, "n-3945951431270L,good, S");
+		println(out, header);
 		int S = 0;//starting at regular Gram Point
 		while (count < N  ) {
-			int n = count + (hiary?2:1);
-			double upperLimit = baseLimit + (n-1)* (gramIncr - 1.0E-9);
+			int n = count + noffset;
+			double upperLimit = baseLimit + (n-1)* (gramIncr);
 			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
 				print(out, n + ",1, " + S);
 				good = true;
