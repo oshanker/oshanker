@@ -110,7 +110,7 @@ public class GSeriesTest {
 	@Test
 	public void testZeroLargeOffset() {
 		double[][] fAtBeta = null;
-		double[] begin = {244.158906912980683962, 243842.849093097187164747};
+		double[] begin = {192.309350419702134727, 1921602.793342093316678265};
 		int k0 = 1, k1=0;
 		int R = 2;
 		double lnsqrtArg1 = 0;
@@ -118,7 +118,7 @@ public class GSeriesTest {
 		double dsqrtArg1 = 0;
 		double tbase = 0;
 		double basesqrtArg1 = 0;
-		long offset = (long) 1.0E12;
+		long offset = (long) 1.0E15;
 		for (int i = 0; i < begin.length; i++) {
 			double tincr =  (begin[i]-begin[0]) ; 
 			BigDecimal tval = new BigDecimal(begin[i], Gram.mc).add(
