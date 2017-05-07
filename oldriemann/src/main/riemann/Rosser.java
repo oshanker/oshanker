@@ -97,7 +97,7 @@ public class Rosser {
 	
 	public static void readItems( int N, PrintStream out)
 			throws FileNotFoundException, IOException {
-		String zerosFile =hiary?"/Users/oshanker/Google Drive/Documents/Riemann/riemann/1e12.zeros.1001_10001002.txt":"data/zerosE12.csv";
+		String zerosFile =hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
 		//assuming that we start at a good regular (odd/even-hiary) Gram Point
 		BufferedReader zeroIn = new BufferedReader(
 				new FileReader(zerosFile));
@@ -167,13 +167,13 @@ public class Rosser {
 			//fetching zero count for current interval
 			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput);
 			if (count==N-1) {
-				System.out.println("final n " + n + " type " + good + " signumGram " + signumGram);
+				System.out.println("final n " + n + " good " + good + " signumGram " + signumGram);
 			}
 			if (zeroInput==null) {
 				break;
 			}
 			//store odd in 0, this is for current interval
-			intervalCounts[(n+1)%2][zeroInput.countZeros]++;
+			intervalCounts[0][zeroInput.countZeros]++;
 			S += zeroInput.countZeros - 1;
 			if(Math.abs(S) > maxS ){
 				System.out.println("S " + S + ", n " + n + ", zeroInput.countZeros " + zeroInput.countZeros );
@@ -213,6 +213,7 @@ public class Rosser {
 //			e.printStackTrace();
 //		}
 		
+        Rosser.hiary = true;
 		readItems(1000002, out);
 		TreeSet<String>[] stats = new TreeSet[10];
 		for (int i = 0; i < stats.length; i++) {
