@@ -263,7 +263,7 @@ Figure~\ref{allhist} shows the histogram of zeta values for all Gram points. It 
 \vspace{1mm}
 \end{figure*}
 
-In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}. 
+In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  All the data for Sections \ref{sec4a} and \ref{sec4b}  are from $10$ million Gram intervals starting at $t=10^{15}$.
 
 Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a positive zeta value, while the notation '$+-$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
 
@@ -274,8 +274,8 @@ One might think that the all Gram points distribution can be used to verify Conj
 \hline
  Gram~type&   --   & -+   & +-   & ++  \\
 \hline
-Odd & 73117& 324793& 28590& 73501 \\
-Even & 73309& 28398& 324600& 73693 \\
+Odd & 0.151651&0.627465&0.069119&0.151765 \\
+Even & 0.151565&0.069206&0.627551&0.151678 \\
 \hline
 \end{array}\)
 \caption{Counts of different configurations of zeta values for pairs of consecutive Gram points.} \label{tab:pairraw}
@@ -286,9 +286,9 @@ Even & 73309& 28398& 324600& 73693 \\
 \hline
  Gram~type&   --   & -+   & +-   & ++  \\
 \hline
-Odd & 73117& 324793& 28590& 73501 \\
+Odd & 0.151651&0.627465&0.069119&0.151765\\
 \hline
-Corresponding& 73693 & 324600 & 28398& 73309\\ 
+Corresponding& 0.151678 & 0.627551 & 0.069206& 0.151565\\ 
 Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 \hline
 \end{array}\)
@@ -302,31 +302,17 @@ In this section we will consider the statistics of zeta values for triples of co
 \begin{table}
 \centering \(\begin{array}{c|cccccccc}
 \hline
- Gram~type&   ---   & --+       & -+-      & -++   &   +--      & +-+   & ++-   & +++ \\
-\hline
- All &   66317& 80109& 272707& 80483& 80109& 273081& 80483& 66711\\
-\hline
-Counts~relationship&66317& 80109& 272707& 80483& 80109& 273081& 80483& 66711\\
-prediction                            &  ---    & +--    & -+-       & ++-  & --+  & +-+ & -++ & +++  \\
-\hline
-\end{array}\)
-\caption{Configurations of triples satisfy various equalities, even without Conjecture \ref{symmetry}.} \label{tab:tripletest}
-\end{table}
-
-\begin{table}
-\centering \(\begin{array}{c|cccccccc}
-\hline
  Gram~type&   ---        & --+       & -+-          & -++          &   +--           & +-+   & ++-   & +++ \\
 \hline
-Odd & 52717& 20400& 264789& 60003& 20592& 7998& 59811& 13690 \\
+Odd & 0.105410&0.046241&0.506512&0.120952&0.046154&0.022965&0.121039&0.030726 \\
 \hline
- &maps~to& 20592& maps~to& 59811& 20400& maps~to& 60003& maps~to \\ 
+ &maps~to& 0.046154& maps~to& 0.121039& 0.046241& maps~to& 0.120952& maps~to\\
 prediction   &  self         & +--       &  self        & ++-       & --+       & self        & -++      & self  \\
 \hline
 \hline
-Even & 13600& 59709& 7918& 20480& 59517& 265083& 20672& 53021 \\
+Even & 0.030675&0.120889&0.023050&0.046156&0.120976&0.506575&0.046069&0.105609 \\
 \hline
- &maps~to& 59517& maps~to& 20672& 59709& maps~to& 20480& maps~to \\  
+ &maps~to& 0.120976& maps~to& 0.046069& 0.120889& maps~to& 0.046156& maps~to\\ 
 prediction   &  self         & +--       &  self        & ++-       & --+       & self        & -++      & self  \\
 \hline
 \end{array}\)
@@ -334,7 +320,7 @@ prediction   &  self         & +--       &  self        & ++-       & --+       
 \end{table}
 
 
-Using just counts based arguments, one can show that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). Table~\ref{tab:tripletest} shows the relationship. There is no real test of Conjecture \ref{symmetry}.
+Using just counts based arguments, one can show that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). There is no real test of Conjecture \ref{symmetry}.
 Table~\ref{tab:tripletestcomplexity} shows that for the even and odd Gram points separately the agreement with the prediction of Conjecture~\ref{symmetry} is at the $1\%$ level. .
 
 \subsection{\label{sec4c}Conjecture 2 and Gram Block}

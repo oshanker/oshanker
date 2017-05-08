@@ -28,8 +28,8 @@ public class Conjectures {
 	static NumberFormat intf = NumberFormat.getIntegerInstance();
     private static int noffset;
 	static {
-		nf.setMinimumFractionDigits(2);
-		nf.setMaximumFractionDigits(2);
+		nf.setMinimumFractionDigits(6);
+		nf.setMaximumFractionDigits(6);
 		nf.setGroupingUsed(false);
 		intf.setMinimumIntegerDigits(6);
 	}
@@ -167,62 +167,43 @@ public class Conjectures {
 				if(noffset%2 == 1){
 				    parityType = sampleOffset1;
 				}
-				if(sampleOffset1==1){
-				out.println(Arrays.toString(descriptions[sampleLength-1]));
-				}
+                String evencompare = " ,";
+                double norm = instance.sampleSize;
+                for (int i = 0; i < length; i++) {
+//                  c1description += descriptions[sampleLength-1][length-i-1] + ", " ;
+                    int idx = swapBits(i, sampleLength);
+                    if(i == idx){
+                        evencompare += "maps~to, ";
+                    } else {
+                        evencompare += nf.format(instance.signumCounts[idx]/norm) +", ";
+                    }
+                }
+                String counts = "";
+                for (int i = 0; i < instance.signumCounts.length; i++) {
+                    counts += nf.format(instance.signumCounts[i]/norm) + ",";
+                }
+                out.println( parity[parityType] + " , " + counts
+                        + " \\\\, "  + instance.sampleSize);
 				if(parityType == 0){
 					//odd
-					String counts = Arrays.toString(instance.signumCounts);
-					counts = counts.replaceAll("[\\[\\]]", "");
-					out.println(  parity[parityType] + " , " + counts
-							+ " \\\\, "  + instance.sampleSize);
-					String evencompare = " ,";
-					String c1description = "";
-					for (int i = 0; i < length; i++) {
-						c1description += descriptions[sampleLength-1][length-i-1] + ", " ;
-						int idx = swapBits(i, sampleLength);
-						if(i == idx){
-							evencompare += "maps~to, ";
-						} else {
-							evencompare += instance.signumCounts[idx] +", ";
-						}
-					}
+//					String c1description = "";
 					if(sampleLength == 3){
-					out.println( evencompare +"\\\\ compare"+ parity[parityType] + " C2 ");
+					out.println( evencompare +"\\\\ compare "+ parity[parityType] + " C2 ");
 					}
-					out.println(c1description + " swap parity:  C1 ");
+//					out.println(c1description + " swap parity:  C1 ");
 				} else {
-					Conjectures instance1 = new Conjectures();
-					String counts = Arrays.toString(instance.signumCounts);
-					counts = counts.replaceAll("[\\[\\]]", "");
-					out.println( parity[parityType] + " , " + counts
-							+ " \\\\, "  + instance.sampleSize);
-					instance1.calculateDistribution(signumPoints, 
-							sampleLength, 0, 1, 1000002, 0);
-					String allcounts = Arrays.toString(instance1.signumCounts);
-					allcounts = allcounts.replaceAll("[\\[\\]]", "");
-					String evencompare = " ,";
-					String compare = " ,";
-					String c2description = "";
-					for (int i = 0; i < length; i++) {
-						int idx = swapBits(i, sampleLength);
-						if(i == idx){
-							evencompare += "maps~to, ";
-							compare +=  "maps~to, ";
-							c2description += "   self, " ;
-						} else {
-							evencompare += instance.signumCounts[idx] +", ";
-							compare += instance1.signumCounts[idx] +", ";
-							c2description += descriptions[sampleLength-1][idx] + ", " ;
-						}
-					}
+//					Conjectures instance1 = new Conjectures();
+//					instance1.calculateDistribution(signumPoints, 
+//							sampleLength, 0, 1, N, 0);
+//					String allcounts = Arrays.toString(instance1.signumCounts);
+//					allcounts = allcounts.replaceAll("[\\[\\]]", "");
 					if(sampleLength == 3){
 					out.println( evencompare +"\\\\ compare "+ parity[parityType] + "  C2 ");
 					}
-					out.println(" All ,   " + allcounts 
-							+ "\\\\," + instance1.sampleSize);
-					out.println( compare +"\\\\ compare All   C2 ");
-					out.println( c2description +" All parity:  C2 ");
+//					out.println(" All ,   " + allcounts 
+//							+ "\\\\," + instance1.sampleSize);
+//					out.println( compare +"\\\\ compare All   C2 ");
+//					out.println( c2description +" All parity:  C2 ");
 					
 				}
 			}
@@ -239,7 +220,7 @@ public class Conjectures {
 						for (int secondGram = 0; secondGram < 2; secondGram++) {
 							int idx = firstGram*2 + secondGram;
 							double calculated = prob[parityIndex][firstGram]* prob[(parityIndex+1)%2][secondGram]
-									*instances[1][parityIndex].sampleSize;
+									;
 							out.print(nf.format( calculated) + " ");
 						}
 					}
