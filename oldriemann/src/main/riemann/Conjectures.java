@@ -10,6 +10,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Map;
 
 import riemann.Rosser.ZeroInfo;
 
@@ -25,6 +26,7 @@ public class Conjectures {
 	private int sampleSize;
 	static NumberFormat nf = NumberFormat.getInstance();
 	static NumberFormat intf = NumberFormat.getIntegerInstance();
+    private static int noffset;
 	static {
 		nf.setMinimumFractionDigits(2);
 		nf.setMaximumFractionDigits(2);
@@ -53,21 +55,25 @@ public class Conjectures {
 		return reversed;
 	}
 	
-	public static int[] readItems(String filename,  int N)
+	public static int[] readItems(Map<String, String> configParams)
 			throws FileNotFoundException, IOException {
-		Rosser.hiary = true;
+        String zerosFile = configParams.get("zerosFile");
+        zerosFile = zerosFile.substring(1, zerosFile.length()-1);
+        double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
+        double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
+        int signumGram = Integer.parseInt(configParams.get("signumGram"));
+        signumGram = (signumGram+1)/2;
+        int N = Integer.parseInt(configParams.get("N"));
+        noffset = Integer.parseInt(configParams.get("noffset"));
+        //(Rosser.hiary?2:1)
+        
 		int[] signumPoints  = new int[N];
-		String zerosFile =Rosser.hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
 		BufferedReader zeroIn1 = new BufferedReader(new FileReader(zerosFile));
 		int count = 0;
-		int signumGram = Rosser.hiary?1:0;
-		double baseLimit = 244.02115917156451839965694310614387;
-		//the small drifts do add up, at small values of zeta at the gram points.
-		double gramIncr = 0.24359904690398668 - 1.0E-9;
 		ZeroInfo zeroInput = new ZeroInfo(null,0);
 		PrintStream out = null;
 		while (count < N) {
-			int n1 = count + (Rosser.hiary?2:1);
+			int n1 = count + noffset;
 			double upperLimit = baseLimit + (n1-1)* (gramIncr);
 			zeroInput = Rosser.readZeros(upperLimit , out, zeroIn1, zeroInput.zeroInput);
 			signumPoints[count] = signumGram;
@@ -111,7 +117,10 @@ public class Conjectures {
 
 	public static void main(String[] args) throws Exception {
 		Files.createDirectories(FileSystems.getDefault().getPath("out"));
-		File file = new File("out/statsE12.csv");
+        Map<String,String> configParams = Rosser.readConfig("data/RosserConfig.txt");
+		String conjecturesOutFile = configParams.get("conjecturesOutFile");
+		conjecturesOutFile = conjecturesOutFile.substring(1, conjecturesOutFile.length()-1);
+        File file = new File(conjecturesOutFile);
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -125,10 +134,10 @@ public class Conjectures {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		signumPoints = readItems("data/zetaE12.csv", 1000002);
+		signumPoints = readItems(configParams);
 		//PrintStream out = System.out;
 		out.println("************** " + signumPoints.length + " *************");
-		statistics(out, 0, 1000002);
+		statistics(out, 0, signumPoints.length);
 		
 	}
 
@@ -153,7 +162,11 @@ public class Conjectures {
 						sampleLength, sampleOffset1, sampleIncrement, N, begin);
 				
 				int length = instance.signumCounts.length;
-				int parityType = Rosser.hiary?(1-sampleOffset1):sampleOffset1;
+				// should be sampleOffset1 if !hiary
+				int parityType = (1-sampleOffset1);
+				if(noffset%2 == 1){
+				    parityType = sampleOffset1;
+				}
 				if(sampleOffset1==1){
 				out.println(Arrays.toString(descriptions[sampleLength-1]));
 				}

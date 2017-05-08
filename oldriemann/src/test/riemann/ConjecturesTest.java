@@ -14,9 +14,8 @@ public class ConjecturesTest {
 
     @Test
     public void testX() {
-        double t = 1.0E12 + 244.158906912980683962;
+        double t = 1.0E15 + 192.309350419702134727;
         increment(t);
-        double incr = increment(1.0E15 + 192.309350419702134727 );
         BigDecimal tval = new BigDecimal(192.2043554309546, Gram.mc).add(
                 BigDecimal.valueOf(1.0E15), Gram.mc);
         BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-28);
@@ -29,10 +28,8 @@ public class ConjecturesTest {
         sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-28);
         thetaPi = theta(tval, sqrtArg1);
         System.out.println(thetaPi);
-        tval = tval.add(new BigDecimal("0.1921410553288139"));
-        sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-28);
        /*
-baseGram 192.2043554309546 idx 5045354828590534
+baseGram 192.2043554309546 idx 5045354828590534 incr at mid 0.19214105532316908
         double[] begin = {192.309350419702134727, 1921602.793342093316678265};
 f  : [1.9524278734805527, 0.2869931460545315] theta 1.716715278515568 rotatedSum 1.1379834185443194E-4 zeta 7.381699365530212E-11
 zetaFromRiemann 7.413854952046176E-11
@@ -55,7 +52,7 @@ sqrtArg1[i].doubleValue() 1.2615662622221947E7 correction -1.1522979560645475E-4
     private double increment(double t) {
         double incr = Math.PI/Math.log(Math.sqrt(t/(2*Math.PI)));
         System.out.println(incr);
-        t += 1000000*incr;
+        t += 5000000*incr;
         incr = Math.PI/Math.log(Math.sqrt(t/(2*Math.PI)));
         System.out.println(incr);
         return incr;

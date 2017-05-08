@@ -121,7 +121,7 @@ public class Rosser {
         return configParams;
 	}
 	
-	public static void readItems( int N, PrintStream out)
+	public static void readItems(  PrintStream out)
 			throws FileNotFoundException, IOException {
 		//String zerosFile =hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
 	    
@@ -131,6 +131,7 @@ public class Rosser {
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
+        int N = Integer.parseInt(configParams.get("N"));
         int noffset = Integer.parseInt(configParams.get("noffset"));
         String header = configParams.get("header");
         header = header.substring(1, header.length()-1);
@@ -149,6 +150,10 @@ public class Rosser {
 		while (count < N  ) {
 			int n = count + noffset;
 			double upperLimit = baseLimit + (n-1)* (gramIncr);
+			//at entry, upperLimit=244.264758217468505 for e12
+			//first zero is 244.158906912980683962
+			//prev gram is 244.02115917156451839965694310614387
+			//idx at entry is 3945951431270L + 2
 			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
 				print(out, n + ",1, " + S);
 				good = true;
@@ -246,7 +251,7 @@ public class Rosser {
 //		}
 		
         Rosser.hiary = true;
-		readItems(1000002, out);
+		readItems( out);
 		TreeSet<String>[] stats = new TreeSet[10];
 		for (int i = 0; i < stats.length; i++) {
 			stats[i] = new TreeSet<String>();

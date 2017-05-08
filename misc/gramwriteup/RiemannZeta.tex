@@ -396,15 +396,28 @@ The notation above classifies the type of violation of Rosser's rule, the value 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the forward-backward symmetry in patterns of violations of Rosser's rule. Once again, while there is very good evidence for the forward-backward symmetry, the $L$ type violations are ever so slightly smaller than the $R$ type violations. Again, we have evidence for a symmetry which is broken very slightly.
 
 \begin{table}
-\centering \(\begin{array}{ccccc}
+\centering \(\begin{array}{llllll}
 \hline
-Source &m = 0&m = 1&m = 2&m = 3\\
+Source &m = 0&m = 1&m = 2&m = 3&size\\
 \hline
- Our~sample&148797&704395&144823&1987\\
- GUE&170222&661430&166490&1860\\
+t = 10^{12}&0.148797&0.704395&0.144823&0.001987&1000000\\
+t = 10^{15}&0.1536533&0.6946820&0.1496761&0.0019886&10000000\\
+ GUE&0.170222&0.661430&0.166490&0.001860&\\
 \hline
 \end{array}\)
 \caption{Counts of Gram intervals that contain $m$ zeros, and the GUE prediction.} \label{tab:intervalzeros}
+\end{table}
+
+\begin{table}
+\centering \(\begin{array}{ccccccc}
+\hline
+Source &p_g&p_b& p_g/p_b&p_{even|bad} &p_{even|good}&\frac{p_{even|bad}}{p_{even|good}}\\
+\hline
+t = 10^{12}&0.7962&0.2038&3.9&0.7204&0.1844&3.9\\
+t = 10^{15}&0.7792&0.2208&3.5&0.6868&0.1946&3.5\\
+\hline
+\end{array}\)
+\caption{.} \label{tab:pevenpred}
 \end{table}
 
 \section{\label{sec5}Riemann zeta zero counts on Gram Intervals}
@@ -420,7 +433,7 @@ While the agreement with the GUE prediction is good, we argue here that the dist
 
 The relationship between the quantities is shown in Equation~\ref{eqGoodRelation}. A given Gram point will be good if the preceding Gram point is good, and the intervening interval contains an odd number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an even number of zeros. A given Gram point will be bad if the preceding Gram point is good, and the intervening interval contains an even number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an odd number of zeros. This is is shown in Equation~\ref{eqGoodRelation}. The assumption made in Ref.~\cite{Odlyzko(1992)} is equivalent to the statement that $p_{odd|good} = p_{odd|bad}$ (from which it follows that  $p_{even|good} = p_{even|bad}$). If this were indeed true, then Equation~\ref{eqGoodRelation} can only be satisfied if $p_g = p_b = 0.5$ (we know that $p_{odd}$ and $p_{even}$ don't take the values $0$ or $1$). Hence it follows that $p_{odd|good} \neq p_{odd|bad}$ (and correspondingly $p_{even|good} \neq p_{even|bad}$). 
 
-We can go further and derive a relationship between $p_{even|bad}$ and $p_{even|good}$. For Equation~\ref{eqGoodRelation} to have a non-trivial solution for $p_g$ and $p_b$, we require that $p_b*p_{even|bad} = p_g*p_{even|good}$. Thus, $p_{even|bad}/p_{even|good}= p_g/p_b \approx 4$. The observed values are $p_{even|bad} = 0.7204$, $p_{even|good} = 0.1844$, giving the ratio $3.9$. This establishes our contention that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval. While we showed that the zero counts in a Gram interval depend on the good or bad nature of the Gram point, we also believe that there is a much smaller dependence  on the odd or even nature of the Gram point. However, the study of this topic has to be postponed to future work.
+We can go further and derive a relationship between $p_{even|bad}$ and $p_{even|good}$. For Equation~\ref{eqGoodRelation} to have a non-trivial solution for $p_g$ and $p_b$, we require that $p_b*p_{even|bad} = p_g*p_{even|good}$. Thus, $p_{even|bad}/p_{even|good}= p_g/p_b$. The comparison with observed values is shown in Table~\ref{tab:pevenpred} for two samples at $t=10^{12}$ and $t=10^{15}$. This establishes our contention that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval. While we showed that the zero counts in a Gram interval depend on the good or bad nature of the Gram point, we also believe that there is a much smaller dependence  on the odd or even nature of the Gram point. However, the study of this topic has to be postponed to future work.
 
 
 \section{\label{conclusions}Conclusions}

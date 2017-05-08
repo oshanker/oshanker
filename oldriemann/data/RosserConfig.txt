@@ -2,6 +2,7 @@
 ignore this content
 #endComment
 
+#beginComment
 zerosFile ="/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002"
 #ignore
 noffset = 2
@@ -9,3 +10,16 @@ signumGram = 1
 header = "n-3945951431270L,good, S"
 baseLimit = 244.02115917156451839965694310614387
 gramIncr = 0.24359904590398668
+N = 1000002
+conjecturesOutFile="out/statsE12.csv"
+#endComment
+
+zerosFile ="/Users/shankero/Documents/tmp/1e15.zeros.1000_10001001"
+#ignore
+noffset = 2
+signumGram = 1
+header = "n-5045354828590534L,good, S"
+baseLimit = 192.2043554309546
+gramIncr = 0.19214105532316908
+N = 10000000
+conjecturesOutFile="out/statsE15.csv"
