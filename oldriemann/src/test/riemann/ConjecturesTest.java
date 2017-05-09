@@ -20,7 +20,10 @@ public class ConjecturesTest {
         MathContext mc = new MathContext(80, RoundingMode.HALF_EVEN);
         double t = 1.0E28 + 100.437512887104287873;
         double incr = increment(t);
-        BigDecimal tval = new BigDecimal(100.437512887104287873, mc).add(
+        incr = 0.10031507797926817;
+        double gram = 100.36777243017612;
+        System.out.println("gram " + gram);
+        BigDecimal tval = new BigDecimal(gram, mc).add(
                 BigDecimal.valueOf(1.0E28), mc);
 //        incr = 0.1921410553288139095;
 //        BigDecimal tval = new BigDecimal(192.2043554309546, mc).add(
@@ -28,7 +31,6 @@ public class ConjecturesTest {
         BigDecimal xx = tval.divide(Gram.pi_2, mc);
         //39894228040143.2677939946061937820389927342029 65420163328854914850403286571752375 
         //39894228040143.2677939946061937820389927342029 24157013297165575084867900724971497
-        incr = 0.10031507797926817914502892776522;
         BigDecimal sqrtArg1 = sqrt(xx, mc, 1.0E-38);
         BigDecimal fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-38);
         double basesqrt = fourthrootArg1.doubleValue();
