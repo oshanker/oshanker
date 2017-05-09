@@ -17,28 +17,30 @@ public class ConjecturesTest {
 
     @Test
     public void testX() {
+        MathContext mc = new MathContext(80, RoundingMode.HALF_EVEN);
         double t = 1.0E28 + 100.437512887104287873;
         double incr = increment(t);
-        MathContext mc = new MathContext(80, RoundingMode.HALF_EVEN);
         BigDecimal tval = new BigDecimal(100.437512887104287873, mc).add(
                 BigDecimal.valueOf(1.0E28), mc);
-        //39894228040143.2677939946061937820389927342030 31
+//        incr = 0.1921410553288139095;
+//        BigDecimal tval = new BigDecimal(192.2043554309546, mc).add(
+//                BigDecimal.valueOf(1.0E15), mc);
         BigDecimal xx = tval.divide(Gram.pi_2, mc);
         //39894228040143.2677939946061937820389927342029 65420163328854914850403286571752375 
         //39894228040143.2677939946061937820389927342029 24157013297165575084867900724971497
-        //-1.8038471561642299879578070831747202428600725798798035968120506716490721681859375E-53
-
-
-        BigDecimal sqrtArg1 = sqrt(xx, mc, 1.0E-33);
-        System.out.println(sqrtArg1 + " " + sqrtArg1.multiply(sqrtArg1).subtract(xx));
-//        double basesqrtArg1 = sqrtArg1.doubleValue();
-//        int k1 = (int)basesqrtArg1;
-//        Gram.initLogVals(k1);
-//        BigDecimal thetaPi = theta(tval, sqrtArg1);
-//        System.out.println(thetaPi);
-//        tval = tval.add(new BigDecimal(Double.toString(incr)));
-//        thetaPi = theta(tval, sqrtArg1);
-//        System.out.println(thetaPi);
+        incr = 0.10031507797926817914502892776522;
+        BigDecimal sqrtArg1 = sqrt(xx, mc, 1.0E-38);
+        BigDecimal fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-38);
+        double basesqrt = fourthrootArg1.doubleValue();
+        int k1 = (int)basesqrt;
+        Gram.initLogVals(k1);
+        BigDecimal thetaPi = theta(tval, fourthrootArg1, mc);
+        System.out.println(thetaPi);
+        tval = tval.add(new BigDecimal(Double.toString(incr)));
+        sqrtArg1 = sqrt(tval.divide(Gram.pi_2, mc), mc, 1.0E-38);
+        fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-38);
+        thetaPi = theta(tval, fourthrootArg1, mc);
+        System.out.println(thetaPi);
        /*
 baseGram 192.2043554309546 idx 5045354828590534 incr at mid 0.19214105532316908
         double[] begin = {192.309350419702134727, 1921602.793342093316678265};
@@ -64,17 +66,17 @@ sqrtArg1[i].doubleValue() 1.2615662622221947E7 correction -1.1522979560645475E-4
                 break; 
             }
         }
-        System.out.println(diff);
         return next;
     }
-
-    private BigDecimal theta(BigDecimal tval, BigDecimal sqrtArg1) {
-        BigDecimal fourthrootArg1 = Gram.sqrt(sqrtArg1, Gram.mc, 1.0E-41);
-        System.out.println(fourthrootArg1);
-        BigDecimal lnsqrtArg1BD = Gram.log(fourthrootArg1, Gram.mc).multiply(Gram.bdTWO);
+    
+    private BigDecimal theta(BigDecimal tval, BigDecimal fourthrootArg1, MathContext mc) {
+        BigDecimal lnsqrtArg1BD = Gram.log(fourthrootArg1, mc).multiply(Gram.bdTWO);
+//        System.out.println(Gram.pi.divide(lnsqrtArg1BD, mc));
+//        BigDecimal thetaPi = tval.multiply((lnsqrtArg1BD.subtract(BigDecimal.ONE.divide(Gram.bdTWO), mc)), mc)
+//                .subtract(Gram.pi8, mc).divide(Gram.pi, mc);
         BigDecimal t2 = tval.divide(Gram.bdTWO);
         BigDecimal thetaPi = tval.multiply(lnsqrtArg1BD, Gram.mc).subtract(t2, Gram.mc)
-                .subtract(Gram.pi8, Gram.mc).divide(Gram.pi, Gram.mc);
+             .subtract(Gram.pi8, Gram.mc).divide(Gram.pi, Gram.mc);
         return thetaPi;
     }
 
