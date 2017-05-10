@@ -121,14 +121,12 @@ public class Rosser {
         return configParams;
 	}
 	
-	public static void readItems(  PrintStream out)
+	public static void readItems(  PrintStream out, double baseLimit, Map<String, String> configParams)
 			throws FileNotFoundException, IOException {
 		//String zerosFile =hiary?"/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002":"data/zerosE12.csv";
 	    
-        Map<String,String> configParams = readConfig("data/RosserConfig.txt");
 	    String zerosFile = configParams.get("zerosFile");
 	    zerosFile = zerosFile.substring(1, zerosFile.length()-1);
-	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
         int N = Integer.parseInt(configParams.get("N"));
@@ -235,6 +233,7 @@ public class Rosser {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws Exception {
+        Map<String,String> configParams = readConfig("data/RosserConfig.txt");
 		PrintStream out = null;
 //		File file = new File("data/rosserE12.csv");
 //		if (!file.exists()) {
@@ -251,7 +250,8 @@ public class Rosser {
 //		}
 		
         Rosser.hiary = true;
-		readItems( out);
+        double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
+		readItems( out, baseLimit, configParams );
 		TreeSet<String>[] stats = new TreeSet[10];
 		for (int i = 0; i < stats.length; i++) {
 			stats[i] = new TreeSet<String>();
@@ -259,6 +259,7 @@ public class Rosser {
 		
 		for (String key : rosser.keySet()) {
 			//String[] parsed = key.split("=");
+		    if(key.length()>9){continue;}
 			int idx = key.length()-2;
 			if(idx < stats.length){
 				stats[idx].add(key + " : " + rosser.get(key));
@@ -280,7 +281,7 @@ public class Rosser {
 			}
 			
 			if(rosser.containsKey(new String(typeI)) && rosser.containsKey(new String(typeII))){
-			    System.out.println(stats[i] + " type II/I " + ((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI)));
+			    System.out.println(/*stats[i]*/ typeII.length + " " + Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
 			} else {
 				System.out.println(stats[i] );
 			}
