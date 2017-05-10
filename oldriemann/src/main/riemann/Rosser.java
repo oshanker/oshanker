@@ -252,10 +252,16 @@ public class Rosser {
 	    Rosser.hiary = true;
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
-	    for (int displacement = 0; displacement < 7; displacement++) {
+	    for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
+
 	        rosser.clear();
+            for (int j = 0; j < intervalCounts.length; j++) {
+                for (int i = 0; i < intervalCounts[j].length; i++) {
+                    intervalCounts[j][i] = 0;
+                }
+            }
 	        System.out.println("displacement " + displacement);
-	        readItems( out, baseLimit-displacement*gramIncr/10, configParams );
+	        readItems( out, baseLimit+(displacement)*gramIncr/10, configParams );
 	        TreeSet<String>[] stats = new TreeSet[10];
 	        for (int i = 0; i < stats.length; i++) {
 	            stats[i] = new TreeSet<String>();
@@ -285,7 +291,8 @@ public class Rosser {
 	            }
 
 	            if(rosser.containsKey(new String(typeI)) && rosser.containsKey(new String(typeII))){
-	                //System.out.println(/*stats[i] typeII.length + " " + */ Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
+//	                System.out.println(/*stats[i] typeII.length + " " + */ 
+//	                        Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
 	                typeIIratios[typeII.length-2][displacement] = ((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI));
 	            } else {
 	                System.out.println(stats[i] );
@@ -307,7 +314,7 @@ public class Rosser {
 
         for (int j = 0; j < typeIIratios.length; j++) {
 	        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
-	            System.out.print(displacement==0?(j+2+""):" &" + Conjectures.nf.format(typeIIratios[j][displacement] ));
+	            System.out.print((displacement==0?(j+2+" &"):" &") + Conjectures.nf.format(typeIIratios[j][displacement] ));
 	        }
 	        System.out.println(" \\\\");
 	    }
