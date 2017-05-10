@@ -233,73 +233,88 @@ public class Rosser {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws Exception {
-        Map<String,String> configParams = readConfig("data/RosserConfig.txt");
-		PrintStream out = null;
-//		File file = new File("data/rosserE12.csv");
-//		if (!file.exists()) {
-//			try {
-//				file.createNewFile();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		try {
-//			out = new PrintStream(file);
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
-		double[][] typeIIratios = new double[9][];
-        Rosser.hiary = true;
-        double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
-		readItems( out, baseLimit, configParams );
-		TreeSet<String>[] stats = new TreeSet[10];
-		for (int i = 0; i < stats.length; i++) {
-			stats[i] = new TreeSet<String>();
-		}
-		
-		for (String key : rosser.keySet()) {
-			//String[] parsed = key.split("=");
-		    if(key.length()>9){continue;}
-			int idx = key.length()-2;
-			if(idx < stats.length){
-				stats[idx].add(key + " : " + rosser.get(key));
-			} else {
-				System.out.println("* " + key.length() + " " + key + " " + rosser.get(key));
-			}
-		}
-		for (int i = 0; i < stats.length; i++) {
-			char[] typeII = new char[i+2];
-			char[] typeI = new char[i+2];
-			for (int j = 0; j < typeII.length; j++) {
-				if(j==0){typeII[j]='0';}
-				else if(j==typeII.length-1){typeII[j]='2';}
-				else {typeII[j]='1';}
-				
-				if(j==0){typeI[j]='2';}
-				else if(j==typeI.length-1){typeI[j]='0';}
-				else {typeI[j]='1';}
-			}
-			
-			if(rosser.containsKey(new String(typeI)) && rosser.containsKey(new String(typeII))){
-			    System.out.println(/*stats[i] typeII.length + " " + */ Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
-			} else {
-				System.out.println(stats[i] );
-			}
-		}
-		for (int j = 0; j < intervalCounts.length; j++) {
-			int sum = 0;
-			for (int i = 0; i < intervalCounts[j].length; i++) {
-				sum += i*intervalCounts[j][i];
-			}
-			System.out.println(" intervalCounts " + j + " "+ Arrays.toString(intervalCounts[j]) + " sum " + sum);
-		}
-		double count = goodCount+badCount;
-		double pGood = ((double)goodCount)/count ;
-		double pBad = ((double)badCount)/count;
-		System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad);
-		System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
-//		System.out.println(rosser);
-		if(out != null){out.close();}
+	    Map<String,String> configParams = readConfig("data/RosserConfig.txt");
+	    PrintStream out = null;
+	    //		File file = new File("data/rosserE12.csv");
+	    //		if (!file.exists()) {
+	    //			try {
+	    //				file.createNewFile();
+	    //			} catch (IOException e) {
+	    //				e.printStackTrace();
+	    //			}
+	    //		}
+	    //		try {
+	    //			out = new PrintStream(file);
+	    //		} catch (FileNotFoundException e) {
+	    //			e.printStackTrace();
+	    //		}
+	    double[][] typeIIratios = new double[10][7];
+	    Rosser.hiary = true;
+	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
+        double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
+	    for (int displacement = 0; displacement < 7; displacement++) {
+	        rosser.clear();
+	        System.out.println("displacement " + displacement);
+	        readItems( out, baseLimit-displacement*gramIncr/10, configParams );
+	        TreeSet<String>[] stats = new TreeSet[10];
+	        for (int i = 0; i < stats.length; i++) {
+	            stats[i] = new TreeSet<String>();
+	        }
+
+	        for (String key : rosser.keySet()) {
+	            //String[] parsed = key.split("=");
+	            if(key.length()>9){continue;}
+	            int idx = key.length()-2;
+	            if(idx < stats.length){
+	                stats[idx].add(key + " : " + rosser.get(key));
+	            } else {
+	                System.out.println("* " + key.length() + " " + key + " " + rosser.get(key));
+	            }
+	        }
+	        for (int i = 0; i < stats.length; i++) {
+	            char[] typeII = new char[i+2];
+	            char[] typeI = new char[i+2];
+	            for (int j = 0; j < typeII.length; j++) {
+	                if(j==0){typeII[j]='0';}
+	                else if(j==typeII.length-1){typeII[j]='2';}
+	                else {typeII[j]='1';}
+
+	                if(j==0){typeI[j]='2';}
+	                else if(j==typeI.length-1){typeI[j]='0';}
+	                else {typeI[j]='1';}
+	            }
+
+	            if(rosser.containsKey(new String(typeI)) && rosser.containsKey(new String(typeII))){
+	                //System.out.println(/*stats[i] typeII.length + " " + */ Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
+	                typeIIratios[typeII.length-2][displacement] = ((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI));
+	            } else {
+	                System.out.println(stats[i] );
+	            }
+	        }
+	        for (int j = 0; j < intervalCounts.length; j++) {
+	            int sum = 0;
+	            for (int i = 0; i < intervalCounts[j].length; i++) {
+	                sum += i*intervalCounts[j][i];
+	            }
+	            System.out.println(" intervalCounts " + j + " "+ Arrays.toString(intervalCounts[j]) + " sum " + sum);
+	        }
+	        double count = goodCount+badCount;
+	        double pGood = ((double)goodCount)/count ;
+	        double pBad = ((double)badCount)/count;
+	        System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad);
+	        System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
+	    }
+
+        for (int j = 0; j < typeIIratios.length; j++) {
+	        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
+	            System.out.print(displacement==0?(j+2+""):" &" + Conjectures.nf.format(typeIIratios[j][displacement] ));
+	        }
+	        System.out.println(" \\\\");
+	    }
+
+
+	    //		System.out.println(rosser);
+	    if(out != null){out.close();}
 	}
 
 }
