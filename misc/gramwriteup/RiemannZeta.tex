@@ -95,8 +95,8 @@ Section~\ref{sec2} establishes the required notation for the
 Riemann Zeta Function. 
 Section~\ref{sec3} describes the numerical evaluation of the Riemann zeta function. 
 Section~\ref{sec4} presents the statistics of the zeta value distributions for different types of Gram points and compares the predictions of the two conjectures with the actual results from the numerical evaluations.. 
-Section~\ref{conclusions}
-gives a brief summary of the results. 
+One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in Sections~\ref{sec4} and ~\ref{sec5}, where we show that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution.
+Section~\ref{conclusions} gives a brief summary of the results. 
 
 
 \section{\label{sec2}Theory of zero distributions of Riemann zeta function }
@@ -212,14 +212,14 @@ In the next section we present the statistics of the zeta value distributions fo
 \centering
 \includegraphics[width=0.62\textwidth]{rzeta.jpg}
 \caption[]{ 
- Distribution of zeta values at a million Gram points starting at $t = 10^{12}$.
+ Distribution of zeta values at a million Gram points  at $t = 10^{12}$.
   }
 \vspace{1mm}
 \label{allhist}
 
 \includegraphics[width=0.62\textwidth]{qqr.jpg}
 \caption[]{ 
- QQ plot of zeta values at a million Gram points starting at $t = 10^{12}$.
+ QQ plot of zeta values at a million Gram points  at $t = 10^{12}$.
   }
 \vspace{1mm}
 \label{qqr}
@@ -236,7 +236,7 @@ Odd&-160.90 &   -2.526 &   -0.8471  & -2.00 &   -0.1121 &  69.41 \\
 Even&-68.63 &   0.1139 &  0.8526  & 2.00 &   2.541 & 165.10 \\
 \hline
 \end{array}\)
-\caption{Quantiles and mean for zeta values at Gram points of different types.} \label{tab:quantiles}
+\caption{Quantiles and mean for zeta values at Gram points of different types.  The statistics are from $1$ million Gram intervals at $t=10^{12}$.} \label{tab:quantiles}
 \end{table}
 
 In this section we present the statistics of the zeta value distributions for different types of Gram points (all Gram points, odd Gram points and even Gram points). We present the relationships between the statistics that would be implied by Conjectures \ref{antisymmetry} and \ref{symmetry}, and we compare the predictions of the two conjectures with the actual results from the numerical evaluations. 
@@ -250,14 +250,14 @@ Figure~\ref{allhist} shows the histogram of zeta values for all Gram points. It 
 \centering
 \includegraphics[width=0.62\textwidth]{ozeta.jpg}
 \caption[]{ 
-  Distribution of zeta values at 500000 odd Gram points starting at $t = 10^{12}$.
+  Distribution of zeta values at 500000 odd Gram points  at $t = 10^{12}$.
  }
 \vspace{1mm}
 \label{oddhist}
 
 \includegraphics[width=0.62\textwidth]{ezeta.jpg}
 \caption[]{ 
-   Distribution of zeta values at 500000 even Gram points starting at $t = 10^{12}$.
+   Distribution of zeta values at 500000 even Gram points  at $t = 10^{12}$.
  }
 \label{evenhist}
 \vspace{1mm}
@@ -278,7 +278,7 @@ Odd & 0.151651&0.627465&0.069119&0.151765 \\
 Even & 0.151565&0.069206&0.627551&0.151678 \\
 \hline
 \end{array}\)
-\caption{Counts of different configurations of zeta values for pairs of consecutive Gram points.} \label{tab:pairraw}
+\caption{Counts of different configurations of zeta values for pairs of consecutive Gram points.  The statistics are from $10$ million Gram intervals at $t=10^{15}$.} \label{tab:pairraw}
 \end{table}
 
 \begin{table}
@@ -292,7 +292,7 @@ Corresponding& 0.151678 & 0.627551 & 0.069206& 0.151565\\
 Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 \hline
 \end{array}\)
-\caption{Test of Conjecture \ref{antisymmetry} using pairs of consecutive Gram points.} \label{tab:pairtest}
+\caption{Test of Conjecture \ref{antisymmetry} using pairs of consecutive Gram points.  The statistics are from $10$ million Gram intervals at $t=10^{15}$.} \label{tab:pairtest}
 \end{table}
 
 
@@ -316,7 +316,7 @@ Even & 0.030675&0.120889&0.023050&0.046156&0.120976&0.506575&0.046069&0.105609 \
 prediction   &  self         & +--       &  self        & ++-       & --+       & self        & -++      & self  \\
 \hline
 \end{array}\)
-\caption{Test of Conjecture~\ref{symmetry} for  even and odd Gram points.} \label{tab:tripletestcomplexity}
+\caption{Test of Conjecture~\ref{symmetry} for  even and odd Gram points.  The statistics are from $10$ million Gram intervals at $t=10^{15}$.} \label{tab:tripletestcomplexity}
 \end{table}
 
 
@@ -342,8 +342,39 @@ Gram~block	& Type~II/Type~I \\
 10& 0.992668154\\
 \hline
 \end{array}\)
-\caption{Test of prediction of Conjecture \ref{symmetry} from Gram block counts.} \label{tab:rosser}
+\caption{Test of prediction of Conjecture \ref{symmetry} from Gram block counts. The statistics are from the first $10^{13}$ Gram intervals.} \label{tab:rosser}
 \end{table}
+
+\begin{table}
+\centering \(\begin{array}{cccccccc}
+\hline
+Length~of 	& &&&Displacment \\
+Gram~block	& 0.0\delta & 0.1\delta & 0.2\delta & 0.3\delta & 0.4\delta & 0.5\delta & 0.6\delta  \\
+\hline
+2 &0.999090 &0.663992 &0.441400 &0.292890 &0.193273 &0.131595 &0.100640 \\
+3 &0.998864 &0.526210 &0.274796 &0.142350 &0.074865 &0.043989 &0.041090 \\
+4 &1.001220 &0.426549 &0.178314 &0.073724 &0.031403 &0.020961 &0.030952 \\
+5 &1.011907 &0.343228 &0.115100 &0.037317 &0.014659 &0.013193 &0.028092 \\
+6 &1.008597 &0.266224 &0.070801 &0.017774 &0.006960 &0.010627 &0.030064 \\
+7 &0.974761 &0.205256 &0.041497 &0.008768 &0.003980 &0.010287 &0.030693 \\
+8 &0.983726 &0.149338 &0.018210 &0.002528 &0.002756 &0.008224 &0.029362 \\
+9 &0.975052 &0.103749 &0.008631 &0.000888 &0.002499 &0.009855 &0.028924 \\
+10 &0.949264 &0.057506 &0.004515 &0.000333 &0.001611 &0.008898 &0.028121 \\
+\hline
+\end{array}\)
+\caption{Test that Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosserrandom}
+\end{table}
+
+In this section we present the prediction of  Conjecture \ref{symmetry} on the distribution of different types of Gram blocks. We will follow the notation of   Odlyzko~\cite{Odlyzko(1992)}. A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise. A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
+and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where k is called the length of the Gram block, and $a_i$ denote the number of roots of Z(t) in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
+
+A Gram block of length k which contains exactly k roots of Z[t) is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
+Thus, Regular Gram blocks must have a pattern of one of the following three forms:
+$21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
+where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko(1992)} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture \ref{symmetry} above predicts that the number of Type I and Type II Gram blocks up to a given large height must be equal to each other (except for Type I Gram blocks of length one, which only have the pattern 1).  Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of counts of Gram Blocks of Type II to Type I, found up to $t = 10^{13}$. The prediction of Conjecture 2 is borne out to a remarkable degree. While there is very good evidence for the forward-backward symmetry from the ratio of $Type~II$ to $Type~I$ counts, there is another intriguing pattern: the Type II counts are ever so slightly smaller than the Type I counts. Thus, while we have a symmetry, it is broken very slightly.
+
+One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in this section and in  the next section. Table~\ref{tab:rosserrandom} shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.
+The table shows clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution.
 
 \begin{table}
 \centering \(\begin{array}{cc}
@@ -363,16 +394,8 @@ Type~of~violation &Ratio~of~counts\\
 2L04/2R40 &0.998111916\\
 \hline
 \end{array}\)
-\caption{Forward-backward symmetry in patterns of violations of Rosser's rule.} \label{tab:vrr}
+\caption{Forward-backward symmetry in patterns of violations of Rosser's rule.  The statistics are from the first $10^{13}$ Gram intervals.} \label{tab:vrr}
 \end{table}
-
-In this section we present the prediction of  Conjecture \ref{symmetry} on the distribution of different types of Gram blocks. We will follow the notation of   Odlyzko~\cite{Odlyzko(1992)}. A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise. A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
-and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where k is called the length of the Gram block, and $a_i$ denote the number of roots of Z(t) in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
-
-A Gram block of length k which contains exactly k roots of Z[t) is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
-Thus, Regular Gram blocks must have a pattern of one of the following three forms:
-$21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
-where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko(1992)} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture \ref{symmetry} above predicts that the number of Type I and Type II Gram blocks up to a given large height must be equal to each other (except for Type I Gram blocks of length one, which only have the pattern 1).  Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of counts of Gram Blocks of Type II to Type I, found up to $t = 10^{13}$. The prediction of Conjecture 2 is borne out to a remarkable degree. While there is very good evidence for the forward-backward symmetry from the ratio of Type II to Type I counts, there is another intriguing pattern: the Type II counts are ever so slightly smaller than the Type I counts. Thus, while we have a symmetry, it is broken very slightly.
 
 Further validation comes from a consideration of the different types of violations of Rosser's rule~\cite{gourdon}, which also show the forward-backward symmetry. Rosser's rule states that Gram blocks of length $k$ contain at least $k$ zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram Blocks. A Gram block is either regular, or it has an excess of zeros, or it has fewer zeros than its length. The last type of Gram block violates Rosser's rule. 
 If a Gram block of length k is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Gourdon uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
@@ -380,6 +403,8 @@ to describe an exception on a Gram block of length $k$  where the missing zeros 
 
 The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Gourdon uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the forward-backward symmetry in patterns of violations of Rosser's rule. Once again, while there is very good evidence for the forward-backward symmetry, the $L$ type violations are ever so slightly smaller than the $R$ type violations. Again, we have evidence for a symmetry which is broken very slightly.
+
+\section{\label{sec5}Riemann zeta zero counts on Gram Intervals}
 
 \begin{table}
 \centering \(\begin{array}{llllll}
@@ -405,10 +430,9 @@ t = 10^{15}&0.7792&0.2208&3.5&0.6868&0.1946&3.5\\
 t = 10^{28}&0.7374&0.2626&2.8&0.6090&0.2169&2.8\\
 \hline
 \end{array}\)
-\caption{.} \label{tab:pevenpred}
+\caption{Test from  Equation~\ref{eqGoodRelation} that the zero counts distribution in a Gram interval is not independent of Gram type.} \label{tab:pevenpred}
 \end{table}
 
-\section{\label{sec5}Riemann zeta zero counts on Gram Intervals}
 In this section we consider the distribution of Gram intervals that contain a given number of zeros. We present a new relation between the distribution and the good/bad nature of Gram points. We also review the prediction of Odlyzko~\cite{Odlyzko(1992)} based on the GUE hypothesis. The GUE hypothesis  is the conjecture that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices are called the Gauss unitary ensemble (GUE).  Odlyzko derived the GUE prediction by assuming that a Gram interval does not differ from any other interval of that length. From this assumption it follows that the distribution is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, and the GUE prediction.
 
 While the agreement with the GUE prediction is good, we argue here that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of points.  We set up the notation. $p_g$ and $p_b$ represent the probabilities that a given Gram Point is good or bad respectively. For the sample of a million zeros considered by us,  $p_g = 0.7962$ and $p_b = 0.2038$. $p_{odd|good}$ and $p_{even|good}$ are the probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point is good. $p_{odd|bad}$ and $p_{even|bad}$ have corresponding interpretations when the left Gram point is bad. We now derive a consistency relation between these quantities, by asking the question: what is the probability of a given Gram point being good or bad, given information about the preceding Gram point? 
