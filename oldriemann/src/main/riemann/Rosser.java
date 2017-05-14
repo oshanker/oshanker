@@ -16,19 +16,51 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import riemann.Rosser.GramBlock.TYPE;
+
 /**
  * @author oshanker
  *
  */
 public class Rosser {
 	static boolean hiary = false;
-	static HashMap<String, Integer> rosser = new HashMap<>();
+	static HashMap<String, GramBlock> rosser = new HashMap<>();
 	static int[][] intervalCounts = new int[2][6];
 	private static int maxS = 10;
 	static int pEvenGood = 0, pEvenBad = 0;
 	static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
 	private static int goodCount;
 	private static int badCount;
+	
+	public static class GramBlock{
+	    enum TYPE{
+	        I,II,III,NOT_REGULAR
+	    }
+	    TYPE type;
+	    double occurrence;
+	    String pattern;
+        public GramBlock(String pattern, int blockZerosCount) {
+            this.occurrence = 1;
+            this.pattern = pattern;
+            int len = pattern.length();
+            if(blockZerosCount==len ){
+                if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='0'){
+                    type = TYPE.III;
+                }else if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='2'){
+                    type = TYPE.II;
+                }else if(pattern.charAt(0)=='2' && pattern.charAt(len-1)=='0'){
+                    type = TYPE.I;
+                }else {
+                    throw new IllegalStateException();
+                }
+            }else{
+                type = TYPE.NOT_REGULAR;
+            }
+        }
+	    public void increment(){
+	        occurrence++;
+	    }
+	}
 	static class ZeroInfo{
 		String zeroInput;
 		int countZeros;
@@ -145,6 +177,7 @@ public class Rosser {
 		boolean evenInterval = false;
 		println(out, header);
 		int S = 0;//starting at regular Gram Point
+		int blockZerosCount = 0;
 		while (count < N  ) {
 			int n = count + noffset;
 			double upperLimit = baseLimit + (n-1)* (gramIncr);
@@ -170,6 +203,7 @@ public class Rosser {
 			    }
 				if(inGramBlock){
 					interval += zeroInput.countZeros;
+			        blockZerosCount += zeroInput.countZeros;
 					badBad++;
 				} else {
 					goodGood++;
@@ -178,11 +212,12 @@ public class Rosser {
 				//transition
 				if(inGramBlock){
 					interval += zeroInput.countZeros;
+                    blockZerosCount += zeroInput.countZeros;
 				    println(out,  ", exited gram Block: config " + interval);
 				    if(rosser.containsKey(interval)){
-				    	rosser.put(interval, rosser.get(interval)+1);
+				        rosser.get(interval).increment();
 				    } else {
-				    	rosser.put(interval, 1);
+				    	rosser.put(interval, new GramBlock(interval, blockZerosCount));
 				    }
 				    if(oldGood || !evenInterval){
 				    	throw new IllegalStateException();
@@ -191,6 +226,7 @@ public class Rosser {
 				    badGood++;
 				} else {
 					interval = Integer.toString(zeroInput.countZeros);
+                    blockZerosCount = zeroInput.countZeros;
 					println(out, ", entered gram Block" );
 					goodBad++;
 				    if(!oldGood || !evenInterval){
@@ -248,7 +284,8 @@ public class Rosser {
 	    //		} catch (FileNotFoundException e) {
 	    //			e.printStackTrace();
 	    //		}
-	    double[][] typeIIratios = new double[10][1];
+        double[][] typeIIratios = new double[10][1];
+        //double[][] test = new double[10][1];
 	    Rosser.hiary = true;
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
@@ -269,14 +306,26 @@ public class Rosser {
 
 	        for (String key : rosser.keySet()) {
 	            //String[] parsed = key.split("=");
-	            //if(key.length()>9){continue;}
-	            int idx = key.length()-2;
+                int len = key.length();
+	            if(len>11){continue;}
+                int idx = len -2;
+                GramBlock block = rosser.get(key);
+                if(block.type == TYPE.II){
+                    char[] chars = key.toCharArray();
+                    chars[0] = '2';
+                    chars[len-1]='0';
+                    String typeI = new String(chars);
+                    if(rosser.containsKey(typeI)){
+                        typeIIratios[len-2][displacement] = block.occurrence/rosser.get(new String(typeI)).occurrence;
+                    }
+                }
 	            if(idx < stats.length){
-	                stats[idx].add(key + " : " + rosser.get(key));
+                    stats[idx].add(key + " : " + block .occurrence);
 	            } else {
-	                System.out.println("* " + key.length() + " " + key + " " + rosser.get(key));
+	                System.out.println("* " + key.length() + " " + key + " " + block.occurrence);
 	            }
 	        }
+	        /*
 	        for (int i = 0; i < stats.length; i++) {
 	            char[] typeII = new char[i+2];
 	            char[] typeI = new char[i+2];
@@ -289,16 +338,17 @@ public class Rosser {
 	                else if(j==typeI.length-1){typeI[j]='0';}
 	                else {typeI[j]='1';}
 	            }
-
 	            if(rosser.containsKey(new String(typeI)) && rosser.containsKey(new String(typeII))){
-//	                System.out.println(/*stats[i] typeII.length + " " + */ 
+//	                System.out.println(
 //	                        Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
-	                typeIIratios[typeII.length-2][displacement] = ((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI));
-                    System.out.println(stats[i] );
+	                typeIIratios[typeII.length-2][displacement] =
+	                        ((double)rosser.get(new String(typeII)).occurrence)/rosser.get(new String(typeI)).occurrence;
+//                    System.out.println(stats[i] );
 	            } else {
-	                System.out.println(stats[i] );
+//	                System.out.println(stats[i] );
 	            }
 	        }
+	*/
 	        for (int j = 0; j < intervalCounts.length; j++) {
 	            int sum = 0;
 	            for (int i = 0; i < intervalCounts[j].length; i++) {
@@ -315,7 +365,8 @@ public class Rosser {
 
         for (int j = 0; j < typeIIratios.length; j++) {
 	        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
-	            System.out.print((displacement==0?(j+2+" &"):" &") + Conjectures.nf.format(typeIIratios[j][displacement] ));
+	            System.out.print((displacement==0?(j+2+" &"):" &") 
+                        + Conjectures.nf.format(typeIIratios[j][displacement] ) );
 	        }
 	        System.out.println(" \\\\");
 	    }
