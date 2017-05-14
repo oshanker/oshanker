@@ -248,7 +248,7 @@ public class Rosser {
 	    //		} catch (FileNotFoundException e) {
 	    //			e.printStackTrace();
 	    //		}
-	    double[][] typeIIratios = new double[10][7];
+	    double[][] typeIIratios = new double[10][1];
 	    Rosser.hiary = true;
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
@@ -269,7 +269,7 @@ public class Rosser {
 
 	        for (String key : rosser.keySet()) {
 	            //String[] parsed = key.split("=");
-	            if(key.length()>9){continue;}
+	            //if(key.length()>9){continue;}
 	            int idx = key.length()-2;
 	            if(idx < stats.length){
 	                stats[idx].add(key + " : " + rosser.get(key));
@@ -294,6 +294,7 @@ public class Rosser {
 //	                System.out.println(/*stats[i] typeII.length + " " + */ 
 //	                        Conjectures.nf.format(((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI))));
 	                typeIIratios[typeII.length-2][displacement] = ((double)rosser.get(new String(typeII)))/rosser.get(new String(typeI));
+                    System.out.println(stats[i] );
 	            } else {
 	                System.out.println(stats[i] );
 	            }
