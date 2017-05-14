@@ -311,13 +311,8 @@ public class Rosser {
                 int idx = len -2;
                 GramBlock block = rosser.get(key);
                 if(block.type == TYPE.II){
-                    char[] chars = key.toCharArray();
-                    chars[0] = '2';
-                    chars[len-1]='0';
-                    String typeI = new String(chars);
-                    if(rosser.containsKey(typeI)){
-                        typeIIratios[len-2][displacement] = block.occurrence/rosser.get(new String(typeI)).occurrence;
-                    }
+                    double ratio = calculateRatio(key, block);
+                    if(ratio > -1){typeIIratios[len-2][displacement] = ratio;}
                 }
 	            if(idx < stats.length){
                     stats[idx].add(key + " : " + block .occurrence);
@@ -375,5 +370,35 @@ public class Rosser {
 	    //		System.out.println(rosser);
 	    if(out != null){out.close();}
 	}
+
+    private static double calculateRatio(String key,  GramBlock block) {
+        double ratio = -1;
+        int len = key.length();
+        char[] chars = key.toCharArray();
+        chars[0] = '2';
+        chars[len-1]='0';
+        String typeI = new String(chars);
+        if(rosser.containsKey(typeI)){
+            ratio = block.occurrence/rosser.get(new String(typeI)).occurrence;
+        }
+        return ratio;
+    }
+
+    private static double[] calculateRatio3(String key,  GramBlock block) {
+        double[] ratio ={ -1, -1};
+        int len = key.length();
+        int idx = key.indexOf('3');
+        if(idx > len/2){
+            return ratio;
+        }
+        char[] chars = key.toCharArray();
+        chars[0] = '2';
+        chars[len-1]='0';
+        String typeI = new String(chars);
+        if(rosser.containsKey(typeI)){
+//            ratio = block.occurrence/rosser.get(new String(typeI)).occurrence;
+        }
+        return ratio;
+    }
 
 }
