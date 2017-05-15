@@ -406,6 +406,9 @@ public class Rosser {
         if(len%2==1 && idx == len/2){
             return ;
         }
+        if( idx != 1 && idx != len-2){
+            return ;
+        }
         if(idx < len/2){
             ratio[len-2][0] += block.occurrence;
         } else {
