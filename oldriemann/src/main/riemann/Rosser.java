@@ -284,8 +284,7 @@ public class Rosser {
 	    //		} catch (FileNotFoundException e) {
 	    //			e.printStackTrace();
 	    //		}
-        double[][] typeIIratios = new double[10][1];
-        //double[][] test = new double[10][1];
+        double[][] typeIIratios = new double[10][7];
 	    Rosser.hiary = true;
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
@@ -303,6 +302,11 @@ public class Rosser {
 	        for (int i = 0; i < stats.length; i++) {
 	            stats[i] = new TreeSet<String>();
 	        }
+	        
+	        double[][]  ratio = new double[typeIIratios.length][];
+	        for (int i = 0; i < ratio.length; i++) {
+	            ratio[i] = new double[]{0, 0};
+            }
 
 	        for (String key : rosser.keySet()) {
 	            //String[] parsed = key.split("=");
@@ -310,9 +314,12 @@ public class Rosser {
 	            if(len>11){continue;}
                 int idx = len -2;
                 GramBlock block = rosser.get(key);
-                if(block.type == TYPE.II){
-                    double ratio = calculateRatio(key, block);
-                    if(ratio > -1){typeIIratios[len-2][displacement] = ratio;}
+//                if(block.type == TYPE.II){
+//                    double ratio = calculateRatio(key, block);
+//                    if(ratio > -1){typeIIratios[len-2][displacement] = ratio;}
+//                }
+                if(block.type == TYPE.III){
+                    calculateRatio3(key, block, ratio);
                 }
 	            if(idx < stats.length){
                     stats[idx].add(key + " : " + block .occurrence);
@@ -320,6 +327,15 @@ public class Rosser {
 	                System.out.println("* " + key.length() + " " + key + " " + block.occurrence);
 	            }
 	        }
+            for (int i = 0; i < ratio.length; i++) {
+                if(ratio[i][0]<1 || (ratio[i][1]<1) ){
+                    continue;
+                }
+//                if( i > 5){
+//                    System.out.println(stats[i] + "\n" + Arrays.toString(ratio[i]));
+//                }
+                typeIIratios[i][displacement] = ratio[i][0]/ratio[i][1];
+            }
 	        /*
 	        for (int i = 0; i < stats.length; i++) {
 	            char[] typeII = new char[i+2];
@@ -384,21 +400,18 @@ public class Rosser {
         return ratio;
     }
 
-    private static double[] calculateRatio3(String key,  GramBlock block) {
-        double[] ratio ={ -1, -1};
+    private static void calculateRatio3(String key,  GramBlock block, double[][] ratio) {
         int len = key.length();
         int idx = key.indexOf('3');
-        if(idx > len/2){
-            return ratio;
+        if(len%2==1 && idx == len/2){
+            return ;
         }
-        char[] chars = key.toCharArray();
-        chars[0] = '2';
-        chars[len-1]='0';
-        String typeI = new String(chars);
-        if(rosser.containsKey(typeI)){
-//            ratio = block.occurrence/rosser.get(new String(typeI)).occurrence;
+        if(idx < len/2){
+            ratio[len-2][0] += block.occurrence;
+        } else {
+            ratio[len-2][1] += block.occurrence;
         }
-        return ratio;
+        return ;
     }
 
 }
