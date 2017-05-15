@@ -284,7 +284,7 @@ public class Rosser {
 	    //		} catch (FileNotFoundException e) {
 	    //			e.printStackTrace();
 	    //		}
-        double[][] typeIIratios = new double[10][7];
+        double[][] typeIIratios = new double[10][4];
 	    Rosser.hiary = true;
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
@@ -374,7 +374,7 @@ public class Rosser {
 	        System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
 	    }
 
-        for (int j = 0; j < typeIIratios.length; j++) {
+        for (int j = 2; j < typeIIratios.length; j++) {
 	        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
 	            System.out.print((displacement==0?(j+2+" &"):" &") 
                         + Conjectures.nf.format(typeIIratios[j][displacement] ) );

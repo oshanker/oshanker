@@ -365,6 +365,25 @@ Gram~block	& 0.0\delta & 0.1\delta & 0.2\delta & 0.3\delta & 0.4\delta & 0.5\del
 \caption{Test that Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosserrandom}
 \end{table}
 
+\begin{table}
+\centering \(\begin{array}{ccccc}
+\hline
+Length~of 	& &&Displacment \\
+Gram~block	& 0.0\delta & 0.1\delta & 0.2\delta & 0.3\delta  \\
+\hline
+4 &1.011644 &1.248305 &1.463930 &1.948624 \\
+5 &0.977058 &1.503534 &2.505236 &3.393130 \\
+6 &1.004535 &1.497143 &2.399160 &3.668831 \\
+7 &1.050000 &2.121951 &4.260274 &7.692308 \\
+8 &0.915966 &1.725000 &4.171429 &11.200000 \\
+9 &1.272727 &2.448276 &11.000000 &18.600000 \\
+10 &0.896552 &3.142857 &12.400000 &74.000000 \\
+11 &1.166667 &9.333333 &19.000000 &16.500000 \\
+\hline
+\end{array}\)
+\caption{Test that Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosser3random}
+\end{table}
+
 In this section we present the prediction of  Conjecture \ref{symmetry} on the distribution of different types of Gram blocks. We will follow the notation of   Odlyzko~\cite{Odlyzko(1992)}. A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise. A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
 and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where k is called the length of the Gram block, and $a_i$ denote the number of roots of Z(t) in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
 
@@ -374,8 +393,11 @@ $21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
 where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko(1992)} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture \ref{symmetry} above predicts that the number of Type I and Type II Gram blocks up to a given large height must be equal to each other (except for Type I Gram blocks of length one, which only have the pattern 1).  Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of counts of Gram Blocks of Type II to Type I, found up to $t = 10^{13}$. The prediction of Conjecture 2 is borne out to a remarkable degree. While there is very good evidence for the forward-backward symmetry from the ratio of $Type~II$ to $Type~I$ counts, there is another intriguing pattern: the Type II counts are ever so slightly smaller than the Type I counts. Thus, while we have a symmetry, it is broken very slightly.
 
 One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in this section and in  the next section. Table~\ref{tab:rosserrandom} shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.
-The table shows clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution.
+The table shows clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution. 
+We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), using the ratio of  $Type~III,left$ interval counts where the '3' interval occurs on the left, to  $Type~III,right$ interval counts where the '3' interval occurs on the right. 
+Table~\ref{tab:rosser3random} shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. This provides further evidence for the conclusions of Table~\ref{tab:rosserrandom}.
 
+  
 \begin{table}
 \centering \(\begin{array}{cc}
 \hline
