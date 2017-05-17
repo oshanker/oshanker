@@ -6,3 +6,4 @@
      text (0, sin(0), "sin");
      text (1, cos(1), "cos");
      legend ("sin ..(x)","cos");
+     axis([-10,10, -0.707, 1.1]);
