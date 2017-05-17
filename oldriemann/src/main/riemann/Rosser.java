@@ -284,7 +284,7 @@ public class Rosser {
 	    //		} catch (FileNotFoundException e) {
 	    //			e.printStackTrace();
 	    //		}
-        double[][] typeIIratios = new double[10][4];
+        double[][] typeIIratios = new double[10][5];
 	    Rosser.hiary = true;
 	    double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
@@ -297,7 +297,7 @@ public class Rosser {
                 }
             }
 	        System.out.println("displacement " + displacement);
-	        readItems( out, baseLimit+(displacement)*gramIncr/10, configParams );
+	        readItems( out, baseLimit+(displacement-2)*gramIncr/10, configParams );
 	        TreeSet<String>[] stats = new TreeSet[10];
 	        for (int i = 0; i < stats.length; i++) {
 	            stats[i] = new TreeSet<String>();
@@ -314,13 +314,12 @@ public class Rosser {
 	            if(len>11){continue;}
                 int idx = len -2;
                 GramBlock block = rosser.get(key);
-//                if(block.type == TYPE.II){
-//                    double ratio = calculateRatio(key, block);
-//                    if(ratio > -1){typeIIratios[len-2][displacement] = ratio;}
-//                }
-                if(block.type == TYPE.III){
-                    calculateRatio3(key, block, ratio);
+                if(block.type == TYPE.II){
+                    calculateRatio(key, block, ratio);
                 }
+//                if(block.type == TYPE.III){
+//                    calculateRatio3(key, block, ratio);
+//                }
 	            if(idx < stats.length){
                     stats[idx].add(key + " : " + block .occurrence);
 	            } else {
@@ -374,12 +373,12 @@ public class Rosser {
 	        System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
 	    }
 
-        for (int j = 2; j < typeIIratios.length; j++) {
+        for (int j = 0; j < typeIIratios.length; j++) {
 	        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
-	            System.out.print((displacement==0?(j+2+" &"):" &") 
+	            System.out.print((/*displacement==0?(j+2+" &"): */"&") 
                         + Conjectures.nf.format(typeIIratios[j][displacement] ) );
 	        }
-	        System.out.println(" \\\\");
+	        System.out.println(/*" \\\\"*/);
 	    }
 
 
@@ -387,17 +386,17 @@ public class Rosser {
 	    if(out != null){out.close();}
 	}
 
-    private static double calculateRatio(String key,  GramBlock block) {
-        double ratio = -1;
+    private static void calculateRatio(String key,  GramBlock block, double[][] ratio) {
         int len = key.length();
         char[] chars = key.toCharArray();
         chars[0] = '2';
         chars[len-1]='0';
         String typeI = new String(chars);
         if(rosser.containsKey(typeI)){
-            ratio = block.occurrence/rosser.get(new String(typeI)).occurrence;
+            ratio[len-2][0]=block.occurrence;
+            ratio[len-2][1] = rosser.get(new String(typeI)).occurrence;
         }
-        return ratio;
+        return ;
     }
 
     private static void calculateRatio3(String key,  GramBlock block, double[][] ratio) {
