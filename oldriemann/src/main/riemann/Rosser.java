@@ -375,10 +375,10 @@ public class Rosser {
 
         for (int j = 0; j < typeIIratios.length; j++) {
 	        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
-	            System.out.print((/*displacement==0?(j+2+" &"): */"&") 
+	            System.out.print((displacement==0?(j+2+" &"): "&") 
                         + Conjectures.nf.format(typeIIratios[j][displacement] ) );
 	        }
-	        System.out.println(/*" \\\\"*/);
+	        System.out.println(" \\\\");
 	    }
 
 
