@@ -19,7 +19,7 @@
 
 \date{}
 \lhead[]{}
-\chead[\underline{xxx}]{\it{ updated May 17 2017}}
+\chead[\underline{xxx}]{\it{ updated May 18 2017}}
 \rhead[]{}
 
 \title{\bf{Conjectures regarding Riemann zeta function at Gram points}}
@@ -321,7 +321,7 @@ prediction   &  self         & +--       &  self        & ++-       & --+       
 
 
 Using just counts based arguments, one can show that the count for a given configuration from the all Gram points distribution  will match the count for the reversed configuration ( e.g., the count for '$++-$' will match count for '$-++$'). There is no real test of Conjecture \ref{symmetry}.
-Table~\ref{tab:tripletestcomplexity} shows that for the even and odd Gram points separately the agreement with the prediction of Conjecture~\ref{symmetry} is at the $1\%$ level. .
+Table~\ref{tab:tripletestcomplexity} shows that for the even and odd Gram points separately the agreement with the prediction of Conjecture~\ref{symmetry} is at the $1\%$ level. .We can verify from Tables~\ref{tab:pairtest} and \ref{tab:tripletestcomplexity} that  the results change significantly if we shift all the Gram points by the same amount in a large interval. From Table~\ref{tab:pairtest} we find that the probability for a Gram interval to contain an even number of zeros is $0.303$ which gives the  probability for a pair of consecutive  Gram intervals to both contain an even number of zeros to be $0.092$ if the distributions were independent of the Gram points.   From Table~\ref{tab:tripletestcomplexity} we find that the actual measured probability for a pair of consecutive  Gram intervals to both contain an even number of zeros is $0.136$. Thus, the  probability for a pair of consecutive  Gram intervals to both contain an even number of zeros is about $45\%$ larger than would be expected if the distribution of zero differences on the critical line is independent of the Gram point locations.
 
 \subsection{\label{sec4c}Conjecture 2 and Gram Block}
 
@@ -390,7 +390,7 @@ Gram~block	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\delta  \\
 \centering
 \includegraphics[width=1.1\textwidth]{typeIIratio}
 \caption[]{ 
-  Ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. All the curves cross over exactly at the Gram point, and have the value $1$ at crossover. Thus, the forward-backward symmetry depends strongly on measuring at the Gram point.
+  Ratio of $Type~II/Type~I$ counts for Gram blocks of various lengths $l$, when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. All the curves cross over exactly at the Gram point, and have the value $1$ at crossover. Thus, the forward-backward symmetry depends strongly on measuring at the Gram point.
  }
 \vspace{1mm}
 \label{typeIIratio}
@@ -432,10 +432,10 @@ Type~of~violation &Ratio~of~counts\\
 \end{table}
 
 Further validation comes from a consideration of the different types of violations of Rosser's rule~\cite{gourdon}, which also show the forward-backward symmetry. Rosser's rule states that Gram blocks of length $k$ contain at least $k$ zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram Blocks. A Gram block is either regular, or it has an excess of zeros, or it has fewer zeros than its length. The last type of Gram block violates Rosser's rule. 
-If a Gram block of length k is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Gourdon uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
+If a Gram block of length k is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Odlyzko uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
 to describe an exception on a Gram block of length $k$  where the missing zeros are on the left (for $X = L$) or on the right (for $X = R$), the pattern containing the missing zeros being $a_1a_2 . . . a_m$ (moreover, this pattern is the smallest union of Gram block adjacent to the exception that contains the missing zeros). For example, $3L04$ denotes a violation of Rosser's rule on a Gram block of length 3, the missing zeros being at its left. Written out in detail, the pattern of zeros is expressed by the notation is $04010$.
 
-The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Gourdon uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
+The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Odlyzko uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the forward-backward symmetry in patterns of violations of Rosser's rule. Once again, while there is very good evidence for the forward-backward symmetry, the $L$ type violations are ever so slightly smaller than the $R$ type violations. Again, we have evidence for a symmetry which is broken very slightly.
 
 In the next section we present the statistics of the Riemann zeta zero counts on Gram Intervals. We show that the distribution is not independent of the type of Gram interval..
