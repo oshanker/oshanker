@@ -13,8 +13,8 @@ public class ZeroPolyTest {
     @Test @Ignore
     public void riemann() {
         double delta = 0.001;
-        double[] begin = {243.8749480149-delta, 243.8749480149+delta,
-                244.158906912980683962-delta, 244.158906912980683962+delta};
+        double[] begin = {//244.367502584863394599-delta, 244.367502584863394599+delta,
+                244.920599505825861697-delta, 244.920599505825861697+delta};
         double[] zetaFromRiemann = new double[begin.length];
         long offset = (long) 1.0E12;
         for (int i = 0; i < begin.length; i++) {
@@ -28,14 +28,23 @@ public class ZeroPolyTest {
         }
     }
     
-    @Test 
+    @Test  
     public void root() {
-        double[] roots = new double[]{243.8749480149, 244.158906912980683962};
-        double[] slopes = new double[]{17.618801272842216, -20.007038515089505};
+        double[] roots = new double[]{243.8749480149, 244.158906912980683962,
+                244.367502584863394599, 244.588579452072075626, 244.920599505825861697};
+        double[] slopes = new double[]{17.618801272842216, -20.007038515089505,
+                19.34333425934199, -27.175254718303503, 23.851008298572186};
         ZeroPoly zeroPoly = new ZeroPoly(roots, slopes);
         double t1 = 243.77756012466052947405878015472510;
-        double z = zeroPoly.eval(t1);
-        System.out.println("z "+ z);
+        long offset = (long) 1.0E12;
+        //double incr  = 2*Math.PI/(Math.log((offset+t1)/(2*Math.PI)));
+        double incr = 0.24359904690399015;
+        for (int i = 0; i < 5; i++) {
+            double z = zeroPoly.eval(t1);
+            double zetaFromRiemann = Riemann.riemann(t1, offset);
+            System.out.println(t1 + " zetaFromRiemann " + zetaFromRiemann + " z "+ z);
+            t1+=incr;
+        }
     }
     
     @Test @Ignore
