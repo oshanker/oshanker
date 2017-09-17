@@ -5,6 +5,7 @@ target
 .project
 .recommenders
 .DS_Store
+.Rapp.history
 oldriemann/bin
 oldriemann/out/
 misc/gramwriteup/RiemannZeta.pdf
