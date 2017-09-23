@@ -34,7 +34,7 @@ public class Conjectures {
 		intf.setMinimumIntegerDigits(6);
 	}
 	
-	public static int swapBits(int i, int size){
+	private static int swapBits(int i, int size){
 		int ret = 0;
 		int x = i;
 		int digit = 0;
@@ -47,7 +47,7 @@ public class Conjectures {
 		}
 		return ret;
 	}
-	public static int[] reverse(int[] data) {
+	private static int[] reverse(int[] data) {
 		int[] reversed = new int[data.length];
 	    for (int i = 0; i < data.length; i++) {
 			reversed[i] = data[data.length-1-i];
@@ -55,20 +55,17 @@ public class Conjectures {
 		return reversed;
 	}
 	
-	public static int[] readItems(Map<String, String> configParams)
+	private static int[] readItems(Map<String, String> configParams)
 			throws FileNotFoundException, IOException {
-        String zerosFile = configParams.get("zerosFile");
-        zerosFile = zerosFile.substring(1, zerosFile.length()-1);
+        BufferedReader zeroIn1 = Rosser.getZerosFile(configParams);
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
         signumGram = (signumGram+1)/2;
         int N = Integer.parseInt(configParams.get("N"));
         noffset = Integer.parseInt(configParams.get("noffset"));
-        //(Rosser.hiary?2:1)
         
 		int[] signumPoints  = new int[N];
-		BufferedReader zeroIn1 = new BufferedReader(new FileReader(zerosFile));
 		int count = 0;
 		ZeroInfo zeroInput = new ZeroInfo(null,0);
 		PrintStream out = null;
@@ -89,7 +86,7 @@ public class Conjectures {
 		return signumPoints;
 	}
 
-	public int[] calculateDistribution(int[] signumPoints, int sampleLength, 
+	private int[] calculateDistribution(int[] signumPoints, int sampleLength, 
 			int sampleOffset, int sampleIncrement, int N, int begin)
 	{
 		int count = 0;
@@ -115,33 +112,7 @@ public class Conjectures {
 		return signumCounts;
 	}
 
-	public static void main(String[] args) throws Exception {
-		Files.createDirectories(FileSystems.getDefault().getPath("out"));
-        Map<String,String> configParams = Rosser.readConfig("data/RosserConfig.txt");
-		String conjecturesOutFile = configParams.get("conjecturesOutFile");
-		conjecturesOutFile = conjecturesOutFile.substring(1, conjecturesOutFile.length()-1);
-        File file = new File(conjecturesOutFile);
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		PrintStream out = null;
-		try {
-			out = new PrintStream(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		signumPoints = readItems(configParams);
-		//PrintStream out = System.out;
-		out.println("************** " + signumPoints.length + " *************");
-		statistics(out, 0, signumPoints.length);
-		
-	}
-
-	public static void statistics(PrintStream out, int begin, int N)  {
+	private static void statistics(PrintStream out, int begin, int N)  {
 		int sampleLength = 1;
 		int sampleOffset1 = 0; 
 		int sampleIncrement = 2;
@@ -229,5 +200,33 @@ public class Conjectures {
 			}
 		}
 	}
+
+    public static void main(String[] args) throws Exception {
+        Files.createDirectories(FileSystems.getDefault().getPath("out"));
+        Map<String,String> configParams = Rosser.readConfig("data/RosserConfig.txt");
+        String conjecturesOutFile = configParams.get("conjecturesOutFile");
+        System.out.println(conjecturesOutFile);
+        //get rid of quotes
+        conjecturesOutFile = conjecturesOutFile.substring(1, conjecturesOutFile.length()-1);
+        File file = new File(conjecturesOutFile);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        PrintStream out = null;
+        try {
+            out = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        signumPoints = readItems(configParams);
+        //PrintStream out = System.out;
+        out.println("************** " + signumPoints.length + " *************");
+        statistics(out, 0, signumPoints.length);
+        
+    }
 
 }
