@@ -23,7 +23,6 @@ import riemann.Rosser.GramBlock.TYPE;
  *
  */
 public class Rosser {
-	static boolean hiary = false;
 	static HashMap<String, GramBlock> rosser = new HashMap<>();
 	static int[][] intervalCounts = new int[2][6];
 	private static int maxS = 10;
@@ -317,11 +316,11 @@ public class Rosser {
         //      } catch (FileNotFoundException e) {
         //          e.printStackTrace();
         //      }
-        double[][] typeIIratios = new double[10][5];
-        Rosser.hiary = true;
+        double[][] typeIIratios = new double[10][1];
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
-        for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
+        int displacementCount = typeIIratios[0].length;
+        for (int displacement = 0; displacement < displacementCount; displacement++) {
 
             rosser.clear();
             for (int j = 0; j < intervalCounts.length; j++) {
@@ -330,7 +329,7 @@ public class Rosser {
                 }
             }
             System.out.println("displacement " + displacement);
-            readItems( out, baseLimit+(displacement-2)*gramIncr/10, configParams );
+            readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10, configParams );
             TreeSet<String>[] stats = new TreeSet[10];
             for (int i = 0; i < stats.length; i++) {
                 stats[i] = new TreeSet<String>();
@@ -404,7 +403,11 @@ public class Rosser {
             double pBad = ((double)badCount)/count;
             System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad);
             System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
+            System.out.println("Table 10: pEvenBad/pEvenGood " +( ((double)badGood)/badCount )/(((double)goodBad)/goodCount)
+                    + " pGood/pBad " + pGood/pBad);
         }
+        
+        System.out.println("Table 6");
 
         for (int j = 0; j < typeIIratios.length; j++) {
             for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
