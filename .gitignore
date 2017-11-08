@@ -6,6 +6,7 @@ target
 .recommenders
 .DS_Store
 .Rapp.history
+gramratio.pdf
 oldriemann/bin
 oldriemann/out/
 misc/gramwriteup/RiemannZeta.pdf
