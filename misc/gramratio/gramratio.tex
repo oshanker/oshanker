@@ -49,7 +49,7 @@ symmetry related conjectures about the location of the zeros.
 
 
 \section{Introduction}
-The Riemann Hypothesis is one of the seven millennium prize problems posed by the the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
+The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
 In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called "Gram points".
 He observed that in his calculations the roots of the Riemann zeta function alternated with the Gram points. He also observed that the
 value of the real part of the Riemann zeta function was positive at the Gram points. Such points are today called good Gram points. Thus, we may say that since the early 
@@ -60,6 +60,11 @@ The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function. 
 Section~\ref{sec3} describes the Gram points. 
+Section~\ref{sec4} describes the Gram blocks. 
+In Section~\ref{sec5} we study empirically the ratio of good to bad Gram points, and relate it to a conjecture of Odlyzko. 
+In Section~\ref{sec6} we study the ratio of $Type~II/Type~I$ Gram blocks.. 
+Section~\ref{sec7} presents two new conjectures. 
+Section~\ref{conclusions} gives a brief summary of the results. 
 
 \section{\label{sec2}The Notation for the Riemann zeta function }
 
@@ -163,7 +168,7 @@ large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS
 use a high precision module to evaluate the arguments. The rest of the calculation
 is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to efficiently evaluate the zeta function at large t.
 
-In the next section we present the statistics of the zeta value distributions for 
+In the next section we present the theory of Gram blocks.
 
 \section{\label{sec4}Gram Blocks}
 
@@ -174,8 +179,9 @@ and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by 
 A Gram block of length k which contains exactly k roots of Z[t) is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
 Thus, regular Gram blocks must have a pattern of one of the following three forms:
 $21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
-where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko 1992} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively. A simple generalization of Conjecture 
+where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko 1992} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively.  
 
+In the next section we study the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture.
 
 \section{\label{sec5}Good to Bad Gram point ratio}
 
@@ -328,7 +334,7 @@ to describe an exception on a Gram block of length $k$  where the missing zeros 
 The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Odlyzko uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the forward-backward symmetry in patterns of violations of Rosser's rule. Once again, while there is very good evidence for the forward-backward symmetry, the $L$ type violations are ever so slightly smaller than the $R$ type violations. Again, we have evidence for a symmetry which is broken very slightly.
 
-In the next section 
+In the next section we present two new conjectures based on the empirical evidence presented so far.
 
 
 \section{\label{sec7}Two Conjectures}
@@ -406,6 +412,9 @@ The evidence for  Conjecture~\ref{symmetry} has been presented in the previous s
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  All the data  are from $10$ million Gram intervals starting at $t=10^{15}$.
 
 Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a positive zeta value, while the notation '$+-$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
+
+In the next section we present the conclusions.
+
 
 \section{\label{conclusions}Conclusions}
 
