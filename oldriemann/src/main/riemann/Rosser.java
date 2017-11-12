@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +24,12 @@ import riemann.Rosser.GramBlock.TYPE;
  *
  */
 public class Rosser {
+    static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMinimumFractionDigits(13);
+        nf.setMaximumFractionDigits(13);
+        nf.setGroupingUsed(false);
+    }
 	static HashMap<String, GramBlock> rosser = new HashMap<>();
 	static int[][] intervalCounts = new int[2][6];
 	private static int maxS = 10;
@@ -60,9 +67,20 @@ public class Rosser {
 	        occurrence++;
 	    }
 	}
+	
+	/**
+	 * 
+	 * 
+	 *
+	 */
 	static class ZeroInfo{
 		String zeroInput;
 		int countZeros;
+		/**
+		 * 
+		 * @param zeroInput
+		 * @param countZeros
+		 */
 		public ZeroInfo(String zeroInput, int countZeros) {
 			super();
 			this.zeroInput = zeroInput;
@@ -128,9 +146,9 @@ public class Rosser {
 	
 	public static Map<String,String> readConfig(String configFile) throws IOException{
 	    HashMap<String,String> configParams = new HashMap<>();
-        BufferedReader zeroIn = new BufferedReader(
+        BufferedReader configIn = new BufferedReader(
                 new FileReader(configFile));
-        String input = zeroIn.readLine();
+        String input = configIn.readLine();
         boolean inCommentSection = false;
         while(input != null){
             input = input.trim();
@@ -141,14 +159,14 @@ public class Rosser {
                 inCommentSection = true;
             }
             if(input.startsWith("#") || inCommentSection || input.length() == 0){
-                input = zeroIn.readLine();
+                input = configIn.readLine();
                 continue;
             }
             String[] parsed = input.split("=");
             configParams.put(parsed[0].trim(), parsed[1].trim());
-            input = zeroIn.readLine();
+            input = configIn.readLine();
         }
-	    zeroIn.close();
+	    configIn.close();
         return configParams;
 	}
 
@@ -167,11 +185,16 @@ public class Rosser {
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
         int N = Integer.parseInt(configParams.get("N"));
         int noffset = Integer.parseInt(configParams.get("noffset"));
+        int correction = 0;
+        String correctionString = configParams.get("correction");
+        if(correctionString!=null){
+            correction = Integer.parseInt(correctionString);
+        }
         String header = configParams.get("header");
         header = header.substring(1, header.length()-1);
 		//assuming that we start at a good regular (odd/even-hiary) Gram Point
 		int count = 0;
-		ZeroInfo zeroInput = new ZeroInfo(null,0);
+		ZeroInfo zeroInput = readZeros(baseLimit , out, zeroIn, null);
 		boolean oldGood = true;
 		boolean good = false;
 		boolean inGramBlock = false;
@@ -183,17 +206,17 @@ public class Rosser {
 		int blockZerosCount = 0;
 		while (count < N  ) {
 			int n = count + noffset;
-			double upperLimit = baseLimit + (n-1)* (gramIncr);
+			double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
 			//at entry, upperLimit=244.264758217468505 for e12
 			//first zero is 244.158906912980683962
 			//prev gram is 244.02115917156451839965694310614387
 			//idx at entry is 3945951431270L + 2
 			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
-				print(out, n + ",1, " + S);
+				print(out, n + ", 1 , " + S + ", " + nf.format(upperLimit-gramIncr));
 				good = true;
 				goodCount++;
 			} else {
-				print(out, n + ",0, " + S);
+				print(out, n + ", 0 , " + S + ", " + nf.format(upperLimit-gramIncr));
 				good = false;
 				badCount++;
 			}
@@ -303,20 +326,23 @@ public class Rosser {
     public static void main(String[] args) throws Exception {
         Map<String,String> configParams = readConfig("data/RosserConfig.txt");
         PrintStream out = null;
-        //      File file = new File("data/rosserE12.csv");
-        //      if (!file.exists()) {
-        //          try {
-        //              file.createNewFile();
-        //          } catch (IOException e) {
-        //              e.printStackTrace();
-        //          }
-        //      }
-        //      try {
-        //          out = new PrintStream(file);
-        //      } catch (FileNotFoundException e) {
-        //          e.printStackTrace();
-        //      }
-        double[][] typeIIratios = new double[10][1];
+        int N = Integer.parseInt(configParams.get("N"));
+        if (N < 125) {
+              File file = new File("out/rosserE28.txt");
+              if (!file.exists()) {
+                  try {
+                      file.createNewFile();
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+              }
+              try {
+                  out = new PrintStream(file);
+              } catch (FileNotFoundException e) {
+                  e.printStackTrace();
+              }
+        }
+        double[][] typeIIratios = new double[10][5];
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int displacementCount = typeIIratios[0].length;
