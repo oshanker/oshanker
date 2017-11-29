@@ -110,7 +110,7 @@ public class GSeries {
 	}
 	
 	public static double correction( double sqrtArg1 ) {
-		int N = (int)sqrtArg1;
+		long N = (long)sqrtArg1;
 		double p = sqrtArg1-N;
 		double fourthRoot = Math.sqrt(sqrtArg1);
 		double c0formula = Math.cos(2 * Math.PI * (p * p - p - 1.0 / 16))

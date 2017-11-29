@@ -12,8 +12,72 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import math.GSeries;
+import riemann.Riemann.GramInfo;
 
 public class ConjecturesTest {
+    //@Test //needs fixing (large sums)
+    public void testZeroLargeOffset() {
+        MathContext mc = new MathContext(80, RoundingMode.HALF_EVEN);
+        double[][] fAtBeta = null;
+        double[] begin = {100.437512887104287873, 100.464843234223048518};
+        int k0 = 1, k1;
+        int R = 2;
+        double lnsqrtArg1 = 0;
+        double basetheta = 0;
+        double dsqrtArg1 = 0;
+        double tbase = 0;
+        double basesqrtArg1 = 0;
+        BigDecimal offset =  BigDecimal.valueOf(1.0E28);
+        for (int i = 0; i < begin.length; i++) {
+            double tincr =  (begin[i]-begin[0]) ; 
+            BigDecimal tval = new BigDecimal(begin[i], mc).add(
+                    offset, mc);
+            double predictedSqrtArg1 = 0;
+            double theta = 0;
+            if(i == 0 ){
+                dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tval.doubleValue()));
+                tbase = tval.doubleValue();
+                BigDecimal xx = tval.divide(Gram.pi_2, mc);
+                BigDecimal sqrtArg1 = sqrt(xx, mc, 1.0E-38);
+                BigDecimal fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-38);
+                //k1 = ;
+                Gram.initLogVals((int)fourthrootArg1.doubleValue());
+                k1 = (int)(sqrtArg1.doubleValue());
+                System.out.println(sqrtArg1);
+                System.out.println("k1 " + k1);
+                k1 = (int) 214748.3647;
+                BigDecimal thetaPi = theta(tval, fourthrootArg1, mc);
+                System.out.println(thetaPi);
+
+                BigDecimal t2 = tval.divide(Gram.bdTWO);
+                basesqrtArg1 = sqrtArg1.doubleValue();
+                BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, mc);
+                lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
+                fAtBeta = GSeries.fSeries(k0, k1, begin[1]-begin[0], R, tval);
+                //theta should be 2.819633653651107
+                theta = tval.multiply(lnsqrtArg1BD, mc).subtract(t2, mc)
+                        .subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
+                basetheta = theta;
+                predictedSqrtArg1 = basesqrtArg1 ;
+                System.out.println(predictedSqrtArg1);
+            } else {
+                theta = (basetheta + lnsqrtArg1*tincr)%(2*Math.PI);
+                predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
+                
+                
+            }
+            double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
+            double correction = GSeries.correction( predictedSqrtArg1);
+            double zeta = rotatedSum + correction;
+            System.out.println("f  : " + Arrays.toString(fAtBeta[i])
+               + " theta " + theta + " rotatedSum " + rotatedSum
+               + " zeta " + zeta);
+            System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
+            assertTrue(i + " ", Math.abs(zeta)  < 5.0E-7);
+        }
+    }
+
+
 
     @Test
     public void testX() {

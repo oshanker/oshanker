@@ -306,16 +306,19 @@ public class Gram {
 //		System.out.println(pi.multiply(e).multiply(bdTWO));
 		BigDecimal offset = new BigDecimal("10000000000000000000000000000");
 		BigDecimal zero = new BigDecimal("100.437512887104287873");
-//		BigDecimal zero = new BigDecimal("100.506081842155716721");
+		BigDecimal zero1 = new BigDecimal("100.464843234223048518");
 		BigDecimal tvalsi = offset.add(zero, Gram.mc);
 		BigDecimal t2 = tvalsi.divide(bdTWO, mc);
 		BigDecimal arg1 = sqrt(t2.divide(pi, mc), mc, 1.0E-15);
 		//System.out.println(offset.longValueExact());
 		BigDecimal arg2 = Gram.sqrt(arg1, mc, 1.0E-15);
 		Gram.initLogVals(100);
-		BigDecimal diff = pi.divide(log(arg2, mc).multiply(Gram.bdTWO), mc);
-		BigDecimal heck1 = theta(tvalsi, Gram.mc).multiply(diff, mc);
-		System.out.println(zero.subtract(heck1) + " diff " + diff);
+		double diff = pi.divide(log(arg2, mc).multiply(Gram.bdTWO), mc).doubleValue();
+		double heck1 = thetaNormalized(tvalsi, Gram.mc) *(diff)/Math.PI;
+		
+		double gram0 = zero.doubleValue() - (heck1);
+        System.out.println(gram0 + ", cf riemann.ConjecturesTest.testX() " 
+		+ (100.36777243017612) + " diff " + diff);
 	}
 	
 	/*
