@@ -43,6 +43,12 @@ public class Gram {
 	static BigDecimal pi2 = pi.divide(bdTWO, mc);
 	static BigDecimal pi4 = pi.divide(BigDecimal.valueOf(4), mc);
 	public static BigDecimal pi_2 = pi.multiply(bdTWO, mc);	
+    static BigDecimal iBD[] = new BigDecimal[20];
+    static{
+        for (int i = 0; i < 20; i++) {
+            iBD[i] = BigDecimal.valueOf(i);
+        }
+    }
 	
 	/**
 	 * High precision log values for the integers.
@@ -212,8 +218,8 @@ public class Gram {
 	       if(Math.abs(term.doubleValue()) < 1.0E-35){ 
 	    	   break; 
 	       }
-	       BigDecimal divisor = BigDecimal.valueOf(i);
-	       sum = (sum.add(term.divide(divisor, mc),mc));
+	       //BigDecimal divisor = BigDecimal.valueOf(i);
+	       sum = (sum.add(term.divide(iBD[i], mc),mc));
 	    }
 	    return sum.multiply(bdTWO, mc);
 	}
@@ -311,9 +317,9 @@ public class Gram {
 		BigDecimal t2 = tvalsi.divide(bdTWO, mc);
 		BigDecimal arg1 = sqrt(t2.divide(pi, mc), mc, 1.0E-15);
 		//System.out.println(offset.longValueExact());
-		BigDecimal arg2 = Gram.sqrt(arg1, mc, 1.0E-15);
-		Gram.initLogVals(100);
-		double diff = pi.divide(log(arg2, mc).multiply(Gram.bdTWO), mc).doubleValue();
+		BigDecimal fourthrootArg1 = Gram.sqrt(arg1, mc, 1.0E-15);
+		Gram.initLogVals(fourthrootArg1.intValue());
+		double diff = pi.divide(log(fourthrootArg1, mc).multiply(Gram.bdTWO), mc).doubleValue();
 		double heck1 = thetaNormalized(tvalsi, Gram.mc) *(diff)/Math.PI;
 		
 		double gram0 = zero.doubleValue() - (heck1);
