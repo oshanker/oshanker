@@ -197,14 +197,11 @@ public class Gram {
 	}
 	
 	public static BigDecimal log(BigDecimal x, MathContext mc) {
-		long arg = x.longValue();
-		if(arg < 100) {
-			throw new IllegalArgumentException("arg too low " + arg);
-		}
-		BigDecimal bigDecimalArg = BigDecimal.valueOf(arg);
-		BigDecimal delta = x.subtract(bigDecimalArg, mc);
+		BigDecimal[] breakup = x.divideAndRemainder(BigDecimal.ONE);
+		BigDecimal bigDecimalArg = breakup[0];
+		BigDecimal delta = breakup[1];
 
-		return log(arg).add(
+		return log(bigDecimalArg.longValue()).add(
 				log1sym(delta.divide(
 						bigDecimalArg.add(x, mc), mc),mc),mc);
 	}
