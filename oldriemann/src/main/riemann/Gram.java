@@ -222,16 +222,18 @@ public class Gram {
 	}
 
 	public static BigDecimal sqrt(BigDecimal x, MathContext mc, double prec) {
-		double init = Math.sqrt(x.doubleValue());
-		BigDecimal next = BigDecimal.valueOf(init);
-		while (true) {
-			BigDecimal diff = x.divide(next, mc).subtract(next, mc).divide(bdTWO,mc);
-		    next = next.add(diff, mc);
-		    if(Math.abs(diff.doubleValue()) < prec){ 
-		    	break; 
-		    }
-		}
-		return next;
+        double init = Math.sqrt(x.doubleValue());
+        BigDecimal next = BigDecimal.valueOf(init);
+        BigDecimal diff = null;
+        while (true) {
+            BigDecimal oldnext = next;
+            next = x.divide(next, mc).add(next, mc).divide(Gram.bdTWO,mc);
+            diff =  next.subtract(oldnext, mc);
+            if(Math.abs(diff.doubleValue()) < prec){ 
+                break; 
+            }
+        }
+        return next;
 	}
 	
 	public static BigDecimal theta(BigDecimal t, MathContext mc) {

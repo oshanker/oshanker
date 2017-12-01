@@ -29,6 +29,7 @@ public class GSeriesTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+        Gram.initLogVals((int)(398942/2.2));
 	}
 
 	/**
@@ -58,7 +59,6 @@ public class GSeriesTest {
 	@Test
 	public void testLargeOffset() {
 		int k0 = 1, k1=206393;
-		Gram.initLogVals(k1);
 		int R = 10000;
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(267653395647L);
@@ -82,7 +82,8 @@ public class GSeriesTest {
 	@Test
 	public void test1E12() {
 		int k0 = 1, k1=398942;
-		Gram.initLogVals(k1);
+		//this reduces time to 14131ms from 14326ms
+		//need to tune optimum value
 		int R = 10000;
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
@@ -132,7 +133,6 @@ public class GSeriesTest {
 				BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
 				basesqrtArg1 = sqrtArg1.doubleValue();
 				k1 = (int)basesqrtArg1;
-				Gram.initLogVals(k1);
 				BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, Gram.mc);
 				lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
 				fAtBeta = GSeries.fSeries(k0, k1, begin[1]-begin[0], R, tval);

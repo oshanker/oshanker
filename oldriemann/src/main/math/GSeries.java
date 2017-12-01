@@ -157,7 +157,7 @@ public class GSeries {
 		return gAtBeta;
 	}
 
-	public static double[][] fSeries(int k0, int k1, double incr, int R, BigDecimal tBase) {
+	public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
 		double[][] fAtBeta = new double[R][2];
 		for (int i = k0; i <= k1; i++) {
 			//evaluate one term in the series, for all t.
