@@ -123,6 +123,15 @@ sqrtArg1[i].doubleValue() 1.2615662622221947E7 correction -1.1522979560645475E-4
          */
     }
 
+    /**
+     * This differs from original Gram sqrt in the way the loop values
+     * are evaluated. This implementation is more stable than the original implementation, 
+     * the original tends to sometimes not terminate.
+     * @param x
+     * @param mc
+     * @param prec
+     * @return
+     */
     public static BigDecimal sqrt(BigDecimal x, MathContext mc, double prec) {
         double init = Math.sqrt(x.doubleValue());
         BigDecimal next = BigDecimal.valueOf(init);
