@@ -3,6 +3,7 @@ package riemann;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -16,13 +17,14 @@ import riemann.Riemann.GramInfo;
 
 public class ConjecturesTest {
     public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
-        
-        double tBasei = tBase.doubleValue();
         double[][] fAtBeta = new double[R][2];
+        tBase = tBase.divide(Gram.pi_2,Gram.mc);
         for (int i = k0; i <= k1; i++) {
             //evaluate one term in the series, for all t.
             double coeff = 1/Math.sqrt(i);;
-            double argi = tBasei*(Math.log(i)/Math.PI);
+            BigDecimal tlni = tBase.multiply(Gram.log(i), Gram.mc);
+            tlni = tlni.subtract(new BigDecimal(tlni.toBigInteger()));
+            double argi = tlni.doubleValue()*2*Math.PI;
             double costlni = Math.cos(argi);
             double sintlni = Math.sin(argi);
             //this speeds up, but do we lose accuracy?
@@ -71,7 +73,7 @@ public class ConjecturesTest {
                 k1 = (sqrtArg1.longValue());
                 System.out.println(sqrtArg1);
                 System.out.println("k1 " + k1);
-                k1 = (long) k1/1000000000;
+                k1 = (long) 3989420;
                 // a billion seconds
                 BigDecimal thetaPi = theta(tval, fourthrootArg1, mc);
                 System.out.println(thetaPi);
