@@ -16,7 +16,20 @@ import math.GSeries;
 import riemann.Riemann.GramInfo;
 
 public class ConjecturesTest {
-    public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
+   //45 works well with -45, but 40 doesn't 
+   static MathContext mc = new MathContext(45, RoundingMode.HALF_EVEN);
+   static double offset = 1.0E28;
+   static BigDecimal gram = new BigDecimal("100.3677724301761067");
+   static BigDecimal tval = gram.add(
+           BigDecimal.valueOf(offset), mc);
+   static double incr = 0.10031507797926817;
+   static long b = 1L<<40;
+   static double bdbl  = (double)b;
+   static double bdlSquared = bdbl*bdbl;
+   static BigDecimal bBD = BigDecimal.valueOf(b);
+   static BigDecimal bBD2 = bBD.multiply(bBD);
+   
+   public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
         double[][] fAtBeta = new double[R][2];
         tBase = tBase.divide(Gram.pi_2,Gram.mc);
         for (int i = k0; i <= k1; i++) {
@@ -44,7 +57,7 @@ public class ConjecturesTest {
     }
     
     
-    @Test //needs fixing (large sums)
+    //@Test //needs fixing (large sums)
     public void testZeroLargeOffset() {
         MathContext mc = new MathContext(50, RoundingMode.HALF_EVEN);
         double[][] fAtBeta = null;
@@ -68,7 +81,6 @@ public class ConjecturesTest {
                 BigDecimal xx = tval.divide(Gram.pi_2, mc);
                 BigDecimal sqrtArg1 = sqrt(xx, mc, 1.0E-38);
                 BigDecimal fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-38);
-                //k1 = ;
                 Gram.initLogVals((int)fourthrootArg1.intValue()/2);
                 k1 = (sqrtArg1.longValue());
                 System.out.println(sqrtArg1);
@@ -108,19 +120,74 @@ public class ConjecturesTest {
         }
     }
 
+    @Test
+    public void testTlni() {
+        long K = (long) 1.0E8;
+        BigDecimal tBase = tval.divide(Gram.pi_2,Gram.mc);
+        BigDecimal tlni = tBase.multiply(Gram.log(K), Gram.mc);
+        System.out.println(tBase + " multiply " + Gram.log(K) + ", " + tlni);
+        tlni = tlni.subtract(new BigDecimal(tlni.toBigInteger()));
+        System.out.println(".." + tlni);
+        double argi = tlni.doubleValue()*2*Math.PI;
+        
+        //4194304
+        int h = 1<<22;
+        //int h = 2;
+        BigDecimal tlnih = tBase.multiply(Gram.log(K+h), Gram.mc);
+        System.out.println(tBase + " multiply " + Gram.log(K+h) + ", " + tlnih);
+        tlnih = tlnih.subtract(new BigDecimal(tlnih.toBigInteger()));
+        System.out.println(".." + tlnih);
+        double argih = tlnih.doubleValue()*2*Math.PI;
+        
+        System.out.println(argi+ ", " + argih);
+        
+        double uKincr = UK(K, tBase, h);
+        System.out.println("uKincr " + uKincr + ", " +  (argih-argi)/(2*Math.PI) );
+        
+    }
 
+
+    public double UK(long K, BigDecimal tBase, int h) {
+        //15915494309189533576.8883764969917072972957635
+        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
+        BigDecimal UKfrac = UK.subtract(new BigDecimal(UK.toBigInteger()));
+        // 1073981284752072893765934.0765940899460794820853760
+        BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
+        BigDecimal UKNormint = new BigDecimal(UKfracNorm.toBigInteger());
+
+        double r = UKfracNorm.subtract(UKNormint).doubleValue()/bdlSquared;
+        BigDecimal[] UKA1andA0 = UKNormint.divideAndRemainder(bBD);
+        
+        //3726121.0948383058838768100311040
+        BigDecimal check = UKfrac.multiply(BigDecimal.valueOf(h));
+        System.out.println(b + ", UKfrac*h " + check + ", " + r);
+        
+        long A1 = UKA1andA0[0].longValue();
+        long A0 = UKA1andA0[1].longValue();
+        System.out.println(" A1 " +  A1 + ", A0 " + A0);
+        
+        long A1h = ((A1*h)%b);
+        double t1 = A1h/bdbl;
+        
+        long A0h = A0*h;
+        //modof b squared
+        long A0hmod = (A0h%b + b*((A0h/b)%b)) ;
+        double t2 = A0hmod/bdlSquared;
+        
+        double t3 = r*h;
+        
+        double uKincr = t1 + t2 + t3;
+        return uKincr;
+    }
 
     @Test
     public void testScaleFactors() {
-        //50 works well with -45, but 40 doesn't 
-        MathContext mc = new MathContext(50, RoundingMode.HALF_EVEN);
-        double t = 1.0E28 + 100.437512887104287873;
-        double incr = increment(t);
-        incr = 0.10031507797926817;
-        BigDecimal gram = new BigDecimal("100.3677724301761067");
+        
         System.out.println("gram " + gram);
-        BigDecimal tval = gram.add(
-                BigDecimal.valueOf(1.0E28), mc);
+        checkGramValue( tval,  incr);
+    }
+    
+    void checkGramValue(BigDecimal tval, double incr) {
 //        incr = 0.1921410553288139095;
 //        BigDecimal tval = new BigDecimal(192.2043554309546, mc).add(
 //                BigDecimal.valueOf(1.0E15), mc);
@@ -189,7 +256,7 @@ sqrtArg1[i].doubleValue() 1.2615662622221947E7 correction -1.1522979560645475E-4
         return thetaPi;
     }
 
-    private double increment(double t) {
+    private static double increment(double t) {
         double incr = Math.PI/Math.log(Math.sqrt(t/(2*Math.PI)));
         System.out.println(incr);
         t += 5000000*incr;
