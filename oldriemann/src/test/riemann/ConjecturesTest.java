@@ -141,43 +141,56 @@ public class ConjecturesTest {
         
         System.out.println(argi+ ", " + argih);
         
-        double uKincr = UK(K, tBase, h);
+        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
+        A1A0r coeff = uk(UK);
+        double uKincr = UK(coeff,   h);
         System.out.println("uKincr " + uKincr + ", " +  (argih-argi)/(2*Math.PI) );
         
     }
 
+    public class A1A0r{
+        long A1;
+        long A0;
+        double r;
+        BigDecimal UKfrac;
+    }
 
-    public double UK(long K, BigDecimal tBase, int h) {
-        //15915494309189533576.8883764969917072972957635
-        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
-        BigDecimal UKfrac = UK.subtract(new BigDecimal(UK.toBigInteger()));
-        // 1073981284752072893765934.0765940899460794820853760
-        BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
-        BigDecimal UKNormint = new BigDecimal(UKfracNorm.toBigInteger());
-
-        double r = UKfracNorm.subtract(UKNormint).doubleValue()/bdlSquared;
-        BigDecimal[] UKA1andA0 = UKNormint.divideAndRemainder(bBD);
+    public double UK(A1A0r coeff,  int h) {
         
-        //3726121.0948383058838768100311040
-        BigDecimal check = UKfrac.multiply(BigDecimal.valueOf(h));
-        System.out.println(b + ", UKfrac*h " + check + ", " + r);
-        
-        long A1 = UKA1andA0[0].longValue();
-        long A0 = UKA1andA0[1].longValue();
-        System.out.println(" A1 " +  A1 + ", A0 " + A0);
-        
-        long A1h = ((A1*h)%b);
+        long A1h = ((coeff.A1*h)%b);
         double t1 = A1h/bdbl;
         
-        long A0h = A0*h;
-        //modof b squared
+        //3726121.0948383058838768100311040
+        BigDecimal check = coeff.UKfrac.multiply(BigDecimal.valueOf(h));
+        System.out.println(b + ", UKfrac*h " + check + ", " + coeff.r);
+        
+        long A0h = coeff.A0*h;
+        //mod of b squared
         long A0hmod = (A0h%b + b*((A0h/b)%b)) ;
         double t2 = A0hmod/bdlSquared;
         
-        double t3 = r*h;
+        double t3 = coeff.r*h;
         
         double uKincr = t1 + t2 + t3;
         return uKincr;
+    }
+
+
+    public A1A0r uk(BigDecimal UK) {
+        A1A0r coeff = new A1A0r();
+        //15915494309189533576.8883764969917072972957635
+        coeff.UKfrac = UK.subtract(new BigDecimal(UK.toBigInteger()));
+        // 1073981284752072893765934.0765940899460794820853760
+        BigDecimal UKfracNorm = coeff.UKfrac.multiply(bBD2);
+        BigDecimal UKNormint = new BigDecimal(UKfracNorm.toBigInteger());
+
+        coeff.r = UKfracNorm.subtract(UKNormint).doubleValue()/bdlSquared;
+        BigDecimal[] UKA1andA0 = UKNormint.divideAndRemainder(bBD);
+        
+        coeff.A1 = UKA1andA0[0].longValue();
+        coeff.A0 = UKA1andA0[1].longValue();
+        System.out.println(" A1 " +  coeff.A1 + ", A0 " + coeff.A0);
+        return coeff;
     }
 
     @Test
