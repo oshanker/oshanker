@@ -29,11 +29,11 @@ public class ConjecturesTest {
     25: 0.7935445010 cf .7935445018
     24  0.793544471  cf .79354450
     */
-   static long b = 1L<<25;
+   static long b = 1L<<32;
    static double bdbl  = (double)b;
-   static double bdlSquared = bdbl*bdbl;
-   static BigDecimal bBD = BigDecimal.valueOf(b);
-   static BigDecimal bBD2 = bBD.multiply(bBD);
+   static double bdlSquared = 1.0d + (double)Long.MAX_VALUE;
+   //static BigDecimal bBD = BigDecimal.valueOf(b);
+   static BigDecimal bBD2 = BigDecimal.valueOf(bdlSquared);
    
    public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
         double[][] fAtBeta = new double[R][2];
@@ -155,12 +155,12 @@ public class ConjecturesTest {
         double uKincr1 = calculateIncr1(coeff1,   h);
         System.out.println("** uKincr " + uKincr1 + ", " +  (argih-argi)/(2*Math.PI) );
         
-        UK = UK.divide(BigDecimal.valueOf(2*K));
-        System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
-        
-        A1A0r coeff2 = evalA1A0(UK);
-        double uKincr = calculateIncr2(coeff2,   h);
-        System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
+//        UK = UK.divide(BigDecimal.valueOf(2*K));
+//        System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
+//        
+//        A1A0r coeff2 = evalA1A0(UK);
+//        double uKincr = calculateIncr2(coeff2,   h);
+//        System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
     }
 
     public class A1A0r{
@@ -224,13 +224,18 @@ public class ConjecturesTest {
         System.out.println(" UKfrac " + UKfrac);
         // 1073981284752072893765934.0765940899460794820853760
         BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
-        BigDecimal UKNormint = new BigDecimal(UKfracNorm.toBigInteger());
+        BigDecimal intValue = new BigDecimal(UKfracNorm.toBigInteger());
+        long UKNormint = intValue.longValue();
 
-        coeff.r = UKfracNorm.subtract(UKNormint).doubleValue()/bdlSquared;
-        BigDecimal[] UKA1andA0 = UKNormint.divideAndRemainder(bBD);
+        coeff.r = UKfracNorm.subtract(intValue).divide(bBD2,mc).doubleValue();
+        long mask32 = 1l;
+        long incr = 1l;
+        for (int i = 1; i < 32; i++){
+            mask32 += incr<<1;
+        }
         
-        coeff.A1 = UKA1andA0[0].longValue();
-        coeff.A0 = UKA1andA0[1].longValue();
+        coeff.A0 = UKNormint&mask32;
+        coeff.A1 = (UKNormint-coeff.A0)>>32;
         System.out.println(" A1 " +  coeff.A1 + ", A0 " + coeff.A0  + ", r " + coeff.r);
         System.out.println(" test " +  ((coeff.A1*bdbl +  coeff.A0)/bdlSquared  +  coeff.r));
         return coeff;
