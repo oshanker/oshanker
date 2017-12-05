@@ -30,7 +30,10 @@ public class ConjecturesTest {
     24  0.793544471  cf .79354450
     */
    static long b = 1L<<32;
+   long mask32 = b-1;
+
    static double bdbl  = (double)b;
+   static double denom_norm = 1L<<31;
    static double bdlSquared = 1.0d + (double)Long.MAX_VALUE;
    //static BigDecimal bBD = BigDecimal.valueOf(b);
    static BigDecimal bBD2 = BigDecimal.valueOf(bdlSquared);
@@ -147,6 +150,10 @@ public class ConjecturesTest {
         
         System.out.println(argi+ ", " + argih + ", b " + b + ", h " + h);
         
+//        BigDecimal UK = BigDecimal.valueOf((1l<<32) + (1L<<31) + 0.5d).divide(bBD2,mc);
+//        System.out.println(UK + ", " + (1l<<32) + ", " +  (1L<<31) );
+//        A1A0r coeff1 = evalA1A0(UK);
+        
         BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
         //3726121.0948383058838768100311040
         System.out.println( "\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)) );
@@ -171,13 +178,14 @@ public class ConjecturesTest {
 
     public double calculateIncr1(A1A0r coeff,  long h) {
         
-        long A1h = ((coeff.A1*h)%b);
-        double t1 = A1h/bdbl;
+        long pow31 = (1L<<31);
+        double pow31dbl = (double)pow31;
+        long A1h = (coeff.A1*h)%pow31;
+        double t1 = A1h/pow31dbl;
         
         long A0h = coeff.A0*h;
-        //mod of b squared
-        long A0hmod = (A0h%b + b*((A0h/b)%b)) ;
-        double t2 = A0hmod/bdlSquared;
+        //mod of b squared trivial, if there is no overflow.
+        double t2 = A0h/bdlSquared;
         
         double t3 = coeff.r*h;
         
@@ -187,8 +195,8 @@ public class ConjecturesTest {
     }
 
     public double calculateIncr2(A1A0r coeff,  long h) {
-        
-        long A1h = (coeff.A1*h)%b;
+        long pow31 = (1<<31);
+        long A1h = (coeff.A1*h)%pow31;
         A1h = (A1h*h)%b;
         double t1 = A1h/bdbl;
         
@@ -224,20 +232,16 @@ public class ConjecturesTest {
         System.out.println(" UKfrac " + UKfrac);
         // 1073981284752072893765934.0765940899460794820853760
         BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
+        System.out.println(" UKfracNorm " + UKfracNorm);
         BigDecimal intValue = new BigDecimal(UKfracNorm.toBigInteger());
         long UKNormint = intValue.longValue();
 
         coeff.r = UKfracNorm.subtract(intValue).divide(bBD2,mc).doubleValue();
-        long mask32 = 1l;
-        long incr = 1l;
-        for (int i = 1; i < 32; i++){
-            mask32 += incr<<1;
-        }
-        
         coeff.A0 = UKNormint&mask32;
         coeff.A1 = (UKNormint-coeff.A0)>>32;
+        
         System.out.println(" A1 " +  coeff.A1 + ", A0 " + coeff.A0  + ", r " + coeff.r);
-        System.out.println(" test " +  ((coeff.A1*bdbl +  coeff.A0)/bdlSquared  +  coeff.r));
+        System.out.println(" test " + (coeff.A1/denom_norm +  (coeff.A0)/bdlSquared  +  coeff.r));
         return coeff;
     }
 
