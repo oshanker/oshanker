@@ -167,7 +167,8 @@ public class ConjecturesTest {
         System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
         
         A1A0r coeff2 = evalA1A0(UK);
-        double uKincr = calculateIncr2(coeff2,   h);
+        int k = 2;
+        double uKincr = calculateIncr2(coeff2,   h, k);
         System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
     }
 
@@ -193,39 +194,35 @@ public class ConjecturesTest {
         return uKincr;
     }
 
-    public double calculateIncr2(A1A0r coeff,  long h) {
-        long A1h = (coeff.A1*h)&mask31;
-        A1h = (A1h*h)&mask31;
-        
+    public double calculateIncr2(A1A0r coeff,  long h, int k) {
+        long A1h = (coeff.A1);
+        double t3 = (coeff.r);
         long overflow = 0;
-        //first h
-        long A0h = coeff.A0*h;
-        if(A0h>mask32){
-            long temp = A0h&mask32;
-            overflow = (((A0h-temp)>>32));
-            System.out.println("overflow " + overflow + ", " + ((overflow<<32)+temp));
-            overflow = (overflow*h)&mask31;
-            A0h = temp; //max 2^32-1
-        }
+        long A0h = coeff.A0;
         
-        //second h
-        long overflow1 = 0;
-        A0h = A0h*h;
-        if(A0h>mask32){
-            long temp = A0h&mask32;
-            overflow1 = (((A0h-temp)>>32))&mask31;//masking not needed
-            System.out.println("overflow1 " + overflow1);
-            A0h = temp; //max 2^32-1
+        for(int i = 0; i<k; i++){
+            t3 *= h;
+            A1h = (A1h*h)&mask31;
+            A0h = A0h*h;
+            if(A0h>mask32){
+                long temp = A0h&mask32;
+                long overflow1 = (((A0h-temp)>>32));
+                for(int j = 1; j < (k-i); j++){
+                   overflow1 = (overflow1*h)&mask31;
+                }
+                overflow += overflow1;
+                A0h = temp; //max 2^32-1
+            }
         }
-        
-        A1h = (A1h + overflow + overflow1)&mask31;
+
+        A1h = (A1h + overflow)&mask31;
         
         double t2 = A0h/bdlSquared;
         double t1 = A1h/pow31dbl;
         
-        double t3 = (coeff.r*h)*h;
         System.out.println(t1 + ", " + t2 + ", " +  t3);
-        double uKincr = -(t1 + t2 + t3);
+        double uKincr = (t1 + t2 + t3);
+        if(k%2==0){uKincr = -uKincr;}
         return uKincr;
     }
 
