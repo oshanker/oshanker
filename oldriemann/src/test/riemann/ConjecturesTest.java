@@ -30,10 +30,12 @@ public class ConjecturesTest {
     24  0.793544471  cf .79354450
     */
    static long b = 1L<<32;
-   long mask32 = b-1;
+   static long mask32 = b-1;
 
    static double bdbl  = (double)b;
-   static double denom_norm = 1L<<31;
+   static long pow31 = (1L<<31);
+   static long mask31 = pow31-1;
+   static double pow31dbl = (double)pow31;
    static double bdlSquared = 1.0d + (double)Long.MAX_VALUE;
    //static BigDecimal bBD = BigDecimal.valueOf(b);
    static BigDecimal bBD2 = BigDecimal.valueOf(bdlSquared);
@@ -140,7 +142,7 @@ public class ConjecturesTest {
         double argi = tlni.doubleValue()*2*Math.PI;
         
         //4194304
-        long h = 1<<12;
+        long h = (1<<22)+1;
         //int h = 2;
         BigDecimal tlnih = tBase.multiply(Gram.log(K+h), Gram.mc);
         System.out.println(tBase + " multiply " + Gram.log(K+h) + ", " + tlnih);
@@ -148,14 +150,13 @@ public class ConjecturesTest {
         System.out.println(".." + tlnih);
         double argih = tlnih.doubleValue()*2*Math.PI;
         
+        h = 2;
         System.out.println(argi+ ", " + argih + ", b " + b + ", h " + h);
         
-//        BigDecimal UK = BigDecimal.valueOf((1l<<32) + (1L<<31) + 0.5d).divide(bBD2,mc);
-//        System.out.println(UK + ", " + (1l<<32) + ", " +  (1L<<31) );
-//        A1A0r coeff1 = evalA1A0(UK);
+        BigDecimal UK = BigDecimal.valueOf((1l<<32) + (1L<<30) + 0.5d).divide(bBD2,mc);
+        System.out.println(UK + ", " + (1l<<32) + ", " +  (1L<<31) );
         
-        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
-        //3726121.0948383058838768100311040
+//        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
         System.out.println( "\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)) );
         
         A1A0r coeff1 = evalA1A0(UK);
@@ -163,11 +164,11 @@ public class ConjecturesTest {
         System.out.println("** uKincr " + uKincr1 + ", " +  (argih-argi)/(2*Math.PI) );
         
 //        UK = UK.divide(BigDecimal.valueOf(2*K));
-//        System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
-//        
-//        A1A0r coeff2 = evalA1A0(UK);
-//        double uKincr = calculateIncr2(coeff2,   h);
-//        System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
+        System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
+        
+        A1A0r coeff2 = evalA1A0(UK);
+        double uKincr = calculateIncr2(coeff2,   h);
+        System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
     }
 
     public class A1A0r{
@@ -178,9 +179,7 @@ public class ConjecturesTest {
 
     public double calculateIncr1(A1A0r coeff,  long h) {
         
-        long pow31 = (1L<<31);
-        double pow31dbl = (double)pow31;
-        long A1h = (coeff.A1*h)%pow31;
+        long A1h = (coeff.A1*h)&mask31;
         double t1 = A1h/pow31dbl;
         
         long A0h = coeff.A0*h;
@@ -195,31 +194,37 @@ public class ConjecturesTest {
     }
 
     public double calculateIncr2(A1A0r coeff,  long h) {
-        long pow31 = (1<<31);
-        long A1h = (coeff.A1*h)%pow31;
-        A1h = (A1h*h)%b;
-        double t1 = A1h/bdbl;
+        long A1h = (coeff.A1*h)&mask31;
+        A1h = (A1h*h)&mask31;
         
-        double testeval = (/*coeff.A1*bdbl  + */ (double)coeff.A0)*h /bdlSquared ;
-        //testeval = testeval - (long)testeval;
-        System.out.println( " Test h2 " + testeval);
-
+        long overflow = 0;
+        //first h
         long A0h = coeff.A0*h;
-        //mod of b squared
-        long A0hmod = (A0h%b + b*((A0h/b)%b)) ;
-        System.out.println("A0hmod ?? " + A0hmod + " cf " + 0.0030736254739167634 *bdlSquared);
+        if(A0h>mask32){
+            long temp = A0h&mask32;
+            overflow = (((A0h-temp)>>32));
+            System.out.println("overflow " + overflow + ", " + ((overflow<<32)+temp));
+            overflow = (overflow*h)&mask31;
+            A0h = temp; //max 2^32-1
+        }
         
-        // this is where we have to fix.
-        //lose significance
-        A0hmod = A0hmod*h ;
-        System.out.println(0.0030736254739167634 *h*bdlSquared + " , " + A0hmod);
-        System.out.println("A0hmod h /bdlSquared ? " + A0hmod/bdlSquared);
-        A0hmod = (A0hmod%b + b*((A0hmod/b)%b)) ;
-        System.out.println("A0hmod h " + A0hmod);
-        double t2 = A0hmod/bdlSquared;
+        //second h
+        long overflow1 = 0;
+        A0h = A0h*h;
+        if(A0h>mask32){
+            long temp = A0h&mask32;
+            overflow1 = (((A0h-temp)>>32))&mask31;//masking not needed
+            System.out.println("overflow1 " + overflow1);
+            A0h = temp; //max 2^32-1
+        }
         
-        double t3 = coeff.r*h;
-       System.out.println(t1 + ", " + t2 + ", " +  t3);
+        A1h = (A1h + overflow + overflow1)&mask31;
+        
+        double t2 = A0h/bdlSquared;
+        double t1 = A1h/pow31dbl;
+        
+        double t3 = (coeff.r*h)*h;
+        System.out.println(t1 + ", " + t2 + ", " +  t3);
         double uKincr = -(t1 + t2 + t3);
         return uKincr;
     }
@@ -241,7 +246,7 @@ public class ConjecturesTest {
         coeff.A1 = (UKNormint-coeff.A0)>>32;
         
         System.out.println(" A1 " +  coeff.A1 + ", A0 " + coeff.A0  + ", r " + coeff.r);
-        System.out.println(" test " + (coeff.A1/denom_norm +  (coeff.A0)/bdlSquared  +  coeff.r));
+        System.out.println(" test " + (coeff.A1/pow31dbl +  (coeff.A0)/bdlSquared  +  coeff.r));
         return coeff;
     }
 
