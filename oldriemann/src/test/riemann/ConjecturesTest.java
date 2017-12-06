@@ -142,7 +142,7 @@ public class ConjecturesTest {
         double argi = tlni.doubleValue()*2*Math.PI;
         
         //4194304
-        long h = (1<<22)+1;
+        long h = (1<<20)+1;
         //int h = 2;
         BigDecimal tlnih = tBase.multiply(Gram.log(K+h), Gram.mc);
         System.out.println(tBase + " multiply " + Gram.log(K+h) + ", " + tlnih);
@@ -150,24 +150,28 @@ public class ConjecturesTest {
         System.out.println(".." + tlnih);
         double argih = tlnih.doubleValue()*2*Math.PI;
         
-        h = 2;
         System.out.println(argi+ ", " + argih + ", b " + b + ", h " + h);
         
         BigDecimal UK = BigDecimal.valueOf((1l<<32) + (1L<<30) + 0.5d).divide(bBD2,mc);
-        System.out.println(UK + ", " + (1l<<32) + ", " +  (1L<<31) );
+//        System.out.println(UK + ", " + (1l<<32) + ", " +  (1L<<31) );
         
 //        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
-        System.out.println( "\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)) );
         
+        System.out.println( "\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)) );
         A1A0r coeff1 = evalA1A0(UK);
         double uKincr1 = calculateIncr1(coeff1,   h);
         System.out.println("** uKincr " + uKincr1 + ", " +  (argih-argi)/(2*Math.PI) );
         
 //        UK = UK.divide(BigDecimal.valueOf(2*K));
         System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
-        
         A1A0r coeff2 = evalA1A0(UK);
         int k = 2;
+        double uKincr2 = calculateIncr2(coeff2,   h, k);
+        System.out.println("** uKincr " + uKincr2 + ", " +  (uKincr1 + uKincr2)  + "\n");
+
+        k = 3;
+        System.out.println( "\n" + UK + ", "  + " UK*h*h*h " 
+        + UK.multiply(BigDecimal.valueOf(h*h)).multiply(BigDecimal.valueOf(h)) );
         double uKincr = calculateIncr2(coeff2,   h, k);
         System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
     }
