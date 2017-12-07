@@ -141,9 +141,7 @@ public class ConjecturesTest {
         System.out.println(".." + tlni);
         double argi = tlni.doubleValue()*2*Math.PI;
         
-        //4194304
-        long h = (1<<20)+1;
-        //int h = 2;
+        long h = (1<<11);
         BigDecimal tlnih = tBase.multiply(Gram.log(K+h), Gram.mc);
         System.out.println(tBase + " multiply " + Gram.log(K+h) + ", " + tlnih);
         tlnih = tlnih.subtract(new BigDecimal(tlnih.toBigInteger()));
@@ -153,7 +151,6 @@ public class ConjecturesTest {
         System.out.println(argi+ ", " + argih + ", b " + b + ", h " + h);
         
         BigDecimal UK = BigDecimal.valueOf((1l<<32) + (1L<<30) + 0.5d).divide(bBD2,mc);
-//        System.out.println(UK + ", " + (1l<<32) + ", " +  (1L<<31) );
         
 //        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
         
@@ -161,19 +158,30 @@ public class ConjecturesTest {
         A1A0r coeff1 = evalA1A0(UK);
         double uKincr1 = calculateIncr1(coeff1,   h);
         System.out.println("** uKincr " + uKincr1 + ", " +  (argih-argi)/(2*Math.PI) );
+        System.out.println("** uKincr " + (1.0d + (1L<<31) + (1L<<33))/(1L<<53) + "\n"   );
+        assertEquals(uKincr1, (1.0d + (1L<<31) + (1L<<33))/(1L<<53),1.0E-22);
+        
+        assertEquals(calculateIncr2(evalA1A0(BigDecimal.valueOf((1l<<32) + (1L<<20) + 0.5d).divide(bBD2,mc)), 
+                (1L<<5), 2), 
+                -(1.0d + (1L<<21) + (1L<<33))/(1L<<54),1.0E-22);
         
 //        UK = UK.divide(BigDecimal.valueOf(2*K));
-        System.out.println( "\n" + UK + ", "  + " UK2*h*h " + UK.multiply(BigDecimal.valueOf(h*h)) );
+        BigDecimal ukh2 = UK.multiply(BigDecimal.valueOf(h*h));
+        System.out.println( "\n" + UK + ", "  + " UK2*h*h " + ukh2 );
         A1A0r coeff2 = evalA1A0(UK);
         int k = 2;
         double uKincr2 = calculateIncr2(coeff2,   h, k);
-        System.out.println("** uKincr " + uKincr2 + ", " +  (uKincr1 + uKincr2)  + "\n");
+        System.out.println("** uKincr " + uKincr2 + ", " +  (uKincr1 + uKincr2)  );
+        System.out.println("** uKincr " + -(1.0d + (1L<<31) + (1L<<33))/(1L<<42) + ", "   );
+        assertEquals(uKincr2, -(1.0d + (1L<<31) + (1L<<33))/(1L<<42),1.0E-19);
 
         k = 3;
         System.out.println( "\n" + UK + ", "  + " UK*h*h*h " 
-        + UK.multiply(BigDecimal.valueOf(h*h)).multiply(BigDecimal.valueOf(h)) );
+        + ukh2.multiply(BigDecimal.valueOf(h)) );
         double uKincr = calculateIncr2(coeff2,   h, k);
         System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
+        System.out.println("** ****** " + 1.0d/(1L<<31) + ", "  );
+        assertEquals(uKincr, 1.0d/(1L<<31),1.0E-28);
     }
 
     public class A1A0r{
