@@ -217,13 +217,12 @@ public class ConjecturesTest {
             A1h = (A1h*h)&mask31;
             A0h = A0h*h;
             if(A0h>mask32){
-                long temp = A0h&mask32;
-                long overflow1 = (((A0h-temp)>>32));
+                long overflow1 = (((A0h)>>32));
                 for(int j = 1; j < (k-i); j++){
                    overflow1 = (overflow1*h)&mask31;
                 }
                 overflow += overflow1;
-                A0h = temp; //max 2^32-1
+                A0h &= mask32; //max 2^32-1
             }
         }
 
@@ -246,7 +245,6 @@ public class ConjecturesTest {
         System.out.println(" UKfrac " + UKfrac);
         // 1073981284752072893765934.0765940899460794820853760
         BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
-        System.out.println(" UKfracNorm " + UKfracNorm);
         BigDecimal intValue = new BigDecimal(UKfracNorm.toBigInteger());
         long UKNormint = intValue.longValue();
 
