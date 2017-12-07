@@ -240,10 +240,7 @@ public class ConjecturesTest {
 
     public A1A0r evalA1A0(BigDecimal UK) {
         A1A0r coeff = new A1A0r();
-        //15915494309189533576.8883764969917072972957635
         BigDecimal UKfrac = UK.subtract(new BigDecimal(UK.toBigInteger()));
-        System.out.println(" UKfrac " + UKfrac);
-        // 1073981284752072893765934.0765940899460794820853760
         BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
         BigDecimal intValue = new BigDecimal(UKfracNorm.toBigInteger());
         long UKNormint = intValue.longValue();
