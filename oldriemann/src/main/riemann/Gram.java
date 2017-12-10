@@ -53,7 +53,7 @@ public class Gram {
 	/**
 	 * High precision log values for the integers.
 	 */
-	static BigDecimal[] logVals = {
+	public static BigDecimal[] logVals = {
 			BigDecimal.ZERO,
 		      new BigDecimal("0.693147180559945309417232121458176568075500134360255254120680009493393", mc),
 		      new BigDecimal("1.098612288668109691395245236922525704647490557822749451734694333637494", mc),

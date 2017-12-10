@@ -14,10 +14,23 @@ public class UTSumTest {
     public enum SOURCE{GSERIES, UTSUM};
     @Test
     public void testZeroLargeOffset() {
-        long offset = (long) 1.0E12;
-        double[] begin = {243.8749480149, 1436233.106281030331450810};
+        //1445ms
+//        long offset = (long) 1.0E12;
+//        double[] begin = {243.8749480149, 1436233.106281030331450810};
+        
+        //15495ms
+//        long offset = (long) 1.0E15;
+//        double[] begin = {192.309350419702134727, 200.446361911804399436};
+        
+        //530711ms
+        //-ea -Xmx2G -Xms2G -> 554180ms
+        long offset = (long) 1.0E18;
+        double[] begin = {158.997193245871834444, 168.073334879216515686};
+
+        Gram.initLogVals(100000);
 //        evaluateZeta(offset, begin, SOURCE.GSERIES);
         evaluateZeta(offset, begin, SOURCE.UTSUM);
+        System.out.println("Gram.logVals.length " + Gram.logVals.length);
     }
 
     @Test
@@ -47,7 +60,39 @@ public class UTSumTest {
         assertEquals(argih, argi + sum, 1.0E-14);
     }
 
-    public double performSum(A1A0r[] coeff, long currentK, long h, double tBaseDbl) {
+
+    @Test
+    public void testCalculateIncr2() {
+        long h = (1 << 11);
+        assertEquals(UTSum.calculateIncr2(
+                UTSum.evalA1A0(BigDecimal.valueOf((1l << 32) + (1L << 20) + 0.5d).divide(UTSum.bBD2, UTSum.mc)),
+                (1L << 5), 2), -(1.0d + (1L << 21) + (1L << 33)) / (1L << 54), 1.0E-22);
+
+        BigDecimal UK = BigDecimal.valueOf((1l << 32) + (1L << 30) + 0.5d).divide(UTSum.bBD2, UTSum.mc);
+
+        System.out.println("\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)));
+        A1A0r coeff1 = UTSum.evalA1A0(UK);
+        double uKincr1 = UTSum.calculateIncr1(coeff1, h);
+        System.out.println("** uKincr " + uKincr1 + ", ");
+        System.out.println("** uKincr " + (1.0d + (1L << 31) + (1L << 33)) / (1L << 53) + "\n");
+        assertEquals(uKincr1, (1.0d + (1L << 31) + (1L << 33)) / (1L << 53), 1.0E-22);
+
+        BigDecimal ukh2 = UK.multiply(BigDecimal.valueOf(h * h));
+        System.out.println("\n" + UK + ", " + " UK2*h*h " + ukh2);
+
+        double uKincr2 = UTSum.calculateIncr2(coeff1, h, 2);
+        System.out.println("** uKincr " + uKincr2 + ", " + (uKincr1 + uKincr2));
+        System.out.println("** uKincr " + -(1.0d + (1L << 31) + (1L << 33)) / (1L << 42) + ", ");
+        assertEquals(uKincr2, -(1.0d + (1L << 31) + (1L << 33)) / (1L << 42), 1.0E-19);
+
+        System.out.println("\n" + UK + ", " + " UK*h*h*h " + ukh2.multiply(BigDecimal.valueOf(h)));
+        double uKincr = UTSum.calculateIncr2(coeff1, h, 3);
+        System.out.println("** uKincr " + uKincr + ", " + (uKincr1 + uKincr));
+        System.out.println("** ****** " + 1.0d / (1L << 31) + ", ");
+        assertEquals(uKincr, 1.0d / (1L << 31), 1.0E-28);
+    }
+
+    private double performSum(A1A0r[] coeff, long currentK, long h, double tBaseDbl) {
         double sum = 0;
         
         double uKincr1 = UTSum.calculateIncr1(coeff[0],   h);
@@ -78,7 +123,7 @@ public class UTSumTest {
         return sum;
     }
 
-    public A1A0r[] evaluateCoefficients(long currentK, BigDecimal tBase, long h) {
+    private A1A0r[] evaluateCoefficients(long currentK, BigDecimal tBase, long h) {
         A1A0r[] coeff = new A1A0r[3];
         
         BigDecimal UK = tBase.divide(BigDecimal.valueOf(currentK));
@@ -101,7 +146,7 @@ public class UTSumTest {
     }
     
 
-    public void evaluateZeta(long offset, double[] begin, SOURCE source) {
+    private void evaluateZeta(long offset, double[] begin, SOURCE source) {
         int k0 = 1, k1=0;
         int R = 2;
         double lnsqrtArg1 = 0;
@@ -157,38 +202,6 @@ public class UTSumTest {
             System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
             assertTrue(i + " ", Math.abs(zeta)  < 5.0E-7);
         }
-    }
-
-
-    @Test
-    public void testCalculateIncr2() {
-        long h = (1 << 11);
-        assertEquals(UTSum.calculateIncr2(
-                UTSum.evalA1A0(BigDecimal.valueOf((1l << 32) + (1L << 20) + 0.5d).divide(UTSum.bBD2, UTSum.mc)),
-                (1L << 5), 2), -(1.0d + (1L << 21) + (1L << 33)) / (1L << 54), 1.0E-22);
-
-        BigDecimal UK = BigDecimal.valueOf((1l << 32) + (1L << 30) + 0.5d).divide(UTSum.bBD2, UTSum.mc);
-
-        System.out.println("\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)));
-        A1A0r coeff1 = UTSum.evalA1A0(UK);
-        double uKincr1 = UTSum.calculateIncr1(coeff1, h);
-        System.out.println("** uKincr " + uKincr1 + ", ");
-        System.out.println("** uKincr " + (1.0d + (1L << 31) + (1L << 33)) / (1L << 53) + "\n");
-        assertEquals(uKincr1, (1.0d + (1L << 31) + (1L << 33)) / (1L << 53), 1.0E-22);
-
-        BigDecimal ukh2 = UK.multiply(BigDecimal.valueOf(h * h));
-        System.out.println("\n" + UK + ", " + " UK2*h*h " + ukh2);
-
-        double uKincr2 = UTSum.calculateIncr2(coeff1, h, 2);
-        System.out.println("** uKincr " + uKincr2 + ", " + (uKincr1 + uKincr2));
-        System.out.println("** uKincr " + -(1.0d + (1L << 31) + (1L << 33)) / (1L << 42) + ", ");
-        assertEquals(uKincr2, -(1.0d + (1L << 31) + (1L << 33)) / (1L << 42), 1.0E-19);
-
-        System.out.println("\n" + UK + ", " + " UK*h*h*h " + ukh2.multiply(BigDecimal.valueOf(h)));
-        double uKincr = UTSum.calculateIncr2(coeff1, h, 3);
-        System.out.println("** uKincr " + uKincr + ", " + (uKincr1 + uKincr));
-        System.out.println("** ****** " + 1.0d / (1L << 31) + ", ");
-        assertEquals(uKincr, 1.0d / (1L << 31), 1.0E-28);
     }
 
 }
