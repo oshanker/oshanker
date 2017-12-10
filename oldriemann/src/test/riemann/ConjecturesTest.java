@@ -3,7 +3,6 @@ package riemann;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -13,62 +12,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import math.GSeries;
-import riemann.Riemann.GramInfo;
+import math.UTSum;
+import math.UTSum.A1A0r;
 
 public class ConjecturesTest {
    //45 works well with -45, but 40 doesn't 
-   static MathContext mc = new MathContext(45, RoundingMode.HALF_EVEN);
    static double offset = 1.0E28;
    static BigDecimal gram = new BigDecimal("100.3677724301761067");
    static BigDecimal tval = gram.add(
-           BigDecimal.valueOf(offset), mc);
+           BigDecimal.valueOf(offset), UTSum.mc);
    static double incr = 0.10031507797926817;
-   /*
-    why do we lose significance?
-    26: 0.7935445010 //can exceed long limits
-    25: 0.7935445010 cf .7935445018
-    24  0.793544471  cf .79354450
-    */
-   static long b = 1L<<32;
-   static long mask32 = b-1;
-
-   static double bdbl  = (double)b;
-   static long pow31 = (1L<<31);
-   static long mask31 = pow31-1;
-   static double pow31dbl = (double)pow31;
-   static double bdlSquared = 1.0d + (double)Long.MAX_VALUE;
-   //static BigDecimal bBD = BigDecimal.valueOf(b);
-   static BigDecimal bBD2 = BigDecimal.valueOf(bdlSquared);
-   
-   public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
-        double[][] fAtBeta = new double[R][2];
-        tBase = tBase.divide(Gram.pi_2,Gram.mc);
-        for (int i = k0; i <= k1; i++) {
-            //evaluate one term in the series, for all t.
-            double coeff = 1/Math.sqrt(i);;
-            BigDecimal tlni = tBase.multiply(Gram.log(i), Gram.mc);
-            tlni = tlni.subtract(new BigDecimal(tlni.toBigInteger()));
-            double argi = tlni.doubleValue()*2*Math.PI;
-            double costlni = Math.cos(argi);
-            double sintlni = Math.sin(argi);
-            //this speeds up, but do we lose accuracy?
-            // no, that is not culprit: R costlni -0.9949659697160186, cf -0.9949659697160186
-            double cosdlni = Math.cos(incr*Math.log(i));
-            double sindlni = Math.sin(incr*Math.log(i));
-            for (int j = 0; j < R; j++) {
-                fAtBeta[j][0] += coeff*costlni;
-                fAtBeta[j][1] += coeff*sintlni;
-                //now set values for next t
-                double tmpCos = costlni*cosdlni - sintlni*sindlni;
-                sintlni = sintlni*cosdlni + costlni*sindlni;
-                costlni = tmpCos;
-            }
-        }
-        return fAtBeta;
-    }
-    
-    
-    //@Test //needs fixing (large sums)
+   //@Test //needs fixing (large sums)
     public void testZeroLargeOffset() {
         MathContext mc = new MathContext(50, RoundingMode.HALF_EVEN);
         double[][] fAtBeta = null;
@@ -107,7 +61,7 @@ public class ConjecturesTest {
                 lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
                 long init= System.currentTimeMillis();
 
-                fAtBeta = fSeries(k0, k1, begin[1]-begin[0], R, tval);
+                fAtBeta = UTSum.fSeries(k0, k1, begin[1]-begin[0], R, tval);
                 long end = System.currentTimeMillis();
                 System.out.println("evaluateWithOffset calc for " + k1 + ": " + (end - init) + "ms");
                 //theta should be 2.819633653651107
@@ -134,126 +88,47 @@ public class ConjecturesTest {
     @Test
     public void testTlni() {
         long K = (long) 1.0E8;
-        BigDecimal tBase = tval.divide(Gram.pi_2,Gram.mc);
+        BigDecimal tBase = tval.divide(Gram.pi_2,UTSum.mc);
         BigDecimal tlni = tBase.multiply(Gram.log(K), Gram.mc);
         System.out.println(tBase + " multiply " + Gram.log(K) + ", " + tlni);
         tlni = tlni.subtract(new BigDecimal(tlni.toBigInteger()));
         System.out.println(".." + tlni);
         double argi = tlni.doubleValue()*2*Math.PI;
         
-        long h = (1<<11);
+        long h = (1L<<11);
         BigDecimal tlnih = tBase.multiply(Gram.log(K+h), Gram.mc);
         System.out.println(tBase + " multiply " + Gram.log(K+h) + ", " + tlnih);
         tlnih = tlnih.subtract(new BigDecimal(tlnih.toBigInteger()));
         System.out.println(".." + tlnih);
         double argih = tlnih.doubleValue()*2*Math.PI;
         
-        System.out.println(argi+ ", " + argih + ", b " + b + ", h " + h);
+        System.out.println(argi+ ", " + argih + ", b " + UTSum.b + ", h " + h);
         
-        BigDecimal UK = BigDecimal.valueOf((1l<<32) + (1L<<30) + 0.5d).divide(bBD2,mc);
         
-//        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
+        BigDecimal UK = tBase.divide(BigDecimal.valueOf(K));
         
         System.out.println( "\n" + UK + " UK*h " + UK.multiply(BigDecimal.valueOf(h)) );
-        A1A0r coeff1 = evalA1A0(UK);
-        double uKincr1 = calculateIncr1(coeff1,   h);
+        A1A0r coeff1 = UTSum.evalA1A0(UK);
+        double uKincr1 = UTSum.calculateIncr1(coeff1,   h);
         System.out.println("** uKincr " + uKincr1 + ", " +  (argih-argi)/(2*Math.PI) );
-        System.out.println("** uKincr " + (1.0d + (1L<<31) + (1L<<33))/(1L<<53) + "\n"   );
-        assertEquals(uKincr1, (1.0d + (1L<<31) + (1L<<33))/(1L<<53),1.0E-22);
         
-        assertEquals(calculateIncr2(evalA1A0(BigDecimal.valueOf((1l<<32) + (1L<<20) + 0.5d).divide(bBD2,mc)), 
-                (1L<<5), 2), 
-                -(1.0d + (1L<<21) + (1L<<33))/(1L<<54),1.0E-22);
         
-//        UK = UK.divide(BigDecimal.valueOf(2*K));
+        UK = UK.divide(BigDecimal.valueOf(2*K));
         BigDecimal ukh2 = UK.multiply(BigDecimal.valueOf(h*h));
         System.out.println( "\n" + UK + ", "  + " UK2*h*h " + ukh2 );
-        A1A0r coeff2 = evalA1A0(UK);
-        int k = 2;
-        double uKincr2 = calculateIncr2(coeff2,   h, k);
+        A1A0r coeff2 = UTSum.evalA1A0(UK);
+
+        double uKincr2 = UTSum.calculateIncr2(coeff2,   h, 2);
         System.out.println("** uKincr " + uKincr2 + ", " +  (uKincr1 + uKincr2)  );
-        System.out.println("** uKincr " + -(1.0d + (1L<<31) + (1L<<33))/(1L<<42) + ", "   );
-        assertEquals(uKincr2, -(1.0d + (1L<<31) + (1L<<33))/(1L<<42),1.0E-19);
 
-        k = 3;
+        UK = UK.multiply(Gram.bdTWO).divide(BigDecimal.valueOf(3*K));
         System.out.println( "\n" + UK + ", "  + " UK*h*h*h " 
-        + ukh2.multiply(BigDecimal.valueOf(h)) );
-        double uKincr = calculateIncr2(coeff2,   h, k);
-        System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr) );
-        System.out.println("** ****** " + 1.0d/(1L<<31) + ", "  );
-        assertEquals(uKincr, 1.0d/(1L<<31),1.0E-28);
+        + UK.multiply(BigDecimal.valueOf(h*h*h)) );
+        A1A0r coeff3 = UTSum.evalA1A0(UK);
+        double uKincr = UTSum.calculateIncr2(coeff3,   h, 3);
+        System.out.println("** uKincr " + uKincr + ", " +  (uKincr1 + uKincr2 + uKincr) );
     }
-
-    public class A1A0r{
-        long A1;
-        long A0;
-        double r;
-    }
-
-    public double calculateIncr1(A1A0r coeff,  long h) {
-        
-        long A1h = (coeff.A1*h)&mask31;
-        double t1 = A1h/pow31dbl;
-        
-        long A0h = coeff.A0*h;
-        //mod of b squared trivial, if there is no overflow.
-        double t2 = A0h/bdlSquared;
-        
-        double t3 = coeff.r*h;
-        
-        System.out.println(t1 + ", " + t2 + ", " +  t3);
-        double uKincr = t1 + t2 + t3;
-        return uKincr;
-    }
-
-    public double calculateIncr2(A1A0r coeff,  long h, int k) {
-        long A1h = (coeff.A1);
-        double t3 = (coeff.r);
-        long overflow = 0;
-        long A0h = coeff.A0;
-        
-        for(int i = 0; i<k; i++){
-            t3 *= h;
-            A1h = (A1h*h)&mask31;
-            A0h = A0h*h;
-            if(A0h>mask32){
-                long overflow1 = (((A0h)>>32));
-                for(int j = 1; j < (k-i); j++){
-                   overflow1 = (overflow1*h)&mask31;
-                }
-                overflow += overflow1;
-                A0h &= mask32; //max 2^32-1
-            }
-        }
-
-        A1h = (A1h + overflow)&mask31;
-        
-        double t2 = A0h/bdlSquared;
-        double t1 = A1h/pow31dbl;
-        
-        System.out.println(t1 + ", " + t2 + ", " +  t3);
-        double uKincr = (t1 + t2 + t3);
-        if(k%2==0){uKincr = -uKincr;}
-        return uKincr;
-    }
-
-
-    public A1A0r evalA1A0(BigDecimal UK) {
-        A1A0r coeff = new A1A0r();
-        BigDecimal UKfrac = UK.subtract(new BigDecimal(UK.toBigInteger()));
-        BigDecimal UKfracNorm = UKfrac.multiply(bBD2);
-        BigDecimal intValue = new BigDecimal(UKfracNorm.toBigInteger());
-        long UKNormint = intValue.longValue();
-
-        coeff.r = UKfracNorm.subtract(intValue).divide(bBD2,mc).doubleValue();
-        coeff.A0 = UKNormint&mask32;
-        coeff.A1 = (UKNormint-coeff.A0)>>32;
-        
-        System.out.println(" A1 " +  coeff.A1 + ", A0 " + coeff.A0  + ", r " + coeff.r);
-        System.out.println(" test " + (coeff.A1/pow31dbl +  (coeff.A0)/bdlSquared  +  coeff.r));
-        return coeff;
-    }
-
+    
     @Test
     public void testScaleFactors() {
         
@@ -263,22 +138,22 @@ public class ConjecturesTest {
     
     void checkGramValue(BigDecimal tval, double incr) {
 //        incr = 0.1921410553288139095;
-//        BigDecimal tval = new BigDecimal(192.2043554309546, mc).add(
-//                BigDecimal.valueOf(1.0E15), mc);
-        BigDecimal xx = tval.divide(Gram.pi_2, mc);
+//        BigDecimal tval = new BigDecimal(192.2043554309546, UTSum.mc).add(
+//                BigDecimal.valueOf(1.0E15), UTSum.mc);
+        BigDecimal xx = tval.divide(Gram.pi_2, UTSum.mc);
         //39894228040143.2677939946061937820389927342029 65420163328854914850403286571752375 
         //39894228040143.2677939946061937820389927342029 24157013297165575084867900724971497
-        BigDecimal sqrtArg1 = sqrt(xx, mc, 1.0E-45);
-        BigDecimal fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-45);
+        BigDecimal sqrtArg1 = sqrt(xx, UTSum.mc, 1.0E-45);
+        BigDecimal fourthrootArg1 = sqrt(sqrtArg1, UTSum.mc, 1.0E-45);
         int k1 = fourthrootArg1.intValue();
         Gram.initLogVals(k1);
-        BigDecimal thetaPi = theta(tval, fourthrootArg1, mc);
+        BigDecimal thetaPi = theta(tval, fourthrootArg1, UTSum.mc);
         System.out.println(thetaPi);
         
         tval = tval.add(new BigDecimal(Double.toString(incr)));
-        sqrtArg1 = sqrt(tval.divide(Gram.pi_2, mc), mc, 1.0E-45);
-        fourthrootArg1 = sqrt(sqrtArg1, mc, 1.0E-45);
-        BigDecimal thetaPi2 = theta(tval, fourthrootArg1, mc);
+        sqrtArg1 = sqrt(tval.divide(Gram.pi_2, UTSum.mc), UTSum.mc, 1.0E-45);
+        fourthrootArg1 = sqrt(sqrtArg1, UTSum.mc, 1.0E-45);
+        BigDecimal thetaPi2 = theta(tval, fourthrootArg1, UTSum.mc);
         System.out.println(thetaPi2);
         
         assertEquals(thetaPi2.subtract(thetaPi).doubleValue(), 1, 1.0E-15);
