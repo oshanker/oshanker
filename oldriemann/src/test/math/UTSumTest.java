@@ -12,6 +12,7 @@ import riemann.Gram;
 
 public class UTSumTest {
     public enum SOURCE{GSERIES, UTSUM};
+    
     @Test
     public void testZeroLargeOffset() {
         //1183ms
@@ -22,10 +23,14 @@ public class UTSumTest {
 //        long offset = (long) 1.0E15;
 //        double[] begin = {192.309350419702134727, 200.446361911804399436};
         
+        //27866 
+        long offset = (long) 1.0E16;
+        double[] begin = {179.701837722056461444, 180.110245349184374800};
+
         //254759ms
         //-ea -Xmx2G -Xms2G 
-        long offset = (long) 1.0E18;
-        double[] begin = {158.997193245871834444, 168.073334879216515686};
+//        long offset = (long) 1.0E18;
+//        double[] begin = {158.997193245871834444, 168.073334879216515686};
 
         //1183ms
 //        long offset = (long) 1.0E20;
@@ -33,10 +38,24 @@ public class UTSumTest {
 
         Gram.initLogVals(100000);
 //        evaluateZeta(offset, begin, SOURCE.GSERIES);
-        evaluateZeta(offset, begin, SOURCE.UTSUM);
+        double[] zeta = evaluateZeta(offset, begin, SOURCE.UTSUM);
+        for (int j = 0; j < zeta.length; j++) {
+            assertTrue(j + " ", Math.abs(zeta[j])  < 5.0E-7);
+        }
+
         System.out.println("Gram.logVals.length " + Gram.logVals.length);
     }
 
+    @Test
+    public void testLargeValue() {
+        Gram.initLogVals(100000);
+        long offset = 80587673978410171L;
+        double incr = Math.PI/Math.log(Math.sqrt(offset/(2*Math.PI)));
+        double[] begin = {0.1558857141254, 0};
+        begin[1] = begin[0]+incr;
+        double[] zeta = evaluateZeta(offset, begin, SOURCE.UTSUM);
+    }
+    
     @Test
     public void testTlni() {
         long currentK = 1L<<13;
@@ -150,7 +169,7 @@ public class UTSumTest {
     }
     
 
-    private void evaluateZeta(long offset, double[] begin, SOURCE source) {
+    private double[] evaluateZeta(long offset, double[] begin, SOURCE source) {
         int k0 = 1, k1=0;
         int R = 2;
         double lnsqrtArg1 = 0;
@@ -159,6 +178,7 @@ public class UTSumTest {
         double tbase = 0;
         double basesqrtArg1 = 0;
         double[][] fAtBeta = null;
+        double[] zeta = new double[2];
         for (int i = 0; i < begin.length; i++) {
             double tincr =  (begin[i]-begin[0]) ; 
             BigDecimal tval = new BigDecimal(begin[i], Gram.mc).add(
@@ -199,13 +219,13 @@ public class UTSumTest {
             }
             double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
             double correction = GSeries.correction( predictedSqrtArg1);
-            double zeta = rotatedSum + correction;
+            zeta[i] = rotatedSum + correction;
             System.out.println("f  : " + Arrays.toString(fAtBeta[i])
                + " theta " + theta + "\n rotatedSum " + rotatedSum
-               + " zeta " + zeta);
+               + " *** zeta " + zeta[i]);
             System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
-            assertTrue(i + " ", Math.abs(zeta)  < 5.0E-7);
         }
+        return zeta;
     }
 
 }
