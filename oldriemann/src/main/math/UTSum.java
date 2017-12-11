@@ -1,13 +1,8 @@
 package math;
 
-import static org.junit.Assert.assertEquals;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Arrays;
-
-import math.UTSum.A1A0r;
 import riemann.Gram;
 
 public class UTSum {
@@ -45,7 +40,7 @@ public class UTSum {
         return uKincr;
     }
 
-    public static double calculateIncr2(A1A0r coeff, long h, int k) {
+    public static double calculateIncr2(final A1A0r coeff, long h, final int k) {
         long A1h = (coeff.A1);
         double t3 = (coeff.r);
         long overflow = 0;
@@ -129,10 +124,12 @@ public class UTSum {
             }
         }
        
-        int h = 0;
-        int hmax = 1;
         long updateHmax = 2*K; 
+        int h = 0;
+        double rho = 0;
+        int hmax = 1;
         long currentK = i-1;
+        double rhoIncr = 1.0d/currentK;
         A1A0r[] coeff = new A1A0r[3];
         
         BigDecimal UK = tBase.divide(BigDecimal.valueOf(currentK), mc);
@@ -160,7 +157,9 @@ public class UTSum {
             if(h >= hmax){
                 //generate uk
                 currentK = i;
+                rhoIncr = 1.0d/currentK;
                 h = 0;
+                rho = 0;
                 UK = tBase.divide(BigDecimal.valueOf(currentK), mc);
                 coeff[0] = UTSum.evalA1A0(UK);
 
@@ -174,9 +173,31 @@ public class UTSum {
                 uk = tlni.doubleValue();
                 argi_2pi = uk;
             } else {
-                // else use expansion and increment h
+                //  use expansion and increment h
                 h++;
-                double sum = performSum(coeff, currentK,  h, tBase.doubleValue());
+                rho += rhoIncr;
+                double sum = 0;
+                sum += ((coeff[0].A1 * h) & mask31)/ pow31dbl;
+
+                sum +=  (coeff[0].A0 * h)/ bdlSquared;
+
+                sum +=  coeff[0].r * h;
+
+                sum += UTSum.calculateIncr2(coeff[1],   h, 2);
+
+                sum += UTSum.calculateIncr2(coeff[2],   h, 3);
+                
+                double term = -tBaseDbl*Math.pow(rho, 4)/(4);
+                double remaining = term;
+                for(int j = 5; j <12; j++){
+                    term = -rho*term*(j-1)/j;
+                    remaining += term;
+                    if(Math.abs(term)<1.0E-15){
+                        break;
+                    }
+                }
+                
+                sum += remaining;
                 argi_2pi = uk + sum;
             }
             

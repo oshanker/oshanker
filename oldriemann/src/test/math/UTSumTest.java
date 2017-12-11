@@ -14,18 +14,22 @@ public class UTSumTest {
     public enum SOURCE{GSERIES, UTSUM};
     @Test
     public void testZeroLargeOffset() {
-        //1445ms
+        //1183ms
 //        long offset = (long) 1.0E12;
 //        double[] begin = {243.8749480149, 1436233.106281030331450810};
         
-        //15495ms
+        //9855ms
 //        long offset = (long) 1.0E15;
 //        double[] begin = {192.309350419702134727, 200.446361911804399436};
         
-        //530711ms
-        //-ea -Xmx2G -Xms2G -> 554180ms
+        //254759ms
+        //-ea -Xmx2G -Xms2G 
         long offset = (long) 1.0E18;
         double[] begin = {158.997193245871834444, 168.073334879216515686};
+
+        //1183ms
+//        long offset = (long) 1.0E20;
+//        double[] begin = {142.285612643329601679, 145.088695674076487929};
 
         Gram.initLogVals(100000);
 //        evaluateZeta(offset, begin, SOURCE.GSERIES);
