@@ -40,7 +40,7 @@
         <configuration>
           <archive>
             <manifest>
-            <mainClass> ml.kmeans.KMeans</mainClass>
+            <mainClass>math.Quadratic</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -58,7 +58,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <configuration>
-             <mainClass> ml.kmeans.KMeans</mainClass>
+             <mainClass>math.Quadratic</mainClass>
         </configuration>
         </plugin>
       
