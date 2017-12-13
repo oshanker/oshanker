@@ -3,7 +3,6 @@ package math;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -11,8 +10,6 @@ import math.UTSum.A1A0r;
 import riemann.Gram;
 
 public class UTSumTest {
-    public enum SOURCE{GSERIES, UTSUM};
-    
     @Test
     public void testZeroLargeOffset() {
         //1183ms
@@ -38,7 +35,7 @@ public class UTSumTest {
 
         Gram.initLogVals(100000);
 //        evaluateZeta(offset, begin, SOURCE.GSERIES);
-        double[] zeta = evaluateZeta(offset, begin, SOURCE.UTSUM);
+        double[] zeta = UTSum.evaluateZeta(offset, begin, UTSum.SOURCE.UTSUM);
         for (int j = 0; j < zeta.length; j++) {
             assertTrue(j + " ", Math.abs(zeta[j])  < 5.0E-7);
         }
@@ -53,7 +50,7 @@ public class UTSumTest {
         double incr = Math.PI/Math.log(Math.sqrt(offset/(2*Math.PI)));
         double[] begin = {0.1558857141254, 0};
         begin[1] = begin[0]+incr;
-        double[] zeta = evaluateZeta(offset, begin, SOURCE.UTSUM);
+        double[] zeta = UTSum.evaluateZeta(offset, begin, UTSum.SOURCE.UTSUM);
     }
     
     @Test
@@ -166,66 +163,6 @@ public class UTSumTest {
         + UK.multiply(BigDecimal.valueOf(h*h*h)) );
         coeff[2] = UTSum.evalA1A0(UK);
         return coeff;
-    }
-    
-
-    private double[] evaluateZeta(long offset, double[] begin, SOURCE source) {
-        int k0 = 1, k1=0;
-        int R = 2;
-        double lnsqrtArg1 = 0;
-        double basetheta = 0;
-        double dsqrtArg1 = 0;
-        double tbase = 0;
-        double basesqrtArg1 = 0;
-        double[][] fAtBeta = null;
-        double[] zeta = new double[2];
-        for (int i = 0; i < begin.length; i++) {
-            double tincr =  (begin[i]-begin[0]) ; 
-            BigDecimal tval = new BigDecimal(begin[i], Gram.mc).add(
-                    BigDecimal.valueOf(offset), Gram.mc);
-            double predictedSqrtArg1 = 0;
-            double theta = 0;
-            if(i == 0 ){
-                dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tval.doubleValue()));
-                tbase = tval.doubleValue();
-                BigDecimal t2 = tval.divide(Gram.bdTWO);
-                BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
-                basesqrtArg1 = sqrtArg1.doubleValue();
-                k1 = (int)basesqrtArg1;
-                BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, Gram.mc);
-                lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
-                
-                long init= System.currentTimeMillis();
-                switch (source) {
-                case GSERIES:
-                    fAtBeta = GSeries.fSeries(k0, k1, begin[1]-begin[0], R, tval);
-                    break;
-
-                default:
-                    fAtBeta = UTSum.fSeries(k0, k1, begin[1]-begin[0], R, tval);
-                    break;
-                }
-                long end = System.currentTimeMillis();
-                System.out.println("calc for " + R + ": " + (end - init) + "ms");
-                
-                theta = tval.multiply(lnsqrtArg1BD, Gram.mc).subtract(t2, Gram.mc)
-                        .subtract(Gram.pi8, Gram.mc).remainder(Gram.pi_2).doubleValue();
-                basetheta = theta;
-                predictedSqrtArg1 = basesqrtArg1 ;
-            } else {
-                theta = (basetheta + lnsqrtArg1*tincr
-                        +tincr*tincr/(4*tbase))%(2*Math.PI);
-                predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
-            }
-            double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
-            double correction = GSeries.correction( predictedSqrtArg1);
-            zeta[i] = rotatedSum + correction;
-            System.out.println("f  : " + Arrays.toString(fAtBeta[i])
-               + " theta " + theta + "\n rotatedSum " + rotatedSum
-               + " *** zeta " + zeta[i]);
-            System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
-        }
-        return zeta;
     }
 
 }

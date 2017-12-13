@@ -3,6 +3,9 @@ package math;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Arrays;
+
+import math.UTSum.SOURCE;
 import riemann.Gram;
 
 public class UTSum {
@@ -26,6 +29,9 @@ public class UTSum {
             return "A1A0r [A1=" + A1 + ", A0=" + A0 + ", r=" + r + "]";
         }
     }
+
+    public enum SOURCE{GSERIES, UTSUM}
+
 
     public static double calculateIncr1(A1A0r coeff, long h) {
         long A1h = (coeff.A1 * h) & mask31;
@@ -180,10 +186,12 @@ public class UTSum {
                 sum += ((coeff[0].A1 * h) & mask31)/ pow31dbl;
 
                 sum +=  (coeff[0].A0 * h)/ bdlSquared;
+                
+                if(h > 8000){
+                    sum +=  coeff[0].r * h;
+                }
 
-                sum +=  coeff[0].r * h;
-
-                sum += UTSum.calculateIncr2(coeff[1],   h, 2);
+               sum += UTSum.calculateIncr2(coeff[1],   h, 2);
 
                 sum += UTSum.calculateIncr2(coeff[2],   h, 3);
                 
@@ -239,7 +247,6 @@ public class UTSum {
         //System.out.println("** uKincr " + uKincr + ", " +  (sum) );
         
         double rho = ((double)h)/currentK;
-        //System.out.println("** rho " + rho + ", "  );
         double term = -tBaseDbl*Math.pow(rho, 4)/(4);
         double remaining = term;
         //System.out.println("** term " + term + ", " +  (remaining) );
@@ -256,8 +263,78 @@ public class UTSum {
         return sum;
     }
 
-
-    public static void main(String[] args) {
+    public static void calculateLargeValue() {
+        Gram.initLogVals(100000);
+        BigDecimal tFactor = Gram.pi_2.divide(Gram.log(Gram.bdTWO, mc), mc);
+        BigDecimal t = tFactor.multiply(BigDecimal.valueOf(3164680085302956L));
+        long offset = t.longValue();
+        double incr = Math.PI/Math.log(Math.sqrt(offset/(2*Math.PI)));
+        double[] begin = {t.subtract(BigDecimal.valueOf(offset)).doubleValue(), 0};
+        begin[1] = begin[0]+incr/14.5d;
+        double[] zeta = evaluateZeta(offset, begin, UTSum.SOURCE.UTSUM);
     }
 
+    public static double[] evaluateZeta(long offset, double[] begin, SOURCE source) {
+        int k0 = 1, k1=0;
+        int R = 2;
+        double lnsqrtArg1 = 0;
+        double basetheta = 0;
+        double dsqrtArg1 = 0;
+        double tbase = 0;
+        double basesqrtArg1 = 0;
+        double[][] fAtBeta = null;
+        double[] zeta = new double[2];
+        for (int i = 0; i < begin.length; i++) {
+            double tincr =  (begin[i]-begin[0]) ; 
+            BigDecimal tval = new BigDecimal(begin[i], mc).add(
+                    BigDecimal.valueOf(offset), mc);
+            double predictedSqrtArg1 = 0;
+            double theta = 0;
+            if(i == 0 ){
+                dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tval.doubleValue()));
+                tbase = tval.doubleValue();
+                BigDecimal t2 = tval.divide(Gram.bdTWO);
+                BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, mc), mc, 1.0E-21);
+                basesqrtArg1 = sqrtArg1.doubleValue();
+                k1 = (int)basesqrtArg1;
+                BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, mc);
+                lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
+                
+                long init= System.currentTimeMillis();
+                switch (source) {
+                case GSERIES:
+                    fAtBeta = GSeries.fSeries(k0, k1, begin[1]-begin[0], R, tval);
+                    break;
+    
+                default:
+                    fAtBeta = fSeries(k0, k1, begin[1]-begin[0], R, tval);
+                    break;
+                }
+                long end = System.currentTimeMillis();
+                System.out.println("calc for " + R + ": " + (end - init) + "ms");
+                
+                theta = tval.multiply(lnsqrtArg1BD, mc).subtract(t2, mc)
+                        .subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
+                basetheta = theta;
+                predictedSqrtArg1 = basesqrtArg1 ;
+            } else {
+                theta = (basetheta + lnsqrtArg1*tincr
+                        +tincr*tincr/(4*tbase))%(2*Math.PI);
+                predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
+            }
+            double rotatedSum = 2*( Math.cos(theta)*fAtBeta[i][0]+Math.sin(theta)*fAtBeta[i][1]);
+            double correction = GSeries.correction( predictedSqrtArg1);
+            zeta[i] = rotatedSum + correction;
+            System.out.println("f  : " + Arrays.toString(fAtBeta[i])
+               + " theta " + theta + "\n rotatedSum " + rotatedSum
+               + " *** zeta " + zeta[i]);
+            System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
+        }
+        return zeta;
+    }
+
+
+    public static void main(String[] args) {
+        calculateLargeValue();
+    }
 }
