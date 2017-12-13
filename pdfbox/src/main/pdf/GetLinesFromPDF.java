@@ -24,6 +24,7 @@ public class GetLinesFromPDF extends PDFTextStripper {
     int[] hist = new int[10];
     static enum TYPE{k,t,Z,Other, kHeader, tHeader};
     TYPE currentType = TYPE.Other;
+    long currentK;
 
     public GetLinesFromPDF() throws IOException {
     }
@@ -75,6 +76,7 @@ public class GetLinesFromPDF extends PDFTextStripper {
         case k:
             if(m.matches()){
                currentType = TYPE.t;
+               currentK = Long.parseLong(str);
             }
             return;
         case t:
@@ -83,10 +85,14 @@ public class GetLinesFromPDF extends PDFTextStripper {
         case Z:
             currentType = TYPE.k;
             count++;
-            double Z = Math.abs(Double.parseDouble(str));
-            int idx = (int) ((Z-500)/50);
+            double Z = Double.parseDouble(str);
+            double abs = Math.abs(Z);
+            int idx = (int) ((abs-500)/50);
             if(idx >= hist.length){idx = hist.length - 1; }
             hist[idx]++;
+            if(abs >= 950){
+                System.out.println(currentK + ", " + Z);
+            }
             break;
         case kHeader:
             if(str.equals("t")){
@@ -94,14 +100,14 @@ public class GetLinesFromPDF extends PDFTextStripper {
             } else {
                 currentType = TYPE.Other;
             }
-            break;
+            return;
         case tHeader:
             if(str.startsWith("Z(t)")){
                currentType = TYPE.k;
             } else {
                 currentType = TYPE.Other;
             }
-            break;
+            return;
 
         default:
             if(str.equals("k")){
