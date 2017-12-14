@@ -25,11 +25,11 @@ public class ConjecturesTest {
    //@Test //needs fixing (large sums)
     public void testZeroLargeOffset() {
         MathContext mc = new MathContext(50, RoundingMode.HALF_EVEN);
-        double[][] fAtBeta = null;
+        int R = 2;
+        double[][] fAtBeta = new double[R][2];
         double[] begin = {100.437512887104287873, 100.464843234223048518};
         int k0 = 1;
         long k1;
-        int R = 2;
         double lnsqrtArg1 = 0;
         double basetheta = 0;
         double dsqrtArg1 = 0;
@@ -61,7 +61,7 @@ public class ConjecturesTest {
                 lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
                 long init= System.currentTimeMillis();
 
-                fAtBeta = UTSum.fSeries(k0, k1, begin[1]-begin[0], R, tval);
+                fAtBeta = UTSum.fSeries(fAtBeta, k0, k1, begin[1]-begin[0], R, tval);
                 long end = System.currentTimeMillis();
                 System.out.println("evaluateWithOffset calc for " + k1 + ": " + (end - init) + "ms");
                 //theta should be 2.819633653651107

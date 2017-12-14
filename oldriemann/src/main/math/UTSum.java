@@ -10,15 +10,16 @@ import riemann.Gram;
 
 public class UTSum {
     public static MathContext mc = new MathContext(45, RoundingMode.HALF_EVEN);
-    public static long b = 1L << 32;
-    public static long mask32 = b - 1;
+    public static final long b = 1L << 32;
+    public static final long mask32 = b - 1;
 
-    public static double bdbl = (double) b;
-    public static long pow31 = (1L << 31);
-    public static long mask31 = pow31 - 1;
-    public static double pow31dbl = (double) pow31;
-    public static double bdlSquared = 1.0d + (double) Long.MAX_VALUE;
-    public static BigDecimal bBD2 = BigDecimal.valueOf(bdlSquared);
+    public static final double bdbl = (double) b;
+    public static final long pow31 = (1L << 31);
+    public static final long mask31 = pow31 - 1;
+    public static final double pow31dbl = (double) pow31;
+    public static final double bdlSquared = 1.0d + (double) Long.MAX_VALUE;
+    public static final BigDecimal bBD2 = BigDecimal.valueOf(bdlSquared);
+    public static final double twoPI = 2*Math.PI;
 
     public static class A1A0r {
         public long A1;
@@ -30,7 +31,7 @@ public class UTSum {
         }
     }
 
-    public enum SOURCE{GSERIES, UTSUM}
+    public enum SOURCE{GSERIES, UTSUM, SIGMA1}
 
 
     public static double calculateIncr1(A1A0r coeff, long h) {
@@ -92,10 +93,8 @@ public class UTSum {
         return coeff;
     }
 
-    public static double[][] fSeries(final int k0, final long k1, final double incr, final int R, 
+    public static double[][] fSeries(final double[][] fAtBeta, final int k0, final long k1, final double incr, final int R, 
             BigDecimal tBase) {
-        double[][] fAtBeta = new double[R][2];
-        final double twoPI = 2*Math.PI;
         tBase = tBase.divide(Gram.pi_2, mc);
         double tBaseDbl = tBase.doubleValue();
         long K = (long) Math.ceil(Math.pow(tBaseDbl/4.0d, 0.25d));
@@ -106,7 +105,7 @@ public class UTSum {
         // do loop upto K
         for (; i <= K; i++) {
             //evaluate one term in the series, for all t.
-            double coeff = 1/Math.sqrt(i);
+            double coeff1 = 1/Math.sqrt(i);
             
             BigDecimal tlni = tBase.multiply(Gram.log(i),  mc);
             tlni = tlni.subtract(new BigDecimal(tlni.toBigInteger()));
@@ -121,12 +120,14 @@ public class UTSum {
             double sindlni = Math.sin(incr*Math.log(i));
             
             for (int j = 0; j < R; j++) {
-                fAtBeta[j][0] += coeff*costlni;
-                fAtBeta[j][1] += coeff*sintlni;
-                //now set values for next t
-                double tmpCos = costlni*cosdlni - sintlni*sindlni;
-                sintlni = sintlni*cosdlni + costlni*sindlni;
-                costlni = tmpCos;
+                fAtBeta[j][0] += coeff1*costlni;
+                fAtBeta[j][1] += coeff1*sintlni;
+                if(j < R - 1){
+                    //now set values for next t
+                    double tmpCos = costlni*cosdlni - sintlni*sindlni;
+                    sintlni = sintlni*cosdlni + costlni*sindlni;
+                    costlni = tmpCos;
+                }
             }
         }
        
@@ -221,9 +222,11 @@ public class UTSum {
                 fAtBeta[j][0] += coeff1*costlni;
                 fAtBeta[j][1] += coeff1*sintlni;
                 //now set values for next t
-                double tmpCos = costlni*cosdlni - sintlni*sindlni;
-                sintlni = sintlni*cosdlni + costlni*sindlni;
-                costlni = tmpCos;
+                if(j < R - 1){
+                    double tmpCos = costlni*cosdlni - sintlni*sindlni;
+                    sintlni = sintlni*cosdlni + costlni*sindlni;
+                    costlni = tmpCos;
+                }
             }
         }
         System.out.println("hmax " + hmax + ", updateHmax " + updateHmax);
@@ -271,7 +274,7 @@ public class UTSum {
         double incr = Math.PI/Math.log(Math.sqrt(offset/(2*Math.PI)));
         double[] begin = {t.subtract(BigDecimal.valueOf(offset)).doubleValue(), 0};
         begin[1] = begin[0]+incr/14.5d;
-        double[] zeta = evaluateZeta(offset, begin, UTSum.SOURCE.UTSUM);
+        double[] zeta = evaluateZeta(offset, begin, UTSum.SOURCE.SIGMA1);
     }
 
     public static double[] evaluateZeta(long offset, double[] begin, SOURCE source) {
@@ -282,7 +285,7 @@ public class UTSum {
         double dsqrtArg1 = 0;
         double tbase = 0;
         double basesqrtArg1 = 0;
-        double[][] fAtBeta = null;
+        double[][] fAtBeta = new double[R][6];
         double[] zeta = new double[2];
         for (int i = 0; i < begin.length; i++) {
             double tincr =  (begin[i]-begin[0]) ; 
@@ -306,8 +309,12 @@ public class UTSum {
                     fAtBeta = GSeries.fSeries(k0, k1, begin[1]-begin[0], R, tval);
                     break;
     
-                default:
-                    fAtBeta = fSeries(k0, k1, begin[1]-begin[0], R, tval);
+                case SIGMA1:
+                    fAtBeta = fSeries(fAtBeta, k0, k1, begin[1]-begin[0], R, tval);
+                    break;
+    
+               default:
+                    fAtBeta = fSeries(fAtBeta, k0, k1, begin[1]-begin[0], R, tval);
                     break;
                 }
                 long end = System.currentTimeMillis();
