@@ -95,17 +95,19 @@ public class UTSum {
 
     public static double[][] fSeries(final double[][] fAtBeta, final int k0, final long k1, final double incr, final int R, 
             BigDecimal tBase) {
+        boolean calcSigma = fAtBeta[0].length == 6;
         tBase = tBase.divide(Gram.pi_2, mc);
         double tBaseDbl = tBase.doubleValue();
         long K = (long) Math.ceil(Math.pow(tBaseDbl/4.0d, 0.25d));
         System.out.println("K " + K + " k1 " +k1 + " tBaseDbl " + tBaseDbl);
 
+        double coeff1 = 1;
         double uk = 0;
         long i = k0;
         // do loop upto K
         for (; i <= K; i++) {
             //evaluate one term in the series, for all t.
-            double coeff1 = 1/Math.sqrt(i);
+            coeff1 = 1/Math.sqrt(i);
             
             BigDecimal tlni = tBase.multiply(Gram.log(i),  mc);
             tlni = tlni.subtract(new BigDecimal(tlni.toBigInteger()));
@@ -122,6 +124,12 @@ public class UTSum {
             for (int j = 0; j < R; j++) {
                 fAtBeta[j][0] += coeff1*costlni;
                 fAtBeta[j][1] += coeff1*sintlni;
+                if(calcSigma){
+                    fAtBeta[j][2] += costlni/i;
+                    fAtBeta[j][3] += sintlni/i;
+                    fAtBeta[j][4] += costlni;
+                    fAtBeta[j][5] += sintlni;
+                }
                 if(j < R - 1){
                     //now set values for next t
                     double tmpCos = costlni*cosdlni - sintlni*sindlni;
@@ -158,7 +166,7 @@ public class UTSum {
             }            
             
             //evaluate one term in the series, for all t.
-            double coeff1 = 1/Math.sqrt(i);
+            coeff1 = 1/Math.sqrt(i);
             double argi_2pi;
             //1. do we need to generate a new uk?
             if(h >= hmax){
@@ -221,6 +229,12 @@ public class UTSum {
             for (int j = 0; j < R; j++) {
                 fAtBeta[j][0] += coeff1*costlni;
                 fAtBeta[j][1] += coeff1*sintlni;
+                if(calcSigma){
+                    fAtBeta[j][2] += costlni/i;
+                    fAtBeta[j][3] += sintlni/i;
+                    fAtBeta[j][4] += costlni;
+                    fAtBeta[j][5] += sintlni;
+                }
                 //now set values for next t
                 if(j < R - 1){
                     double tmpCos = costlni*cosdlni - sintlni*sindlni;
