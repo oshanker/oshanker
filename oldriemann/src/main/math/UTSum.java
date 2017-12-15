@@ -292,7 +292,7 @@ public class UTSum {
     }
 
     public static double[] evaluateZeta(long offset, double[] begin, SOURCE source) {
-        int k0 = 1, k1=0;
+        int k0 = 1; long k1=0;
         int R = 2;
         double lnsqrtArg1 = 0;
         double basetheta = 0;
@@ -301,9 +301,10 @@ public class UTSum {
         double basesqrtArg1 = 0;
         double[][] fAtBeta = new double[R][6];
         double[] zeta = new double[2];
+        BigDecimal tval = null;
         for (int i = 0; i < begin.length; i++) {
             double tincr =  (begin[i]-begin[0]) ; 
-            BigDecimal tval = new BigDecimal(begin[i], mc).add(
+            tval = new BigDecimal(begin[i], mc).add(
                     BigDecimal.valueOf(offset), mc);
             double predictedSqrtArg1 = 0;
             double theta = 0;
@@ -350,7 +351,14 @@ public class UTSum {
                + " theta " + theta + "\n rotatedSum " + rotatedSum
                + " *** zeta " + zeta[i]);
             System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
+            
         }
+        tval = tval.divide(Gram.bdTWO);
+        BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, mc), mc, 1.0E-21);
+        k1 = sqrtArg1.longValue();
+        fAtBeta = fSeries(fAtBeta, k0, k1, 0, 1, tval);
+        System.out.println("f  : " + Arrays.toString(fAtBeta[0])
+        + " t " + tval);
         return zeta;
     }
 
