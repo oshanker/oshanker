@@ -248,38 +248,6 @@ public class UTSum {
         return fAtBeta;
     }
     
-    public static double performSum(A1A0r[] coeff, long currentK, long h, double tBaseDbl) {
-        double sum = 0;
-        //System.out.println("coeff " + Arrays.toString(coeff) + ",\n h " + h + " currentK " + currentK);
-        double uKincr1 = UTSum.calculateIncr1(coeff[0],   h);
-        sum += uKincr1;
-        //System.out.println("** uKincr " + uKincr1  );
-
-        double uKincr2 = UTSum.calculateIncr2(coeff[1],   h, 2);
-        sum += uKincr2;
-        //System.out.println("** uKincr " + uKincr2 + ", " +  (sum)  );
-
-        double uKincr = UTSum.calculateIncr2(coeff[2],   h, 3);
-        sum += uKincr;
-        //System.out.println("** uKincr " + uKincr + ", " +  (sum) );
-        
-        double rho = ((double)h)/currentK;
-        double term = -tBaseDbl*Math.pow(rho, 4)/(4);
-        double remaining = term;
-        //System.out.println("** term " + term + ", " +  (remaining) );
-        for(int j = 5; j <12; j++){
-            term = -rho*term*(j-1)/j;
-            remaining += term;
-            //System.out.println("** term " + term + ", " +  (remaining) );
-            if(Math.abs(term)<1.0E-15){
-                break;
-            }
-        }
-        
-        sum += remaining;
-        return sum;
-    }
-
     public static void calculateLargeValue() {
         Gram.initLogVals(100000);
         BigDecimal tFactor = Gram.pi_2.divide(Gram.log(Gram.bdTWO, mc), mc);
@@ -289,6 +257,8 @@ public class UTSum {
         double[] begin = {t.subtract(BigDecimal.valueOf(offset)).doubleValue(), 0};
         begin[1] = begin[0]+incr/14.5d;
         double[] zeta = evaluateZeta(offset, begin, UTSum.SOURCE.SIGMA1);
+        t = t.divide(Gram.bdTWO);
+        evalSingle(1, t);
     }
 
     public static double[] evaluateZeta(long offset, double[] begin, SOURCE source) {
@@ -353,13 +323,16 @@ public class UTSum {
             System.out.println("sqrtArg1[i].doubleValue() " + predictedSqrtArg1 + " correction " + correction );
             
         }
-        tval = tval.divide(Gram.bdTWO);
-        BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, mc), mc, 1.0E-21);
-        k1 = sqrtArg1.longValue();
-        fAtBeta = fSeries(fAtBeta, k0, k1, 0, 1, tval);
-        System.out.println("f  : " + Arrays.toString(fAtBeta[0])
-        + " t " + tval);
         return zeta;
+    }
+
+    public static void evalSingle(int k0, BigDecimal tval) {
+        BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, mc), mc, 1.0E-21);
+        long k1half = sqrtArg1.longValue();
+        double[][] fAtBetahalf = new double[1][6];
+        fAtBetahalf = fSeries(fAtBetahalf, k0, k1half, 0, 1, tval);
+        System.out.println("f  : " + Arrays.toString(fAtBetahalf[0])
+        + " t " + tval);
     }
 
 
