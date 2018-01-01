@@ -13,6 +13,7 @@
 \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
 
 \newtheorem{mydef}{Conjecture}
+\newtheorem*{mydef-non}{Conjecture}
 
 \setcounter{page}{1}
 \begin{document}
@@ -34,11 +35,11 @@
 \thispagestyle{fancy}
 
 \begin{abstract}
-We consider the asymptotic value of the ratio of good to bad Gram points for the Riemann zeta function.
+In this work we consider the asymptotic value of the ratio of good to bad Gram points for the Riemann zeta function.
+We present two new results. The first new result is a relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.
 We relate this to a conjecture of Odlyzko about the locations of the zeros of the Riemann zeta function.
-The conjecture is based on the GUE hypothesis, and the additional assumption that a Gram interval does not differ from any other interval of that length.
 If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. 
-We study the empirical evidence for the relationship. The study leads us to the formulation of two 
+We show that the empirical evidence does not favor Odlyzko's conjecture. The  second new result is the formulation and empirical validation of two 
 symmetry related conjectures about the location of the zeros.
 \end{abstract}
 
@@ -49,12 +50,23 @@ symmetry related conjectures about the location of the zeros.
 
 
 \section{Introduction}
-The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
-In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called "Gram points".
-He observed that in his calculations the roots of the Riemann zeta function alternated with the Gram points. He also observed that the
-value of the real part of the Riemann zeta function was positive at the Gram points. Such points are today called good Gram points. Thus, we may say that since the early 
-twentieth century we have been observing that the majority of Gram points are good Gram points. In this work we study empirically the ratio of good to bad Gram points, and relate it to a conjecture of Odlyzko~\cite{Odlyzko 1992}. The conjecture is based on the GUE hypothesis, and the additional assumption that a Gram interval does not differ from any other interval of that length.
-If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. We also formulate two symmetry related conjectures about the location of the zeros.
+The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. 
+The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
+In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called ``Gram points".
+The Gram points lie on the line $1/2+it$ in the complex plane, and the Riemann zeta function $\zeta(1/2+it)$ is real at these points. 
+Gram observed that in his calculations the roots of the Riemann zeta function alternated with the Gram points. He also observed that the
+value of the real part of the Riemann zeta function tends to be positive at the Gram points. Such points are today called good Gram points. Thus, we may say that since the early 
+twentieth century we have been observing that the majority of Gram points are good Gram points. 
+
+In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's~\cite{Odlyzko 1992} conjecture,  that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
+If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros. In the same section show that the empirical evidence does not favor Odlyzko's conjecture.  We formulate two new symmetry related conjectures about the location of the zeros, as stated below and explained in Section~\ref{sec7}.
+
+\begin{mydef-non}\label{antisymmetry0}
+(even-odd antisymmetry): The distribution of the zeta values for odd Gram points is the negative of the distribution of zeta values for the even Gram points.
+\end{mydef-non}
+\begin{mydef-non}\label{symmetry0}
+(forward-backward symmetry): When we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order or in decreasing order).
+\end{mydef-non}
 
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
@@ -116,9 +128,6 @@ to the theory of the spectra of random matrix theories (RMT)
 and the spectra of classically chaotic quantum systems. 
 Many remarkable properties of the Riemann zeta function keep turning up in the literature~\cite{os6,Matiyasevich}.
 
-
-The next section discusses the Gram Points.
-
 \section{\label{sec3}Gram Points}
 
 In this section we discuss the details of the numerical work. 
@@ -126,7 +135,7 @@ The numerical analysis takes advantage of the functional
 equation Eq.~(\ref{eq:func}).
 One defines
 \begin{equation}
-\theta(t) = arg (\pi^{?it/2} \Gamma(\frac{1}{4} + \frac{it}{2})), 
+\theta(t) = arg (\pi^{it/2} \Gamma(\frac{1}{4} + \frac{it}{2})), 
 \label{eq:theta}
 \end{equation}
 where the argument is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
@@ -144,11 +153,11 @@ of a real valued function
 to find zeros on the critical line. This is a very convenient property in the numerical verification 
 of the Riemann Hypothesis.
 Another very helpful property is that many of the zeros are separated by the
-"Gram points".  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
+``Gram points".  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
 For $n \ge 1$, the $n-th$ Gram point $g_n$ is defined as the unique solution $> 7$ to
 $\theta (g_n) = n\pi$.
 The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed.
-Their locations can be found without any evaluations of the Riemann-Siegal series Eq.(\ref{eq:RS}).
+Their locations can be found without any evaluations of the Riemann-Siegel series Eq.(\ref{eq:RS}).
 Gram's law is the empirical observation that $Z(t)$ usually changes its sign in each Gram interval 
 $G_n = [g_n,g_{n+1})$. 
 This law fails infinitely often, but it is true in a large proportion of cases.
@@ -167,8 +176,6 @@ source for loss of accuracy at large heights is the cancellation between
 large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS}). We 
 use a high precision module to evaluate the arguments. The rest of the calculation
 is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to efficiently evaluate the zeta function at large t.
-
-In the next section we present the theory of Gram blocks.
 
 \section{\label{sec4}Gram Blocks}
 
@@ -304,7 +311,6 @@ In this section we investigate further the assumption that that a Gram interval 
 They  show clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution. 
 We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), using the ratio of  $Type~III,left$ interval counts where the '3' interval occurs at the first odd interval position on the left, to  $Type~III,right$ interval counts where the '3' interval occurs at the last odd interval position on the right. 
 Table~\ref{tab:rosser3random} shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. This provides further evidence for the conclusions of Table~\ref{tab:rosserrandom}.
-
   
 \begin{table}
 \centering \(\begin{array}{cc}
@@ -333,9 +339,6 @@ to describe an exception on a Gram block of length $k$  where the missing zeros 
 
 The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Odlyzko uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the forward-backward symmetry in patterns of violations of Rosser's rule. Once again, while there is very good evidence for the forward-backward symmetry, the $L$ type violations are ever so slightly smaller than the $R$ type violations. Again, we have evidence for a symmetry which is broken very slightly.
-
-In the next section we present two new conjectures based on the empirical evidence presented so far.
-
 
 \section{\label{sec7}Two Conjectures}
 
@@ -401,6 +404,8 @@ Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 The empirical data presented in the previous section lead us to formulate two new conjectures  about the distribution of zeta values at the 
 the Gram points. These conjectures are most likely related to the symmetry properties of the rotated zeta function (Hardy's function) under inversion around the origin. 
 
+Why is this striking?
+
 \begin{mydef}\label{antisymmetry}
 (even-odd antisymmetry): The distribution of the zeta values for odd Gram points is the negative of the distribution of zeta values for the even Gram points.
 \end{mydef}
@@ -413,27 +418,24 @@ In this section we will consider the statistics of zeta values at pairs of conse
 
 Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a positive zeta value, while the notation '$+-$' stands for a Gram Point which has a positive zeta value followed by a Gram Point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
 
-In the next section we present the conclusions.
-
-
 \section{\label{conclusions}Conclusions}
 
-In this work we presented a new  relation for the ratio of good to bad Gram points. We presented two conjectures regarding the distribution of zeta function values at Gram points. The conjectures refer to the even-odd Gram point antisymmetry and the forward-backward symmetry ("time reversal" symmetry, if we think of the zeta values at Gram points as being a time series). After briefly describing the theory of the Riemann zeta function and the numerical evaluation, we presented statistics of the zeta function values. The statistics provide validation for the two conjectures.
+In this work we presented a new  relation for the ratio of good to bad Gram points. We presented two conjectures regarding the distribution of zeta function values at Gram points. The conjectures refer to the even-odd Gram point antisymmetry and the forward-backward symmetry (``time reversal" symmetry, if we think of the zeta values at Gram points as being a time series). After briefly describing the theory of the Riemann zeta function and the numerical evaluation, we presented statistics of the zeta function values. The statistics provide validation for the two conjectures.
 
 
 \begin{thebibliography} {}
 
 \bibitem{Sarnak 2005} Peter Sarnak,
-"Problems of the Millennium: The Riemann Hypothesis (2004)", The Proceedings of the Clay Mathematics Institute 2004, Budapest, Hungary,
+``Problems of the Millennium: The Riemann Hypothesis (2004)", The Proceedings of the Clay Mathematics Institute 2004, Budapest, Hungary,
 \url{http://www.claymath.org/sites/default/files/sarnak_rh_0.pdf}, (2005)
 
 \bibitem{Gram 1903} J. P. Gram, 
-"Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
+``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
 {\it Acta Math.} {\bf27}(1903), 289-304.
 
 \bibitem{Odlyzko 1992}  A. Odlyzko,
-"The $10^{20}$-th Zero of the Riemann Zeta
-Function and 175 Million of its Neighbors'", report,
+``The $10^{20}$-th Zero of the Riemann Zeta
+Function and 175 Million of its Neighbors", report,
 \url{http://www.dtc.umn.edu/~odlyzko/unpublished/zeta.10to20.1992.pdf}, (1992)
 
 
@@ -450,25 +452,25 @@ Function,'' Oxford University Press, Second Edition, (1986).
 Academic Press,  (1974).
 
 \bibitem{os6} O. Shanker, 
-"Generalised Zeta Functions and Self-Similarity of Zero Distributions",
+``Generalised Zeta Functions and Self-Similarity of Zero Distributions",
 {\it J.  Phys. A} {\bf39}(2006), 13983-13997.
 
 \bibitem {Matiyasevich} Y. Matiyasevich, 
-"An artless method for calculating approximate values of
+``An artless method for calculating approximate values of
 zeros of Riemann zeta function",
 Web report, \url{http://logic.pdmi.ras.ru/~yumat/
 personaljournal/artlessmethod/artlessmethodtexts.php}, (2013)
 
 \bibitem{hiary} G. A. Hiary,
-"METHODS TO COMPUTE THE RIEMANN ZETA
+``METHODS TO COMPUTE THE RIEMANN ZETA
 FUNCTION", arxiv.org, math.NT, 0711.5005v4, (2011).
 
 \bibitem{gourdon} Xavier Gourdon,
-"The $10^{13}$ first zeros of the Riemann Zeta function,
+``The $10^{13}$ first zeros of the Riemann Zeta function,
 and zeros computation at very large height", report,
 \url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
 
-\bibitem {Odlyzko(1989)} A. Odlyzko, "The $10^{20}$-th Zero of the Riemann Zeta
+\bibitem {Odlyzko(1989)} A. Odlyzko, ``The $10^{20}$-th Zero of the Riemann Zeta
 Function and 70 Million of its Neighbors'' (preprint), A.T.T., (1989).
 
 
