@@ -93,11 +93,10 @@ Eq.~(\ref{eqRie})  converges for $\mathrm{Re} (s) > 1$.
  $\zeta ( s )$ has a  continuation
 to the complex plane and satisfies a functional equation \cite{Riemann(1858),Riemann 1892, Titchmarsh 1986,Edwards(1974)}
 \begin{equation}  
-\xi(s):= \pi^{-s/2} \, \Gamma (s/2) \, \zeta ( s ) \, = \, \xi ( 1 - s );
-\label{eq:func}
+\xi(s):=s(s-1) \pi^{-s/2} \, \Gamma (s/2) \, \zeta ( s )/2 \, = \, \xi ( 1 - s );
+\label{eq:xifunc}
 \end{equation}
-$\xi(s)$ is entire except for simple poles at $s = 0$ and $1$. Riemann
-multiplied the definition by $s(s-1)$ to remove the poles. We
+$\xi(s)$ is an entire function. We
 write the zeroes of $\xi(s)$ as $1/2 + i \gamma$. The Riemann Hypothesis  
 asserts that $\gamma$ is real for the non-trivial zeroes.
 We order the $\gamma$s in increasing order, with 
@@ -111,10 +110,10 @@ $14.1347$, $21.0220$, $\ldots$.
 
 
 Asymptotically, for the Riemann zeta function the mean number of 
-zeros with height less than $\gamma$ (the smoothed Riemann zeta staircase)
+zeros with height less than $\gamma$ (the smoothed Riemann zeta staircase, which we denote by $N(\gamma) $)
 is~\cite{Edwards(1974)}
 \begin{equation}  
-<\mathcal{N_R} (\gamma)> = (\gamma/2\pi)(ln(\gamma/2\pi)-1)-\frac{7}{8}.
+N(\gamma) = (\gamma/2\pi)(ln(\gamma/2\pi)-1)+\frac{7}{8}.
 \label{eq:Rnumber}
 \end{equation}
 Thus, the mean spacing of the zeros at height $\gamma$ is 
@@ -139,22 +138,20 @@ One defines
 \label{eq:theta}
 \end{equation}
 where the argument is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
-For large $t$ $\theta$ has the asymptotic expansion
+For large $t$, $\theta$ has the asymptotic expansion
 \begin{equation}
-\theta(t) = \frac{t}{2}\ln (\frac{t}{2\pi}) - \frac{t}{2} - \frac{\pi}{8} + \frac{1}{48t} - \frac{1}{5760t^3}. 
+\theta(t) \approx \frac{t}{2}\ln (\frac{t}{2\pi}) - \frac{t}{2} - \frac{\pi}{8} + \frac{1}{48t} - \frac{1}{5760t^3}. 
 \label{eq:thetaAsymptotic}
 \end{equation}
+
 A consequence of the zeta functional equation is that the function 
-$Z(t)=exp(i\theta(t))\zeta(1/2 +it)$,
-known as the Riemann-Siegel Z-function, is real valued for real $t$. 
+$Z(t)=exp(i\theta(t))\zeta(1/2 +it)$ is real valued for real $t$. 
 Moreover we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the imaginary part of the zeros 
-of $\zeta(s)$ which lie on the critical line. We are led to finding the change of sign 
-of a real valued function 
+of $\zeta(s)$ which lie on the critical line. We are led to finding the change of sign of a real valued function 
 to find zeros on the critical line. This is a very convenient property in the numerical verification 
-of the Riemann Hypothesis.
-Another very helpful property is that many of the zeros are separated by the
+of the Riemann Hypothesis. Another very helpful property is that many of the zeros are separated by the
 ``Gram points".  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
-For $n \ge 1$, the $n-th$ Gram point $g_n$ is defined as the unique solution $> 7$ to
+For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
 $\theta (g_n) = n\pi$.
 The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed.
 Their locations can be found without any evaluations of the Riemann-Siegel series Eq.(\ref{eq:RS}).
@@ -164,8 +161,7 @@ This law fails infinitely often, but it is true in a large proportion of cases.
 The average value of $Z(g_n)$ is $2$ for even $n$ and $-2$ for odd $n$~\cite{Titchmarsh 1986},
 and hence $Z(g_n)$ undergoes an infinite number of sign changes.
 
-
-The Riemann-Siegel Z-function is evaluated using the Riemann-Siegal series
+The $Z$ function is evaluated using the Riemann$-$Siegel series
 \begin{equation}
 Z(t) = 2\sum^{m}_{n=1}\frac{\cos(\theta(t) - t \ln (n))}{\sqrt{n}} + R(t), 
 \label{eq:RS}
@@ -175,7 +171,7 @@ term which can be evaluated to the desired level of accuracy. The most important
 source for loss of accuracy at large heights is the cancellation between
 large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS}). We 
 use a high precision module to evaluate the arguments. The rest of the calculation
-is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to efficiently evaluate the zeta function at large t.
+is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to efficiently evaluate the zeta function at large $t$.
 
 \section{\label{sec4}Gram Blocks}
 
@@ -187,8 +183,6 @@ A Gram block of length k which contains exactly k roots of Z[t) is called regula
 Thus, regular Gram blocks must have a pattern of one of the following three forms:
 $21 . . . 10, 01 . . . 12, 01 . . . 131 . . . 10$
 where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko 1992} denotes these three types of regular Gram Blocks as Type I, Type II and Type III respectively.  
-
-In the next section we study the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture.
 
 \section{\label{sec5}Good to Bad Gram point ratio}
 
@@ -307,7 +301,11 @@ Gram~block	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\delta  \\
 \end{figure}
 
 
-In this section we investigate further the assumption that that a Gram interval does not differ from any other interval of that length. We study this in the context of the ratio of $Type~II/Type~I$ counts in a given large interval. The starting point is the observation of a remarkable relation, namely, the ratio is very close to one for Gram blocks of different lengths.   Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows this fact for all zeros up to $t = 10^{13}$. One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in this section. Table~\ref{tab:rosserrandom} and Figure~\ref{typeIIratio} shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.
+In this section we investigate further the assumption that that a Gram interval does not differ from any other interval of that length. 
+
+lead up to this. why is this important? what is striking about the relationships?
+
+We study this in the context of the ratio of $Type~II/Type~I$ counts in a given large interval. The starting point is the observation of a remarkable relation, namely, the ratio is very close to one for Gram blocks of different lengths.   Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows this fact for all zeros up to $t = 10^{13}$. One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in this section. Table~\ref{tab:rosserrandom} and Figure~\ref{typeIIratio} shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.
 They  show clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution. 
 We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), using the ratio of  $Type~III,left$ interval counts where the '3' interval occurs at the first odd interval position on the left, to  $Type~III,right$ interval counts where the '3' interval occurs at the last odd interval position on the right. 
 Table~\ref{tab:rosser3random} shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. This provides further evidence for the conclusions of Table~\ref{tab:rosserrandom}.
