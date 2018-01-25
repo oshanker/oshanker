@@ -342,7 +342,7 @@ public class Rosser {
                   e.printStackTrace();
               }
         }
-        double[][] typeIIratios = new double[10][5];
+        double[][] typeIIratios = new double[10][1];
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int displacementCount = typeIIratios[0].length;
