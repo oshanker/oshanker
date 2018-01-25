@@ -242,7 +242,7 @@ In this section we consider the distribution of Gram intervals that contain a gi
 We  review the prediction of Odlyzko~\cite{Odlyzko 1992} regarding the distribution of Gram intervals that contain a given number of zeros. The prediction is based on the conjecture that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
 The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices form the Gauss unitary ensemble (GUE). The distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. In what follows we will refer to this distribution as Odlyzko's prediction.
 
-Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros for three samples at $t=10^{12}$, $t=10^{15}$  and $t=10^{28}$ respectively, and the  expected values using Odlyzko's prediction. The first three rows of the table are based on Hiary. The last row is from Ref.~\cite{Odlyzko 1992}.
+Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros for three samples at $t=10^{12}$, $t=10^{15}$  and $t=10^{28}$ respectively, and the  expected values using Odlyzko's prediction. The first three rows of the table are based on the zeros tabulated in Ref~\cite{hiary 2010}. The last row is from Ref.~\cite{Odlyzko 1992}.
 
 While the agreement with Odlyzko's prediction is good, we argue here that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of points.  We set up the notation. $p_g$ and $p_b$ represent the probabilities that a given Gram Point is good or bad respectively.  $p_{odd|good}$ and $p_{even|good}$ are the probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point is good. $p_{odd|bad}$ and $p_{even|bad}$ have corresponding interpretations when the left Gram point is bad. We now derive a consistency relation between these quantities, by asking the question: what is the probability of a given Gram point being good or bad, given information about the preceding Gram point? 
 
@@ -501,6 +501,10 @@ and zeros computation at very large height", report,
 
 \bibitem {Odlyzko(1989)} A. Odlyzko, ``The $10^{20}$-th Zero of the Riemann Zeta
 Function and 70 Million of its Neighbors'' (preprint), A.T.T., (1989).
+
+\bibitem{hiary 2010} G. A. Hiary,
+``An amortized-complexity method to compute the Riemann zeta function", report,
+\url{https://people.math.osu.edu/hiary.1/amortized.html}, (2010).
 
 
 \end{thebibliography} 
