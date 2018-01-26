@@ -65,7 +65,7 @@ A Gram point is called good if the real part of the Riemann zeta function is pos
 Thus, we may say that since the early 
 twentieth century we have been observing that the majority of Gram points are good Gram points. 
 
-In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's~\cite{Odlyzko 1992} conjecture,  that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
+In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length (see Section 2.13 of Ref~\cite{Odlyzko 1992}). Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
 If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. This is in conflict with the empirical observation that good Gram points tend to be more numerous than bad Gram points. In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.  Based on the empirical data we also formulate two new symmetry related conjectures about the location of the zeros, as stated below and explained in Section~\ref{sec7}.
 
 \begin{mydef-non}\label{antisymmetry0}
@@ -81,8 +81,8 @@ Riemann Zeta Function.
 Section~\ref{sec3} describes the Gram points. 
 Section~\ref{sec4} describes the Gram blocks. 
 In Section~\ref{sec5} we study empirically the ratio of good to bad Gram points, and relate it to a conjecture of Odlyzko. 
-In Section~\ref{sec6} we study the ratio of $Type~II/Type~I$ Gram blocks. This ratio, and other ratios of more complex Gram block patterns, show a
-remarkable structure, i.e., the ratios are very close to $1$ for Gram blocks of different lengths.
+In Section~\ref{sec6} we study some remarkable empirical relations for Gram block counts over a large interval, for different types of Gram blocks. We find that the count for
+a given type of Gram block is very close to the count for the type with the reversed pattern. 
 Section~\ref{sec7} presents two new conjectures based on the empirical data. 
 Section~\ref{conclusions} gives a brief summary of the results. 
 
@@ -184,7 +184,7 @@ term which can be evaluated to the desired level of accuracy. The most important
 source for loss of accuracy at large heights is the cancellation between
 large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS}). We 
 use a high precision module to evaluate the arguments. The rest of the calculation
-is done using regular double precision accuracy. See ~\cite{hiary,gourdon,Odlyzko(1989)} for methods to efficiently evaluate the zeta function at large $t$.
+is done using regular double precision accuracy. See ~\cite{Odlyzko 1992,hiary,gourdon} for methods to efficiently evaluate the zeta function at large $t$.
 
 \section{\label{sec4}Gram blocks}
 
@@ -268,7 +268,7 @@ Table~\ref{tab:pevenpred} shows the empirical data which validates this relation
 Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length, implies that $p_{odd|good} = p_{odd|bad}$ and  $p_{even|good} = p_{even|bad}$. If this were indeed true, then Eq.~\ref{eqGoodRelation} can only be satisfied for $p_g = p_b = 0.5$ . Empirically, we know that $p_g > p_b$ (which is Gram's law). Thus, Gram's law provides empirical evidence against Odlyzko's conjecture. 
 Is it possible that the conjecture is asymptotically true, i.e., asymptotically, $p_g = p_b = 0.5$? The data for  $p_g$ and $p_b$ in Table~\ref{tab:pevenpred}  show that at least for $t$ of this order,  the  evidence does not favor the conjecture. 
 
-\section{\label{sec6}Ratio of $Type~II/Type~I$ Gram block counts}
+\section{\label{sec6}Some remarkable empirical relations for Gram block counts}
 
 \begin{table}
 \centering \(\begin{array}{cc}
@@ -308,7 +308,7 @@ Gram~block	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\delta  \\
 11 &1397.000000&34.533333&1.027888&0.041000&0.001084 \\
 \hline
 \end{array}\)
-\caption{Test that the equality of $Type~II$ and $Type~I$ Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosserrandom}
+\caption{Test that the equality of $Type~II$ and $Type~I$ Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. All the curves cross over exactly at the Gram point, and are very close to $1$ at crossover. The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosserrandom}
 \end{table}
 
 \begin{table}
@@ -327,26 +327,17 @@ Gram~block	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\delta  \\
 11 &0.068966&0.142857&1.000000&10.500000& \\
 \hline
 \end{array}\)
-\caption{Test that the equality of  $Type~III,left$ and $Type~III,right$ Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosser3random}
+\caption{Test that the equality of  $Type~III,left$ and $Type~III,right$ Gram block counts are not just a result of randomness over and above well-known distribution. The table shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. All the curves cross over exactly at the Gram point, and are very close to $1$ at crossover.  The statistics are from $10$ million Gram intervals at $t=10^{28}$.} \label{tab:rosser3random}
 \end{table}
-
-
-\begin{figure}
-\centering
-\includegraphics[width=1.1\textwidth]{typeIIratio}
-\caption[]{ 
-  Ratio of $Type~II/Type~I$ counts for Gram blocks of various lengths $l$, when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. All the curves cross over exactly at the Gram point, and have the value $1$ at crossover. Thus, the forward-backward symmetry depends strongly on measuring at the Gram point.
- }
-\vspace{1mm}
-\label{typeIIratio}
-\end{figure}
 
 
 In this section we investigate further the assumption that that a Gram interval does not differ from any other interval of that length. 
 
 lead up to this. why is this important? what is striking about the relationships?
 
-We study this in the context of the ratio of $Type~II/Type~I$ counts in a given large interval. The starting point is the observation of a remarkable relation, namely, the ratio is very close to one for Gram blocks of different lengths (the relation excludes the case of regular Gram blocks of length 1, which do not fit into one of the patterns of Eq.~\ref{types}).   Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows this fact for all zeros up to $t = 10^{13}$. One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in this section. Table~\ref{tab:rosserrandom} and Figure~\ref{typeIIratio} shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.
+We study this in the context of the ratio of $Type~II/Type~I$ counts in a given large interval. The starting point is the observation of a remarkable relation, namely, the ratio is very close to one for Gram blocks of different lengths (the relation excludes the case of regular Gram blocks of length 1, which do not fit into one of the patterns of Eq.~\ref{types}).   Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows this fact for all zeros up to $t = 10^{13}$. 
+
+One question we can ask is the extent to which the results follow just from randomness over and above the basic known patterns of the Riemann zeta distribution. In other words, do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? Would the results change significantly if we shift all the Gram points  by the same amount in a large interval? We address this question in this section. Table~\ref{tab:rosserrandom}  shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. The statistics are from $10$ million Gram intervals at $t=10^{28}$.
 They  show clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution. 
 We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), using the ratio of  $Type~III,left$ interval counts where the '3' interval occurs at the first odd interval position on the left, to  $Type~III,right$ interval counts where the '3' interval occurs at the last odd interval position on the right. 
 Table~\ref{tab:rosser3random} shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $n\delta$, where $\delta$ is the Gram interval. This provides further evidence for the conclusions of Table~\ref{tab:rosserrandom}.
@@ -455,7 +446,7 @@ Why is this striking?
 The evidence for  Conjecture~\ref{symmetry} has been presented in the previous sections. 
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  All the data  are from $10$ million Gram intervals starting at $t=10^{15}$.
 
-Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($zeta > 0$) and '$-$' for negative zeta values ($zeta \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a positive zeta value, while the notation '$+-$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
+Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($Z(t) > 0$) and '$-$' for negative zeta values ($Z(t) \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a positive zeta value, while the notation '$+-$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
 
 \section{\label{conclusions}Conclusions}
 
@@ -467,12 +458,12 @@ implications and future work.
 \begin{thebibliography} {}
 
 \bibitem{Sarnak 2005} Peter Sarnak,
-``Problems of the Millennium: The Riemann Hypothesis (2004)", The Proceedings of the Clay Mathematics Institute 2004, Budapest, Hungary,
-\url{http://www.claymath.org/sites/default/files/sarnak_rh_0.pdf}, (2005)
+``Problems of the Millennium: The Riemann Hypothesis (2004)",  {\it Clay Mathematics Institute Annual Report}, ( 2004), 
+16-21
 
 \bibitem{Gram 1903} J. P. Gram, 
 ``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
-{\it Acta Math.} {\bf27}(1903), 289-304.
+{\it Acta Math.} {\bf27}(1903), 289-304
 
 \bibitem{Odlyzko 1992}  A. Odlyzko,
 ``The $10^{20}$-th Zero of the Riemann Zeta
@@ -482,19 +473,19 @@ Function and 175 Million of its Neighbors", report,
 
 \bibitem {Riemann(1858)} B. Riemann, ``\"{U}ber die Anzahl der Primzahlen uter
 Einer Gegebenen Gr\"{o}be,'' {\it Montasb. der Berliner Akad.}, (1858),
-671-680.
+671-680
 
-\bibitem {Riemann 1892} B. Riemann, ``Gesammelte Werke'', Teubner, Leipzig, (1892).
+\bibitem {Riemann 1892} B. Riemann, ``Gesammelte Werke'', Teubner, Leipzig, (1892)
 
 \bibitem {Titchmarsh 1986} E. Titchmarsh, ``The Theory of the Riemann Zeta
-Function,'' Oxford University Press, Second Edition, (1986).
+Function,'' Oxford University Press, Second Edition, (1986)
 
 \bibitem {Edwards(1974)} H. M. Edwards, ``Riemann's Zeta Function,'' 
-Academic Press,  (1974).
+Academic Press,  (1974)
 
 \bibitem{os6} O. Shanker, 
 ``Generalised Zeta Functions and Self-Similarity of Zero Distributions",
-{\it J.  Phys. A} {\bf39}(2006), 13983-13997.
+{\it J.  Phys. A} {\bf39}(2006), 13983-13997
 
 \bibitem {Matiyasevich} Y. Matiyasevich, 
 ``An artless method for calculating approximate values of
@@ -503,20 +494,17 @@ Web report, \url{http://logic.pdmi.ras.ru/~yumat/
 personaljournal/artlessmethod/artlessmethodtexts.php}, (2013)
 
 \bibitem{hiary} G. A. Hiary,
-``METHODS TO COMPUTE THE RIEMANN ZETA
-FUNCTION", arxiv.org, math.NT, 0711.5005v4, (2011).
+``Fast methods to compute the Riemann zeta function",
+{\it Annals of Mathematics} {\bf174}(2011), 891-946
 
 \bibitem{gourdon} Xavier Gourdon,
 ``The $10^{13}$ first zeros of the Riemann Zeta function,
 and zeros computation at very large height", report,
 \url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
 
-\bibitem {Odlyzko(1989)} A. Odlyzko, ``The $10^{20}$-th Zero of the Riemann Zeta
-Function and 70 Million of its Neighbors'' (preprint), A.T.T., (1989).
-
 \bibitem{hiary 2010} G. A. Hiary,
 ``An amortized-complexity method to compute the Riemann zeta function", report,
-\url{https://people.math.osu.edu/hiary.1/amortized.html}, (2010).
+\url{https://people.math.osu.edu/hiary.1/amortized.html}, (2010)
 
 
 \end{thebibliography} 
