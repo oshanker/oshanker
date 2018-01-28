@@ -62,21 +62,23 @@ value of the real part of the Riemann zeta function tends to be positive at the 
 \begin{defn}\label{good0}
 A Gram point is called good if the real part of the Riemann zeta function is positive at the Gram point.
 \end{defn}
-Thus, we may say that since the early 
+Note that this definition of a good Gram point can be extended to any t on the critical line $1/2+it$ . Thus, we may say that since the early 
 twentieth century we have been observing that the majority of Gram points are good Gram points. 
 
 In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length (see Section 2.13 of Ref~\cite{Odlyzko 1992}). Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
 If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. This is in conflict with the empirical observation that good Gram points tend to be more numerous than bad Gram points. In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.  
 
-In the course of these investigations we observed some remarkable patterns. First, we observed that the 
+In the course of these investigations we observed some remarkable patterns. 
+We summarize our observations here, and discuss these results in detail in Sections \ref{sec6} and \ref{sec7}.
+First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation:
 \begin{mydef-non}\label{antisymmetry0}
-(even-odd antisymmetry): The distribution of the zeta values for odd Gram points is the negative of the distribution of zeta values for the even Gram points.
+(even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points.
 \end{mydef-non}
-
+The second relation we observed is related to the patterns of zero counts on consecutive Gram intervals.  We find that the count for
+a given pattern of zero counts  is very close to the count for the reversed pattern. This equality is observed not only for simple patterns of zero counts, but also for complex patterns like the ones presented in Section~\ref{sec6a}. This leads us to the following conjecture (observed for patterns of zero counts on Gram intervals, but likely true for other properties of the sequence of $Z(t)$):
 \begin{mydef-non}\label{symmetry0}
 (forward-backward symmetry): When we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order or in decreasing order).
 \end{mydef-non}
-We discuss these results in Sections \ref{sec6} and \ref{sec7}.
 
 The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider $ln(t)$ to be essentially constant over the interval.  The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations. 
 
@@ -157,8 +159,12 @@ For large $t$, $\theta$ has the asymptotic expansion
 \label{eq:thetaAsymptotic}
 \end{equation}
 
-A consequence of the zeta functional equation is that the function 
-$Z(t)=exp(i\theta(t))\zeta(1/2 +it)$ is real valued for real $t$. 
+A consequence of the zeta functional equation is that Hardy's function 
+\begin{equation}
+Z(t)=exp(i\theta(t))\zeta(1/2 +it) 
+\label{eq:hardy}
+\end{equation}
+is real valued for real $t$. 
 Moreover we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the imaginary part of the zeros 
 of $\zeta(s)$ which lie on the critical line. We are led to finding the change of sign of a real valued function 
 to find zeros on the critical line. This is a very convenient property in the numerical verification 
@@ -179,7 +185,7 @@ This law fails infinitely often, but it is true in a large proportion of cases.
 The average value of $Z(g_n)$ is $2$ for even $n$ and $-2$ for odd $n$~\cite{Titchmarsh 1986},
 and hence $Z(g_n)$ undergoes an infinite number of sign changes.
 
-The $Z$ function is evaluated using the Riemann$-$Siegel series
+Hardy's function $Z(t)$  is evaluated using the Riemann$-$Siegel series
 \begin{equation}
 Z(t) = 2\sum^{m}_{n=1}\frac{\cos(\theta(t) - t \ln (n))}{\sqrt{n}} + R(t), 
 \label{eq:RS}
@@ -369,6 +375,8 @@ Type~of~violation &Ratio~of~counts\\
 \caption{Forward-backward symmetry in patterns of violations of Rosser's rule.  The statistics are from the first $10^{13}$ Gram intervals.} \label{tab:vrr}
 \end{table}
 
+\subsection{\label{sec6a}Symmetry as manifested for patterns involving violations of Rosser's rule}
+
 Further validation comes from a consideration of the different types of violations of Rosser's rule~\cite{gourdon}, which also show the forward-backward symmetry. Rosser's rule states that Gram blocks of length $k$ contain at least $k$ zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram blocks. A Gram block is either regular, or it has an excess of zeros, or it has fewer zeros than its length. The last type of Gram block violates Rosser's rule. 
 If a Gram block of length k is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Odlyzko uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
 to describe an exception on a Gram block of length $k$  where the missing zeros are on the left (for $X = L$) or on the right (for $X = R$), the pattern containing the missing zeros being $a_1a_2 . . . a_m$ (moreover, this pattern is the smallest union of Gram block adjacent to the exception that contains the missing zeros). For example, $3L04$ denotes a violation of Rosser's rule on a Gram block of length 3, the missing zeros being at its left. Written out in detail, the pattern of zeros is expressed by the notation is $04010$.
@@ -382,14 +390,14 @@ Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the forward-backwar
 \centering
 \includegraphics[width=0.62\textwidth]{ozeta.jpg}
 \caption[]{ 
-  Distribution of zeta values at 500000 odd Gram points  at $t = 10^{12}$.
+  Distribution of  $Z(t)$ at 500000 odd Gram points  at $t = 10^{12}$.
  }
 \vspace{1mm}
 \label{oddhist}
 
 \includegraphics[width=0.62\textwidth]{ezeta.jpg}
 \caption[]{ 
-   Distribution of zeta values at 500000 even Gram points  at $t = 10^{12}$.
+   Distribution of $Z(t)$ at 500000 even Gram points  at $t = 10^{12}$.
  }
 \label{evenhist}
 \vspace{1mm}
@@ -406,7 +414,7 @@ Odd&-160.90 &   -2.526 &   -0.8471  & -2.00 &   -0.1121 &  69.41 \\
 Even&-68.63 &   0.1139 &  0.8526  & 2.00 &   2.541 & 165.10 \\
 \hline
 \end{array}\)
-\caption{Quantiles and mean for zeta values at Gram points of different types.  The statistics are from $1$ million Gram intervals at $t=10^{12}$.} \label{tab:quantiles}
+\caption{Quantiles and mean for  $Z(t)$ at Gram points of different types.  The statistics are from $1$ million Gram intervals at $t=10^{12}$.} \label{tab:quantiles}
 \end{table}
 
 
@@ -419,7 +427,7 @@ Odd & 0.151651&0.627465&0.069119&0.151765 \\
 Even & 0.151565&0.069206&0.627551&0.151678 \\
 \hline
 \end{array}\)
-\caption{Counts of different configurations of zeta values for pairs of consecutive Gram points.  The statistics are from $10$ million Gram intervals at $t=10^{15}$.} \label{tab:pairraw}
+\caption{Counts of different configurations of $Z(t)$  for pairs of consecutive Gram points.  The statistics are from $10$ million Gram intervals at $t=10^{15}$.} \label{tab:pairraw}
 \end{table}
 
 \begin{table}
@@ -443,7 +451,7 @@ the Gram points. These conjectures are most likely related to the symmetry prope
 Why is this striking?
 
 \begin{mydef}\label{antisymmetry}
-(even-odd antisymmetry): The distribution of the zeta values for odd Gram points is the negative of the distribution of zeta values for the even Gram points.
+(even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points.
 \end{mydef}
 \begin{mydef}\label{symmetry}
 (forward-backward symmetry): When we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order or in decreasing order).
@@ -452,7 +460,7 @@ Why is this striking?
 The evidence for  Conjecture~\ref{symmetry} has been presented in the previous sections. 
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  
 
-Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of zeta values at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($Z(t) > 0$) and '$-$' for negative zeta values ($Z(t) \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a positive zeta value, while the notation '$+-$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
+Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of $Z(t)$ at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive zeta values ($Z(t) > 0$) and '$-$' for negative zeta values ($Z(t) \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a positive zeta value, while the notation '$+-$' stands for a Gram point which has a positive zeta value followed by a Gram point which has a negative zeta value. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
 
 \section{\label{conclusions}Conclusions}
 
