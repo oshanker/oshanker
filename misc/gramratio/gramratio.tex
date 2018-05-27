@@ -7,6 +7,8 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \usepackage{url}
+\usepackage{xcolor}
+
 
 \def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
 \long\def\symbolfootnote[#1]#2{\begingroup%
@@ -62,7 +64,7 @@ value of the real part of the Riemann zeta function tends to be positive at the 
 \begin{defn}\label{good0}
 A Gram point is called good if the real part of the Riemann zeta function is positive at the Gram point.
 \end{defn}
-Note that this definition of a good Gram point can be extended to any t on the critical line $1/2+it$ . Thus, we may say that since the early 
+Note that this definition of a good Gram point can be extended to any \textcolor{blue}{$t$} on the critical line $1/2+it$ . Thus, we may say that since the early 
 twentieth century we have been observing that the majority of Gram points are good Gram points. 
 
 The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider $ln(t)$ to be essentially constant over the interval.  The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
@@ -125,12 +127,15 @@ $14.1347$, $21.0220$, $\ldots$.
 
 
 Asymptotically, for the Riemann zeta function the mean number of 
-zeros with height less than $t$ (the smoothed Riemann zeta staircase, which we denote by $N(t)$)
+zeros with height less than $t$ (the smoothed Riemann zeta staircase, which we denote by \textcolor{blue}{
+$N_{smooth}(t)$})
 is~\cite{Edwards(1974)}
+\textcolor{blue}{
 \begin{equation}  
-N(t) = (t/2\pi)(ln(t/2\pi)-1)+\frac{7}{8}.
+N_{smooth}(t) = (t/2\pi)(ln(t/2\pi)-1)+\frac{7}{8}.
 \label{eq:Rnumber}
 \end{equation}
+}
 Thus, the mean spacing $\delta$ of the zeros at height $t$ is 
 \begin{equation}  
 \delta = 2\pi(\ln (t/2\pi))^{-1}. 
@@ -212,7 +217,7 @@ Definitions \ref{good0} and \ref{good1} are equivalent because of Eq.~\ref{eq:ze
 A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
 and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where $k$ is called the length of the Gram block, and $a_i$ denote the number of roots of $Z(t)$ in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
 
-A Gram block of length $k$ which contains exactly $k$ roots of $Z[t)$ is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). 
+A Gram block of length $k$ which contains exactly $k$ roots of \textcolor{blue}{$Z(t)$} is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). 
 The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
 Thus, regular Gram blocks must have a pattern of one of the following three forms:
 \begin{eqnarray}
@@ -391,7 +396,7 @@ Column $3$ shows the pattern of zero counts for the numerator in column $1$. The
 \subsection{\label{sec6a}Symmetry as manifested for patterns involving violations of Rosser's rule}
 
 We now present the evidence for symmetry under reversal of the zero patterns for more complex zero patterns than those considered so far. The more complex patterns can be classified under different types of violations of Rosser's rule~\cite{gourdon}. Rosser's rule states that Gram blocks of length $k$ contain at least $k$ zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram blocks. A Gram block is either regular, or it has an excess of zeros, or it has fewer zeros than its length. The last type of Gram block violates Rosser's rule. 
-If a Gram block of length k is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Odlyzko uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
+If a Gram block of length \textcolor{blue}{$k$} is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Odlyzko uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
 to describe an exception on a Gram block of length $k$  where the missing zeros are on the left (for $X = L$) or on the right (for $X = R$), the pattern containing the missing zeros being $a_1a_2 . . . a_m$ (moreover, this pattern is the smallest union of Gram blocks adjacent to the exception that contains the missing zeros). For example, $3L04$ denotes a violation of Rosser's rule on a Gram block of length 3, the missing zeros being at its left. Written out in detail, the pattern of zeros is expressed by the notation is $04010$.
 
 The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Odlyzko uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
