@@ -57,7 +57,7 @@ symmetry related conjectures about the location of the zeros.
 The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. 
 The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
 In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called ``Gram points"
-\textcolor{blue}{(see Definition \ref{gram} in Section~\ref{sec3})}.
+\textcolor{blue}{(defined in Definition \ref{gram}, Section~\ref{sec3})}.
 The Gram points lie on the line $1/2+it$ in the complex plane, and the Riemann zeta function $\zeta(1/2+it)$ is real at these points. 
 Gram observed that in his calculations the roots of the Riemann zeta function tended to alternate with the Gram points. He also observed that the
 value of the real part of the Riemann zeta function tends to be positive at the Gram points. Such points are today called good Gram points. 
@@ -74,7 +74,7 @@ In Section~\ref{sec5} we derive a new relation between the ratio of good to bad 
 
 In the course of these investigations we observed some remarkable patterns. 
 We summarize our observations here, and discuss these results in detail in Sections \ref{sec6} and \ref{sec7}.
-First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation(see the definitions in Section~\ref{sec3}):
+First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation\textcolor{blue}{(see the definitions in Section~\ref{sec3})}:
  \textcolor{blue}{
  \begin{mydef}\label{antisymmetry}
 (even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points, i.e., $p_{odd}(y) = p_{even}(-y)$ .
@@ -98,6 +98,7 @@ In Section~\ref{sec5} we study empirically the ratio of good to bad Gram points,
 In Section~\ref{sec6} we study some remarkable empirical relations for Gram block counts over a large interval, for different types of Gram blocks. We find that the count for
 a given type of Gram block is very close to the count for the type with the reversed pattern. 
 Section~\ref{sec7} discusses  \textcolor{blue}{the Conjectures~\ref{antisymmetry} and ~\ref{symmetry}}. 
+ \textcolor{blue}{In Section~\ref{machineLearning} we discuss how the findings of this work might relate to Machine Learning applications of the study of the zeros of the Riemann zeta function.}
 Section~\ref{conclusions} gives a brief summary of the results. 
 
 \section{\label{sec2}The Notation for the Riemann zeta function }
@@ -207,7 +208,7 @@ is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a l
 Similarly, we define $p_{even}(y)$ as the probability distribution function for $Z(t)$ at even Gram points. }
 
 Gram's law is the empirical observation that $Z(t)$ usually changes its sign in each Gram interval 
-$G_n = [g_n,g_{n+1})$. 
+$G_n = [g_n,g_{n+1})$. Different definitions.
 This law fails infinitely often, but it is true in a large proportion of cases.
 The average value of $Z(g_n)$ is $2$ for even $n$ and $-2$ for odd $n$~\cite{Titchmarsh 1986},
 and hence $Z(g_n)$ undergoes an infinite number of sign changes.
@@ -415,14 +416,14 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 Length~of&Pattern~of& &&Displacement \\
 Gram~block&zero~counts	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\delta  \\
 \hline
-4 &0300&0.632816&0.829027&1.011644&1.248305&1.463930 \\
-5 &03000&0.409091&0.642699&0.977058&1.503534&2.505236 \\
-6 &030000&0.263617&0.474359&0.987097&1.625000&2.926174 \\
-7 &0300000&0.207627&0.489247&1.029412&2.359551&5.361702 \\
-8 &03000000&0.133803&0.385321&0.870130&1.895833&6.222222 \\
-9 &030000000&0.032258&0.290909&1.172414&2.600000&25.666667 \\
-10 &0300000000&0.068966&0.424242&1.000000&5.833333&25.500000 \\
-11 &03000000000&0.068966&0.142857&1.000000&10.500000& \\
+4 &0310&0.632816&0.829027&1.011644&1.248305&1.463930 \\
+5 &03110&0.409091&0.642699&0.977058&1.503534&2.505236 \\
+6 &031110&0.263617&0.474359&0.987097&1.625000&2.926174 \\
+7 &0311110&0.207627&0.489247&1.029412&2.359551&5.361702 \\
+8 &03111110&0.133803&0.385321&0.870130&1.895833&6.222222 \\
+9 &031111110&0.032258&0.290909&1.172414&2.600000&25.666667 \\
+10 &0311111110&0.068966&0.424242&1.000000&5.833333&25.500000 \\
+11 &03111111110&0.068966&0.142857&1.000000&10.500000& \\
 \hline
 \end{array}\)
 \caption{Test that the equality of  $Type~III,left$ and $Type~III,right$ Gram block counts are not just a result of randomness over and above well-known distribution. The statistics are from $10$ million Gram intervals at $t=10^{28}$. The table shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $k\delta$, 
@@ -567,11 +568,48 @@ Table~\ref{tab:quantiles} shows the quantiles and mean for  $Z(t)$ at Gram point
 Conjecture \ref{antisymmetry}., i.e.,  $p_{odd}(y) = p_{even}(-y)$ .
 Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of $Z(t)$ at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive $Z(t)$  ($Z(t) > 0$) and '$-$' for negative $Z(t)$ ($Z(t) \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive $Z(t)$ followed by a Gram point which has a positive $Z(t)$, while the notation '$+-$' stands for a Gram point which has a positive $Z(t)$ followed by a Gram point which has a negative $Z(t)$. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
 
+\section{\label{machineLearning}Machine Learning applications}
+
+ \textcolor{blue}{ 
+In this section we digress a bit and speculate on possible lessons of the present study for Machine Learning applications to the study of the Riemann zeta zeros \cite{osneural,osentropy}.
+Why do we think that machine learning is a good tool to apply to the study of the zeros? It is because Machine Learning is an excellent tool to extract patterns when one has a huge amount of data and one does not have a complete understanding of the patterns underlying the phenomenon being studied. And indeed, with tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another encouraging indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order.
+}
+\subsection{\label{secfeature}Neural Networks: feature selection}
+ \textcolor{blue}{ 
+How can we apply Machine Learning techniques to the problem? This is an open question, and one can think of different possible applications. Here we review a case study which used neural networks. A great deal of effort has gone into finding the zeros of the Riemann zeta function. At large heights finding the zeros is a non-trivial task, requiring much computer time (and some knowledge of special techniques to find the roots). It would be useful to have some guide to the location of the roots. In particular, close pairs of zeros are interesting. They correspond to cases for which the
+Riemann Hypothesis is nearly false. Calculating the Riemann zeta function in zones where
+two zeros are very close is a stringent test of the Riemann Hypothesis. Probably the biggest open task is to identify a feature set which is good at predicting zero differences, while not requiring excessive computing time. Ref~\cite{osneural} found that the behavior of the zeta function at Gram points is a good starting point to extract features for use in prediction. Our current study, indicating that Gram points have interesting properties which distinguish them from random points on the critical line, support the conclusion. The results of the present study suggest that it may be useful to extend the neural network application by separating the odd and even Gram points, and building separate models for them. Given the symmetry properties of the zeta values, we will probably find that the two models will be closely related to each other.  Furthermore, one can use symmetry properties of the zeta values at Gram points to impose restrictions on the models to be fitted.  
+}
+
+\subsection{\label{secMLrare}Machine Learning: detection of rare events}
+
+ \textcolor{blue}{ 
+We now discuss another possible approach to the solution. We want to identify a set of features which can be used  to predict zeros which are located very close to each other. We have available to us extensive compilations of the location of zeros. The main challenge is that the phenomenon we are trying to detect, namely zeros which are located close to each other, is very rare. 
+}
+
+\textcolor{blue}{ 
+Ref~\cite{Friedman(2001)} suggest that  a good approach to detecting rare events is to estimate the expected probability density for the feature set, and to use the estimated probability density to identify values of the observed features which are anomalous, in that the estimated probability for the occurrence of the observed values is below a set threshold. The hope is that the places where the anomalous feature values occur are the places where the Riemann zeta zeros deviate from the normal pattern of behavior. The deviations could be of different types (small zero differences, large zero differences, etc.). If the classifier is sufficiently selective, then we will have a smaller number of roots that we have to evaluate to check for interesting behavior. 
+}
+
+\textcolor{blue}{ 
+Density estimation is a hard problem. Section 14.2.4 of \cite{Friedman(2001)}  discuss a technique for transforming the density estimation problem into one of supervised function approximation. To learn the input density, we generate two sets of data. The first set (class 0) contains the actual (sampled) inputs from the training data, whereas the second set (class 1) consists of randomly-generated feature values. Class 0 represents a sample representing the actual density function, and class 1 represents samples drawn from the same input space, with a uniform density function. Given this, the two data sets are then used to learn a logistic regression model, whose output can be interpreted as an approximate estimate of the actual density of the input. The steps suggested in \cite{Friedman(2001)} are:
+\begin{itemize}
+\item The feature set values occurring in the training data are assumed to be from the probability density function $g(x)$.
+\item Consider a uniform probability density function over the same feature space, $g_0(x)$.
+\item Generate  as many random examples from $g_0(x)$ as the number of training examples.
+\item Learn a logistic regression model for the log-odds: $f(x) = \ln(\frac{g(x)}{g_0(x)})$ . 
+\end{itemize}
+}
+          
+\textcolor{blue}{ 
+Once the model is built, all the actual inputs (class 0) are run through it, and the model log-odds outputs $f(x)$ (which approximate the actual probability of being a valid input) are sorted in ascending order. A threshold output score is then determined. The threshold is chosen such that a pre-determined fraction of the inputs are classified as outliers. The model and the threshold are then used  to detect anomalous inputs for new generated feature sets. In particular, all inputs for which the model predicts a value below the threshold are identified for detailed analysis of the patterns of zeros. For all this to be useful, the cost of generating new feature sets must be lower than the cost of calculating all the zeros.
+}
+
 \section{\label{conclusions}Conclusions}
 
 In this work we presented a new  relation (Eq.~\ref{eq:consistency}) for the ratio of good to bad Gram points. We presented two conjectures regarding the distribution of zeta function values at Gram points. The conjectures refer to the even-odd Gram point antisymmetry Conjecture~\ref{antisymmetry}, and the forward-backward symmetry Conjecture~\ref{symmetry} (``time reversal" symmetry, if we think of the zeta values at Gram points as being a time series). After briefly describing the theory of the Riemann zeta function and the numerical evaluation, we presented statistics of the zeta function values. The statistics provide validation for the two conjectures.
 
-Further study of the theoretical underpinnings of the observations in this work would likely give us a deeper insight into the properties of the Riemann zeta function. The symmetry properties could also aid us in choosing feature sets for   Machine Learning applications to the study of the Riemann zeta zeros \cite{osneural,osentropy}.
+Further study of the theoretical underpinnings of the observations in this work would likely give us a deeper insight into the properties of the Riemann zeta function. The symmetry properties could also aid us in choosing feature sets for Machine Learning applications to the study of the Riemann zeta zeros \cite{osneural,osentropy}.
 
 \begin{thebibliography} {}
 
@@ -598,7 +636,7 @@ Einer Gegebenen Gr\"{o}be,'' {\it Montasb. der Berliner Akad.}, (1858),
 \bibitem {Titchmarsh 1986} E. Titchmarsh, ``The Theory of the Riemann Zeta
 Function,'' Oxford University Press, Second Edition, (1986)
 
-\bibitem {Edwards(1974)} H. M. Edwards, ``Riemann's Zeta Function,'' 
+\bibitem {Edwards(1974)} H. M. Edwards, ``Riemann's Zeta Function,''
 Academic Press,  (1974)
 
 \bibitem{os6} O. Shanker, 
@@ -629,6 +667,9 @@ and zeros computation at very large height", report,
 
 \bibitem{osentropy} O. Shanker, ``Entropy of Riemann zeta zero sequence''
 {\it Advanced Modeling and Optimization}, {\bf 13}, 449-456, (2013). 
+
+\bibitem {Friedman(2001)} J. Friedman, T. Hastie, and R. Tibshirani, ``The Elements of Statistical Learning,''
+Springer,  (2001) 
 
 \end{thebibliography} 
 
