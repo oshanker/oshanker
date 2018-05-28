@@ -57,7 +57,8 @@ symmetry related conjectures about the location of the zeros.
 \section{Introduction}
 The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. 
 The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
-In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called ``Gram points".
+In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called ``Gram points"
+\textcolor{blue}{(see Definition \ref{gram})}.
 The Gram points lie on the line $1/2+it$ in the complex plane, and the Riemann zeta function $\zeta(1/2+it)$ is real at these points. 
 Gram observed that in his calculations the roots of the Riemann zeta function tended to alternate with the Gram points. He also observed that the
 value of the real part of the Riemann zeta function tends to be positive at the Gram points. Such points are today called good Gram points. 
@@ -67,7 +68,7 @@ A Gram point is called good if the real part of the Riemann zeta function is pos
 Note that this definition of a good Gram point can be extended to any \textcolor{blue}{$t$} on the critical line $1/2+it$ . Thus, we may say that since the early 
 twentieth century we have been observing that the majority of Gram points are good Gram points. 
 
-The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider $ln(t)$ to be essentially constant over the interval.  The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
+The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider \textcolor{blue}{$\ln (t)$} to be essentially constant over the interval. \textcolor{blue}{The notation $\ln (t)$ stands for the natural logarithm of $t$.} The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
 
 In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length (see Section 2.13 of Ref~\cite{Odlyzko 1992}). Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
 If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. This is in conflict with the empirical observation that good Gram points tend to be more numerous than bad Gram points. In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.  
@@ -132,7 +133,7 @@ $N_{smooth}(t)$})
 is~\cite{Edwards(1974)}
 \textcolor{blue}{
 \begin{equation}  
-N_{smooth}(t) = (t/2\pi)(ln(t/2\pi)-1)+\frac{7}{8}.
+N_{smooth}(t) = (t/2\pi)(\ln(t/2\pi)-1)+\frac{7}{8}.
 \label{eq:Rnumber}
 \end{equation}
 }
@@ -178,15 +179,20 @@ of $\zeta(s)$ which lie on the critical line. We are led to finding the change o
 to find zeros on the critical line. This is a very convenient property in the numerical verification 
 of the Riemann Hypothesis. Another very helpful property is that many of the zeros are separated by the
 ``Gram points".  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
+\textcolor{blue}{
+\begin{defn}\label{gram}
 For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
-$\theta (g_n) = n\pi$. Thus, at a Gram point we have
+$\theta (g_n) = n\pi$. We call the Gram point an odd Gram point if $n$ is odd, and we call it an even Gram point if $n$ is even.
+\end{defn}
+}
+Thus, at a Gram point we have
 \begin{equation}
 \zeta(1/2+ig_n) = (-1)^{n}Z(g_n).
 \label{eq:zetagram}
 \end{equation}
-
 The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed.
 Their locations can be found without any evaluations of the Riemann-Siegel series Eq.(\ref{eq:RS}).
+
 Gram's law is the empirical observation that $Z(t)$ usually changes its sign in each Gram interval 
 $G_n = [g_n,g_{n+1})$. 
 This law fails infinitely often, but it is true in a large proportion of cases.
@@ -208,16 +214,25 @@ is done using regular double precision accuracy. See ~\cite{Odlyzko 1992,hiary,g
 \section{\label{sec4}Gram blocks}
 
 
-In this section we present the different types of Gram blocks. We will follow the notation of   Odlyzko~\cite{Odlyzko 1992}. A common definition of a good Gram point is
+In this section we present the different types of Gram blocks. A common definition of a good Gram point is
 \begin{defn}\label{good1}
 A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise.
 \end{defn}
 
 Definitions \ref{good0} and \ref{good1} are equivalent because of Eq.~\ref{eq:zetagram}.
+\textcolor{blue}{
+\begin{defn}\label{gramblock}
 A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
-and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where $k$ is called the length of the Gram block, and $a_i$ denote the number of roots of $Z(t)$ in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
-
-A Gram block of length $k$ which contains exactly $k$ roots of \textcolor{blue}{$Z(t)$} is called regular. The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). 
+and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. 
+\end{defn}
+}
+A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where $k$ is called the length of the Gram block, and $a_i$ denote the number of roots of $Z(t)$ in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
+\textcolor{blue}{
+\begin{defn}\label{regulargramblock}
+A Gram block of length $k$ which contains exactly $k$ roots of \textcolor{blue}{$Z(t)$} is called regular. 
+\end{defn}
+}
+The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). 
 The internal Gram intervals must all contain an odd number of roots (all of them must contain one root if the end intervals contain 2 and 0 roots. If the end intervals both contain no roots, then one of the internal intervals must contain 3 roots.) 
 Thus, regular Gram blocks must have a pattern of one of the following three forms:
 \begin{eqnarray}
@@ -226,7 +241,24 @@ Thus, regular Gram blocks must have a pattern of one of the following three form
  01 . . . 131 . . . 10
 \label{types}
 \end{eqnarray}
-where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. Odlyzko~\cite{Odlyzko 1992} denotes these three types of regular Gram blocks as Type I, Type II and Type III respectively.  A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we present in Section~\ref{sec7}. Gram blocks whch are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
+where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. 
+Following Odlyzko~\cite{Odlyzko 1992} we define three types of Gram blocks.  
+\textcolor{blue}{
+\begin{defn}\label{gramblockI}
+A Type I Gram Block is a regular Gram Block which has the pattern of zero counts $21...10$.
+\end{defn}
+}
+\textcolor{blue}{
+\begin{defn}\label{gramblockII}
+A Type II Gram Block is a regular Gram Block which has the pattern of zero counts $01 . . . 12$.
+\end{defn}
+}
+\textcolor{blue}{
+\begin{defn}\label{gramblockIII}
+A Type III Gram Block is a regular Gram Block which has the pattern of zero counts $0 01 . . . 131 . . . 10$.
+\end{defn}
+}
+A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we present in Section~\ref{sec7}. Gram blocks whch are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
 
 \section{\label{sec5}Good to Bad Gram point ratio}
 
@@ -334,6 +366,28 @@ Gram~block	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\delta  \\
 \end{table}
 
 \begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+Length~of 	& &Displacement \\
+Gram~block	 & 0.1\delta & 0.2\delta  \\
+\hline
+2 &0.999240&1.001350 \\
+3 &0.997868&0.996005 \\
+4 &1.009721&0.996571 \\
+5 &1.003348&1.018584 \\
+6 &0.992729&1.017626 \\
+7 &0.969144&0.994330 \\
+8 &1.002763&0.943081 \\
+9 &1.050946&1.006617 \\
+10 &0.765187&1.632575 \\
+11 &1.415867&1.514637 \\
+\hline
+\end{array}\)
+\caption{Product}
+\label{tab:rosserproduct}
+\end{table}
+
+\begin{table}
 \centering \(\begin{array}{ccccccc}
 \hline
 Length~of&Pattern~of& &&Displacement \\
@@ -352,6 +406,25 @@ Gram~block&zero~counts	& -0.2\delta & -0.1\delta & 0.0\delta & 0.1\delta & 0.2\d
 \caption{Test that the equality of  $Type~III,left$ and $Type~III,right$ Gram block counts are not just a result of randomness over and above well-known distribution. The statistics are from $10$ million Gram intervals at $t=10^{28}$. The table shows the ratio of $Type~III,left/Type~III,right$ counts when we displace the Gram points by $k\delta$, 
 where $\delta$ is the Gram interval at height $t$. All rows cross over exactly at the Gram point, and are very close to $1$ at crossover.  Column $2$ shows the pattern of zero counts for the numerator of the ratio.  } 
 \label{tab:rosser3random}
+\end{table}
+
+\begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+Length~of 	& &Displacement \\
+Gram~block	 & 0.1\delta & 0.2\delta  \\
+\hline
+4 &1.035 & 0.926\\
+5 &0.966& 1.025\\ 
+6 &0.770& 0.771\\
+7 &1.154& 1.113\\
+8 &0.730& 0.832\\
+9 &0.756& 0.827\\
+10 &2.47& 1.75\\
+\hline
+\end{array}\)
+\caption{Product}
+\label{tab:rosser3product}
 \end{table}
 
 In this section we present evidence that the count for

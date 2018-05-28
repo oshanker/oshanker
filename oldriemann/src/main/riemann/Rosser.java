@@ -38,6 +38,7 @@ public class Rosser {
 	private static int goodCount;
 	private static int badCount;
 	
+	// one instance per type of Gram Block and pattern
 	public static class GramBlock{
 	    enum TYPE{
 	        I,II,III,NOT_REGULAR
@@ -50,6 +51,7 @@ public class Rosser {
             this.pattern = pattern;
             int len = pattern.length();
             if(blockZerosCount==len ){
+                //we are in a regular Gram block
                 if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='0'){
                     type = TYPE.III;
                 }else if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='2'){
@@ -342,12 +344,14 @@ public class Rosser {
                   e.printStackTrace();
               }
         }
-        double[][] typeIIratios = new double[10][1];
+        int displacementCount = 1;
+        if(configParams.containsKey("displacementCount")){
+            displacementCount = Integer.parseInt(configParams.get("displacementCount"));
+        }
+        double[][] typeIIratios = new double[10][displacementCount];
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
-        int displacementCount = typeIIratios[0].length;
         for (int displacement = 0; displacement < displacementCount; displacement++) {
-
             rosser.clear();
             for (int j = 0; j < intervalCounts.length; j++) {
                 for (int i = 0; i < intervalCounts[j].length; i++) {
@@ -436,13 +440,23 @@ public class Rosser {
         System.out.println("Table 6");
 
         for (int j = 0; j < typeIIratios.length; j++) {
-            for (int displacement = 0; displacement < typeIIratios[0].length; displacement++) {
+            for (int displacement = 0; displacement < displacementCount; displacement++) {
                 System.out.print((displacement==0?(j+2+" &"): "&") 
                         + Conjectures.nf.format(typeIIratios[j][displacement] ) );
             }
             System.out.println(" \\\\");
         }
 
+        System.out.println("Product");
+
+        int minDisplacementCount = (displacementCount+1)/2;
+        for (int j = 0; j < typeIIratios.length; j++) {
+            for (int displacement = minDisplacementCount; displacement < displacementCount; displacement++) {
+                System.out.print((displacement==minDisplacementCount?(j+2+" &"): " &") 
+                        + Conjectures.nf.format(typeIIratios[j][displacement]* typeIIratios[j][displacementCount-1-displacement]) );
+            }
+            System.out.println(" \\\\");
+        }
 
         //      System.out.println(rosser);
         if(out != null){out.close();}
