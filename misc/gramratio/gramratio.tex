@@ -43,8 +43,7 @@
 In this work we consider the asymptotic value of the ratio of good to bad Gram points for the Riemann zeta function.
 We present two new results. The first new result is a relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.
 We relate this to a conjecture of Odlyzko about the locations of the zeros of the Riemann zeta function.
-If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. 
-This violates the empirical Gram's law, and thus the evidence does not favor Odlyzko's conjecture. The  second new result is the formulation and experimental validation of two 
+The  second new result is the formulation and experimental validation of two 
 symmetry related conjectures about the location of the zeros.
 \end{abstract}
 
@@ -58,7 +57,7 @@ symmetry related conjectures about the location of the zeros.
 The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. 
 The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
 In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called ``Gram points"
-\textcolor{blue}{(see Definition \ref{gram})}.
+\textcolor{blue}{(see Definition \ref{gram} in Section~\ref{sec3})}.
 The Gram points lie on the line $1/2+it$ in the complex plane, and the Riemann zeta function $\zeta(1/2+it)$ is real at these points. 
 Gram observed that in his calculations the roots of the Riemann zeta function tended to alternate with the Gram points. He also observed that the
 value of the real part of the Riemann zeta function tends to be positive at the Gram points. Such points are today called good Gram points. 
@@ -71,20 +70,25 @@ twentieth century we have been observing that the majority of Gram points are go
 The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider \textcolor{blue}{$\ln (t)$} to be essentially constant over the interval. \textcolor{blue}{The notation $\ln (t)$ stands for the natural logarithm of $t$.} The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
 
 In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length (see Section 2.13 of Ref~\cite{Odlyzko 1992}). Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
-If the conjecture is correct, we show that the ratio of good to bad Gram points should be $1$. This is in conflict with the empirical observation that good Gram points tend to be more numerous than bad Gram points. In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.  
+In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.  
 
 In the course of these investigations we observed some remarkable patterns. 
 We summarize our observations here, and discuss these results in detail in Sections \ref{sec6} and \ref{sec7}.
-First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation:
-\begin{mydef-non}\label{antisymmetry0}
-(even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points.
-\end{mydef-non}
+First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation(see the definitions in Section~\ref{sec3}):
+ \textcolor{blue}{
+ \begin{mydef}\label{antisymmetry}
+(even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points, i.e., $p_{odd}(y) = p_{even}(-y)$ .
+\end{mydef}
+}
 The second relation we observed is related to the patterns of zero counts on consecutive Gram intervals.  We find that the count for
 a given pattern of zero counts  is very close to the count for the reversed pattern. This equality is observed not only for simple patterns of zero counts, but also for complex patterns like the ones presented in Section~\ref{sec6a}. This leads us to the following conjecture (observed for patterns of zero counts on successive Gram intervals, but also likely to be true for other properties of the sequence of $Z(t)$):
-\begin{mydef-non}\label{symmetry0}
+ \textcolor{blue}{
+ \begin{mydef}\label{symmetry}
 (forward-backward symmetry): On the given sample space, when we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order of $t$ or in decreasing order of $t$). The sequence of Gram points could be any sequence of consecutive Gram points, not necessarily Gram blocks.
-\end{mydef-non}
-
+\end{mydef}
+}
+ \textcolor{blue}{These conjectures are most likely related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$.} 
+ 
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function. 
@@ -93,7 +97,7 @@ Section~\ref{sec4} describes the Gram blocks.
 In Section~\ref{sec5} we study empirically the ratio of good to bad Gram points, and relate it to a conjecture of Odlyzko. 
 In Section~\ref{sec6} we study some remarkable empirical relations for Gram block counts over a large interval, for different types of Gram blocks. We find that the count for
 a given type of Gram block is very close to the count for the type with the reversed pattern. 
-Section~\ref{sec7} presents two new conjectures based on our analysis of the data. 
+Section~\ref{sec7} discusses  \textcolor{blue}{the Conjectures~\ref{antisymmetry} and ~\ref{symmetry}}. 
 Section~\ref{conclusions} gives a brief summary of the results. 
 
 \section{\label{sec2}The Notation for the Riemann zeta function }
@@ -192,6 +196,15 @@ Thus, at a Gram point we have
 \end{equation}
 The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed.
 Their locations can be found without any evaluations of the Riemann-Siegel series Eq.(\ref{eq:RS}).
+ \textcolor{blue}{We define $p_{odd}(y)$ as the probability distribution function for $Z(t)$ at odd Gram points, i.e., 
+\begin{defn}\label{podd}
+\begin{equation}
+\int\limits_{a}^{b} p_{odd}(y)dy
+\label{eq:pdfodd}
+\end{equation}
+is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of odd Gram points in the sample space. 
+\end{defn}
+Similarly, we define $p_{even}(y)$ as the probability distribution function for $Z(t)$ at even Gram points. }
 
 Gram's law is the empirical observation that $Z(t)$ usually changes its sign in each Gram interval 
 $G_n = [g_n,g_{n+1})$. 
@@ -255,7 +268,7 @@ A Type II Gram Block is a regular Gram Block which has the pattern of zero count
 }
 \textcolor{blue}{
 \begin{defn}\label{gramblockIII}
-A Type III Gram Block is a regular Gram Block which has the pattern of zero counts $0 01 . . . 131 . . . 10$.
+A Type III Gram Block is a regular Gram Block which has the pattern of zero counts $01 . . . 131 . . . 10$.
 \end{defn}
 }
 A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we present in Section~\ref{sec7}. Gram blocks whch are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
@@ -285,8 +298,12 @@ Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m
 
 While the agreement with Odlyzko's prediction is good, we argue here that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of zeros of $Z(t)$.  
 
-We set up the notation. Our sample space is as described in the introduction. Let $p_g$ be the ratio of the number of good Gram points in the sample space to the total number of Gram points in the sample space. Similarly, let $p_b$ be the ratio of the number of bad Gram points in the sample space to the total number of Gram points in the sample space. Thus, $p_g$ and $p_b$ represent the probabilities in the given sample space that a given Gram point is good or bad respectively.  
-
+We set up the notation. Our sample space is as described in the introduction. Let $p_g$ be the ratio of the number of good Gram points in the sample space to the total number of Gram points in the sample space. Similarly, let $p_b$ be the ratio of the number of bad Gram points in the sample space to the total number of Gram points in the sample space. Thus, 
+\textcolor{blue}{
+\begin{defn}\label{pgood}
+$p_g$ and $p_b$ represent the probabilities in the given sample space that a given Gram point is good or bad respectively. 
+\end{defn} 
+}
 \begin{table}
 \centering \(\begin{array}{ccccccc}
 \hline
@@ -302,8 +319,13 @@ at least upto  $t = 10^{28}$.}
 \label{tab:pevenpred}
 \end{table}
 
-In the same sample space as in the above paragraph, we define the conditional probabilities that a Gram interval contains an even or odd number of roots, given that the left Gram point of the Gram interval is good or bad respectively. Let us first consider all Gram intervals which have a good Gram point on the left side. Let $p_{odd|good}$ be the ratio of the number of  Gram intervals in the sample space that have a left hand good Gram point and an odd number of roots, to the total number of Gram intervals in the sample space which have a left hand good Gram point. Let $p_{even|good}$ be the ratio of the number of  Gram intervals in the sample space that have a left hand good Gram point and an even number of roots, to the total number of Gram intervals in the sample space which have a left hand good Gram point. $p_{odd|good}$ and $p_{even|good}$ are the conditional probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point of the Gram interval is good. From the definition it follows that $p_{odd|good} + p_{even|good} = 1$. $p_{odd|bad}$ and $p_{even|bad}$ have corresponding interpretations when the left Gram point is bad. 
-
+In the same sample space as in the above paragraph, we define the conditional probabilities that a Gram interval contains an even or odd number of roots, given that the left Gram point of the Gram interval is good or bad respectively. Let us first consider all Gram intervals which have a good Gram point on the left side. Let $p_{odd|good}$ be the ratio of the number of  Gram intervals in the sample space that have a left hand good Gram point and an odd number of roots, to the total number of Gram intervals in the sample space which have a left hand good Gram point. Let $p_{even|good}$ be the ratio of the number of  Gram intervals in the sample space that have a left hand good Gram point and an even number of roots, to the total number of Gram intervals in the sample space which have a left hand good Gram point. 
+\textcolor{blue}{
+\begin{defn}\label{poddgood}
+$p_{odd|good}$ and $p_{even|good}$ are the conditional probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point of the Gram interval is good. $p_{odd|bad}$ and $p_{even|bad}$ are the conditional probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point of the Gram interval is bad.
+\end{defn} 
+}
+From the definition it follows that $p_{odd|good} + p_{even|good} = 1$.  
 We now derive a consistency relation between these quantities, by asking the question: what is the probability of a given Gram point being good or bad, given information about the preceding Gram point? 
 \begin{eqnarray}
 &&p_g*p_{odd|good}  + p_b*p_{even|bad}\, =  p_g,\nonumber\\
@@ -383,7 +405,7 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 11 &1.415867&1.514637 \\
 \hline
 \end{array}\)
-\caption{Product}
+\caption{ \textcolor{blue}{Product}}
 \label{tab:rosserproduct}
 \end{table}
 
@@ -423,7 +445,7 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 10 &2.47& 1.75\\
 \hline
 \end{array}\)
-\caption{Product}
+\caption{ \textcolor{blue}{Product}}
 \label{tab:rosser3product}
 \end{table}
 
@@ -537,21 +559,7 @@ Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 
 
 The empirical data presented in the previous section lead us to formulate two new conjectures  about the distribution of zeta values at the 
-the Gram points. These conjectures are most likely related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. 
-Let $p_{odd}(y)$ be the probability distribution function for $Z(t)$ at odd Gram points, i.e., 
-\begin{equation}
-\int\limits_{a}^{b} p_{odd}(y)dy
-\label{eq:pdfodd}
-\end{equation}
-is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of odd Gram points in the sample space. Similarly, let $p_{even}(y)$ be the probability distribution function for $Z(t)$ at even Gram points. Then we find empirically that
-
-\begin{mydef}\label{antisymmetry}
-(even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points, i.e., $p_{odd}(y) = p_{even}(-y)$ .
-\end{mydef}
-\begin{mydef}\label{symmetry}
-(forward-backward symmetry): On the given sample space, when we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order of $t$ or in decreasing order of $t$). The sequence of Gram points could be any sequence of consecutive Gram points, not necessarily Gram blocks.
-\end{mydef}
-
+the Gram points. 
 The evidence for  Conjecture~\ref{symmetry} has been presented in the previous sections. 
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  
 
