@@ -48,4 +48,4 @@ header = "n-98094362213058141112271182436L,good, S"
 gramIncr = 0.10031507797926817
 N = 10000000
 conjecturesOutFile="out/statsE28.csv"
-displacementCount = 5
+displacementCount = 1

@@ -31,7 +31,9 @@ public class Rosser {
         nf.setGroupingUsed(false);
     }
 	static HashMap<String, GramBlock> rosser = new HashMap<>();
-	static int[][] intervalCounts = new int[2][6];
+    static int[][] intervalCounts = new int[2][6];
+    static int[] goodIntervalCounts = new int[intervalCounts[0].length];
+    static int[] badIntervalCounts = new int[intervalCounts[0].length];
 	private static int maxS = 10;
 	static int pEvenGood = 0, pEvenBad = 0;
 	static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
@@ -273,6 +275,11 @@ public class Rosser {
 			}
 			//store odd in 0, this is for current interval
 			intervalCounts[0][zeroInput.countZeros]++;
+			if(good){
+			    goodIntervalCounts[zeroInput.countZeros]++;
+			} else {
+                badIntervalCounts[zeroInput.countZeros]++;
+			}
 			S += zeroInput.countZeros - 1;
 			if(Math.abs(S) > maxS ){
 				System.out.println("S " + S + ", n " + n + ", zeroInput.countZeros " + zeroInput.countZeros );
@@ -349,6 +356,7 @@ public class Rosser {
             displacementCount = Integer.parseInt(configParams.get("displacementCount"));
         }
         double[][] typeIIratios = new double[10][displacementCount];
+        double[][] frequencies = new double[displacementCount][intervalCounts[0].length];
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         for (int displacement = 0; displacement < displacementCount; displacement++) {
@@ -421,12 +429,29 @@ public class Rosser {
                 }
             }
     */
+     for (int i = 0; i < intervalCounts[0].length; i++) {
+          System.out.print((i==0?("goodIntervalCounts &"): " &") 
+                  + Conjectures.nf.format(((double)goodIntervalCounts[i])/goodCount)) ;
+      }
+     System.out.println(" \\\\");
+      for (int i = 0; i < intervalCounts[0].length; i++) {
+          System.out.print((i==0?("badIntervalCounts &"): " &") 
+                  + Conjectures.nf.format(((double)badIntervalCounts[i])/badCount)) ;
+      }
+      System.out.println(" \\\\");
+            System.out.println(" goodIntervalCounts "  + Arrays.toString(goodIntervalCounts) );
+            System.out.println(" badIntervalCounts "  + Arrays.toString(badIntervalCounts) );
             for (int j = 0; j < intervalCounts.length; j++) {
                 int sum = 0;
                 for (int i = 0; i < intervalCounts[j].length; i++) {
                     sum += i*intervalCounts[j][i];
                 }
                 System.out.println(" intervalCounts " + j + " "+ Arrays.toString(intervalCounts[j]) + " sum " + sum);
+                if(j==0){
+                    for (int i = 0; i < intervalCounts[j].length; i++) {
+                        frequencies[displacement][i] = ((double)intervalCounts[j][i])/sum;
+                    }
+                }
             }
             double count = goodCount+badCount;
             double pGood = ((double)goodCount)/count ;
@@ -457,7 +482,14 @@ public class Rosser {
             }
             System.out.println(" \\\\");
         }
-
+//        for (int displacement = 0; displacement < displacementCount; displacement++) {
+//            double fracDisplacement = ((double)(displacement-displacementCount/2))/10.0d;
+//            for (int i = 0; i < intervalCounts[0].length; i++) {
+//                System.out.print((i==0?(fracDisplacement+"\\delta &"): " &") 
+//                        + Conjectures.nf.format(frequencies[displacement][i])) ;
+//            }
+//            System.out.println(" \\\\");
+//        }
         //      System.out.println(rosser);
         if(out != null){out.close();}
     }

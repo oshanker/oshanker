@@ -295,14 +295,33 @@ Odlyzko&0.170220&0.661430&0.166490&0.001860&\\
 \caption{Counts of Gram intervals that contain $m$ zeros, for three samples at $t=10^{12}$, $t=10^{15}$  and $t=10^{28}$ respectively, and the  expected values using Odlyzko's prediction~\cite{Odlyzko 1992}.} \label{tab:intervalzeros}
 \end{table}
 
+\begin{table}
+\centering \(\begin{array}{llllll}
+\hline
+Source &m = 0&m = 1&m = 2&m = 3&size\\
+\hline
+goodIntervalCounts &0.109764 &0.782947 &0.107122 &0.000166 &7373998  \\
+badIntervalCounts &0.308372 &0.383872 &0.300660 &0.007095 &2626002  \\
+\hline
+\end{array}\)
+\textcolor{blue}{
+\caption{Counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (row 1) and bad (row 2).  $t=10^{28}$ .} 
+}
+\label{tab:intervalgoodzeros}
+\end{table}
 
-In this section we consider the distribution of Gram intervals that contain a given number of zeros. We present a new relation between the distribution and the good/bad nature of Gram points. 
-We  review the prediction of Odlyzko~\cite{Odlyzko 1992} regarding the distribution of Gram intervals that contain a given number of zeros. The prediction is based on the conjecture that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
+
+In this section we consider the distribution of Gram intervals that contain a given number of zeros. We present a new relation between the distribution and the good/bad nature of Gram points. \textcolor{blue}{
+The motivation for the investigation was to see if 
+ the prediction of Odlyzko~\cite{Odlyzko 1992} regarding the distribution of Gram intervals that contain a given number of zeros could help explain our conjectures.} The prediction is based on the conjecture that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
 The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices form the Gauss unitary ensemble (GUE). Under the assumptions of Odlyzko the distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. In what follows we will refer to this distribution as Odlyzko's prediction.
 
 Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for three samples at heights $t=10^{12}$, $t=10^{15}$  and $t=10^{28}$ respectively. The last row of the table shows the  expected values for the counts from Odlyzko's prediction. For calculating the first three rows of the table we just need a tabulation of the zeros at the respective heights. The Gram points can be located using Eq.~\ref{eq:thetaAsymptotic}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}.
 
-While the agreement with Odlyzko's prediction is good, we argue here that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of zeros of $Z(t)$.  
+\textcolor{blue}{
+The agreement with Odlyzko's prediction is very good. However, we show in this section that adding information about the nature of the interval endpoints does affect the prediction of the
+distribution of zero counts. We show that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of zeros of $Z(t)$.  We can also directly verify this. Table~\ref{tab:intervalgoodzeros} shows the counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (row 1) and bad (row 2).  $t=10^{28}$ for the data in the table.
+}
 
 We set up the notation. Our sample space is as described in the introduction. Let $p_g$ be the ratio of the number of good Gram points in the sample space to the total number of Gram points in the sample space. Similarly, let $p_b$ be the ratio of the number of bad Gram points in the sample space to the total number of Gram points in the sample space. Thus, 
 \textcolor{blue}{
@@ -346,8 +365,11 @@ p_b*p_{even|bad} = p_g*p_{even|good}.
 \end{equation}
 Table~\ref{tab:pevenpred} shows the empirical data which validates this relationship. Eq.~\ref{eq:consistency} can also be stated as $p_g/p_b = p_{even|bad} /p_{even|good}$.
 
-Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length, implies that $p_{odd|good} = p_{odd|bad}$ and  $p_{even|good} = p_{even|bad}$. If this were indeed true, then Eq.~\ref{eqGoodRelation} can only be satisfied for $p_g = p_b = 0.5$ . Empirically, we know that $p_g > p_b$ (which is Gram's law). Thus, Gram's law provides empirical evidence against Odlyzko's conjecture. 
-Is it possible that the conjecture is asymptotically true, i.e., asymptotically, $p_g = p_b = 0.5$? The data for  $p_g$ and $p_b$ in Table~\ref{tab:pevenpred}  show that at least for $t$ of this order,  the  evidence does not favor the conjecture. 
+\textcolor{blue}{
+Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length, holds true if we do not add any 
+further information about the nature of the intervals. As we saw in this section, adding information about the nature of the interval endpoints does affect the prediction of the
+distribution of zero counts. It does not seem that Odlyzko's results explain the phenomena that we study in the current work.
+}
 
 \section{\label{sec6}Some remarkable empirical relations for Gram block counts}
 
@@ -460,7 +482,7 @@ a given pattern of zero counts on consecutive Gram intervals is very close to th
 Table~\ref{tab:rosser}  (based on data in \cite{gourdon}) shows the ratio of $Type~II/Type~I$ counts for different Gram block lengths, for all zeros up to $t = 10^{13}$. The table includes only regular Gram blocks, since $Type~II$ and $Type~I$ Gram blocks are defined only for regular Gram blocks. The ratio is very close to one for Gram blocks of different lengths (the table excludes the case of regular Gram blocks of length 1, which do not fit into one of the patterns of Eq.~\ref{types}. However, a Gram block 
 of length $1$ is identical to its reversed pattern, so the symmetry relation is trivially true for such Gram intervals.).   
 
-Before we present the evidence for the symmetry for more complex patterns of zero counts on successive Gram Intervals, we address the question: do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? We use the test specified in Section 2.13 of Ref~\cite{Odlyzko 1992}: ``Any grid of points spaced like the Gram points would exhibit similar behavior with respect to location of zeros". 
+Before we present the evidence for the symmetry for more complex patterns of zero counts on successive Gram intervals, we address the question: do the results follow just from the well-known (conjectured) distribution of zero differences on the critical line? We use the test specified in Section 2.13 of Ref~\cite{Odlyzko 1992}: ``Any grid of points spaced like the Gram points would exhibit similar behavior with respect to location of zeros". 
 To apply the test, we note  that the Definition ~\ref{good0} of a good Gram point can be extended to any $t$ on the critical line $1/2+it$. Thus, if we consider a  grid of points spaced like the Gram points, we can classify each point on the grid as a good or a bad point. Also, since the classification of Gram block types in Section~\ref{sec4} just makes use of the good or bad classification of the points on the grid, the classification of Gram block types can also be extended to our shifted grid. This sets up the framework to apply Odlyzko's test.
 
 Table~\ref{tab:rosserrandom}  shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval at height $t$ (Eq.~\ref{eq:spacing}). For our sample space $\delta$ is essentially constant.  Column 4 shows the ratio for different Gram block lengths when we measure from the Gram points. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed. The other columns show the value  when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval.  The ratios are all different, and not close to $1$. Clearly, the observed values show that the symmetry we are observing is indeed a property of Gram points. The table includes only regular Gram blocks, since $Type~II$ and $Type~I$ Gram blocks are defined only for regular Gram blocks.  The statistics are from $10$ million Gram intervals at $t=10^{28}$. 
