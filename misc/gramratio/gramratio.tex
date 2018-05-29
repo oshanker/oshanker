@@ -86,7 +86,7 @@ a given pattern of zero counts  is very close to the count for the reversed patt
 (forward-backward symmetry): On the given sample space, when we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order of $t$ or in decreasing order of $t$).  In particular, the properties we studied are patterns of zero counts on successive Gram intervals, but the relation is likely true for other properties of the sequence of $Z(t)$. The sequence of Gram points could be any sequence of consecutive Gram points, not necessarily Gram blocks.
 \end{mydef}
 }
- \textcolor{blue}{We considered whether these conjectures are related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
+ \textcolor{blue}{We considered whether these conjectures are related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ for positive $t_1, t_2$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
  
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
@@ -302,10 +302,12 @@ Source &m = 0&m = 1&m = 2&m = 3&size\\
 \hline
 goodIntervalCounts &0.109764 &0.782947 &0.107122 &0.000166 &7373998  \\
 badIntervalCounts &0.308372 &0.383872 &0.300660 &0.007095 &2626002  \\
+allIntervalCounts&0.161918&0.678150&0.157946&0.001986&10000000\\
 \hline
 \end{array}\)
 \textcolor{blue}{
-\caption{Counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (row 1) and bad (row 2).  $t=10^{28}$ .} 
+\caption{Counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (Row 1) and bad (Row 2). Row 3 gives
+the distribution for all interval counts. Row 3 is the weighted average of Row 1 and Row 2.  $t=10^{28}$ .} 
 }
 \label{tab:intervalgoodzeros}
 \end{table}
@@ -320,7 +322,8 @@ Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m
 
 \textcolor{blue}{
 The agreement with Odlyzko's prediction is very good. However, we show in this section that adding information about the nature of the interval endpoints does affect the prediction of the
-distribution of zero counts. We show that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of zeros of $Z(t)$.  We can also directly verify this. Table~\ref{tab:intervalgoodzeros} shows the counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (row 1) and bad (row 2).  $t=10^{28}$ for the data in the table.
+distribution of zero counts. We show that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of zeros of $Z(t)$.  We can also directly verify this. Table~\ref{tab:intervalgoodzeros} shows the counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (Row 1) and bad (Row 2). Row 3 gives
+the distribution for all interval counts. Row 3 is the weighted average of Row 1 and Row 2. $t=10^{28}$ for the data in the table.
 }
 
 We set up the notation. Our sample space is as described in the introduction. Let $p_g$ be the ratio of the number of good Gram points in the sample space to the total number of Gram points in the sample space. Similarly, let $p_b$ be the ratio of the number of bad Gram points in the sample space to the total number of Gram points in the sample space. Thus, 
@@ -358,17 +361,26 @@ We now derive a consistency relation between these quantities, by asking the que
 \label{eqGoodRelation}
 \end{eqnarray}
 
-The relationship between the quantities is shown in Eq.~\ref{eqGoodRelation}. The equation follows from the following simple facts. A given Gram point will be good if the preceding Gram point is good, and the intervening interval contains an odd number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an even number of zeros. A given Gram point will be bad if the preceding Gram point is good, and the intervening interval contains an even number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an odd number of zeros. This is is shown in Eq.~\ref{eqGoodRelation}. This is an eigenvalue equation for  $p_g$ and $p_b$. The condition for this equation to have a non-trivial solution for  $p_g$ and $p_b$ is
+The relationship between the quantities is shown in Eq.~\ref{eqGoodRelation}. The equation follows from the following simple facts. A given Gram point will be good if the preceding Gram point is good, and the intervening interval contains an odd number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an even number of zeros. A given Gram point will be bad if the preceding Gram point is good, and the intervening interval contains an even number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an odd number of zeros. This is is shown in Eq.~\ref{eqGoodRelation}. 
+
+ \textcolor{blue}{It is important to note that Eq.~\ref{eqGoodRelation} is an eigenvalue equation for  $p_g$ and $p_b$. By the very nature of eigenvalue equations, the system can have consistent solutions only when an eigenvalue condition is satisfied. The eigenvalue condition for this equation is}
 \begin{equation}
 p_b*p_{even|bad} = p_g*p_{even|good}.
 \label{eq:consistency}
 \end{equation}
-Table~\ref{tab:pevenpred} shows the empirical data which validates this relationship. Eq.~\ref{eq:consistency} can also be stated as $p_g/p_b = p_{even|bad} /p_{even|good}$.
+ \textcolor{blue}{Note that Eq.~\ref{eq:consistency} is not an attempt to solve for the variables of interest, it is a statement of the  necessary condition
+ for the set of equations to have a solution in the first place.} Table~\ref{tab:pevenpred} shows the empirical data which validates this relationship. Eq.~\ref{eq:consistency} can also be stated as $p_g/p_b = p_{even|bad} /p_{even|good}$.
 
 \textcolor{blue}{
 Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length, holds true if we do not add any 
 further information about the nature of the intervals. As we saw in this section, adding information about the nature of the interval endpoints does affect the prediction of the
-distribution of zero counts. It does not seem that Odlyzko's results explain the phenomena that we study in the current work.
+distribution of zero counts. It does not seem that Odlyzko's results explain the phenomena that we study in the current work. A naive interpretation
+of Odlyzko's conjecture would be to say that $p_{even|bad}  = p_{even|good}$. However,  we see from Table~\ref{tab:intervalgoodzeros}  that
+that is not the case, and Odlyzko's conjecture should be applied carefully when we add extra information about the intervals under consideration.
+We verified empirically that if we consider a  grid of points spaced like the Gram points, the limiting distribution does tend to the distribution
+in Row 3 of Table~\ref{tab:intervalgoodzeros}, independent of whether we start at a Gram point or not. In the next section we show that this
+property does not hold true for properties like  the ratio of $Type~II/Type~I$ counts, when we displace the Gram points. In fact, these ratios
+are very sensitive to whether we start the intervals at a Gram point or not.
 }
 
 \section{\label{sec6}Some remarkable empirical relations for Gram block counts}
@@ -597,8 +609,8 @@ Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 \end{table}
 
 
-The empirical data presented in the previous section lead us to formulate two new conjectures  about the distribution of zeta values at the 
-the Gram points. 
+The empirical data presented in the  \textcolor{blue}{previous sections led us to formulate the two conjectures stated in the introduction 
+about the distribution of zeta values at the the Gram points. }
 The evidence for  Conjecture~\ref{symmetry} has been presented in the previous sections. 
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  
 
