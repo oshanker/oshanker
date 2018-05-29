@@ -64,8 +64,7 @@ value of the real part of the Riemann zeta function tends to be positive at the 
 \begin{defn}\label{good0}
 A Gram point is called good if the real part of the Riemann zeta function is positive at the Gram point.
 \end{defn}
-Note that this definition of a good Gram point can be extended to any \textcolor{blue}{$t$} on the critical line $1/2+it$ . Thus, we may say that since the early 
-twentieth century we have been observing that the majority of Gram points are good Gram points. 
+Note that this definition of a good Gram point can be extended to any \textcolor{blue}{$t$} on the critical line $1/2+it$ . Thus, we may say that since the early twentieth century we have been observing that the majority of Gram points are good Gram points. 
 
 The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider \textcolor{blue}{$\ln (t)$} to be essentially constant over the interval. \textcolor{blue}{The notation $\ln (t)$ stands for the natural logarithm of $t$.} The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
 
@@ -81,13 +80,13 @@ First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hard
 \end{mydef}
 }
 The second relation we observed is related to the patterns of zero counts on consecutive Gram intervals.  We find that the count for
-a given pattern of zero counts  is very close to the count for the reversed pattern. This equality is observed not only for simple patterns of zero counts, but also for complex patterns like the ones presented in Section~\ref{sec6a}. This leads us to the following conjecture (observed for patterns of zero counts on successive Gram intervals, but also likely to be true for other properties of the sequence of $Z(t)$):
+a given pattern of zero counts  is very close to the count for the reversed pattern. This equality is observed not only for simple patterns of zero counts, but also for complex patterns like the ones presented in Section~\ref{sec6a}. This leads us to the following conjecture:
  \textcolor{blue}{
  \begin{mydef}\label{symmetry}
-(forward-backward symmetry): On the given sample space, when we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order of $t$ or in decreasing order of $t$). The sequence of Gram points could be any sequence of consecutive Gram points, not necessarily Gram blocks.
+(forward-backward symmetry): On the given sample space, when we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order of $t$ or in decreasing order of $t$).  In particular, the properties we studied are patterns of zero counts on successive Gram intervals, but the relation is likely true for other properties of the sequence of $Z(t)$. The sequence of Gram points could be any sequence of consecutive Gram points, not necessarily Gram blocks.
 \end{mydef}
 }
- \textcolor{blue}{These conjectures are most likely related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$.} 
+ \textcolor{blue}{We considered whether these conjectures are related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
  
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
@@ -210,9 +209,11 @@ Similarly, we define $p_{even}(y)$ as the probability distribution function for 
 \textcolor{blue}{
 Gram~\cite{Gram 1903} located the first fifteen non-trivial zeros on the critical line. He found that each Gram interval $G_n = [g_n,g_{n+1})$
 contained exactly one zero. He also stated that the observed pattern was not likely to continue indeterminately. 
-Nevertheless, Hutchinson~\cite{Hutchinson 1925} called this pattern of alternation of Gram points and roots of $Z(t)$ ``Gram's law". He was aware that there were exceptions to the pattern, and thus that it was not a law in the usual sense of the term. In spite of this, the name Gram's law has gained acceptance in the literature. Hutchinson found the first two values of $n$ that do not satisfy Gram'slaw: $n = 128$ and $n = 137$.
+Nevertheless, Hutchinson~\cite{Hutchinson 1925} called this pattern of alternation of Gram points and roots of $Z(t)$ ``Gram's law". He was aware that there were exceptions to the pattern, and thus that it was not a law in the usual sense of the term. In spite of this, the name Gram's law has gained acceptance in the literature. Hutchinson found the first two values of $n$ that do not satisfy Gram's
+law: $n = 128$ and $n = 137$.
 There are many slightly different statements formulations of this ``law" ~\cite{Korolev}.
-It has been proved that this ``law" fails infinitely often, but it is true in a large proportion of cases. E. C. Titchmarsh and L. J. Comrie~\cite{Titchmarsh 1935,Titchmarsh 1936} continued Hutchinson's calculations. They found many new exceptionsto Gram's law, but the proportion of these exceptions did not exceed $4.5\%$.
+It has been proved that this ``law" fails infinitely often, but it is true in a large proportion of cases. E. C. Titchmarsh and L. J. Comrie~\cite{Titchmarsh 1935,Titchmarsh 1936} continued Hutchinson's calculations. They found many new exceptions
+to Gram's law, but the proportion of these exceptions did not exceed $4.5\%$.
 }
 The average value of $Z(g_n)$ is $2$ for even $n$ and $-2$ for odd $n$~\cite{Titchmarsh 1986},
 and hence $Z(g_n)$ undergoes an infinite number of sign changes.
@@ -410,7 +411,7 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 11 &1.415867&1.514637 \\
 \hline
 \end{array}\)
-\caption{ \textcolor{blue}{Product}}
+\caption{ \textcolor{blue}{Product of the ratios for $k\delta$ and $-k\delta$ for different Gram block sizes, for $Type~II/Type~I$ counts.}}
 \label{tab:rosserproduct}
 \end{table}
 
@@ -447,10 +448,9 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 7 &1.154& 1.113\\
 8 &0.730& 0.832\\
 9 &0.756& 0.827\\
-10 &2.47& 1.75\\
 \hline
 \end{array}\)
-\caption{ \textcolor{blue}{Product}}
+\caption{ \textcolor{blue}{Product of the ratios for $k\delta$ and $-k\delta$ for different Gram block sizes, for  $Type~III,left/Type~III,right$ counts.}}
 \label{tab:rosser3product}
 \end{table}
 
@@ -465,9 +465,20 @@ To apply the test, we note  that the Definition ~\ref{good0} of a good Gram poin
 
 Table~\ref{tab:rosserrandom}  shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval at height $t$ (Eq.~\ref{eq:spacing}). For our sample space $\delta$ is essentially constant.  Column 4 shows the ratio for different Gram block lengths when we measure from the Gram points. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed. The other columns show the value  when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval.  The ratios are all different, and not close to $1$. Clearly, the observed values show that the symmetry we are observing is indeed a property of Gram points. The table includes only regular Gram blocks, since $Type~II$ and $Type~I$ Gram blocks are defined only for regular Gram blocks.  The statistics are from $10$ million Gram intervals at $t=10^{28}$. 
 They  show clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution. 
+{ \textcolor{blue}{
+Table~\ref{tab:rosserrandom}  shows another interesting pattern: for any row, the product of the ratios for $k\delta$ and $-k\delta$ appears to be close to one 
+(the author thanks the anonymous referee for bringing this to his attention). The products for different Gram block sizes are shown in Table~\ref{tab:rosserproduct}. The values are close to $1$ for the Gram blocks with small lengths. The deviation from $1$ for 
+Gram blocks with larger lengths may be due to the poorer statistics at these lengths, and possible sensitivity to the assumption that the Gram interval 
+$\delta$ is constant over the sample space.
+}
 
-We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), using the ratio of  $Type~III,left$ interval counts where the '3' interval occurs at the first odd interval position on the left, to  $Type~III,right$ interval counts where the '3' interval occurs at the last odd interval position on the right. 
+We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), { \textcolor{blue}{using the ratio of $Type~III$ interval counts for zero patterns which are the reverse of each other. There are many possible patterns of $Type~III$ interval counts we could consider. For definiteness, we chose one particular pattern: the pattern  $Type~III,left$  where the '3' interval occurs at the first odd interval position on the left, and the reversed pattern  $Type~III,right$,  where the '3' interval occurs at the last odd interval position on the right. }
 Table~\ref{tab:rosser3random} shows the ratio of $Type~III,left/Type~III,right$ counts.  Column 5 shows the ratio for different Gram block lengths when we measure from the Gram points. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed. The other columns show the value  when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval.  The ratios are all different, and not close to $1$. Clearly, the observed values show that the symmetry we are observing is indeed a property of Gram points. The table includes only regular Gram blocks, since $Type~III$ Gram blocks are defined only for regular Gram blocks. This provides further evidence for the conclusions of Table~\ref{tab:rosserrandom}.
+{ \textcolor{blue}{
+Table~\ref{tab:rosser3random}  also shows the pattern that for any row, the product of the ratios for $k\delta$ and $-k\delta$ appears to be close to one. The products for different Gram block sizes are shown in Table~\ref{tab:rosser3product}. The values are close to $1$ for the Gram blocks with small lengths. The deviation from $1$ for 
+Gram blocks with larger lengths may be due to the poorer statistics at these lengths, and possible sensitivity to the assumption that the Gram interval 
+$\delta$ is constant over the sample space.
+}
   
 \begin{table}
 \centering \(\begin{array}{ccc}
@@ -501,6 +512,7 @@ to describe an exception on a Gram block of length $k$  where the missing zeros 
 
 The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Odlyzko uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the  ratio of counts of patterns of zero counts for complex zero patterns, to the counts with reversed zero patterns, for different types violations of Rosser's rule. Column 2 shows the ratio for different Gram block lengths. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed.
+ \textcolor{blue}{As mentioned in the introduction, we considered whether the symmetry relations could be related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
 
 \section{\label{sec7}Two Conjectures}
 
@@ -658,7 +670,8 @@ personaljournal/artlessmethod/artlessmethodtexts.php}, (2013)
 {\it Trans. Amer. Math.Soc.} {\bf27}(1925), 49-60
 
 \bibitem{Korolev} M. A. Korolev,
-``The Gram law and Selberg's conjecture on the distribution of zerosof the Riemann zeta-function",
+``The Gram law and Selberg's conjecture on the distribution of zeros
+of the Riemann zeta-function",
 {\it Izv. Math.} {\bf74}:4(2010)
 
 \bibitem{Titchmarsh 1935} E. C. Titchmarsh,
