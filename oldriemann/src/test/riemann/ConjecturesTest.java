@@ -121,7 +121,7 @@ public class ConjecturesTest {
         double uKincr2 = UTSum.calculateIncr2(coeff2,   h, 2);
         System.out.println("** uKincr " + uKincr2 + ", " +  (uKincr1 + uKincr2)  );
 
-        UK = UK.multiply(Gram.bdTWO).divide(BigDecimal.valueOf(3*K));
+        UK = UK.multiply(Gram.bdTWO).divide(BigDecimal.valueOf(3*K),UTSum.mc);
         System.out.println( "\n" + UK + ", "  + " UK*h*h*h " 
         + UK.multiply(BigDecimal.valueOf(h*h*h)) );
         A1A0r coeff3 = UTSum.evalA1A0(UK);
