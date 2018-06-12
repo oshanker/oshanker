@@ -9,12 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import riemann.Rosser.GramBlock.TYPE;
@@ -39,6 +39,7 @@ public class Rosser {
 	static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
 	private static int goodCount;
 	private static int badCount;
+    static Map<String,String> configParams;
 	
 	// one instance per type of Gram Block and pattern
 	public static class GramBlock{
@@ -174,7 +175,7 @@ public class Rosser {
         return configParams;
 	}
 
-    public static BufferedReader getZerosFile(Map<String, String> configParams) throws FileNotFoundException {
+    public static BufferedReader getZerosFile() throws FileNotFoundException {
         String zerosFile = configParams.get("zerosFile");
         zerosFile = zerosFile.substring(1, zerosFile.length()-1);
         System.out.println("zerosFile " + zerosFile);
@@ -182,9 +183,9 @@ public class Rosser {
         return zeroIn;
     }
 	
-	private static void readItems(  PrintStream out, double baseLimit, Map<String, String> configParams)
+	private static void readItems(  PrintStream out, double baseLimit)
 			throws FileNotFoundException, IOException {
-	    BufferedReader zeroIn = getZerosFile(configParams);
+	    BufferedReader zeroIn = getZerosFile();
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
         int N = Integer.parseInt(configParams.get("N"));
@@ -194,8 +195,12 @@ public class Rosser {
         if(correctionString!=null){
             correction = Integer.parseInt(correctionString);
         }
-        String header = configParams.get("header");
-        header = header.substring(1, header.length()-1);
+        BigDecimal offset = null;
+        if(configParams.containsKey("toffset")){
+            String toffset = getParam("toffset");
+            offset = new BigDecimal(toffset);
+        }
+        String header = getParam("header");
 		//assuming that we start at a good regular (odd/even-hiary) Gram Point
 		int count = 0;
 		ZeroInfo zeroInput = readZeros(baseLimit , out, zeroIn, null);
@@ -211,6 +216,10 @@ public class Rosser {
 		while (count < N  ) {
 			int n = count + noffset;
 			double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
+			if(offset != null && count%1000000 == 0){
+			    double localGram = Gram.gramInterval(offset.add(BigDecimal.valueOf(upperLimit), Gram.mc));
+			    System.out.println(count + ": " + upperLimit + ", " + (localGram-gramIncr));
+			}
 			//at entry, upperLimit=244.264758217468505 for e12
 			//first zero is 244.158906912980683962
 			//prev gram is 244.02115917156451839965694310614387
@@ -298,6 +307,14 @@ public class Rosser {
 		zeroIn.close();
 	}
 
+    public static String getParam(String key) {
+        String header = configParams.get(key);
+        if(header != null) {
+           header = header.substring(1, header.length()-1);
+        }
+        return header;
+    }
+
     private static void calculateRatio(String key,  GramBlock block, double[][] ratio) {
         int len = key.length();
         char[] chars = key.toCharArray();
@@ -333,7 +350,7 @@ public class Rosser {
      * @throws FileNotFoundException 
      */
     public static void main(String[] args) throws Exception {
-        Map<String,String> configParams = readConfig("data/RosserConfig.txt");
+        configParams = readConfig("data/RosserConfig.txt");
         PrintStream out = null;
         int N = Integer.parseInt(configParams.get("N"));
         if (N < 125) {
@@ -367,7 +384,7 @@ public class Rosser {
                 }
             }
             System.out.println("displacement " + displacement);
-            readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10, configParams );
+            readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10 );
             TreeSet<String>[] stats = new TreeSet[10];
             for (int i = 0; i < stats.length; i++) {
                 stats[i] = new TreeSet<String>();

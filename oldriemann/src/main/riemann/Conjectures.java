@@ -3,7 +3,6 @@ package riemann;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.FileSystems;
@@ -57,7 +56,7 @@ public class Conjectures {
 	
 	private static int[] readItems(Map<String, String> configParams)
 			throws FileNotFoundException, IOException {
-        BufferedReader zeroIn1 = Rosser.getZerosFile(configParams);
+        BufferedReader zeroIn1 = Rosser.getZerosFile();
         double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
@@ -203,8 +202,8 @@ public class Conjectures {
 
     public static void main(String[] args) throws Exception {
         Files.createDirectories(FileSystems.getDefault().getPath("out"));
-        Map<String,String> configParams = Rosser.readConfig("data/RosserConfig.txt");
-        String conjecturesOutFile = configParams.get("conjecturesOutFile");
+        Rosser.configParams = Rosser.readConfig("data/RosserConfig.txt");
+        String conjecturesOutFile = Rosser.configParams.get("conjecturesOutFile");
         System.out.println(conjecturesOutFile);
         //get rid of quotes
         conjecturesOutFile = conjecturesOutFile.substring(1, conjecturesOutFile.length()-1);
@@ -222,7 +221,7 @@ public class Conjectures {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        signumPoints = readItems(configParams);
+        signumPoints = readItems(Rosser.configParams);
         //PrintStream out = System.out;
         out.println("************** " + signumPoints.length + " *************");
         statistics(out, 0, signumPoints.length);

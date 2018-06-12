@@ -313,18 +313,22 @@ public class Gram {
 		BigDecimal zero = new BigDecimal("100.437512887104287873");
 		BigDecimal zero1 = new BigDecimal("100.464843234223048518");
 		BigDecimal tvalsi = offset.add(zero, Gram.mc);
-		BigDecimal t2 = tvalsi.divide(bdTWO, mc);
-		BigDecimal arg1 = sqrt(t2.divide(pi, mc), mc, 1.0E-15);
-		//System.out.println(offset.longValueExact());
-		BigDecimal fourthrootArg1 = Gram.sqrt(arg1, mc, 1.0E-15);
-		Gram.initLogVals(fourthrootArg1.intValue());
-		double diff = pi.divide(log(fourthrootArg1, mc).multiply(Gram.bdTWO), mc).doubleValue();
+		double diff = gramInterval(tvalsi);
 		double heck1 = thetaNormalized(tvalsi, Gram.mc) *(diff)/Math.PI;
 		
 		double gram0 = zero.doubleValue() - (heck1);
         System.out.println(gram0 + ", cf riemann.ConjecturesTest.testX() " 
 		+ (100.36777243017612) + " diff " + diff);
 	}
+
+    public static double gramInterval(BigDecimal tvalsi) {
+        BigDecimal t2 = tvalsi.divide(bdTWO, mc);
+		BigDecimal arg1 = sqrt(t2.divide(pi, mc), mc, 1.0E-15);
+		BigDecimal fourthrootArg1 = Gram.sqrt(arg1, mc, 1.0E-15);
+		Gram.initLogVals(fourthrootArg1.intValue());
+		double diff = pi.divide(log(fourthrootArg1, mc).multiply(Gram.bdTWO), mc).doubleValue();
+        return diff;
+    }
 	
 	/*
 awk '{print "new BigDecimal(\"" $2 ")"$3}' xx | sed -e 's/\(l..[1-9]\)/\1./' -e 's/,/",/'	 
