@@ -57,36 +57,36 @@ symmetry related conjectures about the location of the zeros.
 The Riemann Hypothesis is one of the seven millennium prize problems posed by the Clay Mathematical Institute in 2000~\cite{Sarnak 2005}. 
 The earliest detailed evaluations of the roots of the Riemann zeta function were carried out in 1903 by Gram~\cite{Gram 1903}.
 In evaluating the zeros he made use of the values of the Riemann zeta function at special (very regularly placed) points which are called ``Gram points"
-\textcolor{blue}{(defined in Definition \ref{gram}, Section~\ref{sec3})}.
+{(defined in Definition \ref{gram}, Section~\ref{sec3})}.
 The Gram points lie on the line $1/2+it$ in the complex plane, and the Riemann zeta function $\zeta(1/2+it)$ is real at these points. 
 Gram observed that in his calculations the roots of the Riemann zeta function tended to alternate with the Gram points. He also observed that the
 value of the real part of the Riemann zeta function tends to be positive at the Gram points. Such points are today called good Gram points. 
 \begin{defn}\label{good0}
 A Gram point is called good if the real part of the Riemann zeta function is positive at the Gram point.
 \end{defn}
-Note that this definition of a good Gram point can be extended to any \textcolor{blue}{$t$} on the critical line $1/2+it$ . Thus, we may say that since the early twentieth century we have been observing that the majority of Gram points are good Gram points. 
+Note that this definition of a good Gram point can be extended to any {$t$} on the critical line $1/2+it$ . Thus, we may say that since the early twentieth century we have been observing that the majority of Gram points are good Gram points. 
 
-The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider \textcolor{blue}{$\ln (t)$} to be essentially constant over the interval. \textcolor{blue}{The notation $\ln (t)$ stands for the natural logarithm of $t$.} The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
+The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider {$\ln (t)$} to be essentially constant over the interval. {The notation $\ln (t)$ stands for the natural logarithm of $t$.} The latter condition is not a necessary condition, but the heights $t$ that we consider are large enough that we can impose this restriction while still keeping the sample space large. This condition simplifies the numerical calculations (See Eq.~\ref{eq:spacing}). 
 
 In this work we study empirically the ratio of good to bad Gram points, and relate it to Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length (see Section 2.13 of Ref~\cite{Odlyzko 1992}). Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.
 In Section~\ref{sec5} we derive a new relation between the ratio of good to bad Gram points and the distribution of Gram intervals that contain a given number of zeros.  
 
 In the course of these investigations we observed some remarkable patterns. 
 We summarize our observations here, and discuss these results in detail in Sections \ref{sec6} and \ref{sec7}.
-First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation\textcolor{blue}{(see the definitions in Section~\ref{sec3})}:
- \textcolor{blue}{
+First, we observed that at Gram points Hardy's function $Z(t)$ (Eq.~\ref{eq:hardy}) seems to satisfy the following relation {(see the definitions in Section~\ref{sec3})}:
+ {
  \begin{mydef}\label{antisymmetry}
 (even-odd antisymmetry): The distribution of $Z(t)$ for odd Gram points is the negative of the distribution of $Z(t)$ for the even Gram points, i.e., $p_{odd}(y) = p_{even}(-y)$ .
 \end{mydef}
 }
 The second relation we observed is related to the patterns of zero counts on consecutive Gram intervals.  We find that the count for
 a given pattern of zero counts  is very close to the count for the reversed pattern. This equality is observed not only for simple patterns of zero counts, but also for complex patterns like the ones presented in Section~\ref{sec6a}. This leads us to the following conjecture:
- \textcolor{blue}{
+ {
  \begin{mydef}\label{symmetry}
 (forward-backward symmetry): On the given sample space, when we consider a sequence of zeta values at consecutive Gram points, the properties of the sequence are symmetric with respect to the direction of the sequence of Gram points (i.e., the sequence behaves similarly whether we consider the points in increasing order of $t$ or in decreasing order of $t$).  In particular, the properties we studied are patterns of zero counts on successive Gram intervals, but the relation is likely true for other properties of the sequence of $Z(t)$. The sequence of Gram points could be any sequence of consecutive Gram points, not necessarily Gram blocks.
 \end{mydef}
 }
- \textcolor{blue}{We considered whether these conjectures are related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ for positive $t_1, t_2$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
+ {We considered whether these conjectures are related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ for positive $t_1, t_2$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
  
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
@@ -96,8 +96,8 @@ Section~\ref{sec4} describes the Gram blocks.
 In Section~\ref{sec5} we study empirically the ratio of good to bad Gram points, and relate it to a conjecture of Odlyzko. 
 In Section~\ref{sec6} we study some remarkable empirical relations for Gram block counts over a large interval, for different types of Gram blocks. We find that the count for
 a given type of Gram block is very close to the count for the type with the reversed pattern. 
-Section~\ref{sec7} discusses  \textcolor{blue}{the Conjectures~\ref{antisymmetry} and ~\ref{symmetry}}. 
- \textcolor{blue}{In Section~\ref{machineLearning} we discuss how the findings of this work might relate to Machine Learning applications of the study of the zeros of the Riemann zeta function.}
+Section~\ref{sec7} discusses  {the Conjectures~\ref{antisymmetry} and ~\ref{symmetry}}. 
+ {In Section~\ref{machineLearning} we discuss how the findings of this work might relate to Machine Learning applications of the study of the zeros of the Riemann zeta function.}
 Section~\ref{conclusions} gives a brief summary of the results. 
 
 \section{\label{sec2}The Notation for the Riemann zeta function }
@@ -132,10 +132,10 @@ $14.1347$, $21.0220$, $\ldots$.
 
 
 Asymptotically, for the Riemann zeta function the mean number of 
-zeros with height less than $t$ (the smoothed Riemann zeta staircase, which we denote by \textcolor{blue}{
+zeros with height less than $t$ (the smoothed Riemann zeta staircase, which we denote by {
 $N_{smooth}(t)$})
 is~\cite{Edwards(1974)}
-\textcolor{blue}{
+{
 \begin{equation}  
 N_{smooth}(t) = (t/2\pi)(\ln(t/2\pi)-1)+\frac{7}{8}.
 \label{eq:Rnumber}
@@ -183,7 +183,7 @@ of $\zeta(s)$ which lie on the critical line. We are led to finding the change o
 to find zeros on the critical line. This is a very convenient property in the numerical verification 
 of the Riemann Hypothesis. Another very helpful property is that many of the zeros are separated by the
 ``Gram points".  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
-\textcolor{blue}{
+{
 \begin{defn}\label{gram}
 For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
 $\theta (g_n) = n\pi$. We call the Gram point an odd Gram point if $n$ is odd, and we call it an even Gram point if $n$ is even.
@@ -196,7 +196,7 @@ Thus, at a Gram point we have
 \end{equation}
 The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed.
 Their locations can be found without any evaluations of the Riemann-Siegel series Eq.(\ref{eq:RS}).
- \textcolor{blue}{We define $p_{odd}(y)$ as the probability distribution function for $Z(t)$ at odd Gram points, i.e., 
+ {We define $p_{odd}(y)$ as the probability distribution function for $Z(t)$ at odd Gram points, i.e., 
 \begin{defn}\label{podd}
 \begin{equation}
 \int\limits_{a}^{b} p_{odd}(y)dy
@@ -206,7 +206,7 @@ is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a l
 \end{defn}
 Similarly, we define $p_{even}(y)$ as the probability distribution function for $Z(t)$ at even Gram points. }
 
-\textcolor{blue}{
+{
 Gram~\cite{Gram 1903} located the first fifteen non-trivial zeros on the critical line. He found that each Gram interval $G_n = [g_n,g_{n+1})$
 contained exactly one zero. He also stated that the observed pattern was not likely to continue indeterminately. 
 Nevertheless, Hutchinson~\cite{Hutchinson 1925} called this pattern of alternation of Gram points and roots of $Z(t)$ ``Gram's law". He was aware that there were exceptions to the pattern, and thus that it was not a law in the usual sense of the term. In spite of this, the name Gram's law has gained acceptance in the literature. Hutchinson found the first two values of $n$ that do not satisfy Gram's
@@ -239,16 +239,16 @@ A Gram point $g_n$ is called good if $(-1)^nZ(g_n) > 0$, and bad otherwise.
 \end{defn}
 
 Definitions \ref{good0} and \ref{good1} are equivalent because of Eq.~\ref{eq:zetagram}.
-\textcolor{blue}{
+{
 \begin{defn}\label{gramblock}
 A Gram block is an interval $[g_n, g_{n+k})$ such that $g_n$  and $g_{n+k}$ are good Gram points 
 and $g_{n+1}, . . ., g_{n+k-1}$ are bad Gram points. 
 \end{defn}
 }
 A Gram block is denoted by the notation $a_1a_2 . . . a_k$ where $k$ is called the length of the Gram block, and $a_i$ denote the number of roots of $Z(t)$ in the Gram interval $[g_{n+i-1}, g_{n+i})$. So far, no Gram interval has been found with more than 5 zeros, thus the notation is unambiguous. $a_1$ and $a_k$ must be even while  $a_2$ to $a_{k-1}$ are odd.
-\textcolor{blue}{
+{
 \begin{defn}\label{regulargramblock}
-A Gram block of length $k$ which contains exactly $k$ roots of \textcolor{blue}{$Z(t)$} is called regular. 
+A Gram block of length $k$ which contains exactly $k$ roots of {$Z(t)$} is called regular. 
 \end{defn}
 }
 The first and last Gram intervals of a regular Gram block must contain an even number of roots (0 or 2 roots). 
@@ -262,22 +262,22 @@ Thus, regular Gram blocks must have a pattern of one of the following three form
 \end{eqnarray}
 where the notation $1 . . . 1$ refers to any string of consecutive 1s, including the zero length string. 
 Following Odlyzko~\cite{Odlyzko 1992} we define three types of Gram blocks.  
-\textcolor{blue}{
+{
 \begin{defn}\label{gramblockI}
 A Type I Gram Block is a regular Gram Block which has the pattern of zero counts $21...10$.
 \end{defn}
 }
-\textcolor{blue}{
+{
 \begin{defn}\label{gramblockII}
 A Type II Gram Block is a regular Gram Block which has the pattern of zero counts $01 . . . 12$.
 \end{defn}
 }
-\textcolor{blue}{
+{
 \begin{defn}\label{gramblockIII}
 A Type III Gram Block is a regular Gram Block which has the pattern of zero counts $01 . . . 131 . . . 10$.
 \end{defn}
 }
-A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we present in Section~\ref{sec7}. Gram blocks whch are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
+A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we present in Section~\ref{sec7}. Gram blocks \textcolor{blue}{which} are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
 
 \section{\label{sec5}Good to Bad Gram point ratio}
 
@@ -305,7 +305,7 @@ badIntervalCounts &0.308372 &0.383872 &0.300660 &0.007095 &2626002  \\
 allIntervalCounts&0.161918&0.678150&0.157946&0.001986&10000000\\
 \hline
 \end{array}\)
-\textcolor{blue}{
+{
 \caption{Counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (Row 1) and bad (Row 2). Row 3 gives
 the distribution for all interval counts. Row 3 is the weighted average of Row 1 and Row 2.  $t=10^{28}$ .} 
 }
@@ -313,21 +313,21 @@ the distribution for all interval counts. Row 3 is the weighted average of Row 1
 \end{table}
 
 
-In this section we consider the distribution of Gram intervals that contain a given number of zeros. We present a new relation between the distribution and the good/bad nature of Gram points. \textcolor{blue}{
+In this section we consider the distribution of Gram intervals that contain a given number of zeros. We present a new relation between the distribution and the good/bad nature of Gram points. {
 The motivation for the investigation was to see if 
  the prediction of Odlyzko~\cite{Odlyzko 1992} regarding the distribution of Gram intervals that contain a given number of zeros could help explain our conjectures.} The prediction is based on the conjecture that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
 The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices form the Gauss unitary ensemble (GUE). Under the assumptions of Odlyzko the distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. In what follows we will refer to this distribution as Odlyzko's prediction.
 
 Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for three samples at heights $t=10^{12}$, $t=10^{15}$  and $t=10^{28}$ respectively. The last row of the table shows the  expected values for the counts from Odlyzko's prediction. For calculating the first three rows of the table we just need a tabulation of the zeros at the respective heights. The Gram points can be located using Eq.~\ref{eq:thetaAsymptotic}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}.
 
-\textcolor{blue}{
+{
 The agreement with Odlyzko's prediction is very good. However, we show in this section that adding information about the nature of the interval endpoints does affect the prediction of the
 distribution of zero counts. We show that the distribution of zero counts in Gram intervals is not independent of the type of Gram interval, and that it has to depend on whether the left side Gram point of the interval is good or bad. We reach this conclusion by considering a self-consistency condition between the probability of a Gram point being good or bad, and the probability that the corresponding interval contains an even or odd number of zeros of $Z(t)$.  We can also directly verify this. Table~\ref{tab:intervalgoodzeros} shows the counts of Gram intervals that contain $m$ zeros, for Gram intervals with left Gram point being good (Row 1) and bad (Row 2). Row 3 gives
 the distribution for all interval counts. Row 3 is the weighted average of Row 1 and Row 2. $t=10^{28}$ for the data in the table.
 }
 
 We set up the notation. Our sample space is as described in the introduction. Let $p_g$ be the ratio of the number of good Gram points in the sample space to the total number of Gram points in the sample space. Similarly, let $p_b$ be the ratio of the number of bad Gram points in the sample space to the total number of Gram points in the sample space. Thus, 
-\textcolor{blue}{
+{
 \begin{defn}\label{pgood}
 $p_g$ and $p_b$ represent the probabilities in the given sample space that a given Gram point is good or bad respectively. 
 \end{defn} 
@@ -348,7 +348,7 @@ at least upto  $t = 10^{28}$.}
 \end{table}
 
 In the same sample space as in the above paragraph, we define the conditional probabilities that a Gram interval contains an even or odd number of roots, given that the left Gram point of the Gram interval is good or bad respectively. Let us first consider all Gram intervals which have a good Gram point on the left side. Let $p_{odd|good}$ be the ratio of the number of  Gram intervals in the sample space that have a left hand good Gram point and an odd number of roots, to the total number of Gram intervals in the sample space which have a left hand good Gram point. Let $p_{even|good}$ be the ratio of the number of  Gram intervals in the sample space that have a left hand good Gram point and an even number of roots, to the total number of Gram intervals in the sample space which have a left hand good Gram point. 
-\textcolor{blue}{
+{
 \begin{defn}\label{poddgood}
 $p_{odd|good}$ and $p_{even|good}$ are the conditional probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point of the Gram interval is good. $p_{odd|bad}$ and $p_{even|bad}$ are the conditional probabilities that a Gram interval contains an odd or even number of zeros respectively, given that the left Gram point of the Gram interval is bad.
 \end{defn} 
@@ -363,15 +363,15 @@ We now derive a consistency relation between these quantities, by asking the que
 
 The relationship between the quantities is shown in Eq.~\ref{eqGoodRelation}. The equation follows from the following simple facts. A given Gram point will be good if the preceding Gram point is good, and the intervening interval contains an odd number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an even number of zeros. A given Gram point will be bad if the preceding Gram point is good, and the intervening interval contains an even number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an odd number of zeros. This is is shown in Eq.~\ref{eqGoodRelation}. 
 
- \textcolor{blue}{It is important to note that Eq.~\ref{eqGoodRelation} is an eigenvalue equation for  $p_g$ and $p_b$. By the very nature of eigenvalue equations, the system can have consistent solutions only when an eigenvalue condition is satisfied. The eigenvalue condition for this equation is}
+ {It is important to note that Eq.~\ref{eqGoodRelation} is an eigenvalue equation for  $p_g$ and $p_b$. By the very nature of eigenvalue equations, the system can have consistent solutions only when an eigenvalue condition is satisfied. The eigenvalue condition for this equation is}
 \begin{equation}
 p_b*p_{even|bad} = p_g*p_{even|good}.
 \label{eq:consistency}
 \end{equation}
- \textcolor{blue}{Note that Eq.~\ref{eq:consistency} is not an attempt to solve for the variables of interest, it is a statement of the  necessary condition
+ {Note that Eq.~\ref{eq:consistency} is not an attempt to solve for the variables of interest, it is a statement of the  necessary condition
  for the set of equations to have a solution in the first place.} Table~\ref{tab:pevenpred} shows the empirical data which validates this relationship. Eq.~\ref{eq:consistency} can also be stated as $p_g/p_b = p_{even|bad} /p_{even|good}$.
 
-\textcolor{blue}{
+{
 Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length, holds true if we do not add any 
 further information about the nature of the intervals. As we saw in this section, adding information about the nature of the interval endpoints does affect the prediction of the
 distribution of zero counts. It does not seem that Odlyzko's results explain the phenomena that we study in the current work. A naive interpretation
@@ -445,7 +445,7 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 11 &1.415867&1.514637 \\
 \hline
 \end{array}\)
-\caption{ \textcolor{blue}{Product of the ratios for $k\delta$ and $-k\delta$ for different Gram block sizes, for $Type~II/Type~I$ counts.}}
+\caption{ {Product of the ratios for $k\delta$ and $-k\delta$ for different Gram block sizes, for $Type~II/Type~I$ counts.}}
 \label{tab:rosserproduct}
 \end{table}
 
@@ -484,7 +484,7 @@ Gram~block	 & 0.1\delta & 0.2\delta  \\
 9 &0.756& 0.827\\
 \hline
 \end{array}\)
-\caption{ \textcolor{blue}{Product of the ratios for $k\delta$ and $-k\delta$ for different Gram block sizes, for  $Type~III,left/Type~III,right$ counts.}}
+\caption{ {Product of the ratios for $k\delta$ and $-k\delta$ for different Gram block sizes, for  $Type~III,left/Type~III,right$ counts.}}
 \label{tab:rosser3product}
 \end{table}
 
@@ -499,16 +499,16 @@ To apply the test, we note  that the Definition ~\ref{good0} of a good Gram poin
 
 Table~\ref{tab:rosserrandom}  shows the ratio of $Type~II/Type~I$ counts when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval at height $t$ (Eq.~\ref{eq:spacing}). For our sample space $\delta$ is essentially constant.  Column 4 shows the ratio for different Gram block lengths when we measure from the Gram points. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed. The other columns show the value  when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval.  The ratios are all different, and not close to $1$. Clearly, the observed values show that the symmetry we are observing is indeed a property of Gram points. The table includes only regular Gram blocks, since $Type~II$ and $Type~I$ Gram blocks are defined only for regular Gram blocks.  The statistics are from $10$ million Gram intervals at $t=10^{28}$. 
 They  show clearly that the properties are indeed strongly correlated with the Gram points, and hence are not just manifestations of randomness over and above the basic known patterns of the Riemann zeta distribution. 
-{ \textcolor{blue}{
+{ {
 Table~\ref{tab:rosserrandom}  shows another interesting pattern: for any row, the product of the ratios for $k\delta$ and $-k\delta$ appears to be close to one 
 (the author thanks the anonymous referee for bringing this to his attention). The products for different Gram block sizes are shown in Table~\ref{tab:rosserproduct}. The values are close to $1$ for the Gram blocks with small lengths. The deviation from $1$ for 
 Gram blocks with larger lengths may be due to the poorer statistics at these lengths, and possible sensitivity to the assumption that the Gram interval 
 $\delta$ is constant over the sample space. This is a very interesting relation, and we leave the further investigation of this relation to future work.
 }
 
-We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), { \textcolor{blue}{using the ratio of $Type~III$ interval counts for zero patterns which are the reverse of each other. There are many possible patterns of $Type~III$ interval counts we could consider. For definiteness, we chose one particular pattern: the pattern  $Type~III,left$  where the '3' interval occurs at the first odd interval position on the left, and the reversed pattern  $Type~III,right$,  where the '3' interval occurs at the last odd interval position on the right. }
+We can further study the forward-backward symmetry (and the check that the ratio does depend on whether we measure from Gram points, or from points displaced from Gram points), { {using the ratio of $Type~III$ interval counts for zero patterns which are the reverse of each other. There are many possible patterns of $Type~III$ interval counts we could consider. For definiteness, we chose one particular pattern: the pattern  $Type~III,left$  where the '3' interval occurs at the first odd interval position on the left, and the reversed pattern  $Type~III,right$,  where the '3' interval occurs at the last odd interval position on the right. }
 Table~\ref{tab:rosser3random} shows the ratio of $Type~III,left/Type~III,right$ counts.  Column 5 shows the ratio for different Gram block lengths when we measure from the Gram points. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed. The other columns show the value  when we displace the Gram points by $k\delta$, where $\delta$ is the Gram interval.  The ratios are all different, and not close to $1$. Clearly, the observed values show that the symmetry we are observing is indeed a property of Gram points. The table includes only regular Gram blocks, since $Type~III$ Gram blocks are defined only for regular Gram blocks. This provides further evidence for the conclusions of Table~\ref{tab:rosserrandom}.
-{ \textcolor{blue}{
+{ {
 Table~\ref{tab:rosser3random}  also shows the pattern that for any row, the product of the ratios for $k\delta$ and $-k\delta$ appears to be close to one. The products for different Gram block sizes are shown in Table~\ref{tab:rosser3product}. The values are close to $1$ for the Gram blocks with small lengths. The deviation from $1$ for 
 Gram blocks with larger lengths may be due to the poorer statistics at these lengths, and possible sensitivity to the assumption that the Gram interval 
 $\delta$ is constant over the sample space.
@@ -541,12 +541,12 @@ Column $3$ shows the pattern of zero counts for the numerator in column $1$. The
 \subsection{\label{sec6a}Symmetry as manifested for patterns involving violations of Rosser's rule}
 
 We now present the evidence for symmetry under reversal of the zero patterns for more complex zero patterns than those considered so far. The more complex patterns can be classified under different types of violations of Rosser's rule~\cite{gourdon}. Rosser's rule states that Gram blocks of length $k$ contain at least $k$ zeros. This law is violated infinitely often, but is violated only for a small fraction of the Gram blocks. A Gram block is either regular, or it has an excess of zeros, or it has fewer zeros than its length. The last type of Gram block violates Rosser's rule. 
-If a Gram block of length \textcolor{blue}{$k$} is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Odlyzko uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
+If a Gram block of length {$k$} is an exception to Rosser's rule, then its pattern of zeros must be of the form $01...10$. To describe the exception, we must specify where the two missing zeros are. Odlyzko uses the notation $kXa_1a_2 . . . a_m, X = L~or~R $ 
 to describe an exception on a Gram block of length $k$  where the missing zeros are on the left (for $X = L$) or on the right (for $X = R$), the pattern containing the missing zeros being $a_1a_2 . . . a_m$ (moreover, this pattern is the smallest union of Gram blocks adjacent to the exception that contains the missing zeros). For example, $3L04$ denotes a violation of Rosser's rule on a Gram block of length 3, the missing zeros being at its left. Written out in detail, the pattern of zeros is expressed by the notation is $04010$.
 
 The notation above classifies the type of violation of Rosser's rule, the value $m$ being called the length of the excess block. The notation used for exceptions to Rosser's rule is not unambiguous. When several contiguous violations of Rosser's rule exists, they may overlap or missing zeros can be in the same Gram interval. Such situations are very rare, and in these cases (Gourdon found just three occurrences until the $10^{13}th$ zero), Odlyzko uses the notation $Ma_1 ...a_l$ where the pattern $a_1 . . . a_l$ is made of the minimal contiguous Gram blocks containing at least one violation to Rosser rule, and all the missing zeros. For example, the pattern $M00500$, first encountered at gram index $n = 3,680,295,786,518$, denotes a situation with two violations of Rosser's rule ($00$ and $00$, Gram blocks with missing zeros) and a single Gram interval containing all the missing zeros (pattern $5$). 
 Table~\ref{tab:vrr}  (based on data in \cite{gourdon}) shows the  ratio of counts of patterns of zero counts for complex zero patterns, to the counts with reversed zero patterns, for different types violations of Rosser's rule. Column 2 shows the ratio for different Gram block lengths. The ratios are very close to  $1$, showing the symmetry of the counts when the zero patterns are reversed.
- \textcolor{blue}{As mentioned in the introduction, we considered whether the symmetry relations could be related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
+ {As mentioned in the introduction, we considered whether the symmetry relations could be related to the symmetry  of the rotated zeta function (Hardy's function $Z(t)$ ) under the transformation $t \rightarrow -t$. However, while this symmetry ensures that the number of zeros in the interval $(t_1, t_2)$ on the critical axis equals the number of zeros in the interval $(-t_2, -t_1)$, it is not clear how to relate this behavior  to the properties implied by the conjectures.} 
 
 \section{\label{sec7}Two Conjectures}
 
@@ -609,7 +609,7 @@ Even~Entry     & (++)     & (+-)   & (-+)  & (--) \\
 \end{table}
 
 
-The empirical data presented in the  \textcolor{blue}{previous sections led us to formulate the two conjectures stated in the introduction 
+The empirical data presented in the  {previous sections led us to formulate the two conjectures stated in the introduction 
 about the distribution of zeta values at the the Gram points. }
 The evidence for  Conjecture~\ref{symmetry} has been presented in the previous sections. 
 In this section we will consider the statistics of zeta values at pairs of consecutive Gram points. We will look at the evidence for Conjecture \ref{antisymmetry}.  
@@ -620,12 +620,12 @@ Figures \ref{oddhist} and ~\ref{evenhist}  present the histograms of $Z(t)$ at o
 
 \section{\label{machineLearning}Machine Learning applications}
 
- \textcolor{blue}{ 
+ { 
 In this section we digress a bit and speculate on possible lessons of the present study for Machine Learning applications to the study of the Riemann zeta zeros \cite{osneural,osentropy}.
 Why do we think that machine learning is a good tool to apply to the study of the zeros? It is because Machine Learning is an excellent tool to extract patterns when one has a huge amount of data and one does not have a complete understanding of the patterns underlying the phenomenon being studied. And indeed, with tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another encouraging indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order.
 }
 \subsection{\label{secfeature}Neural Networks: feature selection}
- \textcolor{blue}{ 
+ { 
 How can we apply Machine Learning techniques to the problem? This is an open question, and one can think of different possible applications. Here we review a case study which used neural networks. A great deal of effort has gone into finding the zeros of the Riemann zeta function. At large heights finding the zeros is a non-trivial task, requiring much computer time (and some knowledge of special techniques to find the roots). It would be useful to have some guide to the location of the roots. In particular, close pairs of zeros are interesting. They correspond to cases for which the
 Riemann Hypothesis is nearly false. Calculating the Riemann zeta function in zones where
 two zeros are very close is a stringent test of the Riemann Hypothesis. Probably the biggest open task is to identify a feature set which is good at predicting zero differences, while not requiring excessive computing time. Ref~\cite{osneural} found that the behavior of the zeta function at Gram points is a good starting point to extract features for use in prediction. Our current study, indicating that Gram points have interesting properties which distinguish them from random points on the critical line, support the conclusion. The results of the present study suggest that it may be useful to extend the neural network application by separating the odd and even Gram points, and building separate models for them. Given the symmetry properties of the zeta values, we will probably find that the two models will be closely related to each other.  Furthermore, one can use symmetry properties of the zeta values at Gram points to impose restrictions on the models to be fitted.  
@@ -633,15 +633,15 @@ two zeros are very close is a stringent test of the Riemann Hypothesis. Probably
 
 \subsection{\label{secMLrare}Machine Learning: detection of rare events}
 
- \textcolor{blue}{ 
+ { 
 We now discuss another possible approach to the solution. We have available to us extensive compilations of the location of zeros. The main challenge is that the phenomenon we are trying to detect, namely zeros which are located close to each other, is very rare. 
 }
 
-\textcolor{blue}{ 
+{ 
 Ref~\cite{Friedman(2001)} suggest that  a good approach to detecting rare events is to estimate the expected probability density for the feature set, and to use the estimated probability density to identify values of the observed features which are anomalous, in that the estimated probability for the occurrence of the observed values is below a set threshold. The hope is that the places where the anomalous feature values occur are the places where the Riemann zeta zeros deviate from the normal pattern of behavior. The deviations could be of different types (small zero differences, large zero differences, etc.). If the classifier is sufficiently selective, then we will have a smaller number of roots that we have to evaluate to check for interesting behavior. 
 }
 
-\textcolor{blue}{ 
+{ 
 Density estimation is a hard problem. Section 14.2.4 of \cite{Friedman(2001)}  discuss a technique for transforming the density estimation problem into one of supervised function approximation. To learn the input density, we generate two sets of data. The first set (class 0) contains the actual (sampled) inputs from the training data, whereas the second set (class 1) consists of randomly-generated feature values. Class 0 represents a sample representing the actual density function, and class 1 represents samples drawn from the same input space, with a uniform density function. Given this, the two data sets are then used to learn a logistic regression model, whose output can be interpreted as an approximate estimate of the actual density of the input. The steps suggested in \cite{Friedman(2001)} are:
 \begin{itemize}
 \item The feature set values occurring in the training data are assumed to be from the probability density function $g(x)$.
@@ -651,7 +651,7 @@ Density estimation is a hard problem. Section 14.2.4 of \cite{Friedman(2001)}  d
 \end{itemize}
 }
           
-\textcolor{blue}{ 
+{ 
 Once the model is built, all the actual inputs (class 0) are run through it, and the model log-odds outputs $f(x)$ (which approximate the actual probability of being a valid input) are sorted in ascending order. A threshold output score is then determined. The threshold is chosen such that a pre-determined fraction of the inputs are classified as outliers. The model and the threshold are then used  to detect anomalous inputs for new generated feature sets. In particular, all inputs for which the model predicts a value below the threshold are identified for detailed analysis of the patterns of zeros. For all this to be useful, the cost of generating new feature sets must be lower than the cost of calculating all the zeros.
 }
 
@@ -726,8 +726,9 @@ and zeros computation at very large height", report,
 \url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
 
 \bibitem{hiary 2010} G. A. Hiary,
-``An amortized-complexity method to compute the Riemann zeta function", report,
-\url{https://people.math.osu.edu/hiary.1/amortized.html}, (2010)
+``An amortized-complexity method to compute the Riemann zeta function", 
+\textcolor{blue}{{\it Mathematics of Computation} {\bf80}(2011), 1785-1796
+}
 
 \bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
 {\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012). 
