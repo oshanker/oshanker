@@ -271,7 +271,7 @@ A Type II Gram Block is a regular Gram Block which has the pattern of zero count
 A Type III Gram Block is a regular Gram Block which has the pattern of zero counts $01 . . . 131 . . . 10$.
 \end{defn}
 }
-A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we present in Section~\ref{sec7}. Gram blocks \textcolor{blue}{which} are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
+A regular Gram block of length 1 is a special case and is not covered by any of the three forms stated above. Note that the sequence of zero counts in a Type II Gram block is the reverse of the sequence of zero counts in a Type I Gram block of the same length. We use this observation, and the results of Section~\ref{sec6}, where we study the ratio of $Type~II/Type~I$ Gram blocks, as part of the evidence for the new conjectures (in particular,  Conjecture~\ref{symmetry}) that we presented in Section~\ref{sec3}. Gram blocks \textcolor{blue}{which} are not regular have more complex patterns of zero counts on Gram intervals, and can be described using the notation in Section~\ref{sec6a}.
 
 \section{\label{sec5}Good to Bad Gram point ratio}
 
@@ -332,7 +332,7 @@ We now derive a consistency relation between these quantities, by asking the que
 &&p_g*p_{even|good} + p_b*p_{odd|bad}\, = p_b.
 \label{eqGoodRelation}
 \end{eqnarray}
-The relationship between the quantities is shown in Eq.~\ref{eqGoodRelation}. The equation follows from the following simple facts. A given Gram point will be good if the preceding Gram point is good, and the intervening interval contains an odd number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an even number of zeros. A given Gram point will be bad if the preceding Gram point is good, and the intervening interval contains an even number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an odd number of zeros. This is is shown in Eq.~\ref{eqGoodRelation}. 
+The relationship between the quantities is shown in Eq.~\ref{eqGoodRelation}. The equation follows from the following simple facts. A given Gram point will be good if the preceding Gram point is good, and the intervening interval contains an odd number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an even number of zeros. A given Gram point will be bad if the preceding Gram point is good, and the intervening interval contains an even number of zeros, or if the preceding Gram point is bad, and the intervening interval contains an odd number of zeros. These relations lead to Eq.~\ref{eqGoodRelation}. 
 
 \begin{table}
 \centering \(\begin{array}{ccccccc}
@@ -353,8 +353,8 @@ at least upto  $t = 10^{28}$.}
 p_b*p_{even|bad} = p_g*p_{even|good}.
 \label{eq:consistency}
 \end{equation}
- {Note that Eq.~\ref{eq:consistency} is not an attempt to solve for the variables of interest, it is a statement of the  necessary condition
- for the set of equations to have a solution in the first place.} Table~\ref{tab:pevenpred} shows the empirical data which validates this relationship. Eq.~\ref{eq:consistency} can also be stated as $p_g/p_b = p_{even|bad} /p_{even|good}$.
+ Note that Eq.~\ref{eq:consistency} is not an attempt to solve for the variables of interest, it is a statement of the  necessary condition
+ for the set of equations to have a solution in the first place. Table~\ref{tab:pevenpred} shows the empirical data which validates this relationship. Eq.~\ref{eq:consistency} can also be stated as $p_g/p_b = p_{even|bad} /p_{even|good}$.
 
 
 Odlyzko's conjecture,  that at large heights a Gram interval does not differ from any other interval of that length, holds true if we do not add any 
@@ -387,7 +387,7 @@ Gram~block& Type~II/Type~I&(Type~II) \\
 10& 0.992668154&0111111112\\
 \hline
 \end{array}\)
-\caption{Equality of $Type~II$ and $Type~I$ Gram block counts for Gram blocks of different lengths. The statistics are from the first $10^{13}$ Gram intervals. The counts include only regular Gram blocks, since $Type~II$ and $Type~I$ Gram blocks are defined only for regular Gram blocks.} \label{tab:rosser}
+\caption{Equality of $Type~II$ and $Type~I$ Gram block counts for Gram blocks of different lengths. The statistics are from the first $10^{13}$ Gram intervals.} \label{tab:rosser}
 \end{table}
 
 
@@ -448,8 +448,7 @@ They  show clearly that the properties are indeed strongly correlated with the G
 { {
 Table~\ref{tab:rosserrandom}  shows another interesting pattern: for any row, the product of the ratios for $k\delta$ and $-k\delta$ appears to be close to one 
 (the author thanks the anonymous referee for bringing this to his attention). The products for different Gram block sizes are shown in Table~\ref{tab:rosserproduct}. The values are close to $1$ for the Gram blocks with small lengths. The deviation from $1$ for 
-Gram blocks with larger lengths may be due to the poorer statistics at these lengths, and possible sensitivity to the assumption that the Gram interval 
-$\delta$ is constant over the sample space. This is a very interesting relation, and we leave the further investigation of this relation to future work.
+Gram blocks with larger lengths may be due to the poorer statistics at these lengths. This is a very interesting relation, and we leave the further investigation of this relation to future work.
 }
 
 \subsection{\label{sec6-III}Symmetry as manifested for patterns involving Type III Gram intervals}
@@ -604,7 +603,7 @@ Conjecture \ref{antisymmetry}., i.e.,  $p_{odd}(y) = p_{even}(-y)$.
 Figures~\ref{oddhist} and \ref{evenhist}  present the histograms of $Z(t)$ at odd Gram points and even Gram points respectively. These figures further bear out the evidence of Table~\ref{tab:quantiles} that the odd and even distributions are mirror images of each other. \textcolor{blue}{ The distributions in Figures~\ref{oddhist} and \ref{evenhist} are clearly not symmetric, and hence they do not fit a normal distribution. We investigated whether the distribution of values could be approximated by a beta distribution. Because of the large peaks in the histograms, the values of the beta distribution parameters had to be chosen to be quite large. Further investigation of the nature of the distribution needs to be done.
 }
 
-To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive $Z(t)$  ($Z(t) > 0$) and '$-$' for negative $Z(t)$ ($Z(t) \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive $Z(t)$ followed by a Gram point which has a positive $Z(t)$, while the notation '$+-$' stands for a Gram point which has a positive $Z(t)$ followed by a Gram point which has a negative $Z(t)$. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table ( e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
+To study Conjecture \ref{antisymmetry} further, we will consider the zeta values at pairs of consecutive Gram points. We will classify the zeta values into two classes, '$+$' for positive $Z(t)$  ($Z(t) > 0$) and '$-$' for negative $Z(t)$ ($Z(t) \leqslant  0$). Thus, for example, the notation '$++$' stands for a Gram point which has a positive $Z(t)$ followed by a Gram point which has a positive $Z(t)$, while the notation '$+-$' stands for a Gram point which has a positive $Z(t)$ followed by a Gram point which has a negative $Z(t)$. Table~\ref{tab:pairraw} shows the counts for different pair configurations, for pairs beginning at odd Gram points (row 1) and for pairs beginning at even Gram points(row 2). Conjecture \ref{antisymmetry} predicts that the count for a configuration from the odd Gram point row in the table  will match the count for the mirror configuration in the even Gram point row of the table (e.g., the count for '$++$' from the distribution for odd Gram points will match count for '$--$' from the distribution for even Gram points). Table~\ref{tab:pairtest} tests this prediction. The agreement is good, within the expected statistical variations. 
 
 \section{\label{machineLearning}Machine Learning applications}
 
@@ -616,14 +615,14 @@ Why do we think that machine learning is a good tool to apply to the study of th
  
 How can we apply Machine Learning techniques to the problem? This is an open question, and one can think of different possible applications. Here we review a case study which used neural networks. A great deal of effort has gone into finding the zeros of the Riemann zeta function. At large heights finding the zeros is a non-trivial task, requiring much computer time (and some knowledge of special techniques to find the roots). It would be useful to have some guide to the location of the roots. In particular, close pairs of zeros are interesting. They correspond to cases for which the
 Riemann Hypothesis is nearly false. Calculating the Riemann zeta function in zones where
-two zeros are very close is a stringent test of the Riemann Hypothesis. Probably the biggest open task is to identify a feature set which is good at predicting zero differences, while not requiring excessive computing time. Ref~\cite{osneural} found that the behavior of the zeta function at Gram points is a good starting point to extract features for use in prediction. Our current study, indicating that Gram points have interesting properties which distinguish them from random points on the critical line, support the conclusion. The results of the present study suggest that it may be useful to extend the neural network application by separating the odd and even Gram points, and building separate models for them. Given the symmetry properties of the zeta values, we will probably find that the two models will be closely related to each other.  Furthermore, one can use symmetry properties of the zeta values at Gram points to impose restrictions on the models to be fitted.  
+two zeros are very close is a stringent test of the Riemann Hypothesis. Probably the biggest open task is to identify a feature set which is good at predicting zero differences, while not requiring excessive computing time. Ref~\cite{osneural} found that the behavior of the zeta function at Gram points is a good starting point to extract features for use in prediction. Our current study, indicating that Gram points have interesting properties which distinguish them from random points on the critical line, supports the conclusion. The results of the present study suggest that it may be useful to extend the neural network application by separating the odd and even Gram points, and building separate models for them. Given the symmetry properties of the zeta values, we will probably find that the two models will be closely related to each other.  Furthermore, one can use symmetry properties of the zeta values at Gram points to impose restrictions on the models to be fitted.  
 
 
 \subsection{\label{secMLrare}Machine Learning: detection of rare events}
 
 
 We now discuss another possible approach to the solution. We have available to us extensive compilations of the location of zeros. The main challenge is that the phenomenon we are trying to detect, namely zeros which are located close to each other, is very rare. 
-Ref~\cite{Friedman(2001)} suggest that  a good approach to detecting rare events is to estimate the expected probability density for the feature set, and to use the estimated probability density to identify values of the observed features which are anomalous, in that the estimated probability for the occurrence of the observed values is below a set threshold. The hope is that the places where the anomalous feature values occur are the places where the Riemann zeta zeros deviate from the normal pattern of behavior. The deviations could be of different types (small zero differences, large zero differences, etc.). If the classifier is sufficiently selective, then we will have a smaller number of roots that we have to evaluate to check for interesting behavior. 
+Ref~\cite{Friedman(2001)} suggests that  a good approach to detecting rare events is to estimate the expected probability density for the feature set, and to use the estimated probability density to identify values of the observed features which are anomalous, in that the estimated probability for the occurrence of the observed values is below a set threshold. The hope is that the places where the anomalous feature values occur are the places where the Riemann zeta zeros deviate from the normal pattern of behavior. The deviations could be of different types (small zero differences, large zero differences, etc.). If the classifier is sufficiently selective, then we will have a smaller number of roots that we have to evaluate to check for interesting behavior. 
 
 
 Density estimation is a hard problem. Section 14.2.4 of \cite{Friedman(2001)}  discuss a technique for transforming the density estimation problem into one of supervised function approximation. To learn the input density, we generate two sets of data. The first set (class 0) contains the actual (sampled) inputs from the training data, whereas the second set (class 1) consists of randomly-generated feature values. Class 0 represents a sample representing the actual density function, and class 1 represents samples drawn from the same input space, with a uniform density function. Given this, the two data sets are then used to learn a logistic regression model, whose output can be interpreted as an approximate estimate of the actual density of the input. \textcolor{blue}{See~\cite{Friedman(2001)} for further discussion. }     
