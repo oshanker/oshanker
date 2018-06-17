@@ -5,6 +5,18 @@ package math;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -80,25 +92,73 @@ public class GSeriesTest {
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
 	@Test
-	public void test1E12() {
+	public void test1E12() throws Exception{
 		int k0 = 1, k1=398942;
 		//this reduces time to 14131ms from 14326ms
 		//need to tune optimum value
+		DataOutputStream out = null;
+        File file = new File("out/gSeriesE12.dat");
+        boolean output = true;
+        if (output) {
+              if (!file.exists()) {
+                  try {
+                      file.createNewFile();
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+              }
+              try {
+                  OutputStream os = new FileOutputStream(file);
+                  BufferedOutputStream bos = new BufferedOutputStream(os);
+                  // create data output stream
+                  out = new DataOutputStream(bos);
+              } catch (FileNotFoundException e) {
+                  e.printStackTrace();
+              }
+        }
 		int R = 10000;
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		double begin = 243.77756012466052947405878015472510;
 		double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
+		final int initialPadding = 20;
+        long n0 = 3945951431270L - initialPadding;
+		begin -= initialPadding*incr;
 		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, R);
 		long end = System.currentTimeMillis();
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
-		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[0], begin));
+        if (output) {
+            out.writeLong(n0);
+    		for (int i = 0; i < gAtBeta.gAtBeta.length; i++) {
+                out.writeDouble(gAtBeta.gAtBeta[i][0]);
+                out.writeDouble(gAtBeta.gAtBeta[i][1]);
+    		}
+    		out.close();
+            InputStream is = new FileInputStream(file);
+            
+            // create buffered input stream.
+            BufferedInputStream bis = new BufferedInputStream(is);
+
+            // create data input stream to read data in form of primitives.
+            DataInputStream in = new DataInputStream(bis);
+            int i = 0;
+            System.out.println(in.readLong());
+            while (in.available() > 0) {
+                double g0 = in.readDouble();
+                double g1 = in.readDouble();
+                 
+                if(i >= initialPadding){System.out.println(  g0 + ", " +   g1);}
+                if(++i > initialPadding+1){break;}
+            }
+            in.close();
+        }
+		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[initialPadding], begin));
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
 		double zero = 365.657441214932156903;
-		double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, 20, 1.6E-7);
+		double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-7);
 		double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
 		System.out.println("g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
-		assertTrue(Math.abs(zeta) < 0.000005);
+		assertTrue(Math.abs(zeta) < 0.000002);
 
 	}
 
