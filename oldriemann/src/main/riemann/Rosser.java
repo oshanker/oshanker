@@ -78,20 +78,30 @@ public class Rosser {
 	 * 
 	 *
 	 */
-	static class ZeroInfo{
-		String zeroInput;
+	public static class ZeroInfo{
+		public String zeroInput;
 		int countZeros;
+		public double lastZero = -1.0d;
+		
 		/**
 		 * 
 		 * @param zeroInput
 		 * @param countZeros
 		 */
 		public ZeroInfo(String zeroInput, int countZeros) {
-			super();
 			this.zeroInput = zeroInput;
 			this.countZeros = countZeros;
 		}
-		@Override
+		
+		public ZeroInfo(String input, ArrayList<Double> countZeros2) {
+            this.zeroInput = input;
+            this.countZeros = countZeros2.size();
+            if(this.countZeros>0){
+                lastZero = countZeros2.get(this.countZeros-1);
+            }
+        }
+
+        @Override
 		public String toString() {
 			return "ZeroInfo [zeroInput=" + zeroInput + ", countZeros=" + countZeros + "]";
 		}
@@ -142,11 +152,8 @@ public class Rosser {
 			countZeros.add(zero);
 			input = zeroIn.readLine();
 		}
-		if(countZeros.size()>16){
-			System.out.println("really? upperLimit " + upperLimit + " " + countZeros);
-		}
 		println(out, Integer.toString(countZeros.size()));
-		return new ZeroInfo(input,countZeros.size());
+		return new ZeroInfo(input,countZeros);
 	}
 	
 	public static Map<String,String> readConfig(String configFile) throws IOException{

@@ -66,7 +66,7 @@ public class Conjectures {
         
 		int[] signumPoints  = new int[N];
 		int count = 0;
-		ZeroInfo zeroInput = new ZeroInfo(null,0);
+		ZeroInfo zeroInput = new ZeroInfo(null, 0);
 		PrintStream out = null;
 		while (count < N) {
 			int n1 = count + noffset;

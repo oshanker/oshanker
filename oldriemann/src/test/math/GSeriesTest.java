@@ -7,16 +7,17 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -24,11 +25,13 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import riemann.Gram;
 import riemann.Riemann;
 import riemann.Riemann.GramInfo;
+import riemann.Rosser;
 
 /**
  * @author oshanker
@@ -85,9 +88,46 @@ public class GSeriesTest {
 		double zeta = gAtBeta.riemannZeta(gFromBLFI, 1287.5146091794);
 		System.out.println("g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
 		assertTrue(Math.abs(gFromBLFI[0] - (-0.33143958775035764)) + Math.abs(gFromBLFI[1] - 0.0733285174786178) < 0.000005);
-
 	}
-
+	
+    @Test @Ignore
+    public void testX() throws Exception{
+        int k0 = 1, k1=398942;
+        int R = 30040;
+        BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        double begin = Gram.gram(offset, 243.77756012466054 );
+        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
+        String zerosFile = "/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002";
+        BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile ));
+        double upperLimit = begin + (R-40)*incr;
+        Rosser.ZeroInfo zeroInput = Rosser.readZeros(upperLimit, null, zeroIn, null);
+        System.out.println("{" +begin + ", " + zeroInput.lastZero+ "},");
+        for (int i = 0; i < 34; i++) {
+            begin = upperLimit;
+            upperLimit = begin + (R-40)*incr;
+            zeroInput = Rosser.readZeros(upperLimit, null, zeroIn, zeroInput.zeroInput);
+            System.out.println( "{" + begin + ", " + zeroInput.lastZero + "},");
+       }
+        double[][] x = new double[][] { { 243.77756012466054, 7551.727850863262 },
+                { 7551.748967244364, 14859.592051701966 }, { 14859.720374364068, 22167.406308059784 },
+                { 22167.691781483773, 29475.511171552676 }, { 29475.663188603477, 36783.50533179244 },
+                { 36783.63459572318, 44091.59099492764 }, { 44091.606002842884, 51399.45918516771 },
+                { 51399.577409962585, 58707.39943153004 }, { 58707.54881708229, 66015.36710472572 },
+                { 66015.52022420199, 73323.37514290065 }, { 73323.4916313217, 80631.16991578533 },
+                { 80631.4630384414, 87938.90285891743 }, { 87939.43444556111, 95247.28904843173 },
+                { 95247.40585268082, 102555.26217338518 }, { 102555.37725980053, 109863.22425382912 },
+                { 109863.34866692024, 117171.2193838182 }, { 117171.32007403995, 124479.11858461898 },
+                { 124479.29148115966, 131787.26254932594 }, { 131787.26288827937, 139094.915172985 },
+                { 139095.23429539907, 146403.03320424244 }, { 146403.20570251878, 153710.8534040047 },
+                { 153711.1771096385, 161019.06253969827 }, { 161019.1485167582, 168326.92904703945 },
+                { 168327.1199238779, 175635.03465266858 }, { 175635.09133099762, 182942.91104938296 },
+                { 182943.06273811733, 190250.94773079225 }, { 190251.03414523703, 197558.89402020318 },
+                { 197559.00555235674, 204866.80626038337 }, { 204866.97695947645, 212174.8229924622 },
+                { 212174.94836659616, 219482.70295244805 }, { 219482.91977371587, 226790.86141050386 },
+                { 226790.89118083558, 234098.80158802238 }, { 234098.8625879553, 241406.80651327036 },
+                { 241406.833995075, 248714.5783046993 }, { 248714.8054021947, 256022.741415282 }, };
+    }
+    
 	/**
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
