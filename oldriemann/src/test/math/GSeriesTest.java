@@ -124,6 +124,8 @@ public class GSeriesTest {
 		final int initialPadding = 20;
         System.out.println(incr);
         long n0 = 3945951431270L - initialPadding;
+        System.out.println(Gram.theta(offset.add(BigDecimal.valueOf(begin), Gram.mc), Gram.mc)
+                .divide(Gram.pi, Gram.mc));
 		begin -= initialPadding*incr;
 		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, R);
 		long end = System.currentTimeMillis();
