@@ -98,7 +98,7 @@ public class GSeriesTest {
 		//need to tune optimum value
 		DataOutputStream out = null;
         File file = new File("out/gSeriesE12.dat");
-        boolean output = true;
+        boolean output = false;
         if (output) {
               if (!file.exists()) {
                   try {
@@ -116,12 +116,13 @@ public class GSeriesTest {
                   e.printStackTrace();
               }
         }
-		int R = 10000;
+		int R = 30040;
 		long init= System.currentTimeMillis();
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
-		double begin = 243.77756012466052947405878015472510;
+		double begin = Gram.gram(offset, 243.77756012466054 );
 		double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
 		final int initialPadding = 20;
+        System.out.println(incr);
         long n0 = 3945951431270L - initialPadding;
 		begin -= initialPadding*incr;
 		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, R);
@@ -154,7 +155,7 @@ public class GSeriesTest {
         }
 		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[initialPadding], begin));
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
-		double zero = 365.657441214932156903;
+		double zero = 7551.220665324773510640;
 		double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-7);
 		double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
 		System.out.println("g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);

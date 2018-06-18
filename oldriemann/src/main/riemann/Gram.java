@@ -300,6 +300,14 @@ public class Gram {
 	   return grampts;
 	}
 
+	public static double gram(BigDecimal offset, double zero){
+        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(zero), Gram.mc);
+        double diff = gramInterval(tvalsi);
+        double heck1 = thetaNormalized(tvalsi, Gram.mc)  / Math.PI;
+        if(heck1>=1){heck1--;}
+        double gram0 = zero - (heck1*diff);
+        return gram0;
+	}
 	
 	public static void main(String[] args) throws Exception {
 		test1();
