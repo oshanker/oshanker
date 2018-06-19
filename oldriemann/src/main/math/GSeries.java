@@ -27,7 +27,7 @@ public class GSeries {
 	/**
 	 * Store g at n*beta (k is k0 to k1)
 	 */
-	final double[][] gAtBeta;
+	double[][] gAtBeta;
 	private final double beta;
 	final double spacing;
 	private final double gamma;
@@ -39,8 +39,20 @@ public class GSeries {
 	double lnsqrtArg1;
 	double basetheta;
 	
+    public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, double[][] gAtBeta){
+        this(k0, k1, offset, begin, incr);
+        this.gAtBeta = gAtBeta;
+    }
+
 	public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
-		this.k0 = k0;
+		this(k0, k1, offset, begin, incr);
+        BigDecimal tBaseBD = new BigDecimal(begin, Gram.mc).add(
+                offset, Gram.mc);
+        gAtBeta = evaluateWithOffset(k0, k1, begin, incr, R, tBaseBD);
+	}
+
+    private  GSeries(int k0, int k1, BigDecimal offset, double begin, double incr) {
+        this.k0 = k0;
 		this.k1 = k1;
 		this.begin = begin;
 		this.spacing = incr;
@@ -50,7 +62,6 @@ public class GSeries {
 		BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
 		alpha = alphaBD.doubleValue();
 		argalphaBase = tBaseBD.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
-		gAtBeta = evaluateWithOffset(k0, k1, begin, incr, R, tBaseBD);
 		
 		/////
 		dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tBaseBD.doubleValue()));
@@ -64,7 +75,7 @@ public class GSeries {
 				.subtract(Gram.pi8, Gram.mc).remainder(Gram.pi_2).doubleValue();
 		double tau = (Math.log(k1) - Math.log(k0))/2.0;
 		gamma = beta -tau;
-	}
+    }
 
 	/**
 	 * initialize the g-series for the given range of terms.
@@ -72,7 +83,7 @@ public class GSeries {
 	 * @param k0
 	 * @param k1
 	 */
-	public GSeries(int k0, int k1, int n0, int n1) {
+	GSeries(int k0, int k1, int n0, int n1) {
 		this.k0 = k0;
 		this.k1 = k1;
 		int R = n1-n0+1;
@@ -198,7 +209,7 @@ public class GSeries {
 		return g;
 	}
 
-	public  double[] testblfiSum( double t0, int M) {
+	private  double[] testblfiSum( double t0, int M) {
 		double[] directEval = gSeries(t0);
 		double[] sum = new double[]{0,0};
 		//int midIdx = (int) (t0/spacing);
@@ -256,7 +267,7 @@ public class GSeries {
 		return sum;
 	}
 
-	public  double[] blfiSumWithOffset( double t0, int M) {
+	double[] blfiSumWithOffset( double t0, int M) {
 		double[] sum = new double[]{0,0};
 		int midIdx = (int) ((t0-begin)/spacing);
 		SUM:
