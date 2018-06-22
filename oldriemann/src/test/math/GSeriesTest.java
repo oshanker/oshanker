@@ -40,40 +40,40 @@ import riemann.Rosser;
 public class GSeriesTest {
     final static double[][] gramE12 = new double[][] { 
         {243.77756012466054, 7551.727850863262},
-        {7551.748967244364, 14859.592051701966},
-        {14859.720372293501, 22167.406308059784},
-        {22167.69177527207, 29475.511171552676},
-        {29475.66317618007, 36783.50533179244},
-        {36783.6345750175, 44091.59099492764},
-        {44091.60597178437, 51399.45918516771},
-        {51399.57736648067, 58707.39943153004},
-        {58707.5487591064, 66015.36710472572},
-        {66015.52014966156, 73323.37514290065},
-        {73323.49153814616, 80631.16991578533},
-        {80631.4629245602, 87938.90285891743},
-        {87939.43430890366, 95247.28904843173},
-        {95247.40569117655, 102555.26217338518},
-        {102555.37707137888, 109863.22425382912},
-        {109863.34844951064, 117171.2193838182},
-        {117171.31982557183, 124479.11858461898},
-        {124479.29119956246, 131787.26254932594},
-        {131787.2625714825, 139094.915172985},
-        {139095.233941332, 146403.03320424244},
-        {146403.20530911093, 153710.8534040047},
-        {153711.1766748193, 161019.06253969827},
-        {161019.1480384571, 168326.92904703945},
-        {168327.11940002433, 175635.03465266858},
-        {175635.09075952097, 182942.91104938296},
-        {182943.06211694705, 190250.94773079225},
-        {190251.03347230257, 197558.89402020318},
-        {197559.00482558753, 204866.80626038337},
-        {204866.97617680192, 212174.8229924622},
-        {212174.94752594575, 219482.70295244805},
-        {219482.918873019, 226790.86141050386},
-        {226790.89021802167, 234098.80158802238},
-        {234098.86156095378, 241406.80651327036},
-        {241406.83290181533, 248714.5783046993},
-        {248714.80424060632, 256022.741415282},
+        {7551.748966209077, 14859.592051701966},
+        {14859.72037022293, 22167.406308059784},
+        {22167.691772166218, 29475.511171552676},
+        {29475.663172038934, 36783.50533179244},
+        {36783.63456984109, 44091.59099492764},
+        {44091.60596557267, 51399.45918516771},
+        {51399.577359233685, 58707.39943153004},
+        {58707.548750824135, 66015.36710472572},
+        {66015.52014034402, 73323.37514290065},
+        {73323.49152779333, 80631.16991578533},
+        {80631.46291317207, 87938.90285891743},
+        {87939.43429648025, 95247.28904843173},
+        {95247.40567771786, 102555.26217338518},
+        {102555.3770568849, 109863.22425382912},
+        {109863.34843398137, 117171.2193838182},
+        {117171.31980900728, 124479.11858461898},
+        {124479.29118196263, 131787.26254932594},
+        {131787.26255284742, 139094.915172985},
+        {139095.23392166162, 146403.03320424244},
+        {146403.20528840527, 153710.8534040047},
+        {153711.17665307835, 161019.06253969827},
+        {161019.14801568087, 168326.92904703945},
+        {168327.1193762128, 175635.03465266858},
+        {175635.09073467416, 182942.91104938296},
+        {182943.06209106496, 190250.94773079225},
+        {190251.0334453852, 197558.89402020318},
+        {197559.00479763487, 204866.80626038337},
+        {204866.97614781398, 212174.8229924622},
+        {212174.94749592253, 219482.70295244805},
+        {219482.9188419605, 226790.86141050386},
+        {226790.89018592788, 234098.80158802238},
+        {234098.86152782472, 241406.80651327036},
+        {241406.83286765098, 248714.5783046993},
+        {248714.8042054067, 256022.741415282},
     };
 
 	/**
@@ -133,7 +133,7 @@ public class GSeriesTest {
         int R = 30040;
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin = Gram.gram(offset, 243.77756012466054 );
-        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
+        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin + (R-40)*0.2436/2)/(2*Math.PI)));
         String zerosFile = "/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002";
         BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile ));
         double upperLimit = begin + (R-40)*incr;
@@ -141,7 +141,7 @@ public class GSeriesTest {
         System.out.println("{" +begin + ", " + zeroInput.lastZero+ "},");
         for (int i = 0; i < 34; i++) {
             begin = upperLimit;
-            incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
+            incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin + (R-40)*incr/2)/(2*Math.PI)));
             upperLimit = begin + (R-40)*incr;
             zeroInput = Rosser.readZeros(upperLimit, null, zeroIn, zeroInput.zeroInput);
             System.out.println( "{" + begin + ", " + zeroInput.lastZero + "},");
@@ -151,7 +151,7 @@ public class GSeriesTest {
 	/**
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
-	@Test
+	@Test 
 	public void test1E12() throws Exception{
 //        for (int i = 0; i < gramE12.length; i++) {
 //            testE12(gramE12[i][1], gramE12[i][0]);
@@ -160,8 +160,50 @@ public class GSeriesTest {
 
 	}
 
+    @Test 
+    public void testRead1E12() throws Exception{
+//        for (int i = 0; i < gramE12.length; i++) {
+//            testE12(gramE12[i][1], gramE12[i][0]);
+//        }
+        int sampleIndex = 20;
+        testReadE12(sampleIndex );
+
+    }
+
+    private void testReadE12(int sampleIndex) throws Exception{
+        double t0 = gramE12[sampleIndex][0];
+        int index = (int) Math.floor(t0);
+        BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        int k0 = 1, k1=398942;
+        File file = new File("out/gSeriesE12/" + Integer.toString(index) +".dat");
+        InputStream is = new FileInputStream(file);
+        // create buffered input stream.
+        BufferedInputStream bis = new BufferedInputStream(is);
+
+        // create data input stream to read data in form of primitives.
+        DataInputStream in = new DataInputStream(bis);
+        final int initialPadding = 40;
+        int R = 30000+2*initialPadding;
+        double begin = in.readDouble();
+        double incr = in.readDouble();
+        double[][] gBeta = new double[R][2];
+        for (int i = 0; i < gBeta.length; i++) {
+            gBeta[i][0] = in.readDouble();
+            gBeta[i][1] = in.readDouble();
+        }
+        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
+        in.close();
+        double zero = gramE12[sampleIndex][1];
+        double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9);
+        double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
+        System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
+        assertTrue(Math.abs(zeta) < 0.000001);
+        double firstGram = Gram.gram(offset, t0 );
+        System.out.println(firstGram + incr*(R-2*initialPadding));
+    }
+
     private void testE12(double zero, double t0) throws IOException, FileNotFoundException {
-        int index = (int) Math.floor(zero);
+        int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin = Gram.gram(offset, t0 );
 		int k0 = 1, k1=398942;
