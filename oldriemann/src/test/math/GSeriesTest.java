@@ -194,12 +194,32 @@ public class GSeriesTest {
         GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
         in.close();
         double zero = gramE12[sampleIndex][1];
-        double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9);
+        double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9, false);
         double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
         System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
         assertTrue(Math.abs(zeta) < 0.000001);
         double firstGram = Gram.gram(offset, t0 );
-        System.out.println(firstGram + incr*(R-2*initialPadding));
+        int N = R-2*initialPadding;
+        double sum = 0, oddsum = 0, evensum = 0;
+        
+        for (int i = 0; i < N; i++) {
+            double gram = firstGram + incr*i;
+            gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( gram, 4, initialPadding, 1.6E-9, false);
+            zeta = gAtBeta.riemannZeta(gFromBLFI, gram);
+            if(Double.isNaN(zeta)){
+                System.out.println("Nan " + gram + ", " +  Arrays.toString(gFromBLFI));
+                break;
+            }
+            sum += zeta;
+            if(i%2==0){
+                oddsum += zeta;
+            } else {
+                evensum += zeta;
+            }
+        }
+        System.out.println("mean " + sum/N + " odd mean " + 2*oddsum/N 
+                + " even mean " + 2*evensum/N );
+        System.out.println(firstGram + incr*N);
     }
 
     private void testE12(double zero, double t0) throws IOException, FileNotFoundException {
@@ -228,8 +248,6 @@ public class GSeriesTest {
 		final int initialPadding = 40;
         int R = 30000+2*initialPadding;
         System.out.println(incr);
-        System.out.println(Gram.theta(offset.add(BigDecimal.valueOf(begin), Gram.mc), Gram.mc)
-                .divide(Gram.pi, Gram.mc));
 		begin -= initialPadding*incr;
 		GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, R);
 		long end = System.currentTimeMillis();
@@ -242,28 +260,10 @@ public class GSeriesTest {
                 out.writeDouble(gAtBeta.gAtBeta[i][1]);
     		}
     		out.close();
-            InputStream is = new FileInputStream(file);
-            
-            // create buffered input stream.
-            BufferedInputStream bis = new BufferedInputStream(is);
-
-            // create data input stream to read data in form of primitives.
-            DataInputStream in = new DataInputStream(bis);
-            int i = 0;
-            System.out.println(in.readDouble());
-            System.out.println(in.readDouble());
-            while (in.available() > 0) {
-                double g0 = in.readDouble();
-                double g1 = in.readDouble();
-                 
-                if(i >= initialPadding){System.out.println(  g0 + ", " +   g1);}
-                if(++i > initialPadding+1){break;}
-            }
-            in.close();
         }
 		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[initialPadding], begin));
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
-		double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9);
+		double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9, false);
 		double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
 		System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
 		assertTrue(Math.abs(zeta) < 0.000001);
