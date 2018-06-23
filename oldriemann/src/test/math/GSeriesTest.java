@@ -198,7 +198,7 @@ public class GSeriesTest {
         double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
         System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
         assertTrue(Math.abs(zeta) < 0.000001);
-        double firstGram = Gram.gram(offset, t0 );
+        double firstGram = Gram.gram(offset, t0 ) + incr/4;
         int N = R-2*initialPadding;
         double sum = 0, oddsum = 0, evensum = 0;
         
