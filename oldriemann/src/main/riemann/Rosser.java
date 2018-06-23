@@ -351,6 +351,15 @@ public class Rosser {
         }
         return ;
     }
+    private static String reverse(String data) {
+        int length = data.length();
+        char[] reversed = new char[length];
+        for (int i = 0; i < length; i++) {
+            reversed[length-i-1] = data.charAt(i);
+        }
+        return new String(reversed);
+    }
+    
     /**
      * @param args
      * @throws IOException 
@@ -403,7 +412,9 @@ public class Rosser {
             }
 
             for (String key : rosser.keySet()) {
-                //String[] parsed = key.split("=");
+//                GramBlock reversedKey = rosser.get(reverse(key));
+//                System.out.println("***** " + key + " ***** " + rosser.get(key).occurrence
+//                        + ", reversed " + ((reversedKey==null)?0:reversedKey.occurrence) );
                 int len = key.length();
                 if(len>11){continue;}
                 int idx = len -2;
