@@ -160,9 +160,9 @@ public class GSeriesTest {
 	/**
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
-	@Test  @Ignore
+	@Test  @Ignore 
 	public void test1E12() throws Exception{
-        for (int i = 0; i < gramE12.length; i++) {
+        for (int i = 20; i < 23; i++) {
             testE12(gramE12[i][1], gramE12[i][0]);
         }
 //        testE12(gramE12[22][1], gramE12[22][0]);
@@ -176,7 +176,7 @@ public class GSeriesTest {
             file.getParentFile().mkdirs();
         }
         PrintWriter out = new PrintWriter(file);
-        for (int i = 20; i < 23; i++) {
+        for (int i = 0; i < gramE12.length; i++) {
             testReadE12(i, out );
         }
 //        int sampleIndex = 21;
@@ -209,9 +209,12 @@ public class GSeriesTest {
         GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
         in.close();
         double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
-       int k = oddsum.length;
+        int k = oddsum.length;
         double[] zeta = new double[2*k];
-        double firstGram = Gram.gram(offset, t0 );
+        double firstGram = Gram.gram(offset, t0 + 0.001 );
+        System.out.println("****** " + Gram.gramIndex(offset, t0));
+        long gramIndex = Gram.gramIndex(offset, firstGram);
+        System.out.println("****** " + gramIndex);
         int N = R-2*initialPadding;
         
         for (int i = 0; i < N; i++) {
@@ -235,11 +238,14 @@ public class GSeriesTest {
                 out.println();
             }
         }
-//        for (int j = 0; j < k; j++) {
-//            System.out.println("mean for " + j + "*pi/4: odd mean " + 2*oddsum[j]/N 
-//                    + " even mean " + 2*evensum[j]/N );
-//        }
-//        System.out.println(firstGram + incr*N);
+        for (int j = 0; j < k; j++) {
+            System.out.println("mean for " + j + "*pi/4: odd mean " + 2*oddsum[j]/N 
+                    + " even mean " + 2*evensum[j]/N );
+        }
+        assertEquals(-2.00, 2*oddsum[0]/N, 0.05);
+        assertEquals(2.00, 2*evensum[0]/N, 0.05);
+        assertEquals(0, (gramIndex-3945951431271L)%N);
+        System.out.println(firstGram + incr*N);
     }
 
     private void testE12(double zero, double t0) throws IOException, FileNotFoundException {

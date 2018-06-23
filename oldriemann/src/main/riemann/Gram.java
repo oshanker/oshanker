@@ -308,6 +308,12 @@ public class Gram {
         double gram0 = zero - (heck1*diff);
         return gram0;
 	}
+
+    public static long gramIndex(BigDecimal offset, double zero){
+        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(zero), Gram.mc);
+        double heck1 = theta(tvalsi, Gram.mc).divide(pi, Gram.mc).doubleValue();
+        return (long)(heck1+0.5);
+    }
 	
 	public static void main(String[] args) throws Exception {
 		test1();
