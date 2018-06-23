@@ -18,7 +18,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 import org.junit.After;
@@ -38,6 +41,12 @@ import riemann.Rosser;
  *
  */
 public class GSeriesTest {
+    static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMinimumFractionDigits(8);
+        nf.setMaximumFractionDigits(8);
+        nf.setGroupingUsed(false);
+    }
     final static double[][] gramE12 = new double[][] { 
         {243.77756012466054, 7551.727850863262},
         {7551.748966209077, 14859.592051701966},
@@ -151,26 +160,32 @@ public class GSeriesTest {
 	/**
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
-	@Test 
+	@Test @Ignore
 	public void test1E12() throws Exception{
 //        for (int i = 0; i < gramE12.length; i++) {
 //            testE12(gramE12[i][1], gramE12[i][0]);
 //        }
-        testE12(gramE12[21][1], gramE12[21][0]);
+        testE12(gramE12[20][1], gramE12[20][0]);
 
 	}
 
     @Test 
     public void testRead1E12() throws Exception{
-//        for (int i = 0; i < gramE12.length; i++) {
-//            testE12(gramE12[i][1], gramE12[i][0]);
-//        }
-        int sampleIndex = 21;
-        testReadE12(sampleIndex );
+        File file = new File("out/gzetaE12/gzeta.csv");
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        PrintWriter out = new PrintWriter(file);
+        for (int i = 20; i < 22; i++) {
+            testReadE12(i, out );
+        }
+//        int sampleIndex = 21;
+//        testReadE12(sampleIndex );
+        out.close();
 
     }
 
-    private void testReadE12(int sampleIndex) throws Exception{
+    private void testReadE12(int sampleIndex, PrintWriter out) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
@@ -205,19 +220,26 @@ public class GSeriesTest {
                 double t = gram + j*incr/k;
                 double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( t , 4, initialPadding, 1.6E-9, false);
                 if(i%2==0){
-                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
-                    oddsum[j] += zeta[j];
-                } else {
                     zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
-                    evensum[j] += zeta[k+j];
+                    oddsum[j] += zeta[k+j];
+                } else {
+                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    evensum[j] += zeta[j];
                 }
             }
+            if(i%2==1){
+                for (int j = 0; j < 2*k; j++) {
+                    if(j>0){out.print(", ");}
+                    out.print(nf.format(zeta[j]));
+                }
+                out.println();
+            }
         }
-        for (int j = 0; j < k; j++) {
-        System.out.println("mean for " + j + "*pi/4: odd mean " + 2*oddsum[j]/N 
-                + " even mean " + 2*evensum[j]/N );
-        }
-        System.out.println(firstGram + incr*N);
+//        for (int j = 0; j < k; j++) {
+//            System.out.println("mean for " + j + "*pi/4: odd mean " + 2*oddsum[j]/N 
+//                    + " even mean " + 2*evensum[j]/N );
+//        }
+//        System.out.println(firstGram + incr*N);
     }
 
     private void testE12(double zero, double t0) throws IOException, FileNotFoundException {
