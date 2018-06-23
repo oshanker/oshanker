@@ -156,7 +156,7 @@ public class GSeriesTest {
 //        for (int i = 0; i < gramE12.length; i++) {
 //            testE12(gramE12[i][1], gramE12[i][0]);
 //        }
-        testE12(gramE12[20][1], gramE12[20][0]);
+        testE12(gramE12[21][1], gramE12[21][0]);
 
 	}
 
@@ -165,7 +165,7 @@ public class GSeriesTest {
 //        for (int i = 0; i < gramE12.length; i++) {
 //            testE12(gramE12[i][1], gramE12[i][0]);
 //        }
-        int sampleIndex = 20;
+        int sampleIndex = 21;
         testReadE12(sampleIndex );
 
     }
@@ -193,32 +193,30 @@ public class GSeriesTest {
         }
         GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
         in.close();
-        double zero = gramE12[sampleIndex][1];
-        double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9, false);
-        double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
-        System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
-        assertTrue(Math.abs(zeta) < 0.000001);
-        double firstGram = Gram.gram(offset, t0 ) + incr/4;
+        double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
+       int k = oddsum.length;
+        double[] zeta = new double[2*k];
+        double firstGram = Gram.gram(offset, t0 );
         int N = R-2*initialPadding;
-        double sum = 0, oddsum = 0, evensum = 0;
         
         for (int i = 0; i < N; i++) {
             double gram = firstGram + incr*i;
-            gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( gram, 4, initialPadding, 1.6E-9, false);
-            zeta = gAtBeta.riemannZeta(gFromBLFI, gram);
-            if(Double.isNaN(zeta)){
-                System.out.println("Nan " + gram + ", " +  Arrays.toString(gFromBLFI));
-                break;
-            }
-            sum += zeta;
-            if(i%2==0){
-                oddsum += zeta;
-            } else {
-                evensum += zeta;
+            for (int j = 0; j < k; j++) {
+                double t = gram + j*incr/k;
+                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( t , 4, initialPadding, 1.6E-9, false);
+                if(i%2==0){
+                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    oddsum[j] += zeta[j];
+                } else {
+                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    evensum[j] += zeta[k+j];
+                }
             }
         }
-        System.out.println("mean " + sum/N + " odd mean " + 2*oddsum/N 
-                + " even mean " + 2*evensum/N );
+        for (int j = 0; j < k; j++) {
+        System.out.println("mean for " + j + "*pi/4: odd mean " + 2*oddsum[j]/N 
+                + " even mean " + 2*evensum[j]/N );
+        }
         System.out.println(firstGram + incr*N);
     }
 
