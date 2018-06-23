@@ -160,23 +160,23 @@ public class GSeriesTest {
 	/**
 	 * Test method for {@link math.GSeries#gSeries(double)}.
 	 */
-	@Test @Ignore
+	@Test  @Ignore
 	public void test1E12() throws Exception{
-//        for (int i = 0; i < gramE12.length; i++) {
-//            testE12(gramE12[i][1], gramE12[i][0]);
-//        }
-        testE12(gramE12[20][1], gramE12[20][0]);
+        for (int i = 0; i < gramE12.length; i++) {
+            testE12(gramE12[i][1], gramE12[i][0]);
+        }
+//        testE12(gramE12[22][1], gramE12[22][0]);
 
 	}
 
-    @Test 
+    @Test
     public void testRead1E12() throws Exception{
         File file = new File("out/gzetaE12/gzeta.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         PrintWriter out = new PrintWriter(file);
-        for (int i = 20; i < 22; i++) {
+        for (int i = 20; i < 23; i++) {
             testReadE12(i, out );
         }
 //        int sampleIndex = 21;
@@ -190,7 +190,7 @@ public class GSeriesTest {
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         int k0 = 1, k1=398942;
-        File file = new File("out/gSeriesE12/" + Integer.toString(index) +".dat");
+        File file = new File("data/gSeriesE12/" + Integer.toString(index) +".dat");
         InputStream is = new FileInputStream(file);
         // create buffered input stream.
         BufferedInputStream bis = new BufferedInputStream(is);
