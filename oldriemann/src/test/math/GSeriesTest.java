@@ -171,7 +171,7 @@ public class GSeriesTest {
 
     @Test
     public void testRead1E12() throws Exception{
-        File file = new File("out/gzetaE12/gzeta.csv");
+        File file = new File("out/gzetaE12/gzeta6.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -208,11 +208,10 @@ public class GSeriesTest {
         }
         GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
         in.close();
-        double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
+        double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
         int k = oddsum.length;
         double[] zeta = new double[2*k];
         double firstGram = Gram.gram(offset, t0 + 0.001 );
-        System.out.println("****** " + Gram.gramIndex(offset, t0));
         long gramIndex = Gram.gramIndex(offset, firstGram);
         System.out.println("****** " + gramIndex);
         int N = R-2*initialPadding;
@@ -239,8 +238,10 @@ public class GSeriesTest {
             }
         }
         for (int j = 0; j < k; j++) {
-            System.out.println("mean for " + j + "*pi/4: odd mean " + 2*oddsum[j]/N 
+            System.out.println("mean for " + j + "*pi/6: odd mean " + 2*oddsum[j]/N 
                     + " even mean " + 2*evensum[j]/N );
+            assertEquals(-2.00*Math.cos(j*Math.PI/k), 2*oddsum[j]/N, 0.05);
+            assertEquals(2.00*Math.cos(j*Math.PI/k), 2*evensum[j]/N, 0.05);
         }
         assertEquals(-2.00, 2*oddsum[0]/N, 0.05);
         assertEquals(2.00, 2*evensum[0]/N, 0.05);
