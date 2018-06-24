@@ -40,7 +40,10 @@
 \thispagestyle{fancy}
 
 \begin{abstract}
-In this work 
+Symmetry properties  of the Riemann Zeta Function are important, because the celebrated Riemann Hypothesis has so far
+resisted all attempts at a proof or disproof. Symmetry properties can provide guidelines to attacking the problem. The symmetry
+properties are also interesting in themselves. In this work we study new conjectured symmetry properties for the distribution
+of zeta function values on the critical axis.
 \end{abstract}
 
 \symbolfootnote[0]{
@@ -53,10 +56,19 @@ In this work
 
 
 \section{Introduction}
-The The paper is organized as follows.
+In this work we discuss the symmetry properties of the distribution of Riemann zeta values on the critical axis. 
+Understanding such symmetry properties is important, because the celebrated Riemann Hypothesis has so far
+resisted all attempts at a proof or disproof. The study of the symmetry properties  will give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
+The new results are stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym}, after we set up the
+required notation. These results are a generalization of the results in Ref.~\cite{Shanker 2018}. 
+
+The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
-Riemann Zeta Function. 
-\section{\label{sec2}The Notation for the Riemann zeta function }
+Riemann Zeta Function and presents the conjectured symmetry relations. 
+Section~\ref{sec3} provides evidence for the symmetry relations.
+Section~\ref{conclusions} presents the conclusions.
+
+\section{\label{sec2}Notation for the Riemann zeta function and the symmetry properties}
 
 In this section we  establish the required notation for the 
 Riemann Zeta Function. We follow closely the treatment in Ref.~\cite{Shanker 2018}.
@@ -81,7 +93,7 @@ The $\gamma$s are ordered in increasing order, with
 \end{equation}
 Then $\gamma_j \, = \, - \gamma_{-j}$ for $j = 1, 2, \ldots,$ 
 and    $\gamma_1$, $\gamma_2$, $\ldots$  are roughly
-$14.1347$, $21.0220$, $\ldots$.
+$14.1347$, $21.0220$, $\ldots$. The line $1/2 + it$ is called the critical axis.
 
 Asymptotically, the mean number of 
 zeros for the Riemann zeta function with height less than $t$ (the smoothed Riemann zeta staircase, denoted by 
@@ -145,7 +157,7 @@ The notation $\ln (t)$ stands for the natural logarithm of $t$.  We define $p_{\
 \end{equation}
 is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of phi points in the sample space. 
 \end{defn}
-In Ref.~\cite{Shanker 2018}  we defined
+In Ref.~\cite{Shanker 2018}  we defined $p_{odd}(y)$ as
 \begin{defn}\label{podd}
 \begin{equation}
 \int\limits_{a}^{b} p_{odd}(y)dy
@@ -157,12 +169,12 @@ $p_{even}(y)$ was defined analogously. In terms of Definition~\ref{pphi} we have
 The probability densities $p_{odd}(y)$,  $p_{\phi}(y)$ and $p_{even}(y)$ depend on the sample space (i.e., on the height $t$ and on the size of the sample space). In practice the densities are not sensitive to the choice of the sample space as long as the height $t$ is large enough and the length of the interval from which the sample is collected is large enough (but not too large on log scale).
 
 Ref.~\cite{Shanker 2018} conjectured that $p_{odd}(y) = p_{even}(-y)$. We generalize the conjecture as stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} below.
-The mean value $\langle Z(t_{\phi})\rangle$ is given by
+Our first new conjecture is that the mean value $\langle Z(t_{\phi})\rangle$ is given by
 \begin{equation}
 \langle Z(t_{\phi})\rangle = 2\cos (\phi).
 \label{eq:mean}
 \end{equation}
-Equation \ref{eq:mean} was explicitly called out for Gram points in Ref.~\cite{Titchmarsh 1986}. Empirically, we find that $p_{\phi}(y)$ satisfies the conditions
+Equation \ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1986}. The proof of Ref.~\cite{Titchmarsh 1986} can be extended to cover Equation \ref{eq:mean}. Our other two conjectures are that $p_{\phi}(y)$ satisfies the conditions
 \begin{equation}
 p_{\phi}(y) = p_{\phi+\pi}(-y),
 \label{eq:antisym}
@@ -173,7 +185,6 @@ p_{\phi}(y) = p_{2\pi-\phi}(y).
 \label{eq:sym}
 \end{equation}
 The empirical evidence for these generalizations is given in the next section.
-
 
 \begin{figure*}
 \centering
@@ -191,10 +202,24 @@ The empirical evidence for these generalizations is given in the next section.
 \label{3pi2}
 \end{figure*}
 
+\section{\label{sec3}Evidence for the symmetry relations}
+
+For the empirical validation of Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} we have to evaluate $Z(t)$ at several points on the critical axis. We chose our sample space to
+be $10^6$ Gram intervals starting at $t=10^{12} + 243.777560$ (which is a Gram point with Gram index $3945951431271$). We chose this sample space because  Ref~\cite{hiary 2010} has evaluated all the zeros in this range. We used the evaluated zeros to check the accuracy of our zeta function calculations.
 
 
-\section{\label{sec7}Symmetry relations}
-
+Hardy's function $Z(t)$  is evaluated using the Riemann$-$Siegel series
+\begin{equation}
+Z(t) = 2\sum^{m}_{n=1}\frac{\cos(\theta(t) - t \ln (n))}{\sqrt{n}} + R(t), 
+\label{eq:RS}
+\end{equation}
+where $m$ is the integer part of $\sqrt{t/(2\pi)}$. $R(t)$ is a small remainder
+term which can be evaluated to the desired level of accuracy. We used the techniques in Refs.~\cite{Odlyzko 1992,hiary,gourdon} 
+to efficiently evaluate the zeta function at large $t$. The most important 
+source for loss of accuracy at large heights is the cancellation between
+large numbers that occur in the arguments of the $\cos$ terms in Eq.~(\ref{eq:RS}). We 
+use a high precision module to evaluate the arguments. The rest of the calculation
+is done using regular double precision accuracy. 
 
 \begin{table}
 \centering \(\begin{array}{ccccccc}
@@ -215,7 +240,6 @@ The empirical evidence for these generalizations is given in the next section.
 \caption{Quantiles and mean for  $Z(t)$ at Gram points of different types.} 
 \label{tab:quantiles}
 \end{table}
-
 
 \begin{table}
 \centering \(\begin{array}{ccccccc}
@@ -241,10 +265,21 @@ The empirical evidence for these generalizations is given in the next section.
 \label{tab:quantiles6}
 \end{table}
 
+\begin{figure*}
+\includegraphics[width=0.8\textwidth]{qqplot.jpg}
+\caption[]{ 
+ QQ plot of zeta values at $\phi = 3\pi/2$.
+  }
+\vspace{1mm}
+\label{qqplot}
+\end{figure*}
+
 Table~\ref{tab:quantiles} shows the quantiles and mean for  $Z(t)$ a.  Table~\ref{tab:quantiles6} shows the quantiles and mean for  $Z(t)$ a. The statistics are from $1$ million Gram intervals at $t=10^{12}$. Fig.~\ref{pi2} Fig.~\ref{3pi2}
+
 \section{\label{conclusions}Conclusions}
 
 In this work 
+
 \begin{thebibliography} {}
 
 \bibitem{Shanker 2018} O. Shanker, 
@@ -268,6 +303,24 @@ Academic Press,  (1974)
 \bibitem{Gram 1903} J. P. Gram, 
 ``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
 {\it Acta Math.} {\bf27}(1903), 289-304
+
+\bibitem{hiary 2010} G. A. Hiary,
+``An amortized-complexity method to compute the Riemann zeta function", 
+{\it Mathematics of Computation} {\bf80}(2011), 1785-1796
+
+\bibitem{Odlyzko 1992}  A. Odlyzko,
+``The $10^{20}$-th Zero of the Riemann Zeta
+Function and 175 Million of its Neighbors", report,
+\url{http://www.dtc.umn.edu/~odlyzko/unpublished/zeta.10to20.1992.pdf}, (1992)
+
+\bibitem{hiary} G. A. Hiary,
+``Fast methods to compute the Riemann zeta function",
+{\it Annals of Mathematics} {\bf63}(1987), 891-946
+
+\bibitem{gourdon} Xavier Gourdon,
+``The $10^{13}$ first zeros of the Riemann Zeta function,
+and zeros computation at very large height", report,
+\url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
 
 
 \end{thebibliography} 
