@@ -169,6 +169,46 @@ public class GSeriesTest {
 
 	}
 
+    @Test @Ignore 
+    public void testReadX() throws Exception{
+        File file = new File("out/6.txt");
+        BufferedReader zeroIn = new BufferedReader(new FileReader(file));
+        int k = 12;
+        double[][] vals = new double[k][6];
+        for (int i = 0; i < k; i++) {
+            String in = zeroIn.readLine();
+            in = in.replace("\\", "");
+            String[] line = in.split("&");
+            for (int j = 0; j < vals[i].length; j++) {
+                vals[i][j]= Double.parseDouble(line[j+1].trim());
+            }
+        }
+        //anti
+        for (int i = 0; i < k/2; i++) {
+            for (int j = 0; j < vals[i].length; j++) {
+               double diff = -100;
+               if(j == 2 || j ==3){
+                   diff = vals[i][j] + vals[i+k/2][j];
+               } else {
+                   diff = vals[i][j] + vals[i+k/2][6-1-j];
+               }
+                System.out.print(nf.format(diff) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("symmetry");
+        //symm
+        for (int i = 1; i < k/2; i++) {
+            for (int j = 0; j < vals[i].length; j++) {
+                double diff = -100;
+                diff = vals[i][j] - vals[k-i][j];
+                System.out.print(nf.format(diff) + " ");
+            }
+            System.out.println();
+        }
+        zeroIn.close();
+    }
+    
     @Test
     public void testRead1E12() throws Exception{
         File file = new File("out/gzetaE12/gzeta6.csv");
