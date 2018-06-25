@@ -59,8 +59,8 @@ of zeta function values on the critical axis.
 In this work we discuss the symmetry properties of the distribution of Riemann zeta values on the critical axis. 
 Understanding such symmetry properties is important, because the celebrated Riemann Hypothesis has so far
 resisted all attempts at a proof or disproof. The study of the symmetry properties  will give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
-The new results are stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym}, after we set up the
-required notation. These results are a generalization of the results in Ref.~\cite{Shanker 2018}. 
+The new results are stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} (Section~\ref{conjectures}), after we set up the
+required notation (see Section~\ref{sec2}). These results are a generalization of the result in Ref.~\cite{Shanker 2018} for the anti-symmetry of the distribution of $Z(t)$ at even and odd Gram points. 
 
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
@@ -145,7 +145,7 @@ the critical axis, as defined below. In analogy with Gram points, we can associa
 For $t \ge 7$, $t$ is said to be a phi point if
 $\theta (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
 \end{defn}
-We will study the distribution of $Z(t)$ values at a given value of $\phi$, and investigate symmetry and anti-symmetry relations for the 
+An odd Gram point has $\phi=\pi$ and an even Gram point has $\phi = 0$. We will study the distribution of $Z(t)$ values at a given value of $\phi$, and investigate symmetry and anti-symmetry relations for the 
 distributions at different values of $\phi$. Formally, our sample space is defined by
 \begin{defn}\label{samplespace}The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that we can consider {$\ln (t)$} to be essentially constant over the interval. 
 \end{defn}
@@ -168,45 +168,32 @@ is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a l
 $p_{even}(y)$ was defined analogously. In terms of Definition~\ref{pphi} we have $p_{odd}(y) = p_{\pi}(y)$ and $p_{even}(y) = p_{0}(y)$.
 The probability densities $p_{odd}(y)$,  $p_{\phi}(y)$ and $p_{even}(y)$ depend on the sample space (i.e., on the height $t$ and on the size of the sample space). In practice the densities are not sensitive to the choice of the sample space as long as the height $t$ is large enough and the length of the interval from which the sample is collected is large enough (but not too large on log scale).
 
+\subsection{\label{conjectures}Conjectures}
+
 Ref.~\cite{Shanker 2018} conjectured that $p_{odd}(y) = p_{even}(-y)$. We generalize the conjecture as stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} below.
 Our first new conjecture is that the mean value $\langle Z(t_{\phi})\rangle$ is given by
 \begin{equation}
 \langle Z(t_{\phi})\rangle = 2\cos (\phi).
 \label{eq:mean}
 \end{equation}
-Equation \ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1986}. The proof of Ref.~\cite{Titchmarsh 1986} can be extended to cover Equation \ref{eq:mean}. Our other two conjectures are that $p_{\phi}(y)$ satisfies the conditions
+Equation \ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1986}. The proof of Ref.~\cite{Titchmarsh 1986} can be extended to cover Equation \ref{eq:mean}. Our other two conjectures are that $p_{\phi}(y)$ satisfies the anti-symmetry condition
 \begin{equation}
 p_{\phi}(y) = p_{\phi+\pi}(-y),
 \label{eq:antisym}
 \end{equation}
-and
+and the symmetry condition
 \begin{equation}
 p_{\phi}(y) = p_{2\pi-\phi}(y).
 \label{eq:sym}
 \end{equation}
 The empirical evidence for these generalizations is given in the next section.
 
-\begin{figure*}
-\centering
-\includegraphics[width=0.8\textwidth]{pi2plot.pdf}
-\caption[]{ 
- Distribution of zeta values at $\phi = \pi/2$.
-  }
-\vspace{1mm}
-\label{pi2}
-\includegraphics[width=0.8\textwidth]{3pi2plot.pdf}
-\caption[]{ 
- Distribution of zeta values at $\phi = 3\pi/2$.
-  }
-\vspace{1mm}
-\label{3pi2}
-\end{figure*}
-
 \section{\label{sec3}Evidence for the symmetry relations}
 
-For the empirical validation of Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} we have to evaluate $Z(t)$ at several points on the critical axis. We chose our sample space to
-be $10^6$ Gram intervals starting at $t=10^{12} + 243.777560$ (which is a Gram point with Gram index $3945951431271$). We chose this sample space because  Ref~\cite{hiary 2010} has evaluated all the zeros in this range. We used the evaluated zeros to check the accuracy of our zeta function calculations.
+For the empirical validation of the mean value condition  Equation \ref{eq:mean}, the anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym} we have to evaluate $Z(t)$ at several points on the critical axis. We chose our sample space to
+be $10^6$ Gram intervals starting at $t=10^{12} + 243.777560$ (which is a Gram point with Gram index $3945951431271$). We chose this sample space because  Ref~\cite{hiary 2010} has evaluated all the zeros in this range. We used the  zeros from Ref~\cite{hiary 2010} to check the accuracy of our zeta function calculations. Our evaluations of $Z(t)$ are accurate to better than $10^{-6}$.
 
+\subsection{\label{numerics}Numerical evaluation}
 
 Hardy's function $Z(t)$  is evaluated using the Riemann$-$Siegel series
 \begin{equation}
@@ -228,16 +215,16 @@ is done using regular double precision accuracy.
  &              & Quantile   &            &              & Quantile.    &   \\
 \hline
 0 &-69 &0.1134 &0.8517 &2.0001 &2.5403 &165  \\
-1 &-97 &-0.1352 &0.5916 &1.4143 &2.1226 &159 \\
-2 &-121 &-1.082 &0.0017 &0.0001 &1.089 &137 \\
-3 &-148 &-2.1121 &-0.5852 &-1.4141 &0.1364 &103 \\
-4 &-161 &-2.5277 &-0.8467 &-1.9999 &-0.1122 &69 \\
-5 &-153 &-2.1045 &-0.5891 &-1.4141 &0.1365 &105 \\
-6 &-129 &-1.083 &-0.001 &0.0001 &1.084 &138 \\
-7 &-93 &-0.1336 &0.5883 &1.4143 &2.1077 &160 \\
+\pi/4 &-97 &-0.1352 &0.5916 &1.4143 &2.1226 &159 \\
+\pi/2 &-121 &-1.082 &0.0017 &0.0001 &1.089 &137 \\
+3\pi/4&-148 &-2.1121 &-0.5852 &-1.4141 &0.1364 &103 \\
+\pi &-161 &-2.5277 &-0.8467 &-1.9999 &-0.1122 &69 \\
+5\pi/4 &-153 &-2.1045 &-0.5891 &-1.4141 &0.1365 &105 \\
+3\pi/2 &-129 &-1.083 &-0.001 &0.0001 &1.084 &138 \\
+7\pi/4 &-93 &-0.1336 &0.5883 &1.4143 &2.1077 &160 \\
 \hline
 \end{array}\)
-\caption{Quantiles and mean for  $Z(t)$ at Gram points of different types.} 
+\caption{Quantiles and mean for  $Z(t)$ when $\phi$ values are multiples of $\pi/4$.} 
 \label{tab:quantiles}
 \end{table}
 
@@ -248,37 +235,61 @@ is done using regular double precision accuracy.
   &              & Quantile   &            &              & Quantile.    &   \\
 \hline
 0 & -69 & 0.1134 & 0.8517 & 2.0001 & 2.5403 & 165 \\
-1 & -88 & 0.0167 & 0.7318 & 1.7321 & 2.3515 & 162\\
-2 & -105 & -0.3877 & 0.4108 & 1.0001 & 1.8151 & 154\\
-3 & -121 & -1.082 & 0.0017 & 0.0001 & 1.0888 & 137\\
-4 & -140 & -1.81 & -0.4053 & -0.9999 & 0.3904 & 115 \\
-5 & -155 & -2.338 & -0.7258 & -1.732 & -0.0160 & 91\\
-6 & -161 & -2.5277 & -0.8467 & -1.9999 & -0.1122 & 69\\
-7 & -158 & -2.334 & -0.7294 & -1.732 & -0.0161 & 93\\
-8 & -147 & -1.8034 & -0.4097 & -0.9999 & 0.388 & 117\\
-9 & -129 & -1.083 & -0.001 & 0.0001 & 1.0842 & 138\\
-10 & -105 & -0.3855 & 0.4086 & 1.0001 & 1.8103 & 154\\
-11 & -80 & 0.0184 & 0.7317 & 1.7322 & 2.3393 & 164 \\
+\pi/6 & -88 & 0.0167 & 0.7318 & 1.7321 & 2.3515 & 162\\
+\pi/3 & -105 & -0.3877 & 0.4108 & 1.0001 & 1.8151 & 154\\
+\pi/2 & -121 & -1.082 & 0.0017 & 0.0001 & 1.0888 & 137\\
+2\pi/3 & -140 & -1.81 & -0.4053 & -0.9999 & 0.3904 & 115 \\
+5\pi/6 & -155 & -2.338 & -0.7258 & -1.732 & -0.0160 & 91\\
+\pi & -161 & -2.5277 & -0.8467 & -1.9999 & -0.1122 & 69\\
+7\pi/6 & -158 & -2.334 & -0.7294 & -1.732 & -0.0161 & 93\\
+4\pi/3 & -147 & -1.8034 & -0.4097 & -0.9999 & 0.388 & 117\\
+3\pi/2 & -129 & -1.083 & -0.001 & 0.0001 & 1.0842 & 138\\
+5\pi/3 & -105 & -0.3855 & 0.4086 & 1.0001 & 1.8103 & 154\\
+11\pi/6 & -80 & 0.0184 & 0.7317 & 1.7322 & 2.3393 & 164 \\
 \hline
 \end{array}\)
-\caption{Quantiles and mean for  $Z(t)$ at Gram points of different types.}
+\caption{Quantiles and mean for  $Z(t)$ when $\phi$ values are multiples of $\pi/6$.}
 \label{tab:quantiles6}
 \end{table}
 
+\subsection{\label{quantiles}Quantiles}
+Table~\ref{tab:quantiles} shows the quantiles and mean for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  The column showing the mean of the distribution clearly validates the mean value condition Equation~\ref{eq:mean}. The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 of the table have anti-symmetric distribution parameters (row 2 has $\phi=\pi/4$ while row 6 has $\phi=5\pi/4$). The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table have the same distribution parameters (row 2 has $\phi=\pi/4$ while row 8 has $\phi=7\pi/4$). The equation also states that rows 4 and 6 of the table have the same distribution parameters (row 4 has $\phi=3\pi/4$ while row 6 has $\phi=5\pi/4$). Repeated application of Equation~\ref{eq:antisym} and Equation~\ref{eq:sym} gives us the relation between the distributions at $\phi$,  $\pi-\phi$,  $\pi+\phi$ and  $2\pi-\phi$. Table~\ref{tab:quantiles6} shows the quantiles and mean for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$. These values also bear out the validity of Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym}. A mnemonic for remembering the relations is that the distributions are symmetric for reflections around Gram points ($\phi=0$ and $\phi=\pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi=\pi/2$ and $\phi=3\pi/2$).
+
 \begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{pi2plot.pdf}
+\caption[]{ 
+ Distribution of zeta values at $\phi = \pi/2$.
+  }
+\vspace{1mm}
+\label{pi2}
+\includegraphics[width=0.8\textwidth]{3pi2plot.pdf}
+\caption[]{ 
+ Distribution of zeta values at $\phi = 3\pi/2$.
+  }
+\vspace{1mm}
+\label{3pi2}
+\end{figure*}
+
+\begin{figure}
 \includegraphics[width=0.8\textwidth]{qqplot.jpg}
 \caption[]{ 
  QQ plot of zeta values at $\phi = 3\pi/2$.
   }
 \vspace{1mm}
 \label{qqplot}
-\end{figure*}
+\end{figure}
 
-Table~\ref{tab:quantiles} shows the quantiles and mean for  $Z(t)$ a.  Table~\ref{tab:quantiles6} shows the quantiles and mean for  $Z(t)$ a. The statistics are from $1$ million Gram intervals at $t=10^{12}$. Fig.~\ref{pi2} Fig.~\ref{3pi2}
+\subsection{\label{histograms}Histograms}
+Ref.~\cite{Shanker 2018}  presented figures for the histograms at even and odd Gram points, which are the histograms for $\phi=0$ and $\phi=\pi$ respectively. Fig.~\ref{pi2} shows 
+the histogram for $\phi = \pi/2$. Our conjectures predict that the histogram has the same distribution as the distribution for $\phi = 3\pi/2$. Further, the conjectures predict that for this $\phi$ the distribution will be symmetric (this is required if both  Equations  \ref{eq:antisym} and \ref{eq:sym} are to be satisfied). Fig.~\ref{3pi2} shows 
+the histogram for $\phi = 3\pi/2$. The predictions are validated. While  the histograms are symmetric, the distribution is not normal. This can be seen from the QQ plot, which is exhibited in Fig.~\ref{qqplot} for $\phi = 3\pi/2$. The plot shows that the distribution has a fatter tail than would be expected for a normal distribution.
 
 \section{\label{conclusions}Conclusions}
 
-In this work 
+In this work we defined phi points on the critical axis, in analogy with Gram points. We used this definition to extend the results of Ref.~\cite{Shanker 2018}.  Conjecture 1 of that reference stated an anti-symmetry property of the distribution of $Z$ values at even and odd Gram points. In this work we formulated three new symmetry related conjectures. The conjectures are the mean value condition  Equation \ref{eq:mean}, the anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym}. These conjectures are a generalization of Conjecture 1 in 
+Ref.~\cite{Shanker 2018} to phi points. Theoretical study of the relations presented here needs to be done.
+
 
 \begin{thebibliography} {}
 
