@@ -217,6 +217,7 @@ public class GSeriesTest {
         }
         PrintWriter out = new PrintWriter(file);
         for (int i = 0; i < gramE12.length; i++) {
+//        for (int i = 20; i < 21; i++) {
             testReadE12(i, out );
         }
 //        int sampleIndex = 21;
@@ -240,24 +241,31 @@ public class GSeriesTest {
         final int initialPadding = 40;
         int R = 30000+2*initialPadding;
         double begin = in.readDouble();
-        double incr = in.readDouble();
+        double gincr = in.readDouble();
         double[][] gBeta = new double[R][2];
         for (int i = 0; i < gBeta.length; i++) {
             gBeta[i][0] = in.readDouble();
             gBeta[i][1] = in.readDouble();
         }
-        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
+        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  gincr, gBeta);
         in.close();
         double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
         int k = oddsum.length;
         double[] zeta = new double[2*k];
         double firstGram = Gram.gram(offset, t0 + 0.001 );
+        int N = 30000;
         long gramIndex = Gram.gramIndex(offset, firstGram);
+        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*gincr/6), Gram.mc);
+        double incr = Gram.gramInterval(tvalsi);
         System.out.println("****** " + gramIndex);
-        int N = R-2*initialPadding;
         
+        double gram = firstGram-incr;
         for (int i = 0; i < N; i++) {
-            double gram = firstGram + incr*i;
+            if(i>0 && i*3%N == 0){
+                tvalsi = tvalsi.add(BigDecimal.valueOf(N*gincr/3), Gram.mc);
+                incr = Gram.gramInterval(tvalsi);
+            }
+            gram += incr;
             for (int j = 0; j < k; j++) {
                 double t = gram + j*incr/k;
                 double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( t , 4, initialPadding, 1.6E-9, false);
