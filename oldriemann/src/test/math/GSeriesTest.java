@@ -138,7 +138,6 @@ public class GSeriesTest {
 	
     @Test @Ignore
     public void testX() throws Exception{
-        int k0 = 1, k1=398942;
         int R = 30040;
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin = Gram.gram(offset, 243.77756012466054 );
@@ -162,11 +161,9 @@ public class GSeriesTest {
 	 */
 	@Test  @Ignore 
 	public void test1E12() throws Exception{
-        for (int i = 20; i < 23; i++) {
+        for (int i = 0; i < gramE12.length; i++) {
             testE12(gramE12[i][1], gramE12[i][0]);
         }
-//        testE12(gramE12[22][1], gramE12[22][0]);
-
 	}
 
     @Test @Ignore 
@@ -209,7 +206,7 @@ public class GSeriesTest {
         zeroIn.close();
     }
     
-    @Test
+    @Test @Ignore
     public void testRead1E12() throws Exception{
         File file = new File("out/gzetaE12/gzeta6.csv");
         if (!file.getParentFile().exists()) {
@@ -217,58 +214,63 @@ public class GSeriesTest {
         }
         PrintWriter out = new PrintWriter(file);
         for (int i = 0; i < gramE12.length; i++) {
-//        for (int i = 20; i < 21; i++) {
             testReadE12(i, out );
         }
-//        int sampleIndex = 21;
-//        testReadE12(sampleIndex );
         out.close();
-
+    }
+    
+    @Test 
+    public void testCorrelationE12() throws Exception{
+        nf.setMinimumFractionDigits(3);
+        nf.setMaximumFractionDigits(3);
+        nf.setGroupingUsed(false);
+        File file = new File("out/gzetaCorrelation/gzeta4.csv");
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        //PrintWriter out = new PrintWriter(file);
+        PrintWriter out = new PrintWriter(System.out);
+        final int k = 4;
+        final double[][] prod = new double[2*k][2*k];
+        for (int i = 0; i < gramE12.length; i++) {
+            testCorrelationE12(i, out, prod );
+        }
+        for (int i = 0; i < 2*k; i++) {
+            for (int j = 0; j < 2*k; j++) {
+                if(j>0){out.print(", ");}
+                    out.print(nf.format(prod[i][j]/(gramE12.length*30000)));
+            }
+            out.println();
+        }
+        out.close();
     }
 
     private void testReadE12(int sampleIndex, PrintWriter out) throws Exception{
         double t0 = gramE12[sampleIndex][0];
-        int index = (int) Math.floor(t0);
-        BigDecimal offset = BigDecimal.valueOf(1.0E12);
-        int k0 = 1, k1=398942;
-        File file = new File("data/gSeriesE12/" + Integer.toString(index) +".dat");
-        InputStream is = new FileInputStream(file);
-        // create buffered input stream.
-        BufferedInputStream bis = new BufferedInputStream(is);
-
-        // create data input stream to read data in form of primitives.
-        DataInputStream in = new DataInputStream(bis);
-        final int initialPadding = 40;
-        int R = 30000+2*initialPadding;
-        double begin = in.readDouble();
-        double gincr = in.readDouble();
-        double[][] gBeta = new double[R][2];
-        for (int i = 0; i < gBeta.length; i++) {
-            gBeta[i][0] = in.readDouble();
-            gBeta[i][1] = in.readDouble();
-        }
-        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  gincr, gBeta);
-        in.close();
+        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        GSeries gAtBeta = getGSeries(t0, offset);
         double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
         int k = oddsum.length;
-        double[] zeta = new double[2*k];
-        double firstGram = Gram.gram(offset, t0 + 0.001 );
-        int N = 30000;
+        final double[] zeta = new double[2*k];
+        final double firstGram = Gram.gram(offset, t0 + 0.001 );
+        final int N = 30000;
         long gramIndex = Gram.gramIndex(offset, firstGram);
-        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*gincr/6), Gram.mc);
-        double incr = Gram.gramInterval(tvalsi);
-        System.out.println("****** " + gramIndex);
+        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+firstGram)/(2*Math.PI)));
+        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*incr/6), Gram.mc);
+        incr = Gram.gramInterval(tvalsi);
+        System.out.println("****** " + (gramIndex-3945951431271L));
         
         double gram = firstGram-incr;
         for (int i = 0; i < N; i++) {
             if(i>0 && i*3%N == 0){
-                tvalsi = tvalsi.add(BigDecimal.valueOf(N*gincr/3), Gram.mc);
+                tvalsi = tvalsi.add(BigDecimal.valueOf(N*incr/3), Gram.mc);
                 incr = Gram.gramInterval(tvalsi);
             }
             gram += incr;
             for (int j = 0; j < k; j++) {
                 double t = gram + j*incr/k;
-                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( t , 4, initialPadding, 1.6E-9, false);
+                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
+                        t, 4, 40, 1.6E-9, false);
                 if(i%2==0){
                     zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     oddsum[j] += zeta[k+j];
@@ -286,15 +288,34 @@ public class GSeriesTest {
             }
         }
         for (int j = 0; j < k; j++) {
-            System.out.println("mean for " + j + "*pi/6: odd mean " + 2*oddsum[j]/N 
-                    + " even mean " + 2*evensum[j]/N );
             assertEquals(-2.00*Math.cos(j*Math.PI/k), 2*oddsum[j]/N, 0.05);
             assertEquals(2.00*Math.cos(j*Math.PI/k), 2*evensum[j]/N, 0.05);
         }
-        assertEquals(-2.00, 2*oddsum[0]/N, 0.05);
-        assertEquals(2.00, 2*evensum[0]/N, 0.05);
         assertEquals(0, (gramIndex-3945951431271L)%N);
         System.out.println(firstGram + incr*N);
+    }
+
+    private GSeries getGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
+        final int k0 = 1, k1=398942;
+        final int index = (int) Math.floor(t0);
+        File file = new File("data/gSeriesE12/" + Integer.toString(index) +".dat");
+        InputStream is = new FileInputStream(file);
+        // create buffered input stream.
+        BufferedInputStream bis = new BufferedInputStream(is);
+        // create data input stream to read data in form of primitives.
+        DataInputStream in = new DataInputStream(bis);
+        final int initialPadding = 40;
+        int R = 30000+2*initialPadding;
+        double begin = in.readDouble();
+        double gincr = in.readDouble();
+        double[][] gBeta = new double[R][2];
+        for (int i = 0; i < gBeta.length; i++) {
+            gBeta[i][0] = in.readDouble();
+            gBeta[i][1] = in.readDouble();
+        }
+        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  gincr, gBeta);
+        in.close();
+        return gAtBeta;
     }
 
     private void testE12(double zero, double t0) throws IOException, FileNotFoundException {
@@ -344,6 +365,54 @@ public class GSeriesTest {
 		assertTrue(Math.abs(zeta) < 0.000001);
     }
 
+    private void testCorrelationE12(int sampleIndex, PrintWriter out, double[][] prod) throws Exception{
+        double t0 = gramE12[sampleIndex][0];
+        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        GSeries gAtBeta = getGSeries(t0, offset);
+        double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
+        int k = oddsum.length;
+        final double[] zeta = new double[2*k];
+        final double firstGram = Gram.gram(offset, t0 + 0.001 );
+        final int N = 30000;
+        long gramIndex = Gram.gramIndex(offset, firstGram);
+        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+firstGram)/(2*Math.PI)));
+        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*incr/6), Gram.mc);
+        incr = Gram.gramInterval(tvalsi);
+        System.out.println("****** " + (gramIndex-3945951431271L));
+        
+        double gram = firstGram-incr;
+        for (int i = 0; i < N; i++) {
+            if(i>0 && i*3%N == 0){
+                tvalsi = tvalsi.add(BigDecimal.valueOf(N*incr/3), Gram.mc);
+                incr = Gram.gramInterval(tvalsi);
+            }
+            gram += incr;
+            for (int j = 0; j < k; j++) {
+                double t = gram + j*incr/k;
+                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
+                        t, 4, 40, 1.6E-9, false);
+                if(i%2==0){
+                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    oddsum[j] += zeta[k+j];
+                } else {
+                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    evensum[j] += zeta[j];
+                }
+            }
+            if(i%2==1){
+                for (int i1 = 0; i1 < 2*k; i1++) {
+                    for (int j = 0; j < 2*k; j++) {
+                        prod[i1][j] += zeta[i1]*zeta[j];
+                    }
+                }
+            }
+        }
+        for (int j = 0; j < k; j++) {
+            assertEquals(-2.00*Math.cos(j*Math.PI/k), 2*oddsum[j]/N, 0.05);
+            assertEquals(2.00*Math.cos(j*Math.PI/k), 2*evensum[j]/N, 0.05);
+        }
+        assertEquals(0, (gramIndex-3945951431271L)%N);
+    }
 
 	/**
 	 * Compare zeta from F-series with zeta from Riemann evaluation.
