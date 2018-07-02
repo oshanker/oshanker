@@ -224,13 +224,13 @@ public class GSeriesTest {
         nf.setMinimumFractionDigits(3);
         nf.setMaximumFractionDigits(3);
         nf.setGroupingUsed(false);
-        File file = new File("out/gzetaCorrelation/gzeta4.csv");
+        File file = new File("out/gzetaCorrelation/gzeta8.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        //PrintWriter out = new PrintWriter(file);
-        PrintWriter out = new PrintWriter(System.out);
-        final int k = 4;
+        PrintWriter out = new PrintWriter(file);
+        //PrintWriter out = new PrintWriter(System.out);
+        final int k = 8;
         final double[][] prod = new double[2*k][2*k];
         for (int i = 0; i < gramE12.length; i++) {
             testCorrelationE12(i, out, prod );
@@ -238,7 +238,7 @@ public class GSeriesTest {
         for (int i = 0; i < 2*k; i++) {
             for (int j = 0; j < 2*k; j++) {
                 if(j>0){out.print(", ");}
-                    out.print(nf.format(prod[i][j]/(gramE12.length*30000)));
+                out.print(nf.format(2*prod[i][j]/(gramE12.length*30000)));
             }
             out.println();
         }
@@ -369,8 +369,8 @@ public class GSeriesTest {
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getGSeries(t0, offset);
-        double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
-        int k = oddsum.length;
+        int k = prod.length/2;
+        double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];
         final double firstGram = Gram.gram(offset, t0 + 0.001 );
         final int N = 30000;
