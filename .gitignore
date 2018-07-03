@@ -6,6 +6,8 @@ target
 .recommenders
 .DS_Store
 .Rapp.history
+.RData
+.Rhistory
 gramratio.pdf
 oldriemann/bin
 oldriemann/out/

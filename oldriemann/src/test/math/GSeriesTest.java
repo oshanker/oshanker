@@ -232,13 +232,14 @@ public class GSeriesTest {
         //PrintWriter out = new PrintWriter(System.out);
         final int k = 8;
         final double[][] prod = new double[2*k][2*k];
+        int size = 0;
         for (int i = 0; i < gramE12.length; i++) {
-            testCorrelationE12(i, out, prod );
+            size += testCorrelationE12(i, out, prod );
         }
         for (int i = 0; i < 2*k; i++) {
             for (int j = 0; j < 2*k; j++) {
                 if(j>0){out.print(", ");}
-                out.print(nf.format(2*prod[i][j]/(gramE12.length*30000)));
+                out.print(nf.format(prod[i][j]/size));
             }
             out.println();
         }
@@ -365,7 +366,7 @@ public class GSeriesTest {
 		assertTrue(Math.abs(zeta) < 0.000001);
     }
 
-    private void testCorrelationE12(int sampleIndex, PrintWriter out, double[][] prod) throws Exception{
+    private int testCorrelationE12(int sampleIndex, PrintWriter out, double[][] prod) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getGSeries(t0, offset);
@@ -380,8 +381,9 @@ public class GSeriesTest {
         incr = Gram.gramInterval(tvalsi);
         System.out.println("****** " + (gramIndex-3945951431271L));
         
-        double gram = firstGram-incr;
-        for (int i = 0; i < N; i++) {
+        double gram = firstGram;
+        int size = 0;
+        for (int i = 0; i < N-1; i++) {
             if(i>0 && i*3%N == 0){
                 tvalsi = tvalsi.add(BigDecimal.valueOf(N*incr/3), Gram.mc);
                 incr = Gram.gramInterval(tvalsi);
@@ -392,26 +394,28 @@ public class GSeriesTest {
                 double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
                         t, 4, 40, 1.6E-9, false);
                 if(i%2==0){
-                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
-                    oddsum[j] += zeta[k+j];
-                } else {
                     zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     evensum[j] += zeta[j];
+                } else {
+                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    oddsum[j] += zeta[k+j];
                 }
             }
             if(i%2==1){
                 for (int i1 = 0; i1 < 2*k; i1++) {
-                    for (int j = 0; j < 2*k; j++) {
+                    for (int j = i1; j < 2*k; j++) {
                         prod[i1][j] += zeta[i1]*zeta[j];
                     }
                 }
+                size++;
             }
         }
         for (int j = 0; j < k; j++) {
-            assertEquals(-2.00*Math.cos(j*Math.PI/k), 2*oddsum[j]/N, 0.05);
-            assertEquals(2.00*Math.cos(j*Math.PI/k), 2*evensum[j]/N, 0.05);
+            assertEquals(-2.00*Math.cos(j*Math.PI/k), oddsum[j]/size, 0.05);
+            assertEquals(2.00*Math.cos(j*Math.PI/k), evensum[j]/size, 0.05);
         }
         assertEquals(0, (gramIndex-3945951431271L)%N);
+        return size;
     }
 
 	/**
