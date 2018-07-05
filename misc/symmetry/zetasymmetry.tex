@@ -41,9 +41,10 @@
 
 \begin{abstract}
 Symmetry properties  of the Riemann Zeta Function are important, because the celebrated Riemann Hypothesis has so far
-resisted all attempts at a proof or disproof. Symmetry properties can provide guidelines to attacking the problem. The symmetry
+resisted all attempts at a proof or disproof. Symmetry properties can hopefully provide insights into the underlying theory of the Riemann zeta function. The symmetry
 properties are also interesting in themselves. In this work we study new conjectured symmetry properties for the distribution
-of zeta function values on the critical axis.
+of zeta function values on the critical axis. Symmetry properties are fundamental aspects of any theory, so it seems surprising 
+that the properties mentioned in this work do not seem to have been remarked upon till now.
 \end{abstract}
 
 \symbolfootnote[0]{
@@ -57,11 +58,15 @@ of zeta function values on the critical axis.
 
 \section{Introduction}
 In this work we discuss the symmetry properties of the distribution of Riemann zeta values on the critical axis. 
-Understanding such symmetry properties is important, because the celebrated Riemann Hypothesis has so far
-resisted all attempts at a proof or disproof. The study of the symmetry properties  will give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
-The new results are stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} (Section~\ref{conjectures}), after we set up the
-required notation (see Section~\ref{sec2}). These results are a generalization of the result in Ref.~\cite{Shanker 2018} for the anti-symmetry of the distribution of $Z(t)$ at even and odd Gram points. 
-
+ The study of the symmetry properties  will hopefully give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
+The new results presented in this work are:
+\begin{enumerate}
+\item A mean value relation Equation~\ref{eq:mean},
+\item An anti-symmetry relation Equation~\ref{eq:antisym},
+\item A symmetry relation Equation~\ref{eq:sym}.
+\end{enumerate}
+Given that these conjectures express fundamental properties of the behavior of the zeta function, it seems surprising that they have not been commented on in the literature. Our current knowledge of the theory of the Riemann zeta function doesn't seem to help us understand the theoretical basis for the symmetries. The new results are stated in Section~\ref{conjectures}, after we set up the
+required notation. 
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function and presents the conjectured symmetry relations. 
@@ -79,78 +84,36 @@ For $\mathrm{Re} (s) > 1$ the Riemann Zeta function is defined as
 \label{eqRie}
 \end{equation}
  $\zeta ( s )$ can be continued to
-the complex plane. It satisfies the functional equation \cite{Riemann(1858),Riemann 1892, Titchmarsh 1986,Edwards(1974)}
-\begin{equation}  
-\xi(s):=s(s-1) \pi^{-s/2} \, \Gamma (s/2) \, \zeta ( s )/2 \, = \, \xi ( 1 - s );
-\label{eq:xifunc}
-\end{equation}
-$\xi(s)$ is an entire function. The zeroes of $\xi(s)$ are denoted by $1/2 + i \gamma$. The Riemann Hypothesis  
-is that $\gamma$ is real for the non-trivial zeroes.
-The $\gamma$s are ordered in increasing order, with 
-\begin{equation}
-\ldots \ldots \gamma_{-1} \, < \, 0 \, < \, 
-\gamma_1 \, \leq \, \gamma_2 \ldots. 
-\end{equation}
-Then $\gamma_j \, = \, - \gamma_{-j}$ for $j = 1, 2, \ldots,$ 
-and    $\gamma_1$, $\gamma_2$, $\ldots$  are roughly
-$14.1347$, $21.0220$, $\ldots$. The line $1/2 + it$ is called the critical axis.
-
-Asymptotically, the mean number of 
-zeros for the Riemann zeta function with height less than $t$ (the smoothed Riemann zeta staircase, denoted by 
-$N_{smooth}(t)$) is~\cite{Edwards(1974)}
-\begin{equation}  
-N_{smooth}(t) = (t/2\pi)(\ln(t/2\pi)-1)+\frac{7}{8}.
-\label{eq:Rnumber}
-\end{equation}
-Thus, the mean spacing $\delta$ of the zeros at height $t$ is 
-\begin{equation}  
-\delta = 2\pi(\ln (t/2\pi))^{-1}. 
-\label{eq:spacing}
-\end{equation}
-One defines
-\begin{equation}
-\theta(t) = arg (\pi^{it/2} \Gamma(\frac{1}{4} + \frac{it}{2})), 
-\label{eq:theta}
-\end{equation}
-where the argument is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
-For large $t$, $\theta$ has the asymptotic expansion
-\begin{equation}
-\theta(t) \approx \frac{t}{2}\ln (\frac{t}{2\pi}) - \frac{t}{2} - \frac{\pi}{8} + \frac{1}{48t} - \frac{1}{5760t^3}. 
-\label{eq:thetaAsymptotic}
-\end{equation}
-From the zeta functional equation it follows that Hardy's function 
+the complex plane. 
+The mean spacing $\delta$ of the zeros at height $t$ is $\delta = 2\pi(\ln (t/2\pi))^{-1}$. 
+For numerical studies of the Riemann hypothesis one defines Hardy's function 
 \begin{equation}
 Z(t)=exp(i\theta(t))\zeta(1/2 +it) 
 \label{eq:hardy}
 \end{equation}
-is real valued for real $t$. 
-Moreover we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the imaginary part of the zeros 
+where 
+\begin{equation}
+\theta(t) = arg (\pi^{it/2} \Gamma(\frac{1}{4} + \frac{it}{2})). 
+\label{eq:theta}
+\end{equation}
+The argument in Eq.~\ref{eq:theta} is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
+$Z(t)$ is real valued for real $t$,
+and we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the imaginary part of the zeros 
 of $\zeta(s)$ which lie on the critical line.  
 
 Many of the zeros are separated by the
 Gram points~\cite{Gram 1903}.  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
-\begin{defn}\label{gram}
 For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
-$\theta (g_n) = n\pi$. We call the Gram point an odd Gram point if $n$ is odd, and an even Gram point if $n$ is even.
-A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
-\end{defn}
-Thus, at a Gram point we have
-\begin{equation}
-\zeta(1/2+ig_n) = (-1)^{n}Z(g_n).
-\label{eq:zetagram}
-\end{equation}
+$\theta (g_n) = n\pi$. A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
 Ref.~\cite{Shanker 2018} studied empirically the distribution of $Z(t)$ values at Gram points. We will generalize the study to other points on
 the critical axis, as defined below. In analogy with Gram points, we can associate an angle $\phi$ with a point $t$ on the critical axis as follows:
 \begin{defn}\label{phi}
 For $t \ge 7$, $t$ is said to be a phi point if
 $\theta (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
 \end{defn}
-An odd Gram point has $\phi=\pi$ and an even Gram point has $\phi = 0$. We will study the distribution of $Z(t)$ values at a given value of $\phi$, and investigate symmetry and anti-symmetry relations for the 
-distributions at different values of $\phi$. Formally, our sample space is defined by
-\begin{defn}\label{samplespace}The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that  we can divide the sample space into a small number of sub-intervals, where $\ln (t)$ can be considered to be effectively constant over each sub-interval. 
-\end{defn}
-The latter condition is not essential but is convenient, in that it simplifies the numerical work. We divide our sample space into $34$ sub-intervals, and we take $\ln (t)$ to be  constant over each sub-interval.
-The notation $\ln (t)$ stands for the natural logarithm of $t$.  We define $p_{\phi}(y)$, the probability distribution function for $Z(t)$ at phi points:
+We will study the distribution of $Z(t)$ values at a given value of $\phi$, and investigate symmetry and anti-symmetry relations for the 
+distributions at different values of $\phi$. The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that  we can divide the sample space into a small number of sub-intervals, where $\ln (t)$ can be considered to be effectively constant over each sub-interval. 
+The latter condition is not essential but is convenient, in that it simplifies the numerical work. The notation $\ln (t)$ stands for the natural logarithm of $t$.  We define $p_{\phi}(y)$, the probability distribution function for $Z(t)$ at phi points:
 \begin{defn}\label{pphi}
 \begin{equation}
 \int\limits_{a}^{b} p_{\phi}(y)dy
@@ -158,36 +121,32 @@ The notation $\ln (t)$ stands for the natural logarithm of $t$.  We define $p_{\
 \end{equation}
 is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of phi points in the sample space. 
 \end{defn}
-In Ref.~\cite{Shanker 2018}  we defined $p_{odd}(y)$ as
-\begin{defn}\label{podd}
-\begin{equation}
-\int\limits_{a}^{b} p_{odd}(y)dy
-\label{eq:pdfodd}
-\end{equation}
-is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of odd Gram points in the sample space. 
-\end{defn}
-$p_{even}(y)$ was defined analogously. In terms of Definition~\ref{pphi} we have $p_{odd}(y) = p_{\pi}(y)$ and $p_{even}(y) = p_{0}(y)$.
-The probability densities $p_{odd}(y)$,  $p_{\phi}(y)$ and $p_{even}(y)$ depend on the sample space (i.e., on the height $t$ and on the size of the sample space). In practice the densities are not sensitive to the choice of the sample space as long as the height $t$ is large enough and the length of the interval from which the sample is collected is large enough (but not too large on log scale).
+The probability density  $p_{\phi}(y)$ depends on the sample space (i.e., on the height $t$ and on the size of the sample space). In practice the densities are not sensitive to the choice of the sample space as long as the height $t$ is large enough and the length of the interval from which the sample is collected is large enough (but not too large on log scale).
 
 \subsection{\label{conjectures}Conjectures}
 
-Ref.~\cite{Shanker 2018} conjectured that $p_{odd}(y) = p_{even}(-y)$. We generalize the conjecture as stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym} below.
+The new and interesting results are stated in three conjectures. 
 Our first new conjecture is that the mean value $\langle Z(t_{\phi})\rangle$ is given by
 \begin{equation}
 \langle Z(t_{\phi})\rangle = 2\cos (\phi).
 \label{eq:mean}
 \end{equation}
-Equation \ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1934}.  Our other two conjectures are that $p_{\phi}(y)$ satisfies the anti-symmetry condition
+Equation~\ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1934}.  
+
+The second conjecture is the anti-symmetry condition
 \begin{equation}
-p_{\phi}(y) = p_{\phi+\pi}(-y),
+p_{\phi}(y) = p_{\phi+\pi}(-y).
 \label{eq:antisym}
 \end{equation}
-and the symmetry condition
+Equation~\ref{eq:antisym}  is a generalization of the result in Ref.~\cite{Shanker 2018} for the anti-symmetry of the distribution of $Z(t)$ at even and odd Gram points. 
+To relate this equation with the work in Ref.~\cite{Shanker 2018}, we note that an odd Gram point has $\phi=\pi$ and an even Gram point has $\phi = 0$. 
+
+The third conjecture is the symmetry condition
 \begin{equation}
 p_{\phi}(y) = p_{2\pi-\phi}(y).
 \label{eq:sym}
 \end{equation}
-The empirical evidence for these generalizations is given in the next section.
+The relations are deceptively simple to state. However, to the best of the author's knowledge they do not seem to have been remarked upon in the literature. Understanding the cause for these properties will give us new knowledge about the zeta function theory. The empirical evidence for these generalizations is given in the next section.
 
 \section{\label{sec3}Evidence for the symmetry relations}
 
@@ -254,7 +213,15 @@ is done using regular double precision accuracy.
 \end{table}
 
 \subsection{\label{quantiles}Quantiles}
-Table~\ref{tab:quantiles} shows the quantiles and mean for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  The column showing the mean of the distribution clearly validates the mean value condition Equation~\ref{eq:mean}. The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 of the table have anti-symmetric distribution parameters (row 2 has $\phi=\pi/4$ while row 6 has $\phi=5\pi/4$). The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table have the same distribution parameters (row 2 has $\phi=\pi/4$ while row 8 has $\phi=7\pi/4$). The equation also states that rows 4 and 6 of the table have the same distribution parameters (row 4 has $\phi=3\pi/4$ while row 6 has $\phi=5\pi/4$). Repeated application of Equation~\ref{eq:antisym} and Equation~\ref{eq:sym} gives us the relation between the distributions at $\phi$,  $\pi-\phi$,  $\pi+\phi$ and  $2\pi-\phi$. Table~\ref{tab:quantiles6} shows the quantiles and mean for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$. These values also bear out the validity of Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym}. A mnemonic for remembering the relations is that the distributions are symmetric for reflections around Gram points ($\phi=0$ and $\phi=\pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi=\pi/2$ and $\phi=3\pi/2$).
+
+Table~\ref{tab:quantiles} shows the quantiles and mean for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  The column showing the mean of the distribution clearly validates the mean value condition Equation~\ref{eq:mean}. 
+
+The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 of the table have anti-symmetric distribution parameters (row 2 has $\phi=\pi/4$ while row 6 has $\phi=5\pi/4$). 
+
+The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table have the same distribution parameters (row 2 has $\phi=\pi/4$ while row 8 has $\phi=7\pi/4$). Another check of Equation~\ref{eq:sym}  is that rows 4 and 6 of the table have the same distribution parameters (row 4 has $\phi=3\pi/4$ while row 6 has $\phi=5\pi/4$). 
+
+Table~\ref{tab:quantiles6} shows the quantiles and mean for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$. These values also bear out the validity of Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym}. 
+Repeated application of Equation~\ref{eq:antisym} and Equation~\ref{eq:sym} gives us the relation between the distributions at $\phi$,  $\pi-\phi$,  $\pi+\phi$ and  $2\pi-\phi$. A mnemonic for remembering the relations is that the distributions are symmetric for reflections around Gram points ($\phi=0$ and $\phi=\pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi=\pi/2$ and $\phi=3\pi/2$).
 
 \begin{table}
 \parbox{.45\linewidth}{
@@ -302,13 +269,6 @@ $\pi$ & -4.68 & 56.93\\
 }
 \end{table}
 
-
-\subsection{\label{kurtosis}Skewness and kurtosis}
-Table~\ref{tab:kurtosis4} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  
-Table~\ref{tab:kurtosis6} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$.  
-The tables show that the distributions are symmetric for reflections around Gram points ($\phi = 0$ and $\phi= \pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi = \pi/2$ and $\phi = 3\pi/2$). The large values of  kurtosis show that the distributions tend to have heavy tails, or outliers. The distributions  also have large skew, except for $\phi = \pi/2$ and $\phi = 3\pi/2$, where the distributions are symmetric. There seems to be a small systematic deviation for the skewness, maybe due to the fact that we take the Gram interval to be constant over $34$ sub-intervals of the sample space.
-
-
 \begin{figure*}
 \centering
 \includegraphics[width=0.8\textwidth]{pi2plot.pdf}
@@ -326,15 +286,31 @@ The tables show that the distributions are symmetric for reflections around Gram
 \end{figure*}
 
 
+\subsection{\label{kurtosis}Skewness and kurtosis}
+Table~\ref{tab:kurtosis4} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  
+Table~\ref{tab:kurtosis6} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$.  
+
+The tables show that the distributions are symmetric for reflections around Gram points ($\phi = 0$ and $\phi= \pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi = \pi/2$ and $\phi = 3\pi/2$). 
+The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 ($\phi=\pi/4$ and $\phi=5\pi/4$) of Table~\ref{tab:kurtosis4}  have anti-symmetric distribution parameters to within the statistical precision. 
+The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table ( $\phi=\pi/4$ and $\phi=7\pi/4$) have the same distribution parameters within statistical precision. Rows 3 and 7 ($\phi=\pi/2$ and $\phi=3\pi/2$) of Table~\ref{tab:kurtosis4} are interesting, in that they are related by both Equation~\ref{eq:sym} and Equation~\ref{eq:antisym}.
+
+The large values of  kurtosis show that the distributions tend to have heavy tails, or outliers. The distributions  also have large skew, except for $\phi = \pi/2$ and $\phi = 3\pi/2$, where the distributions are symmetric. 
+
+
 \subsection{\label{histograms}Histograms}
-Ref.~\cite{Shanker 2018}  presented figures for the histograms at even and odd Gram points, which are the histograms for $\phi=0$ and $\phi=\pi$ respectively. Fig.~\ref{pi2} shows 
-the histogram for $\phi = \pi/2$. Our conjectures predict that the histogram has the same distribution as the distribution for $\phi = 3\pi/2$. Further, the conjectures predict that for this $\phi$ the distribution will be symmetric (this is required if both  Equations  \ref{eq:antisym} and \ref{eq:sym} are to be satisfied). Fig.~\ref{3pi2} shows 
-the histogram for $\phi = 3\pi/2$. The predictions are validated. While  the histograms are symmetric, the distribution is not normal.  We saw this from the kurtosis.
+Ref.~\cite{Shanker 2018}  presented figures for the histograms at even and odd Gram points, which are the histograms for $\phi=0$ and $\phi=\pi$ respectively. Figs.~\ref{pi2} and \ref{3pi2} show 
+the histograms for $\phi = \pi/2$ and $\phi = 3\pi/2$ respectively. Equation~\ref{eq:sym} predicts that the histograms have the same distribution. The figures validate this prediction to within the statistical precision.
+
+Further, Equation~\ref{eq:antisym} predicts that the histograms are mirror images of each other.  For both relations to be valid, the distributions have to be symmetric. The figures also validate this fact. While  the histograms are symmetric, the distribution is not normal.  This can be seen from the kurtosis values in Table~\ref{tab:kurtosis4}  for $\phi = \pi/2$ and $\phi = 3\pi/2$.
 
 \section{\label{conclusions}Conclusions}
 
-In this work we defined phi points on the critical axis, in analogy with Gram points. We used this definition to extend the results of Ref.~\cite{Shanker 2018}.  Conjecture 1 of that reference stated an anti-symmetry property of the distribution of $Z$ values at even and odd Gram points. In this work we formulated three new symmetry related conjectures. The conjectures are the mean value condition  Equation \ref{eq:mean}, the anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym}. These conjectures are a generalization of Conjecture 1 in 
-Ref.~\cite{Shanker 2018} to phi points. Theoretical study of the relations presented here needs to be done.
+In this work we defined phi points on the critical axis, in analogy with Gram points. We used this definition to  formulate three new conjectures about the distribution of $Z(t)$ on the critical axis. We stated the mean value condition  Equation \ref{eq:mean}. This is a generalization of Titchmarsh's result~\cite{Titchmarsh 1934}.
+We next stated the anti-symmetry condition  Equation \ref{eq:antisym}. This is a generalization of Conjecture 1 in 
+Ref.~\cite{Shanker 2018} to phi points.
+We stated the symmetry condition  Equation \ref{eq:sym}. 
+
+The relations seem to hint at  profound new aspects of the behavior of the zeta function which have not yet been discovered. Theoretical study of the relations presented here needs to be done.
 
 
 \begin{thebibliography} {}
