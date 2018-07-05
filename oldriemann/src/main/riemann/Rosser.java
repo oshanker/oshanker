@@ -161,23 +161,36 @@ public class Rosser {
         BufferedReader configIn = new BufferedReader(
                 new FileReader(configFile));
         String input = configIn.readLine();
+        int line = 1;
         boolean inCommentSection = false;
         while(input != null){
             input = input.trim();
             if(input.equals("#endComment")){
+                if(!inCommentSection){
+                    throw new IllegalStateException("not in #beginComment: line " + line);
+                }
                 inCommentSection = false;
             }
             if(input.equals("#beginComment")){
+                if(inCommentSection){
+                    throw new IllegalStateException("nested #beginComment: line " + line);
+                }
                 inCommentSection = true;
             }
             if(input.startsWith("#") || inCommentSection || input.length() == 0){
                 input = configIn.readLine();
+                line++;
                 continue;
             }
             String[] parsed = input.split("=");
             configParams.put(parsed[0].trim(), parsed[1].trim());
             input = configIn.readLine();
+            line++;
         }
+        if(inCommentSection){
+            throw new IllegalStateException("unterminated #beginComment");
+        }
+       
 	    configIn.close();
         return configParams;
 	}
@@ -369,8 +382,8 @@ public class Rosser {
         configParams = readConfig("data/RosserConfig.txt");
         PrintStream out = null;
         int N = Integer.parseInt(configParams.get("N"));
-        if (N < 125) {
-              File file = new File("out/rosserE28.txt");
+        if (N <= 125) {
+              File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
               if (!file.exists()) {
                   try {
                       file.createNewFile();

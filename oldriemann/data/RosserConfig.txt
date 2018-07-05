@@ -1,11 +1,7 @@
-#beginComment
-ignore this content
-#endComment
 
 #beginComment
 ######################################################################
 zerosFile ="/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002"
-#ignore
 noffset = 2
 signumGram = 1
 header = "n-3945951431270L,good, S"
@@ -19,7 +15,6 @@ conjecturesOutFile="out/statsE12.csv"
 #beginComment
 ######################################################################
 zerosFile ="/Users/shankero/Documents/tmp/1e15.zeros.1000_10001001"
-#ignore
 noffset = 2
 signumGram = 1
 header = "n-5045354828590532L,good, S"
@@ -30,8 +25,6 @@ conjecturesOutFile="out/statsE15.csv"
 ######################################################################
 #endComment
 
-zerosFile ="/Users/shankero/Documents/tmp/1e28.zeros.1000_10001001"
-#ignore
 
 #beginComment
 noffset = 2
@@ -44,6 +37,7 @@ correction = 1
 signumGram = -1
 baseLimit = 100.46808750815538
 
+zerosFile ="/Users/shankero/Documents/tmp/1e28.zeros.1000_10001001"
 header = "n-98094362213058141112271182436L,good, S"
 gramIncr = 0.10031507797926817
 N = 10000000
