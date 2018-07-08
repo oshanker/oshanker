@@ -66,13 +66,13 @@ public class Conjectures {
         
 		int[] signumPoints  = new int[N];
 		int count = 0;
-		ZeroInfo zeroInput = new ZeroInfo(null, null, null);
+		ZeroInfo zeroInput = new ZeroInfo( null, null);
 		PrintStream out = null;
 		while (count < N) {
 			int n1 = count + noffset;
 			double upperLimit = baseLimit + (n1-1)* (gramIncr);
 			zeroInput = Rosser.readZeros(upperLimit , out, zeroIn1, 
-			        zeroInput.zeroInput, zeroInput.nextValues);
+			         zeroInput.nextValues);
 			signumPoints[count] = signumGram;
 			if(zeroInput.countZeros%2 == 1){
 				signumGram = signumGram==0?1:0;

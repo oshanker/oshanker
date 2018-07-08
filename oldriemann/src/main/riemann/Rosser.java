@@ -79,13 +79,11 @@ public class Rosser {
 	 *
 	 */
 	public static class ZeroInfo{
-		public String[] zeroInput;
 		int countZeros;
 		public double lastZero = -1.0d;
 		public  double[] nextValues;
 		
-		public ZeroInfo(String[] input, ArrayList<Double> countZeros2, double[] nextValues) {
-            this.zeroInput = input;
+		public ZeroInfo(ArrayList<Double> countZeros2, double[] nextValues) {
             if(nextValues == null){
                 this.countZeros = 0;
             } else {
@@ -99,7 +97,7 @@ public class Rosser {
 
         @Override
 		public String toString() {
-			return "ZeroInfo [zeroInput=" + zeroInput + ", countZeros=" + countZeros + "]";
+			return "ZeroInfo [countZeros=" + countZeros + "]";
 		}
 		
 	}
@@ -117,25 +115,28 @@ public class Rosser {
 	}
 	
 	public static ZeroInfo readZeros(  double upperLimit, PrintStream out, 
-			BufferedReader[] zeroIn, String[] input, double[] nextValues)
+			BufferedReader[] zeroIn,  double[] nextValues)
 			throws FileNotFoundException, IOException {
 		ArrayList<Double> countZeros = new ArrayList<>();
+		boolean skipParse = true;
+		String[] input = new String[zeroIn.length];
 		if(nextValues == null){
-		    input = new String[zeroIn.length];
+		    skipParse = false;
             nextValues = new double[zeroIn.length];
 		    for (int i = 0; i < input.length; i++) {
 	            input[i] = zeroIn[i].readLine();
             }
-		}
-		if(input[0] == null){
-			return null;
+            if(input[0] == null || input[0].trim().length()==0){
+                System.out.println("done");
+                return null;
+            }
 		}
 		double zero = 0;
 		while (zero < upperLimit ) {
-			if(input[0] == null || input[0].trim().length()==0){
-				System.out.println("done");
-				return null;
-			}
+			if(skipParse){
+			    zero = nextValues[0];
+			    skipParse = false;
+			} else {
     			input[0] = input[0].trim();
                 String[] parsed = input[0].split("\\s+");
                 zero = Double.parseDouble(parsed[0]);
@@ -145,6 +146,7 @@ public class Rosser {
     			if(parsed.length>1){
     				zero += Double.parseDouble(parsed[1]);
     			} 
+			}
             nextValues[0] = zero;
 			if(zero >= upperLimit){
 				break;
@@ -154,15 +156,19 @@ public class Rosser {
             for (int i = 0; i < input.length; i++) {
                 input[i] = zeroIn[i].readLine();
             }
+            if(input[0] == null || input[0].trim().length()==0){
+                System.out.println("done");
+                return null;
+            }
 		}
 		println(out, Integer.toString(countZeros.size()));
-		return new ZeroInfo(input,countZeros, nextValues);
+		return new ZeroInfo(countZeros, nextValues);
 	}
 	
 	public static Map<String,String> readConfig(String configFile) throws IOException{
 	    HashMap<String,String> configParams = new HashMap<>();
-        BufferedReader configIn = new BufferedReader(
-                new FileReader(configFile));
+        try(BufferedReader configIn = new BufferedReader(
+                new FileReader(configFile))){
         String input = configIn.readLine();
         int line = 1;
         boolean inCommentSection = false;
@@ -193,8 +199,7 @@ public class Rosser {
         if(inCommentSection){
             throw new IllegalStateException("unterminated #beginComment");
         }
-       
-	    configIn.close();
+        }
         return configParams;
 	}
 
@@ -226,7 +231,7 @@ public class Rosser {
         String header = getParam("header");
 		//assuming that we start at a good regular (odd/even-hiary) Gram Point
 		int count = 0;
-		ZeroInfo zeroInput = readZeros(baseLimit , out, zeroIn, null, null);
+		ZeroInfo zeroInput = readZeros(baseLimit, out, zeroIn, null);
 		boolean oldGood = true;
 		boolean good = false;
 		boolean inGramBlock = false;
@@ -298,7 +303,7 @@ public class Rosser {
 				inGramBlock = !inGramBlock;
 			}
 			//fetching zero count for current interval
-			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput, 
+			zeroInput = readZeros(upperLimit , out, zeroIn,  
 			        zeroInput.nextValues);
 			if (count==N-1) {
 				System.out.println("final n " + n + " good " + good + " signumGram " + signumGram);

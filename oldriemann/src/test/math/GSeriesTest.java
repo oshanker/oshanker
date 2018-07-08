@@ -145,13 +145,13 @@ public class GSeriesTest {
         String zerosFile = "/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002";
         BufferedReader[] zeroIn = {new BufferedReader(new FileReader(zerosFile ))};
         double upperLimit = begin + (R-40)*incr;
-        Rosser.ZeroInfo zeroInput = Rosser.readZeros(upperLimit, null, zeroIn, null, null);
+        Rosser.ZeroInfo zeroInput = Rosser.readZeros(upperLimit, null, zeroIn,  null);
         System.out.println("{" +begin + ", " + zeroInput.lastZero+ "},");
         for (int i = 0; i < 34; i++) {
             begin = upperLimit;
             incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin + (R-40)*incr/2)/(2*Math.PI)));
             upperLimit = begin + (R-40)*incr;
-            zeroInput = Rosser.readZeros(upperLimit, null, zeroIn, zeroInput.zeroInput, zeroInput.nextValues);
+            zeroInput = Rosser.readZeros(upperLimit, null, zeroIn,  zeroInput.nextValues);
             System.out.println( "{" + begin + ", " + zeroInput.lastZero + "},");
        }
     }
