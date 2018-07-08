@@ -79,25 +79,21 @@ public class Rosser {
 	 *
 	 */
 	public static class ZeroInfo{
-		public String zeroInput;
+		public String[] zeroInput;
 		int countZeros;
 		public double lastZero = -1.0d;
+		public  double[] nextValues;
 		
-		/**
-		 * 
-		 * @param zeroInput
-		 * @param countZeros
-		 */
-		public ZeroInfo(String zeroInput, int countZeros) {
-			this.zeroInput = zeroInput;
-			this.countZeros = countZeros;
-		}
-		
-		public ZeroInfo(String input, ArrayList<Double> countZeros2) {
+		public ZeroInfo(String[] input, ArrayList<Double> countZeros2, double[] nextValues) {
             this.zeroInput = input;
-            this.countZeros = countZeros2.size();
-            if(this.countZeros>0){
-                lastZero = countZeros2.get(this.countZeros-1);
+            if(nextValues == null){
+                this.countZeros = 0;
+            } else {
+                this.nextValues = nextValues;
+                this.countZeros = countZeros2.size();
+                if(this.countZeros>0){
+                    lastZero = countZeros2.get(this.countZeros-1);
+                }
             }
         }
 
@@ -121,39 +117,46 @@ public class Rosser {
 	}
 	
 	public static ZeroInfo readZeros(  double upperLimit, PrintStream out, 
-			BufferedReader zeroIn, String input)
+			BufferedReader[] zeroIn, String[] input, double[] nextValues)
 			throws FileNotFoundException, IOException {
 		ArrayList<Double> countZeros = new ArrayList<>();
-		if(input == null){
-			input = zeroIn.readLine();
+		if(nextValues == null){
+		    input = new String[zeroIn.length];
+            nextValues = new double[zeroIn.length];
+		    for (int i = 0; i < input.length; i++) {
+	            input[i] = zeroIn[i].readLine();
+            }
 		}
-		if(input == null){
+		if(input[0] == null){
 			return null;
 		}
 		double zero = 0;
 		while (zero < upperLimit ) {
-			if(input == null || input.trim().length()==0){
+			if(input[0] == null || input[0].trim().length()==0){
 				System.out.println("done");
 				return null;
 			}
-			input = input.trim();
-            String[] parsed = input.split("\\s+");
-            zero = Double.parseDouble(parsed[0]);
-            if(zero < 0){
-                break;
-            }
-			if(parsed.length>1){
-				zero += Double.parseDouble(parsed[1]);
-			} 
+    			input[0] = input[0].trim();
+                String[] parsed = input[0].split("\\s+");
+                zero = Double.parseDouble(parsed[0]);
+                if(zero < 0){
+                    break;
+                }
+    			if(parsed.length>1){
+    				zero += Double.parseDouble(parsed[1]);
+    			} 
+            nextValues[0] = zero;
 			if(zero >= upperLimit){
 				break;
 			}
 			print( out, zero + ",");
 			countZeros.add(zero);
-			input = zeroIn.readLine();
+            for (int i = 0; i < input.length; i++) {
+                input[i] = zeroIn[i].readLine();
+            }
 		}
 		println(out, Integer.toString(countZeros.size()));
-		return new ZeroInfo(input,countZeros);
+		return new ZeroInfo(input,countZeros, nextValues);
 	}
 	
 	public static Map<String,String> readConfig(String configFile) throws IOException{
@@ -195,17 +198,17 @@ public class Rosser {
         return configParams;
 	}
 
-    public static BufferedReader getZerosFile() throws FileNotFoundException {
-        String zerosFile = configParams.get("zerosFile");
-        zerosFile = zerosFile.substring(1, zerosFile.length()-1);
+    public static BufferedReader[] getZerosFile() throws FileNotFoundException {
+        String zerosFile = getParam("zerosFile");
         System.out.println("zerosFile " + zerosFile);
-        BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
+        BufferedReader[] zeroIn = 
+                {new BufferedReader(new FileReader(zerosFile))};
         return zeroIn;
     }
 	
 	private static void readItems(  PrintStream out, double baseLimit)
 			throws FileNotFoundException, IOException {
-	    BufferedReader zeroIn = getZerosFile();
+	    BufferedReader[] zeroIn = getZerosFile();
         double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
         int signumGram = Integer.parseInt(configParams.get("signumGram"));
         int N = Integer.parseInt(configParams.get("N"));
@@ -223,7 +226,7 @@ public class Rosser {
         String header = getParam("header");
 		//assuming that we start at a good regular (odd/even-hiary) Gram Point
 		int count = 0;
-		ZeroInfo zeroInput = readZeros(baseLimit , out, zeroIn, null);
+		ZeroInfo zeroInput = readZeros(baseLimit , out, zeroIn, null, null);
 		boolean oldGood = true;
 		boolean good = false;
 		boolean inGramBlock = false;
@@ -295,7 +298,8 @@ public class Rosser {
 				inGramBlock = !inGramBlock;
 			}
 			//fetching zero count for current interval
-			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput);
+			zeroInput = readZeros(upperLimit , out, zeroIn, zeroInput.zeroInput, 
+			        zeroInput.nextValues);
 			if (count==N-1) {
 				System.out.println("final n " + n + " good " + good + " signumGram " + signumGram);
 			}
@@ -324,7 +328,9 @@ public class Rosser {
 		}
 		double ratio = ((double)badCount)/(goodCount+badCount);
 		System.out.println("goodCount " + goodCount + " badCount " + badCount + " " + ratio);
-		zeroIn.close();
+        for (int i = 0; i < zeroIn.length; i++) {
+            zeroIn[i].close();
+        }
 	}
 
     public static String getParam(String key) {

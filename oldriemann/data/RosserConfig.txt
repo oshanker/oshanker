@@ -1,6 +1,4 @@
 
-#beginComment
-######################################################################
 zerosFile ="/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002"
 noffset = 2
 signumGram = 1
@@ -9,8 +7,6 @@ baseLimit = 244.02115917156451839965694310614387
 gramIncr = 0.24359904590398668
 N = 1000002
 conjecturesOutFile="out/statsE12.csv"
-######################################################################
-#endComment
 
 #beginComment
 ######################################################################
@@ -32,6 +28,8 @@ signumGram = 1
 baseLimit = 100.36777243017612
 #endComment
 
+#beginComment
+######################################################################
 noffset = 3
 correction = 1
 signumGram = -1
@@ -43,3 +41,5 @@ gramIncr = 0.10031507797926817
 N = 10000000
 conjecturesOutFile="out/statsE28.csv"
 displacementCount = 1
+######################################################################
+#endComment

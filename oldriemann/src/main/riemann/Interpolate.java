@@ -46,11 +46,9 @@ public class Interpolate {
             double[] upper = new double[]{z1, d1, 1};
             double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
             double xmin = z0 - d0*(z1-z0)/(d1-d0);
-            //C = estimateC( max, est[0]);
             for (int i = 0; i < 4; i++) {
                C = estimateC( max, xmin);
                xmin(oldest, upper, wts);
-               System.out.println(Arrays.toString(oldest)+ ", " + Arrays.toString(upper));
                if(oldest[2]> 99){
                    xmin = oldest[0];
                    break;
@@ -65,7 +63,6 @@ public class Interpolate {
             }
             C = estimateC( max, xmin);
             min = xmin;
-            System.out.println(C + ", " + xmin + ", " + eval(xmin)+ ", der " + der(xmin));
         }
 
         private double estimateC( double max, double xmin) {
@@ -105,8 +102,7 @@ public class Interpolate {
     }
     
     public static void main(String[] args) {
-        testInitialZeros();
-        //debug();
+        debug();
 
     }
 
@@ -114,7 +110,9 @@ public class Interpolate {
         final double z0 = 1, z1 = 2;
         final double d0 = -1, d1 = 1;
         final double max = 0.25;
-        Poly3 poly = new Poly3(z0, z1, d0, d1);
+        Poly4 poly = new Poly4(z0, z1, d0, d1, max);
+        System.out.println(poly.C + ", " + poly.min + ", " 
+        + poly.eval(poly.min)+ ", der " + poly.der(poly.min));
         int N = 11;
         double incr = (z1-z0)/(N-1);
         for (int i = 0; i < N; i++) {
@@ -126,48 +124,5 @@ public class Interpolate {
         }
     }
 
-    private static void testInitialZeros() {
-        final double z0 = 244.158906912980683962, z1 = 244.367502584863394599;
-        final double d0 = -20.007604626096071598, d1 = 19.343950349024609636;
-        final double max = 1.232146174810101691;
-        //244.2006260 zetaFromRiemann -0.7453399242908442
-        //244.2627835 zetaFromRiemann -1.2321436376486554
-        Poly3 poly = new Poly3(z0, z1, d0, d1);
-        double xmin = 244.2627835;
-        Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
-        int N = 6;
-        double incr = (z1-z0)/(N-1);
-        for (int i = 0; i < N; i++) {
-            double x = z0 + i*incr;
-            System.out.println(nf.format(x) 
-                    + ", " + nf.format(poly.eval(x))
-                    + ", " + nf.format(poly4.eval(x))
-                    + ", der " + nf.format(poly.der(x))
-                    + ", " + nf.format(poly4.der(x))
-                    );
-        }
-        System.out.println(nf.format(xmin) 
-                + ", " + nf.format(poly.der(xmin))
-                + ", " + nf.format(poly4.der(xmin))
-                );
-        System.out.println(nf.format(xmin) 
-                + ", " + nf.format(poly.eval(xmin))
-                + ", " + nf.format(poly4.eval(xmin))
-        );
-        System.out.println(nf.format(poly4.min) 
-                + ", " + nf.format(poly4.der(poly4.min))
-                + ", " + nf.format(poly4.eval(poly4.min))
-        );
-        incr = (244.2627835-244.26257831011117)/(N-1);
-        for (int i = 0; i < N; i++) {
-            double x = 244.26257831011117 + i*incr;
-            System.out.println(nf.format(x) 
-                    + ", " + nf.format(poly4.eval(x))
-                    + ", der " + nf.format(poly4.der(x))
-                    + ", poly " + nf.format(poly.eval(x))
-                    + ", der " + nf.format(poly.der(x))
-                    );
-        }
-    }
-
+   
 }
