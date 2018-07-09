@@ -79,27 +79,16 @@ public class Rosser {
 	 *
 	 */
 	public static class ZeroInfo{
-		int countZeros;
-		public double lastZero = -1.0d;
-		public  double[] nextValues;
+		final int countZeros;
+		public final double[] lastZero;
+		public  final double[] nextValues;
 		
-		public ZeroInfo(ArrayList<Double> countZeros2, double[] nextValues) {
-            if(nextValues == null){
-                this.countZeros = 0;
-            } else {
-                this.nextValues = nextValues;
-                this.countZeros = countZeros2.size();
-                if(this.countZeros>0){
-                    lastZero = countZeros2.get(this.countZeros-1);
-                }
-            }
+		private ZeroInfo(int countZeros2, double[] lastZero, double[] nextValues) {
+               this.nextValues = nextValues;
+               this.countZeros = countZeros2;
+               this.lastZero = lastZero;
         }
 
-        @Override
-		public String toString() {
-			return "ZeroInfo [countZeros=" + countZeros + "]";
-		}
-		
 	}
 	
 	static void println(PrintStream out, String message){
@@ -120,6 +109,7 @@ public class Rosser {
 		ArrayList<Double> countZeros = new ArrayList<>();
 		boolean skipParse = true;
 		String[] input = new String[zeroIn.length];
+		double[] lastValue  = new double[zeroIn.length];
 		if(nextValues == null){
 		    skipParse = false;
             nextValues = new double[zeroIn.length];
@@ -148,10 +138,16 @@ public class Rosser {
     			} 
 			}
             nextValues[0] = zero;
+            for (int i = 1; i < input.length; i++) {
+                nextValues[i] = Double.parseDouble(input[i]);
+            }
 			if(zero >= upperLimit){
 				break;
 			}
 			print( out, zero + ",");
+            for (int i = 0; i < input.length; i++) {
+                lastValue[i] = nextValues[i];
+            }
 			countZeros.add(zero);
             for (int i = 0; i < input.length; i++) {
                 input[i] = zeroIn[i].readLine();
@@ -162,43 +158,43 @@ public class Rosser {
             }
 		}
 		println(out, Integer.toString(countZeros.size()));
-		return new ZeroInfo(countZeros, nextValues);
+		return new ZeroInfo(countZeros.size(), lastValue, nextValues);
 	}
 	
 	public static Map<String,String> readConfig(String configFile) throws IOException{
 	    HashMap<String,String> configParams = new HashMap<>();
         try(BufferedReader configIn = new BufferedReader(
-                new FileReader(configFile))){
-        String input = configIn.readLine();
-        int line = 1;
-        boolean inCommentSection = false;
-        while(input != null){
-            input = input.trim();
-            if(input.equals("#endComment")){
-                if(!inCommentSection){
-                    throw new IllegalStateException("not in #beginComment: line " + line);
+                new FileReader(configFile))) {
+            String input = configIn.readLine();
+            int line = 1;
+            boolean inCommentSection = false;
+            while (input != null) {
+                input = input.trim();
+                if (input.equals("#endComment")) {
+                    if (!inCommentSection) {
+                        throw new IllegalStateException("not in #beginComment: line " + line);
+                    }
+                    inCommentSection = false;
                 }
-                inCommentSection = false;
-            }
-            if(input.equals("#beginComment")){
-                if(inCommentSection){
-                    throw new IllegalStateException("nested #beginComment: line " + line);
+                if (input.equals("#beginComment")) {
+                    if (inCommentSection) {
+                        throw new IllegalStateException("nested #beginComment: line " + line);
+                    }
+                    inCommentSection = true;
                 }
-                inCommentSection = true;
-            }
-            if(input.startsWith("#") || inCommentSection || input.length() == 0){
+                if (input.startsWith("#") || inCommentSection || input.length() == 0) {
+                    input = configIn.readLine();
+                    line++;
+                    continue;
+                }
+                String[] parsed = input.split("=");
+                configParams.put(parsed[0].trim(), parsed[1].trim());
                 input = configIn.readLine();
                 line++;
-                continue;
             }
-            String[] parsed = input.split("=");
-            configParams.put(parsed[0].trim(), parsed[1].trim());
-            input = configIn.readLine();
-            line++;
-        }
-        if(inCommentSection){
-            throw new IllegalStateException("unterminated #beginComment");
-        }
+            if (inCommentSection) {
+                throw new IllegalStateException("unterminated #beginComment");
+            }
         }
         return configParams;
 	}

@@ -146,7 +146,7 @@ public class GSeriesTest {
         BufferedReader[] zeroIn = {new BufferedReader(new FileReader(zerosFile ))};
         double upperLimit = begin + (R-40)*incr;
         Rosser.ZeroInfo zeroInput = Rosser.readZeros(upperLimit, null, zeroIn,  null);
-        System.out.println("{" +begin + ", " + zeroInput.lastZero+ "},");
+        System.out.println("{" +begin + ", " + zeroInput.lastZero[0]+ "},");
         for (int i = 0; i < 34; i++) {
             begin = upperLimit;
             incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin + (R-40)*incr/2)/(2*Math.PI)));
