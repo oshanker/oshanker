@@ -136,11 +136,12 @@ public class Rosser {
     			if(parsed.length>1){
     				zero += Double.parseDouble(parsed[1]);
     			} 
+                nextValues[0] = zero;
+                for (int i = 1; i < input.length; i++) {
+                    input[i] = input[i].trim();
+                    nextValues[i] = Double.parseDouble(input[i]);
+                }
 			}
-            nextValues[0] = zero;
-            for (int i = 1; i < input.length; i++) {
-                nextValues[i] = Double.parseDouble(input[i]);
-            }
 			if(zero >= upperLimit){
 				break;
 			}
@@ -162,7 +163,7 @@ public class Rosser {
 	}
 	
 	public static Map<String,String> readConfig(String configFile) throws IOException{
-	    HashMap<String,String> configParams = new HashMap<>();
+	    configParams = new HashMap<>();
         try(BufferedReader configIn = new BufferedReader(
                 new FileReader(configFile))) {
             String input = configIn.readLine();
@@ -210,14 +211,13 @@ public class Rosser {
 	private static void readItems(  PrintStream out, double baseLimit)
 			throws FileNotFoundException, IOException {
 	    BufferedReader[] zeroIn = getZerosFile();
-        double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
-        int signumGram = Integer.parseInt(configParams.get("signumGram"));
-        int N = Integer.parseInt(configParams.get("N"));
-        int noffset = Integer.parseInt(configParams.get("noffset"));
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        int signumGram = Rosser.getParamInt("signumGram");
+        int N = Rosser.getParamInt("N");
+        int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
-        String correctionString = configParams.get("correction");
-        if(correctionString!=null){
-            correction = Integer.parseInt(correctionString);
+        if(Rosser.configParams.containsKey("correction")){
+            correction = Rosser.getParamInt("correction");
         }
         BigDecimal offset = null;
         if(configParams.containsKey("toffset")){
@@ -342,6 +342,16 @@ public class Rosser {
         return header;
     }
 
+    public static int getParamInt(String key) {
+        int header = Integer.parseInt(configParams.get(key));
+        return header;
+    }
+
+    public static double getParamDouble(String key) {
+        double header = Double.parseDouble(configParams.get(key));
+        return header;
+    }
+
     private static void calculateRatio(String key,  GramBlock block, double[][] ratio) {
         int len = key.length();
         char[] chars = key.toCharArray();
@@ -386,9 +396,9 @@ public class Rosser {
      * @throws FileNotFoundException 
      */
     public static void main(String[] args) throws Exception {
-        configParams = readConfig("data/RosserConfig.txt");
+        readConfig("data/RosserConfig.txt");
         PrintStream out = null;
-        int N = Integer.parseInt(configParams.get("N"));
+        int N = Rosser.getParamInt("N");
         if (N <= 125) {
               File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
               if (!file.exists()) {
@@ -410,8 +420,8 @@ public class Rosser {
         }
         double[][] typeIIratios = new double[10][displacementCount];
         double[][] frequencies = new double[displacementCount][intervalCounts[0].length];
-        double baseLimit = Double.parseDouble(configParams.get("baseLimit"));
-        double gramIncr = Double.parseDouble(configParams.get("gramIncr"));
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
         for (int displacement = 0; displacement < displacementCount; displacement++) {
             rosser.clear();
             for (int j = 0; j < intervalCounts.length; j++) {

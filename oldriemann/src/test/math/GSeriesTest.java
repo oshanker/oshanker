@@ -152,7 +152,7 @@ public class GSeriesTest {
             incr  = 2*Math.PI/(Math.log((offset.doubleValue()+begin + (R-40)*incr/2)/(2*Math.PI)));
             upperLimit = begin + (R-40)*incr;
             zeroInput = Rosser.readZeros(upperLimit, null, zeroIn,  zeroInput.nextValues);
-            System.out.println( "{" + begin + ", " + zeroInput.lastZero + "},");
+            System.out.println( "{" + begin + ", " + zeroInput.lastZero[0] + "},");
        }
     }
     

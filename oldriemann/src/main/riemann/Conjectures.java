@@ -71,7 +71,7 @@ public class Conjectures {
 		while (count < N) {
 			int n1 = count + noffset;
 			double upperLimit = baseLimit + (n1-1)* (gramIncr);
-			ZeroInfo zeroInput = Rosser.readZeros(upperLimit , out, zeroIn1, 
+			ZeroInfo zeroInput = Rosser.readZeros(upperLimit, out, zeroIn1, 
 			         nextValues);
 			nextValues = zeroInput.nextValues;
 			signumPoints[count] = signumGram;
@@ -204,11 +204,9 @@ public class Conjectures {
 
     public static void main(String[] args) throws Exception {
         Files.createDirectories(FileSystems.getDefault().getPath("out"));
-        Rosser.configParams = Rosser.readConfig("data/RosserConfig.txt");
-        String conjecturesOutFile = Rosser.configParams.get("conjecturesOutFile");
+        Rosser.readConfig("data/RosserConfig.txt");
+        String conjecturesOutFile = Rosser.getParam("conjecturesOutFile");
         System.out.println(conjecturesOutFile);
-        //get rid of quotes
-        conjecturesOutFile = conjecturesOutFile.substring(1, conjecturesOutFile.length()-1);
         File file = new File(conjecturesOutFile);
         if (!file.exists()) {
             try {

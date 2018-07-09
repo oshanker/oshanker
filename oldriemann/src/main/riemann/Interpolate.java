@@ -1,7 +1,14 @@
 package riemann;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.Arrays;
+
+import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
     static NumberFormat nf = NumberFormat.getInstance();
@@ -100,9 +107,53 @@ public class Interpolate {
             return ret;
         }
     }
-    
-    public static void main(String[] args) {
-        debug();
+
+    public static BufferedReader[] getZerosFile() throws FileNotFoundException {
+        String zerosFile = Rosser.getParam("zerosFile");
+        System.out.println("zerosFile " + zerosFile);
+        BufferedReader[] zeroIn = 
+                {new BufferedReader(new FileReader(zerosFile)),null,null};
+        String derFile = zerosFile + ".der";
+        zeroIn[1] = new BufferedReader(new FileReader(derFile));
+        String maxFile = zerosFile + ".max";
+        zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+        return zeroIn;
+    }
+
+    private static void readItems(   )
+            throws FileNotFoundException, IOException {
+        PrintStream out = null;
+        BufferedReader[] zeroIn = getZerosFile();
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        int N = Rosser.getParamInt("N");
+        N = 3;
+        int noffset = Rosser.getParamInt("noffset");
+        int correction = 0;
+        if(Rosser.configParams.containsKey("correction")){
+            correction = Rosser.getParamInt("correction");
+        }
+        int count = 0;
+        ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
+        while (count < N  ) {
+            int n = count + noffset;
+            double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
+            zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
+                    zeroInput.nextValues);
+            if (zeroInput==null) {
+                break;
+            }
+            System.out.println(Arrays.toString(zeroInput.lastZero) +
+                   ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+            if (count==N-1) {
+                System.out.println("final n " + n );
+            }
+            count++;
+        }
+    }
+    public static void main(String[] args) throws Exception{
+        Rosser.readConfig("data/RosserConfig.txt");
+        readItems();
 
     }
 
