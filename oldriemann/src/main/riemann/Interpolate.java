@@ -127,7 +127,7 @@ public class Interpolate {
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int N = Rosser.getParamInt("N");
-        N = 3;
+        N = 35;
         int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){

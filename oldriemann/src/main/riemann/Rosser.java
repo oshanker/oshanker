@@ -126,6 +126,9 @@ public class Rosser {
 			if(skipParse){
 			    zero = nextValues[0];
 			    skipParse = false;
+	            for (int i = 0; i < input.length; i++) {
+	                lastValue[i] = nextValues[i];
+	            }
 			} else {
     			input[0] = input[0].trim();
                 String[] parsed = input[0].split("\\s+");
