@@ -19,40 +19,31 @@ public class InterpolateTest {
 
     @Test
     public void testMain() {
-        final double z0 = 244.158906912980683962, z1 = 244.367502584863394599;
-        final double d0 = -20.007604626096071598, d1 = 19.343950349024609636;
-        final double max = 1.232146174810101691;
+        final double z0 = 251.62429374748942, z1 = 252.0346709114582;
+        final double d0 = 174.60414605716676, d1 = -207.33685149858513;
+        final double max = 30.964994982487042;
         //244.2006260 zetaFromRiemann -0.7453399242908442
         //244.2627835 zetaFromRiemann -1.2321436376486554
         Poly3 poly = new Poly3(z0, z1, d0, d1);
-        double xmin = 244.2627835;
         Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
         int N = 6;
         double incr = (z1-z0)/(N-1);
         for (int i = 0; i < N; i++) {
             double x = z0 + i*incr;
             System.out.println(nf.format(x) 
-                    + ", " + nf.format(poly.eval(x))
                     + ", " + nf.format(poly4.eval(x))
-                    + ", der " + nf.format(poly.der(x))
-                    + ", " + nf.format(poly4.der(x))
+                    + ", der " + nf.format(poly4.der(x))
                     );
         }
-        System.out.println(nf.format(xmin) 
-                + ", " + nf.format(poly.der(xmin))
-                + ", " + nf.format(poly4.der(xmin))
-                );
-        System.out.println(nf.format(xmin) 
-                + ", " + nf.format(poly.eval(xmin))
-                + ", " + nf.format(poly4.eval(xmin))
-        );
+        System.out.println();
         System.out.println(nf.format(poly4.min) 
                 + ", " + nf.format(poly4.der(poly4.min))
                 + ", " + nf.format(poly4.eval(poly4.min))
         );
-        incr = (244.2627835-244.26257831011117)/(N-1);
+        double gram = 251.8163286404921;
+        incr = (gram-251.62429374748942)/(N-1);
         for (int i = 0; i < N; i++) {
-            double x = 244.26257831011117 + i*incr;
+            double x = 251.62429374748942 + i*incr;
             System.out.println(nf.format(x) 
                     + ", " + nf.format(poly4.eval(x))
                     + ", der " + nf.format(poly4.der(x))
@@ -60,6 +51,7 @@ public class InterpolateTest {
                     + ", der " + nf.format(poly.der(x))
                     );
         }
+        assertEquals(30.597, poly4.eval(gram), 0.1);
     }
 
 }

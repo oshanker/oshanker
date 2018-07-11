@@ -53,7 +53,7 @@ public class Interpolate {
             double[] upper = new double[]{z1, d1, 1};
             double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
             double xmin = z0 - d0*(z1-z0)/(d1-d0);
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 10; i++) {
                C = estimateC( max, xmin);
                xmin(oldest, upper, wts);
                if(oldest[2]> 99){
