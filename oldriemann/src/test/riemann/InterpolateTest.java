@@ -3,7 +3,9 @@ package riemann;
 import static org.junit.Assert.*;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import riemann.Interpolate.Poly3;
@@ -16,8 +18,53 @@ public class InterpolateTest {
         nf.setMaximumFractionDigits(7);
         nf.setGroupingUsed(false);
     }
+    
+    public double eval(double x, Poly3 poly, double C){
+        double mult = (x-poly.z0)*(x-poly.z1);
+        mult = mult*mult/poly.denom;
+        double ret = poly.eval1(x)+C*mult;
+        return ret;
+    }        
 
     @Test
+    public void testSlowGrowth() {
+        final double z0 = 251.306919355202, z1 = 251.62429374748942;
+        final double d0 = -51.032529476335846, d1 = 174.60414605716676;
+        final double max = 11.500212986748618;
+        Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
+        int N = 6;
+        double incr = (z1-z0)/(N-1);
+        for (int i = 0; i < N; i++) {
+            double x = z0 + i*incr;
+            System.out.println(nf.format(x) 
+                    + ", " + nf.format(poly4.eval1(x))
+                    + ", der " + nf.format(poly4.der(x))
+                    );
+        }
+        System.out.println();
+        double[] oldest = new double[]{z0, d0, 0};
+        double[] upper = new double[]{z1, d1, 1};
+        double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
+        for (int i = 0; i < 10; i++) {
+            poly4.xmin(oldest, upper, wts, 1);
+            System.out.println(Arrays.toString(oldest)+ ", " + Arrays.toString(upper));
+            double xmin = oldest[0];
+            double C = poly4.estimateC(-max, xmin);
+            System.out.println(C + ", " + eval(xmin,poly4, C));
+        }
+        double gram = 251.3291305486841;
+        incr = (gram-251.306919355202)/(N-1);
+        for (int i = 0; i < N; i++) {
+            double x = 251.306919355202 + i*incr;
+            System.out.println(nf.format(x) 
+                    + ", " + nf.format(poly4.eval1(x))
+                    + ", der " + nf.format(poly4.der(x))
+                    );
+        }
+        assertEquals(-1.283921548, poly4.eval(gram), 0.1);
+    }
+
+    @Test @Ignore
     public void testMain() {
         final double z0 = 251.62429374748942, z1 = 252.0346709114582;
         final double d0 = 174.60414605716676, d1 = -207.33685149858513;
@@ -47,7 +94,7 @@ public class InterpolateTest {
             System.out.println(nf.format(x) 
                     + ", " + nf.format(poly4.eval(x))
                     + ", der " + nf.format(poly4.der(x))
-                    + ", poly " + nf.format(poly.eval(x))
+                    + ", poly " + nf.format(poly.eval1(x))
                     + ", der " + nf.format(poly.der(x))
                     );
         }

@@ -29,7 +29,7 @@ public class Interpolate {
             this.d1 = d1;
             denom = (z0-z1)*(z0-z1);
         }
-        public double eval(double x){
+        public double eval1(double x){
             double ret = (x-z0)*(x-z1)/denom;
             ret *= ((x-z0)*d1 + (x-z1)*d0);
             return ret;
@@ -41,6 +41,30 @@ public class Interpolate {
             return ret;
             
         }
+        
+        void xmin(double[] oldest, double[] upper, double[] wts, double precision){
+            double x0 = oldest[0];
+            double x1 = upper[0];
+            double xmin = (wts[0]*x0 + wts[1]*x1)/(wts[0]+wts[1]);
+            double dermin = der(xmin);
+            if(Math.abs(dermin)<precision){
+                oldest[0]=xmin;
+                oldest[1]=dermin;
+                oldest[2]=100;
+            } else if(Math.signum(dermin) == Math.signum(oldest[1])){
+                oldest[0]=xmin;
+                oldest[1]=dermin;
+            } else {
+                upper[0]=xmin;
+                upper[1]=dermin;
+            }
+        }
+
+        double estimateC( double max, double xmin) {
+            double mult = (xmin-z0)*(xmin-z1);
+            mult = mult*mult/denom;
+            return (max - eval1(xmin))/mult;
+        } 
     };
 
     public static class Poly4 extends Poly3{
@@ -53,9 +77,9 @@ public class Interpolate {
             double[] upper = new double[]{z1, d1, 1};
             double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
             double xmin = z0 - d0*(z1-z0)/(d1-d0);
+            double precision = 0.01*Math.abs(d0);
             for (int i = 0; i < 10; i++) {
-               C = estimateC( max, xmin);
-               xmin(oldest, upper, wts);
+               xmin(oldest, upper, wts, precision);
                if(oldest[2]> 99){
                    xmin = oldest[0];
                    break;
@@ -69,36 +93,32 @@ public class Interpolate {
                }
             }
             C = estimateC( max, xmin);
+            oldest = new double[]{z0, d0, 0};
+            upper = new double[]{z1, d1, 1};
+            wts = new double[]{Math.abs(d1),Math.abs(d0)};
+            precision = 0.01;
+            for (int i = 0; i < 10; i++) {
+               C = estimateC( max, xmin);
+               xmin(oldest, upper, wts, precision);
+               if(oldest[2]> 99){
+                   xmin = oldest[0];
+                   break;
+               }
+               wts[0] = Math.abs(upper[1]);
+               wts[1] = Math.abs(oldest[1]);
+               if(wts[0]>wts[1]){
+                   xmin = oldest[0];
+               }else {
+                   xmin = upper[0];
+               }
+            }
             min = xmin;
         }
 
-        private double estimateC( double max, double xmin) {
-            double mult = (xmin-z0)*(xmin-z1);
-            mult = mult*mult/denom;
-            return (max - super.eval(xmin))/mult;
-        } 
-        
-        void xmin(double[] oldest, double[] upper, double[] wts){
-            double x0 = oldest[0];
-            double x1 = upper[0];
-            double xmin = (wts[0]*x0 + wts[1]*x1)/(wts[0]+wts[1]);
-            double dermin = der(xmin);
-            if(Math.abs(dermin)<0.01){
-                oldest[0]=xmin;
-                oldest[1]=dermin;
-                oldest[2]=100;
-            } else if(Math.signum(dermin) == Math.signum(oldest[1])){
-                oldest[0]=xmin;
-                oldest[1]=dermin;
-            } else {
-                upper[0]=xmin;
-                upper[1]=dermin;
-            }
-        }
         public double eval(double x){
             double mult = (x-z0)*(x-z1);
             mult = mult*mult/denom;
-            double ret = super.eval(x)+C*mult;
+            double ret = super.eval1(x)+C*mult;
             return ret;
         }        
         public double der(double x){
