@@ -34,34 +34,27 @@ public class InterpolateTest {
         Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
         int N = 6;
         double incr = (z1-z0)/(N-1);
+        double gram = 251.3291305486841;
+        incr = (gram-z0)/(N-1);
         for (int i = 0; i < N; i++) {
             double x = z0 + i*incr;
             System.out.println(nf.format(x) 
-                    + ", " + nf.format(poly4.eval1(x))
-                    + ", der " + nf.format(poly4.der(x))
-                    );
-        }
-        System.out.println();
-        double[] oldest = new double[]{z0, d0, 0};
-        double[] upper = new double[]{z1, d1, 1};
-        double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
-        for (int i = 0; i < 10; i++) {
-            poly4.xmin(oldest, upper, wts, 1);
-            System.out.println(Arrays.toString(oldest)+ ", " + Arrays.toString(upper));
-            double xmin = oldest[0];
-            double C = poly4.estimateC(-max, xmin);
-            System.out.println(C + ", " + eval(xmin,poly4, C));
-        }
-        double gram = 251.3291305486841;
-        incr = (gram-251.306919355202)/(N-1);
-        for (int i = 0; i < N; i++) {
-            double x = 251.306919355202 + i*incr;
-            System.out.println(nf.format(x) 
-                    + ", " + nf.format(poly4.eval1(x))
+                    + ", " + nf.format(poly4.eval(x))
                     + ", der " + nf.format(poly4.der(x))
                     );
         }
         assertEquals(-1.283921548, poly4.eval(gram), 0.1);
+        System.out.println();
+        gram = 251.57272959458808;
+        incr = (gram-z0)/(N-1);
+        for (int i = 0; i < N; i++) {
+            double x = z0 + i*incr;
+            System.out.println("n 33, " + nf.format(x) 
+                    + ", " + nf.format(poly4.eval(x))
+                    + ", der " + nf.format(poly4.der(x))
+                    );
+        }
+        assertEquals(-7.45540885886704, poly4.eval(gram), 0.2);
     }
 
     @Test @Ignore
