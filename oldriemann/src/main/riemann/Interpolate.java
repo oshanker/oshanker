@@ -163,7 +163,7 @@ public class Interpolate {
             if (zeroInput==null) {
                 break;
             }
-            System.out.println(Arrays.toString(zeroInput.lastZero) +
+            System.out.println(Arrays.toString(zeroInput.lastZero)  +
                    ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
             if (count==N-1) {
                 System.out.println("final n " + n );

@@ -28,6 +28,30 @@ public class InterpolateTest {
 
     @Test
     public void testSlowGrowth() {
+        final double z0 = 247.1270084390591, z1 = 247.25934052902014;
+        final double d0 = -5.46251113952012, d1 = 4.963052066753181;
+        final double max = 0.19014781349558818;
+        Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
+        int N = 6;
+        double incr = (z1-z0)/(N-1);
+        double gram = 247.18794676831632;
+        for (int i = 0; i < N; i++) {
+            double x = z0 + i*incr;
+            System.out.println(nf.format(x) 
+                    + ", " + nf.format(poly4.eval(x))
+                    + ", der " + nf.format(poly4.der(x))
+                    );
+        }
+        System.out.println(nf.format(gram) 
+                + ", " + nf.format(poly4.eval(gram))
+                + ", der " + nf.format(poly4.der(gram))
+                );
+        assertEquals(-0.189428825055622, poly4.eval(gram), 0.00005);
+        System.out.println();
+    }
+
+    @Test @Ignore
+    public void testConvergence() {
         final double z0 = 251.306919355202, z1 = 251.62429374748942;
         final double d0 = -51.032529476335846, d1 = 174.60414605716676;
         final double max = 11.500212986748618;
