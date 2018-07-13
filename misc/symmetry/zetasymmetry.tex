@@ -61,7 +61,6 @@ In this work we discuss the symmetry properties of the distribution of Riemann z
  The study of the symmetry properties  will hopefully give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
 The new results presented in this work are:
 \begin{enumerate}
-\item A mean value relation Equation~\ref{eq:mean},
 \item An anti-symmetry relation Equation~\ref{eq:antisym},
 \item A symmetry relation Equation~\ref{eq:sym}.
 \end{enumerate}
@@ -125,15 +124,17 @@ The probability density  $p_{\phi}(y)$ depends on the sample space (i.e., on the
 
 \subsection{\label{conjectures}Conjectures}
 
-The new and interesting results are stated in three conjectures. 
-Our first new conjecture is that the mean value $\langle Z(t_{\phi})\rangle$ is given by
+Our empirical study led us to three results, stated in Equations \ref{eq:mean}, \ref{eq:antisym} and \ref{eq:sym}. After the first draft of this work was written up, we discovered that
+Equation \ref{eq:mean} had been stated and proved in Ref.~\cite{kalpokas 2009}. Thus, our new results are Equations  \ref{eq:antisym} and \ref{eq:sym}. 
+Our first empirical result is that the mean value $\langle Z(t_{\phi})\rangle$ is given by
 \begin{equation}
 \langle Z(t_{\phi})\rangle = 2\cos (\phi).
 \label{eq:mean}
 \end{equation}
-Equation~\ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1934}.  
+Equation~\ref{eq:mean} was explicitly called out for Gram points ($\phi = 0$ and $\phi = \pi$) in Ref.~\cite{Titchmarsh 1934}.  It has
+been proved for all $\phi$ points in Ref.~\cite{kalpokas 2009}. 
 
-The second conjecture is the anti-symmetry condition
+The second empirical result, and our first new conjecture, is the anti-symmetry condition
 \begin{equation}
 p_{\phi}(y) = p_{\phi+\pi}(-y).
 \label{eq:antisym}
@@ -141,7 +142,7 @@ p_{\phi}(y) = p_{\phi+\pi}(-y).
 Equation~\ref{eq:antisym}  is a generalization of the result in Ref.~\cite{Shanker 2018} for the anti-symmetry of the distribution of $Z(t)$ at even and odd Gram points. 
 To relate this equation with the work in Ref.~\cite{Shanker 2018}, we note that an odd Gram point has $\phi=\pi$ and an even Gram point has $\phi = 0$. 
 
-The third conjecture is the symmetry condition
+The third empirical result, and our second new conjecture, is the symmetry condition
 \begin{equation}
 p_{\phi}(y) = p_{2\pi-\phi}(y).
 \label{eq:sym}
@@ -305,10 +306,9 @@ Further, Equation~\ref{eq:antisym} predicts that the histograms are mirror image
 
 \section{\label{conclusions}Conclusions}
 
-In this work we defined phi points on the critical axis, in analogy with Gram points. We used this definition to  formulate three new conjectures about the distribution of $Z(t)$ on the critical axis. We stated the mean value condition  Equation \ref{eq:mean}. This is a generalization of Titchmarsh's result~\cite{Titchmarsh 1934}.
-We next stated the anti-symmetry condition  Equation \ref{eq:antisym}. This is a generalization of Conjecture 1 in 
+In this work we defined phi points on the critical axis, in analogy with Gram points. We used this definition to  formulate two new conjectures about the distribution of $Z(t)$ on the critical axis. We empirically observed  the mean value condition  Equation \ref{eq:mean}. This was stated and proved for Gram points by Ref.~\cite{Titchmarsh 1934}  and, as we discovered later,  for all $\phi$ points in Ref.~\cite{kalpokas 2009}. 
+Our two new results are the anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym}. Equation \ref{eq:antisym} is a generalization of Conjecture 1 in 
 Ref.~\cite{Shanker 2018} to phi points.
-We stated the symmetry condition  Equation \ref{eq:sym}. 
 
 The relations seem to hint at  profound new aspects of the behavior of the zeta function which have not yet been discovered. Theoretical study of the relations presented here needs to be done.
 
@@ -340,6 +340,10 @@ Academic Press,  (1974)
 \bibitem{Titchmarsh 1934} E. C. Titchmarsh,
 ``On van der Corput's method and the zeta-function of Riemann (IV)",
 {\it Quart. J. Math. Oxford Ser.} {\bf5}(1934), 98-105
+
+\bibitem{kalpokas 2009} J. Kalpokas and J. Steuding,
+``On the value-distribution of the Riemann zeta-function on the critical line", arXiv preprint arXiv:0907.1910,
+\url{https://arxiv.org/pdf/0907.1910}, (2009)
 
 \bibitem{hiary 2010} G. A. Hiary,
 ``An amortized-complexity method to compute the Riemann zeta function", 
