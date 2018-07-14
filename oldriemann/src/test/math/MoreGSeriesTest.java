@@ -1,6 +1,6 @@
 package math;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -33,10 +33,16 @@ public class MoreGSeriesTest {
         long gramIndex = Gram.gramIndex(offset, t0);
         System.out.println(nf.format(t0) + ", " + gramIndex);
         double zero = 244.920599505825;
-        testE12(zero, t0);
+        double expectedDer = 23.85164367971759;
+        final int initialPadding = 40;
+        GSeries gAtBeta = testE12(t0, initialPadding);
+        double riemannZeta = gAtBeta.riemannZeta( gAtBeta.gAtBeta[40], t0);
+        System.out.println( t0 + ", " +riemannZeta);
+        assertEquals(1.92649807303971, riemannZeta, 0.0000015);
+        validateZero(zero, expectedDer, initialPadding, gAtBeta);
     }
 
-    private void testE12(double zero, double t0) throws IOException, FileNotFoundException {
+    private GSeries testE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin =  t0;
@@ -59,7 +65,6 @@ public class MoreGSeriesTest {
         }
         long init= System.currentTimeMillis();
         double incr  = Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
-        final int initialPadding = 40;
         int R = 500+2*initialPadding;
         System.out.println("incr " + incr);
         begin -= initialPadding*incr;
@@ -75,11 +80,24 @@ public class MoreGSeriesTest {
             }
             out.close();
         }
-        System.out.println( t0 + ", " +gAtBeta.riemannZeta( gAtBeta.gAtBeta[initialPadding], begin));
-        //g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
+        
+        return gAtBeta;
+    }
+
+    private void validateZero(double zero, double expectedDer, final int initialPadding, GSeries gAtBeta) {
         double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9, true);
         double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
         System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
         assertTrue(Math.abs(zeta) < 0.000001);
+        
+        double delta = 0.01*gAtBeta.spacing;
+        double[] g = gAtBeta.diagnosticBLFISumWithOffset( zero+delta, 4, initialPadding, 1.6E-9, false);
+        double zetaplus = gAtBeta.riemannZeta(g, zero+delta);
+        g = gAtBeta.diagnosticBLFISumWithOffset( zero-delta, 4, initialPadding, 1.6E-9, false);
+        double zetaminus = gAtBeta.riemannZeta(g, zero-delta);
+        //244.92059950582586, 23.85164367971759, 1.0396728565623998
+        double der = (zetaplus-zetaminus)/(2*delta);
+        System.out.println("der " + der);
+        assertEquals(expectedDer,der, 0.001);
     }
 }

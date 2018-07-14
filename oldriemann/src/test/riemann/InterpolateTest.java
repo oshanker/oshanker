@@ -26,7 +26,7 @@ public class InterpolateTest {
         return ret;
     }        
 
-    @Test
+    @Test @Ignore
     public void testSlowGrowth() {
         final double z0 = 247.1270084390591, z1 = 247.25934052902014;
         final double d0 = -5.46251113952012, d1 = 4.963052066753181;
@@ -49,6 +49,26 @@ public class InterpolateTest {
         assertEquals(-0.189428825055622, poly4.eval(gram), 0.00005);
         System.out.println();
     }
+    
+    @Test
+    public  void debug() {
+        final double z0 = 1, z1 = 2;
+        final double d0 = -1, d1 = 1;
+        final double max = 0.25;
+        Poly4 poly = new Poly4(z0, z1, d0, d1, max);
+        System.out.println(poly.C + ", " + poly.min + ", " 
+        + poly.eval(poly.min)+ ", der " + poly.der(poly.min));
+        assertEquals(0d, poly.C, 0.0000001);
+        int N = 11;
+        double incr = (z1-z0)/(N-1);
+        for (int i = 0; i < N; i++) {
+            double x = z0 + i*incr;
+            System.out.println(nf.format(x) 
+                    + ", " + nf.format(poly.eval(x))
+                    + ", der " + nf.format(poly.der(x))
+                    );
+        }
+    }
 
     @Test @Ignore
     public void testConvergence() {
@@ -70,9 +90,9 @@ public class InterpolateTest {
         assertEquals(-1.283921548, poly4.eval(gram), 0.1);
         System.out.println();
         gram = 251.57272959458808;
-        incr = (gram-z0)/(N-1);
+        incr = (gram-poly4.min)/(N-1);
         for (int i = 0; i < N; i++) {
-            double x = z0 + i*incr;
+            double x = poly4.min + i*incr;
             System.out.println("n 33, " + nf.format(x) 
                     + ", " + nf.format(poly4.eval(x))
                     + ", der " + nf.format(poly4.der(x))

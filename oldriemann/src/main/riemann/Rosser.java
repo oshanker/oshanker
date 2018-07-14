@@ -81,6 +81,7 @@ public class Rosser {
 	public static class ZeroInfo{
 		final int countZeros;
 		public final double[] lastZero;
+		//zero, slope, max
 		public  final double[] nextValues;
 		
 		private ZeroInfo(int countZeros2, double[] lastZero, double[] nextValues) {
@@ -89,6 +90,9 @@ public class Rosser {
                this.lastZero = lastZero;
         }
 
+        public ZeroInfo(int countZeros2, ZeroInfo zeroInfo) {
+            this(countZeros2, zeroInfo.lastZero, zeroInfo.nextValues);
+        }
 	}
 	
 	static void println(PrintStream out, String message){

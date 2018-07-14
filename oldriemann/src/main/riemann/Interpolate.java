@@ -95,7 +95,15 @@ public class Interpolate {
             C = estimateC( max, xmin);
             oldest = new double[]{z0, d0, 0};
             upper = new double[]{z1, d1, 1};
-            wts = new double[]{Math.abs(d1),Math.abs(d0)};
+            double dermin = der(xmin);
+            if(Math.signum(dermin) == Math.signum(oldest[1])){
+                oldest[0]=xmin;
+                oldest[1]=dermin;
+            } else {
+                upper[0]=xmin;
+                upper[1]=dermin;
+            }            
+            wts = new double[]{Math.abs(upper[1]),Math.abs(oldest[1])};
             precision = 0.01;
             for (int i = 0; i < 10; i++) {
                C = estimateC( max, xmin);
@@ -158,8 +166,12 @@ public class Interpolate {
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
-            zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
-                    zeroInput.nextValues);
+            if(upperLimit<=zeroInput.nextValues[0]){
+                zeroInput = new ZeroInfo(0, zeroInput);
+            } else {
+                zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
+                        zeroInput.nextValues);
+            }
             if (zeroInput==null) {
                 break;
             }
@@ -175,24 +187,6 @@ public class Interpolate {
         Rosser.readConfig("data/RosserConfig.txt");
         readItems();
 
-    }
-
-    private static void debug() {
-        final double z0 = 1, z1 = 2;
-        final double d0 = -1, d1 = 1;
-        final double max = 0.25;
-        Poly4 poly = new Poly4(z0, z1, d0, d1, max);
-        System.out.println(poly.C + ", " + poly.min + ", " 
-        + poly.eval(poly.min)+ ", der " + poly.der(poly.min));
-        int N = 11;
-        double incr = (z1-z0)/(N-1);
-        for (int i = 0; i < N; i++) {
-            double x = z0 + i*incr;
-            System.out.println(nf.format(x) 
-                    + ", " + nf.format(poly.eval(x))
-                    + ", der " + nf.format(poly.der(x))
-                    );
-        }
     }
 
    
