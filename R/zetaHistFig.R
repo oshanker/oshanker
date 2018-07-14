@@ -2,7 +2,8 @@ df <- read.csv("../oldriemann/out/gzetaE12/gzeta6.csv", header = FALSE);
 i = 10;
 	x<-as.matrix(df[i]);
 	x<-as.vector(x);
-qqnorm(x, main = paste("Normal Q-Q Plot for Z(t) at ", expression(phi),
+	x<-log(abs(x));
+qqnorm(x, main = paste("Normal Q-Q Plot for ln(|Z(t)|) at ", expression(phi),
    " = 3", expression(pi), "/2"),
        xlab = "Theoretical Quantiles", ylab = "Sample Quantiles"); qqline(x, col = 2)
        
