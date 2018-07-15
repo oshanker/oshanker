@@ -70,6 +70,9 @@ public class Interpolate {
     public static class Poly4 extends Poly3{
         double C;
         double min;
+        public Poly4(ZeroInfo zeroInput){
+            this(zeroInput.lastZero[0],zeroInput.nextValues[0],zeroInput.lastZero[1],zeroInput.nextValues[1],zeroInput.lastZero[2]);
+        }
         public Poly4(double z0, double z1, double d0, double d1, double max) {
             super(z0, z1, d0, d1);
             if(d0<0){max = -max;}
@@ -151,18 +154,29 @@ public class Interpolate {
     private static void readItems(   )
             throws FileNotFoundException, IOException {
         PrintStream out = null;
+        BufferedReader zetaReader = new BufferedReader(new FileReader(
+                "data/zetaE12.csv"));
+        for (int i = 0; i < 3; i++) {
+            zetaReader.readLine();
+        }
         BufferedReader[] zeroIn = getZerosFile();
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int N = Rosser.getParamInt("N");
-        N = 35;
+        N = 1000000;
         int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
             correction = Rosser.getParamInt("correction");
         }
         int count = 0;
+        Poly4 poly = null;
         ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
+        System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
+        double zetaErr = 0;
+        double zetaMidMean = 0;
+        double absMax = 0;
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
@@ -171,22 +185,53 @@ public class Interpolate {
             } else {
                 zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                         zeroInput.nextValues);
+                poly = new Poly4(zeroInput);
             }
             if (zeroInput==null) {
                 break;
             }
-            System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                   ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+            double zetaEst = poly.eval(upperLimit);
+            String line = zetaReader.readLine();
+            String[] parsed =line.trim().split(",");
+            double zetaActual = Double.parseDouble(parsed[1]);
+
+            double err = zetaActual-zetaEst;
+            zetaErr += err;
+            
+            upperLimit += gramIncr/2;
+            if(upperLimit<=zeroInput.nextValues[0]){
+                zeroInput = new ZeroInfo(0, zeroInput);
+            } else {
+                zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
+                        zeroInput.nextValues);
+                poly = new Poly4(zeroInput);
+            }
+            
+            double zetaEstMid = poly.eval(upperLimit);
+            zetaMidMean += zetaEstMid;
+            if(Math.abs(zeroInput.lastZero[2])>absMax){
+                absMax = Math.abs(zeroInput.lastZero[2]);
+                if(absMax>130){
+                    System.out.println();
+                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+                    System.out.println(zetaEst + " ** " + err);
+                    System.out.println(upperLimit + ", " + zetaEstMid + " (" + count +")");
+                 }
+            }
+            
             if (count==N-1) {
                 System.out.println("final n " + n );
             }
             count++;
         }
+        System.out.println("*** zetaErr " + zetaErr/N);
+        System.out.println("*** zetaMidMean " + zetaMidMean/N);
+        zetaReader.close();
     }
     public static void main(String[] args) throws Exception{
         Rosser.readConfig("data/RosserConfig.txt");
         readItems();
-
     }
 
    
