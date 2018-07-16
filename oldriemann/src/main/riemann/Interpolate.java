@@ -1,6 +1,7 @@
 package riemann;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -154,6 +155,11 @@ public class Interpolate {
     private static void readItems(   )
             throws FileNotFoundException, IOException {
         PrintStream out = null;
+        File file = new File(Rosser.getParam("conjecturesOutFile").replace(
+                "stats", "imFmidGram"));
+        
+        PrintStream imF = new PrintStream(file);
+
         BufferedReader zetaReader = new BufferedReader(new FileReader(
                 "data/zetaE12.csv"));
         for (int i = 0; i < 3; i++) {
@@ -163,7 +169,7 @@ public class Interpolate {
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int N = Rosser.getParamInt("N");
-        N = 1000000;
+        N = 10;
         int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
@@ -197,6 +203,10 @@ public class Interpolate {
 
             double err = zetaActual-zetaEst;
             zetaErr += err;
+            System.out.println();
+            System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                    ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+            System.out.println(zetaEst + ", " + (n+1) + " ** " + err);
             
             upperLimit += gramIncr/2;
             if(upperLimit<=zeroInput.nextValues[0]){
@@ -212,14 +222,15 @@ public class Interpolate {
             if(Math.abs(zeroInput.lastZero[2])>absMax){
                 absMax = Math.abs(zeroInput.lastZero[2]);
                 if(absMax>130){
-                    System.out.println();
-                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-                    System.out.println(zetaEst + " ** " + err);
-                    System.out.println(upperLimit + ", " + zetaEstMid + " (" + count +")");
+//                    System.out.println();
+//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
+//                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+//                    System.out.println(zetaEst + " ** " + err);
+//                    System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
                  }
             }
-            
+            System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
+            imF.println((n+1) + ", " + zetaEstMid);
             if (count==N-1) {
                 System.out.println("final n " + n );
             }
@@ -228,6 +239,7 @@ public class Interpolate {
         System.out.println("*** zetaErr " + zetaErr/N);
         System.out.println("*** zetaMidMean " + zetaMidMean/N);
         zetaReader.close();
+        imF.close();
     }
     public static void main(String[] args) throws Exception{
         Rosser.readConfig("data/RosserConfig.txt");
