@@ -169,7 +169,7 @@ public class Interpolate {
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int N = Rosser.getParamInt("N");
-        N = 10;
+        N = 1000;
         int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
@@ -203,10 +203,6 @@ public class Interpolate {
 
             double err = zetaActual-zetaEst;
             zetaErr += err;
-            System.out.println();
-            System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                    ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-            System.out.println(zetaEst + ", " + (n+1) + " ** " + err);
             
             upperLimit += gramIncr/2;
             if(upperLimit<=zeroInput.nextValues[0]){
@@ -222,14 +218,13 @@ public class Interpolate {
             if(Math.abs(zeroInput.lastZero[2])>absMax){
                 absMax = Math.abs(zeroInput.lastZero[2]);
                 if(absMax>130){
-//                    System.out.println();
-//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//                    System.out.println(zetaEst + " ** " + err);
-//                    System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
+                    System.out.println();
+                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+                    System.out.println(zetaEst + " ** " + err);
+                    System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
                  }
             }
-            System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
             imF.println((n+1) + ", " + zetaEstMid);
             if (count==N-1) {
                 System.out.println("final n " + n );
