@@ -203,6 +203,8 @@ public class Interpolate {
             String line = zetaReader.readLine();
             String[] parsed =line.trim().split(",");
             double zetaActual = Double.parseDouble(parsed[1]);
+            //apply correction to get F
+            //what about factor of 2?
             reF.println((n+1) + ", " + ((n%2==0)?-zetaActual:zetaActual));
 
             double err = zetaActual-zetaEst;
@@ -233,6 +235,8 @@ public class Interpolate {
                     System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
                  }
             }
+            //apply correction to get F
+            //what about factor of 2?
             imF.println((n+1) + ", " + ((n%2==0)?-zetaEstMid:zetaEstMid));
 //            System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
             if (count==N-1) {

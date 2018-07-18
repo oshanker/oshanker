@@ -115,7 +115,7 @@ public class GSeriesTest {
 	}
 
 	/**
-	 * Test method for {@link math.GSeries#gSeries(double)}.
+	 * Test method for t = 2.7E9.
 	 */
 	@Test
 	public void testLargeOffset() {
@@ -168,6 +168,7 @@ public class GSeriesTest {
 
     @Test @Ignore 
     public void testReadX() throws Exception{
+        //check the symmetry and antisymmetry relations from the output of distributions
         File file = new File("out/6.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k = 12;
@@ -490,7 +491,7 @@ public class GSeriesTest {
 
 
 	/**
-	 * Test method for {@link math.GSeries#gSeries(double)}.
+	 * Test method for small values of t (which don't need BigDecimal).
 	 */
 	@Test
 	public void testGSeries() {
