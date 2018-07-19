@@ -11,6 +11,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 
 import math.GSeries;
+import math.Quadratic;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
@@ -158,18 +159,13 @@ public class Interpolate {
             throws FileNotFoundException, IOException {
         PrintStream out = null;
         File file = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "imFmidGram"));
+                "stats", "imF_midGram_"));
         File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "reFGram"));
+                "stats", "reF_Gram_"));
         
-//        PrintStream imF_stream = new PrintStream(file);
-//        PrintStream reF_stream = new PrintStream(reFile);
+        PrintStream imF_stream = new PrintStream(file);
+        PrintStream reF_stream = new PrintStream(reFile);
 
-        BufferedReader zetaReader = new BufferedReader(new FileReader(
-                "data/zetaE12.csv"));
-        for (int i = 0; i < 3; i++) {
-            zetaReader.readLine();
-        }
         BufferedReader[] zeroIn = getZerosFile();
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
@@ -186,15 +182,17 @@ public class Interpolate {
         System.out.println( gSeries.begin + ", " + zetaCorrection);
         
         int N = Rosser.getParamInt("N");
-        N = 2000;
+        N = 100;
         int count = 0;
         Poly4 poly = null;
         ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
-        double zetaErr = 0;
+        
+        double[] h = new double[N];
         double zetaMidMean = 0;
         double absMax = 0;
+        int idx = 0;
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
@@ -209,20 +207,15 @@ public class Interpolate {
                 break;
             }
             double zetaEst = poly.eval(upperLimit);
-            String line = zetaReader.readLine();
-            String[] parsed =line.trim().split(",");
-            double zetaActual = Double.parseDouble(parsed[1]);
             //apply correction to get F
             //what about factor of 2?
             double zeta = (zetaEst - correction)/2;
-//            reF_stream.println((n+1) + ", " + ((n%2==0)?-zeta:zeta));
+            reF_stream.println((n+1) + ", " + ((n%2==0)?-zeta:zeta));
 
-            double err = zetaActual-zetaEst;
-            zetaErr += err;
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
 //                    ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//            System.out.println(zetaEst + " ** " + err);
+//            System.out.println(zetaEst + " ** " );
             
             upperLimit += gramIncr/2;
             if(upperLimit<=zeroInput.nextValues[0]){
@@ -241,29 +234,52 @@ public class Interpolate {
                     System.out.println();
                     System.out.println(Arrays.toString(zeroInput.lastZero)  +
                             ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-                    System.out.println(zetaEst + " ** " + err);
+                    System.out.println(zetaEst + " ** " );
                     System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
                  }
             }
             //apply correction to get F
             //what about factor of 2?
             zeta = (zetaEstMid - correction)/2;
-//            imF_stream.println((n+1) + ", " + ((n%2==0)?-zeta:zeta));
-//            System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
+            double imFmid = ((n%2==0)?-zeta:zeta);
+            imF_stream.println((n+1) + ", " + imFmid);
+            h[idx] = imFmid;
+//            System.out.println(zetaEstMid + ", " +  upperLimit + " (" + (n+1) +")");
             if (count==N-1) {
                 System.out.println("final n " + n );
             }
+            idx++;
             count++;
         }
-        System.out.println("*** zetaErr " + zetaErr/N);
         System.out.println("*** zetaMidMean " + zetaMidMean/N);
         double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
         zetaCorrection = GSeries.correction( predictedSqrtArg1);
         System.out.println( ": " + zetaCorrection);
-        zetaReader.close();
-//        imF_stream.close();
-//        reF_stream.close();
+        imF_stream.close();
+        reF_stream.close();
+        imFGramPoints(h);
     }
+    
+    private static void imFGramPoints(double[] h) {
+        double[][] imFGram = new double[h.length][2];
+        imFGram[0][0] = Double.NEGATIVE_INFINITY;
+        imFGram[0][1] = Double.NEGATIVE_INFINITY;
+        Quadratic initial = new Quadratic(0,1,h);
+        System.out.println(initial.eval(0.5));
+        System.out.println(initial.eval(1.5));
+        System.out.println(initial.eval(0.75));
+        /**
+         * h0 h1 h2 h3 h4
+         * knots h0 h2 h4
+         * cubic c0: h0-h2, c2: h2-h4 -> 8 coefficients
+         * ends vals for c0 and c2: 4 constraints
+         * slope at h2: 1 constraint
+         * second der at h2: 1 constraint
+         * two more constraints needed: vals at h1 and h3.
+         * Better still, have knots at all hi except first and last internal hi.
+         */
+    }
+
     public static void main(String[] args) throws Exception{
         Rosser.readConfig("data/RosserConfig.txt");
         readItems();

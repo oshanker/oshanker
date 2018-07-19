@@ -1,6 +1,6 @@
 library(splines)
 
-df <- read.csv("../oldriemann/out/imFmidGramE12.csv", header = FALSE);
+df <- read.csv("../oldriemann/out/imF_midGram_E12.csv", header = FALSE);
 x=as.vector(df[1])
 breaks=seq(3, length(x[,1])-2, length.out = length(x[,1]) - 4)
 fm1 <- lm(V2 ~ bs(V1, knots=df[breaks,1]), data = df)
@@ -17,6 +17,6 @@ lines(ht,test, col="green")
 lines(df$V1 ,df$V2, col="red")
 }
 
-#figure()
+figure()
 out = data.frame(ht+0.5, test)
-write.csv(out, row.names = F, file = "../oldriemann/out/imFGramE12.csv")
+write.csv(out, row.names = F, file = "../oldriemann/out/imF_Gram_E12.csv")

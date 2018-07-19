@@ -11,11 +11,37 @@ import java.util.Arrays;
  *
  */
 public class Quadratic {
-    public static double[] coefficients(double t1, double incr, double[] z){
+    final double[] coefficients;
+    public Quadratic(double firstPoint, double incr, double[] values){
+       this.coefficients = coefficients(firstPoint, incr, values);
+    }
+    
+    public double eval(double x ){
+        double val = 0;
+        double arg = 1;
+        for (int j = 0; j < 3; j++) {
+            val += arg*coefficients[j];
+            arg *=x;
+        }
+        return val;
+    }
+ 
+    public double der(double x ){
+        return coefficients[1] + 2* coefficients[2]*x;
+    }
+    
+    /**
+     * 
+     * @param t1 first point
+     * @param incr
+     * @param values values at t, t + incr, t + 2*incr
+     * @return
+     */
+    public static double[] coefficients(double t1, double incr, double[] values){
         double[] coefficients = new double[3];
-        coefficients[2] = (z[0] + z[2] - 2*z[1])/(2*incr*incr);
-        coefficients[1] = (z[2]-z[1])/incr - coefficients[2]*(2*t1+3*incr);
-        coefficients[0] = ((t1+2*incr)*z[0]-t1*z[2])/(2*incr) + coefficients[2]*t1*(t1+2*incr);        
+        coefficients[2] = (values[0] + values[2] - 2*values[1])/(2*incr*incr);
+        coefficients[1] = (values[2]-values[1])/incr - coefficients[2]*(2*t1+3*incr);
+        coefficients[0] = ((t1+2*incr)*values[0]-t1*values[2])/(2*incr) + coefficients[2]*t1*(t1+2*incr);        
         return coefficients;
     }
 

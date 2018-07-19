@@ -45,14 +45,14 @@ public class MoreGSeriesTest {
         double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
         System.out.println( gSeries.begin + ", " + zetaCorrection);
         File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "reFGram"));
+                "stats", "reF_Gram_"));
         File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "imFGram"));
+                "stats", "imF_Gram_"));
         BufferedReader reFReader = new BufferedReader(new FileReader(reFile));
         BufferedReader imFReader = new BufferedReader(new FileReader(imFile));
         reFReader.readLine();
         imFReader.readLine();
-        int N = 2000;
+        int N = 99;
         double[][] fAtBeta = new double[N-1][2];
         for (int i = 0; i < fAtBeta.length; i++) {
             String[] reF = reFReader.readLine().split(",");
