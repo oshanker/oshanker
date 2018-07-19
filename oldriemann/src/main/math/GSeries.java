@@ -28,14 +28,14 @@ public class GSeries {
 	 * Store g at n*beta (k is k0 to k1)
 	 */
 	double[][] gAtBeta;
-	private final double beta;
+    private final double beta;
 	final double spacing;
 	private final double gamma;
 	private double argalphaBase;
-	private final double begin;
-	final double  dsqrtArg1;
+	public final double begin;
+	public final double  dsqrtArg1;
 	double tbase;
-	double basesqrtArg1;
+	public double basesqrtArg1;
 	double lnsqrtArg1;
 	double basetheta;
 	
@@ -48,32 +48,33 @@ public class GSeries {
 		this(k0, k1, offset, begin, incr);
         BigDecimal tBaseBD = new BigDecimal(begin, Gram.mc).add(
                 offset, Gram.mc);
-        gAtBeta = evaluateWithOffset(k0, k1, begin, incr, R, tBaseBD);
+        gAtBeta = evaluateWithOffset( R, tBaseBD);
 	}
 
-    private  GSeries(int k0, int k1, BigDecimal offset, double begin, double incr) {
+    public  GSeries(int k0, int k1, BigDecimal offset, double begin, double incr) {
         this.k0 = k0;
-		this.k1 = k1;
 		this.begin = begin;
 		this.spacing = incr;
 		beta = Math.PI/spacing;
 		BigDecimal tBaseBD = new BigDecimal(begin, Gram.mc).add(
 				offset, Gram.mc);
-		BigDecimal alphaBD = (Gram.log(k0).add(Gram.log(k1))).divide(Gram.bdTWO, Gram.mc);
-		alpha = alphaBD.doubleValue();
-		argalphaBase = tBaseBD.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
-		
 		/////
 		dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*tBaseBD.doubleValue()));
 		tbase = tBaseBD.doubleValue();
 		BigDecimal t2 = tBaseBD.divide(Gram.bdTWO);
 		BigDecimal sqrtArg1 = Gram.sqrt(tBaseBD.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
 		basesqrtArg1 = sqrtArg1.doubleValue();
+	    this.k1 = k1==0?(int)basesqrtArg1:k1;
+
+        BigDecimal alphaBD = (Gram.log(this.k0).add(Gram.log(this.k1))).divide(Gram.bdTWO, Gram.mc);
+        alpha = alphaBD.doubleValue();
+        argalphaBase = tBaseBD.multiply(alphaBD, Gram.mc).remainder(Gram.pi_2).doubleValue();
+        
 		BigDecimal lnsqrtArg1BD = Gram.log(sqrtArg1, Gram.mc);
 		lnsqrtArg1 = lnsqrtArg1BD.doubleValue();
 		basetheta = tBaseBD.multiply(lnsqrtArg1BD, Gram.mc).subtract(t2, Gram.mc)
 				.subtract(Gram.pi8, Gram.mc).remainder(Gram.pi_2).doubleValue();
-		double tau = (Math.log(k1) - Math.log(k0))/2.0;
+		double tau = (Math.log(this.k1) - Math.log(this.k0))/2.0;
 		gamma = beta -tau;
     }
 
@@ -98,9 +99,13 @@ public class GSeries {
 		dsqrtArg1 = 1.0/(2*Math.sqrt(2*Math.PI*n0*spacing));
 		for (int i = 0; i < n1-n0+1; i++) {
 			double t = (i+n0)*spacing;
-			gAtBeta[i] = gSeries(t);
+			gAtBeta[i] = gSeriesForSmallT(t);
 		}
 	}
+	
+    public void setgAtBeta(double[][] gAtBeta) {
+        this.gAtBeta = gAtBeta;
+    }
 	
 	public double riemannZeta(double[] g, double tincr){
 		tincr -= begin;
@@ -144,17 +149,24 @@ public class GSeries {
 	 * @param k1
 	 * @param offset
 	 * @param begin
-	 * @param incr
+	 * @param spacing
 	 * @param R
 	 * @return
 	 */
-	private final  double[][] evaluateWithOffset(int k0, int k1, double begin, double incr, int R, BigDecimal tBase){
-		double[][] gAtBeta = fSeries(k0, k1, incr, R, tBase);
+	private final  double[][] evaluateWithOffset( int R, BigDecimal tBase){
+		double[][] gAtBeta = fSeries(k0, k1, spacing, R, tBase);
 		//now ratate the f to g.
-		double costalpha = Math.cos(argalphaBase);
+		rotateFtoG(gAtBeta);
+		
+		return gAtBeta;
+	}
+
+    public void rotateFtoG( double[][] gAtBeta) {
+        int R  = gAtBeta.length;
+        double costalpha = Math.cos(argalphaBase);
 		double sintalpha = Math.sin(argalphaBase);
-		double cosdalpha = Math.cos(incr*alpha);
-		double sindalpha = Math.sin(incr*alpha);
+		double cosdalpha = Math.cos(spacing*alpha);
+		double sindalpha = Math.sin(spacing*alpha);
 		for (int j = 0; j < R; j++) {
 			double tmp = gAtBeta[j][0]*costalpha + gAtBeta[j][1]*sintalpha;
 			gAtBeta[j][1] = -gAtBeta[j][0]*sintalpha + gAtBeta[j][1]*costalpha;
@@ -164,9 +176,7 @@ public class GSeries {
 			sintalpha = sintalpha*cosdalpha + costalpha*sindalpha;
 			costalpha = tmpCos;
 		}
-		
-		return gAtBeta;
-	}
+    }
 
 	public static double[][] fSeries(int k0, long k1, double incr, int R, BigDecimal tBase) {
 		double[][] fAtBeta = new double[R][2];
@@ -197,7 +207,7 @@ public class GSeries {
 	 * @param t
 	 * @return
 	 */
-	double[] gSeries(double t){
+	double[] gSeriesForSmallT(double t){
 		double[] g = new double[2];
 		double f0 = 0, f1 = 0;
 		for (int i = k0; i <= k1; i++) {
@@ -210,7 +220,7 @@ public class GSeries {
 	}
 
 	private  double[] testblfiSum( double t0, int M) {
-		double[] directEval = gSeries(t0);
+		double[] directEval = gSeriesForSmallT(t0);
 		double[] sum = new double[]{0,0};
 		//int midIdx = (int) (t0/spacing);
 		int midIdx = (int) ((t0-begin)/spacing);
@@ -306,7 +316,7 @@ public class GSeries {
 		for (int i = 0; i < offsets.length; i++) {
 			double t0 = (minIndex+N/2+offsets[i])*x.spacing;
 			double[] sum = x.testblfiSum( t0, 3);
-			System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeries(t0)));
+			System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeriesForSmallT(t0)));
 		}
 	}
 

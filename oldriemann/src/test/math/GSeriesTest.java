@@ -157,7 +157,7 @@ public class GSeriesTest {
     }
     
 	/**
-	 * Test method for {@link math.GSeries#gSeries(double)}.
+	 * Test method for calculating calculating and storing G at E12.
 	 */
 	@Test  @Ignore 
 	public void test1E12() throws Exception{
@@ -220,7 +220,7 @@ public class GSeriesTest {
         out.close();
     }
     
-    @Test 
+    @Test @Ignore
     public void testCorrelationE12() throws Exception{
         nf.setMinimumFractionDigits(3);
         nf.setMaximumFractionDigits(3);
@@ -504,7 +504,7 @@ public class GSeriesTest {
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
 		double[] gFromBLFI = x.blfiSumWithOffset( t0, 2);
-		double[] directEval = x.gSeries(t0);
+		double[] directEval = x.gSeriesForSmallT(t0);
 		assertTrue(Math.abs(gFromBLFI[0] - directEval[0]) + Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
 		System.out.println(t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ": " + Arrays.toString(directEval));
 	}

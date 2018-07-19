@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
 
+import math.GSeries;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
@@ -160,8 +162,8 @@ public class Interpolate {
         File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
                 "stats", "reFGram"));
         
-        PrintStream imF = new PrintStream(file);
-        PrintStream reF = new PrintStream(reFile);
+//        PrintStream imF_stream = new PrintStream(file);
+//        PrintStream reF_stream = new PrintStream(reFile);
 
         BufferedReader zetaReader = new BufferedReader(new FileReader(
                 "data/zetaE12.csv"));
@@ -169,15 +171,22 @@ public class Interpolate {
             zetaReader.readLine();
         }
         BufferedReader[] zeroIn = getZerosFile();
-        double baseLimit = Rosser.getParamDouble("baseLimit");
-        double gramIncr = Rosser.getParamDouble("gramIncr");
-        int N = Rosser.getParamInt("N");
-        N = 2000;
-        int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
             correction = Rosser.getParamInt("correction");
         }
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        int k0 = 1, k1=0;
+        int noffset = Rosser.getParamInt("noffset");
+        final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
+        double begin= baseLimit + (noffset-correction)* (gramIncr);
+        GSeries gSeries = new GSeries(k0, k1, offset, begin, gramIncr);
+        double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
+        System.out.println( gSeries.begin + ", " + zetaCorrection);
+        
+        int N = Rosser.getParamInt("N");
+        N = 2000;
         int count = 0;
         Poly4 poly = null;
         ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
@@ -205,7 +214,8 @@ public class Interpolate {
             double zetaActual = Double.parseDouble(parsed[1]);
             //apply correction to get F
             //what about factor of 2?
-            reF.println((n+1) + ", " + ((n%2==0)?-zetaActual:zetaActual));
+            double zeta = (zetaEst - correction)/2;
+//            reF_stream.println((n+1) + ", " + ((n%2==0)?-zeta:zeta));
 
             double err = zetaActual-zetaEst;
             zetaErr += err;
@@ -237,7 +247,8 @@ public class Interpolate {
             }
             //apply correction to get F
             //what about factor of 2?
-            imF.println((n+1) + ", " + ((n%2==0)?-zetaEstMid:zetaEstMid));
+            zeta = (zetaEstMid - correction)/2;
+//            imF_stream.println((n+1) + ", " + ((n%2==0)?-zeta:zeta));
 //            System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
             if (count==N-1) {
                 System.out.println("final n " + n );
@@ -246,9 +257,12 @@ public class Interpolate {
         }
         System.out.println("*** zetaErr " + zetaErr/N);
         System.out.println("*** zetaMidMean " + zetaMidMean/N);
+        double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
+        zetaCorrection = GSeries.correction( predictedSqrtArg1);
+        System.out.println( ": " + zetaCorrection);
         zetaReader.close();
-        imF.close();
-        reF.close();
+//        imF_stream.close();
+//        reF_stream.close();
     }
     public static void main(String[] args) throws Exception{
         Rosser.readConfig("data/RosserConfig.txt");

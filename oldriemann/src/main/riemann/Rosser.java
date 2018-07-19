@@ -39,7 +39,7 @@ public class Rosser {
 	static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
 	private static int goodCount;
 	private static int badCount;
-    static Map<String,String> configParams;
+    public static Map<String,String> configParams;
 	
 	// one instance per type of Gram Block and pattern
 	public static class GramBlock{
