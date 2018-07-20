@@ -17,6 +17,6 @@ lines(ht,test, col="green")
 lines(df$V1 ,df$V2, col="red")
 }
 
-figure()
+#figure()
 out = data.frame(ht+0.5, test)
 write.csv(out, row.names = F, file = "../oldriemann/out/imF_Gram_E12.csv")
