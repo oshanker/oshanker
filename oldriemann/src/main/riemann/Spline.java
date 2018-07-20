@@ -37,17 +37,30 @@ public class Spline {
             return ret;
         }
 
+        public double seconddDer(double x){
+            double ret = 0;
+            double xifac = (x-xi)/h;
+            ret = 2*xifac*((si1-2*yi1/h))/h;
+            ret += 2*(yi1 + (x-xi-h)*(si1-2*yi1/h))/(h*h);
+            ret += 2*xifac*((si1-2*yi1/h))/h;
+            double xi1fac = (x-xi-h)/h;
+            ret += 2*xi1fac*((si+2*yi/h))/h;
+            ret += 2*(yi + (x-xi)*(si+2*yi/h))/(h*h);
+            ret += 2*xi1fac*((si+2*yi/h))/h;
+            return ret;
+        }
+
     }
 
     public static void main(String[] args) {
-        double xi = 1, h = 1;
+        double xi = 1, h = 0.5;
         double yi = 2, yi1 = 2;
-        double si = -2, si1 = 2;
-        //2*(x-1)*(x-2) + 2
+        double si = -1, si1 = 1;
+        //2*(x-1)*(x-1.5) + 2
         Splinei splinei = new Splinei(xi, h, yi, yi1, si, si1);
         for (int i = 0; i < 3; i++) {
-            double x = 1+0.5*i;
-            System.out.println(x + ", " + splinei.eval(x) + ", " + splinei.der(x));
+            double x = 1+0.25*i;
+            System.out.println(x + ", " + splinei.eval(x) + ", " + splinei.der(x)+ ", " + splinei.seconddDer(x));
         }
     }
 
