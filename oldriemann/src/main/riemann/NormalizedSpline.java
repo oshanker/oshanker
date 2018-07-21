@@ -56,27 +56,15 @@ public class NormalizedSpline {
         super();
         this.y = y;
         this.N = this.y.length;
-        /**
-0, 0.0, 0.0, -1024.0
-1, -24.0, -160.0, -256.0
-2, -64.0, -128.0, 512.0
-3, -72.0, 96.0, 1280.0
-4, 0.0, 512.0, 2048.0
-5, 200.0, 1120.0, 2816.0
-From second der at i = 2 :-115.2, -144.0
-From second der at i = 3 :153.6, 192.0
-From second der at i = 4 :652.8, 816.0
-From first spline :-224.0, -224.0
-From last spline :560.0, 560.0
-         */
     }
     
-    public void fit(){
+    public double[] fit(){
         //si[1]
         System.out.println();
         double[] si = new double[N-1];
         double[] diag = new double[N-1];
         double[] rhs = new double[N-1];
+        double[] rIm = new double[N];
         //init
         diag[1] = 4.0;
         rhs[1] = (5*y[2]-4*y[1]-y[0]);
@@ -112,24 +100,35 @@ From last spline :560.0, 560.0
         }
         si[index] = (rhs[index]-2*si[index-1])/diag[index];
         
-        System.out.println(Arrays.toString(diag));
-        System.out.println(Arrays.toString(rhs));
-        System.out.println(Arrays.toString(si));
+        index = 0;
+        rIm[index] = y[index+2] - 3*(3*si[index+1]+si[index+2])/8;
+        index++;
+        while(index<N-2){
+            rIm[index] = (y[index]+y[index+1])/2 + (si[index]-si[index+1])/8;
+            index++;
+        }
+        rIm[index] = y[index-1] + 3*(3*si[index]+si[index-1])/8;
+        return rIm;
     }
 
 
     public static void main(String[] args) {
         //x^3-8x^2
-        int N = 6;
+        int N = 7;
         double[] y = new double[N];
+        double[] rIm = new double[N];
         for (int i = 0; i < N; i++) {
             double x = 2*i;
-             y[i] = x*x*x - 8*x*x;
-            System.out.println(i + ", " + y[i] );
+            y[i] = f(x);
+            rIm[i] = f(x+1);
+            System.out.println(i + ", " + y[i] + ", " +  rIm[i]);
         }
         NormalizedSpline normalizedSpline = new NormalizedSpline(y);
         normalizedSpline.fit();
     }
 
+    private static double f(double x){
+        return x*x*x - 8*x*x;
+    }
 
 }

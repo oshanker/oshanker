@@ -2,13 +2,35 @@ package riemann;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import riemann.NormalizedSpline.Splinei;
 
 public class NormalizedSplineTest {
+    private static double f(double x){
+        return x*x*x - 8*x*x + 5*x - 40 ;
+    }
+
 
     @Test
+    public void testMid() {
+        int N = 8;
+        double[] y = new double[N];
+        double[] rIm = new double[N];
+        for (int i = 0; i < N; i++) {
+            double x = 2*i;
+            y[i] = f(x);
+            rIm[i] = f(x+1);
+        }
+        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
+        double[] actual = normalizedSpline.fit();
+        for (int i = 0; i < N-1; i++) {
+            assertEquals("predicted i = " + i + " :", rIm[i] , actual[i], 0.0000001 ) ;
+        }
+    }
+    
+    @Test @Ignore
     public void test() {
         double xi = 0, h = 8;
         double yi = 0, yi1 = 0;
