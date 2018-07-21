@@ -34,7 +34,7 @@ public class SplineTest {
             double slopei = 0, slopei1 = 64;
             //x^3-8x^2
             Splinei splinei = new Splinei(xi, 8, yi, yi1, slopei, slopei1);
-            int N = 5;
+            int N = 6;
             double[] si = new double[N];
             double[] y = new double[N];
             for (int i = 0; i < N; i++) {
@@ -47,7 +47,18 @@ public class SplineTest {
              * h*(si2+4si1+si)=3*(yi2-yi)
              */
             double h = 2;
-            assertEquals("From second der at x = 4 :", (h*(si[3]+4*si[2]+si[1])) , 3*(y[3]-y[1]), 0.0000001 ) ;
+            double left = h*(si[3]+4*si[2]+si[1]);
+            double right = 3*(y[3]-y[1]);
+            assertEquals("From second der at first spline end :", left , right, 0.0000001 ) ;
+            System.out.println("From second der at first spline end :" +  left + ", " + right ) ;
+            left = h*(2*si[2]+4*si[1]);
+            right = (5*y[2]-4*y[1]-y[0]);
+            assertEquals("From first spline :", left , right, 0.0000001 ) ;
+            System.out.println("From first spline :" +  left + ", " + right ) ;
+            left = h*(2*si[N-3]+4*si[N-2]);
+            right = (-5*y[N-3]+4*y[N-2]+y[N-1]);
+            assertEquals("From last spline :", left , right, 0.0000001 ) ;
+            System.out.println("From last spline :" +  left + ", " + right ) ;
         }
 
 }
