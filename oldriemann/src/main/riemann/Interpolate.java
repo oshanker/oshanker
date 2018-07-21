@@ -177,12 +177,19 @@ public class Interpolate {
         int noffset = Rosser.getParamInt("noffset");
         final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
         double begin= baseLimit + (noffset-correction)* (gramIncr);
+        
+        BigDecimal tBaseBD = BigDecimal.valueOf(begin).add(
+                offset, Gram.mc);
+        System.out.println("**** " + gramIncr + " cf " + Gram.gramInterval(tBaseBD));
         GSeries gSeries = new GSeries(k0, k1, offset, begin, gramIncr);
         double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
+
         System.out.println( gSeries.begin + ", " + zetaCorrection);
         
         int N = Rosser.getParamInt("N");
-        N = 100;
+        N = 100000;
+        tBaseBD = tBaseBD.add(BigDecimal.valueOf(N*gramIncr));
+        System.out.println("**** " + gramIncr + " cf " + Gram.gramInterval(tBaseBD));
         int count = 0;
         Poly4 poly = null;
         ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
@@ -190,7 +197,10 @@ public class Interpolate {
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
         
         double[] h = new double[N];
-        double zetaMidMean = 0;
+        double zetaMidMeanOdd = 0;
+        double zetaGramMeanOdd = 0;
+        double zetaMidMeanEven = 0;
+        double zetaGramMeanEven = 0;
         double absMax = 0;
         int idx = 0;
         while (count < N  ) {
@@ -210,6 +220,11 @@ public class Interpolate {
             //apply correction to get F
             //what about factor of 2?
             double zeta = (zetaEst - correction)/2;
+            if((n%2==0)){
+                zetaGramMeanOdd += zeta;
+            } else {
+                zetaGramMeanEven += zeta;
+            }
             reF_stream.println((n+1) + ", " + ((n%2==0)?-zeta:zeta));
 
 //            System.out.println();
@@ -227,7 +242,6 @@ public class Interpolate {
             }
             
             double zetaEstMid = poly.eval(upperLimit);
-            zetaMidMean += zetaEstMid;
             if(Math.abs(zeroInput.lastZero[2])>absMax){
                 absMax = Math.abs(zeroInput.lastZero[2]);
                 if(absMax>130){
@@ -241,6 +255,11 @@ public class Interpolate {
             //apply correction to get F
             //what about factor of 2?
             zeta = (zetaEstMid - correction)/2;
+            if((n%2==0)){
+                zetaMidMeanOdd += zeta;
+            } else {
+                zetaMidMeanEven += zeta;
+            }
             double imFmid = ((n%2==0)?-zeta:zeta);
             imF_stream.println((n+1) + ", " + imFmid);
             h[idx] = imFmid;
@@ -251,7 +270,10 @@ public class Interpolate {
             idx++;
             count++;
         }
-        System.out.println("*** zetaMidMean " + zetaMidMean/N);
+        System.out.println("*** zetaMidMeanOdd " + zetaMidMeanOdd/N);
+        System.out.println("*** zetaGramMeanOdd " + zetaGramMeanOdd/N);
+        System.out.println("*** zetaMidMeanEven " + zetaMidMeanEven/N);
+        System.out.println("*** zetaGramMeanEven " + zetaGramMeanEven/N);
         double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
         zetaCorrection = GSeries.correction( predictedSqrtArg1);
         System.out.println( ": " + zetaCorrection);
@@ -260,24 +282,13 @@ public class Interpolate {
         imFGramPoints(h);
     }
     
-    private static void imFGramPoints(double[] h) {
-        double[][] imFGram = new double[h.length][2];
-        imFGram[0][0] = Double.NEGATIVE_INFINITY;
-        imFGram[0][1] = Double.NEGATIVE_INFINITY;
-        Quadratic initial = new Quadratic(0,1,h);
-        System.out.println(initial.eval(0.5));
-        System.out.println(initial.eval(1.5));
-        System.out.println(initial.eval(0.75));
-        /**
-         * h0 h1 h2 h3 h4
-         * knots h0 h2 h4
-         * cubic c0: h0-h2, c2: h2-h4 -> 8 coefficients
-         * ends vals for c0 and c2: 4 constraints
-         * slope at h2: 1 constraint
-         * second der at h2: 1 constraint
-         * two more constraints needed: vals at h1 and h3.
-         * Better still, have knots at all hi except first and last internal hi.
-         */
+    private static void imFGramPoints(double[] imFmid) {
+
+        NormalizedSpline normalizedSpline = new NormalizedSpline(imFmid);
+        double[] actual = normalizedSpline.evalMid();
+        for (int i = 0; i < 3; i++) {
+            System.out.println(actual[i]);
+        }
     }
 
     public static void main(String[] args) throws Exception{

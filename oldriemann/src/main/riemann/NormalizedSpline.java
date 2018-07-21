@@ -50,21 +50,20 @@ public class NormalizedSpline {
     }
     
     final double[] y;
+    final double[] si;
     final int N;
 
     public NormalizedSpline(double[] y) {
         super();
         this.y = y;
         this.N = this.y.length;
+        this.si = new double[N-1];
+        fit();
     }
     
-    public double[] fit(){
-        //si[1]
-        System.out.println();
-        double[] si = new double[N-1];
+    public void fit(){
         double[] diag = new double[N-1];
         double[] rhs = new double[N-1];
-        double[] rIm = new double[N];
         //init
         diag[1] = 4.0;
         rhs[1] = (5*y[2]-4*y[1]-y[0]);
@@ -100,14 +99,18 @@ public class NormalizedSpline {
         }
         si[index] = (rhs[index]-2*si[index-1])/diag[index];
         
-        index = 0;
-        rIm[index] = y[index+2] - 3*(3*si[index+1]+si[index+2])/8;
-        index++;
-        while(index<N-2){
-            rIm[index] = (y[index]+y[index+1])/2 + (si[index]-si[index+1])/8;
-            index++;
+    }
+
+    public double[] evalMid() {
+        int index1 = 0;
+        double[] rIm = new double[N-1];
+        rIm[index1] = y[index1+2] - 3*(3*si[index1+1]+si[index1+2])/8;
+        index1++;
+        while(index1<N-2){
+            rIm[index1] = (y[index1]+y[index1+1])/2 + (si[index1]-si[index1+1])/8;
+            index1++;
         }
-        rIm[index] = y[index-1] + 3*(3*si[index]+si[index-1])/8;
+        rIm[index1] = y[index1-1] + 3*(3*si[index1]+si[index1-1])/8;
         return rIm;
     }
 
@@ -124,7 +127,8 @@ public class NormalizedSpline {
             System.out.println(i + ", " + y[i] + ", " +  rIm[i]);
         }
         NormalizedSpline normalizedSpline = new NormalizedSpline(y);
-        normalizedSpline.fit();
+        double[] actual = normalizedSpline.evalMid();
+        System.out.println(Arrays.toString(actual));
     }
 
     private static double f(double x){

@@ -24,7 +24,7 @@ public class NormalizedSplineTest {
             rIm[i] = f(x+1);
         }
         NormalizedSpline normalizedSpline = new NormalizedSpline(y);
-        double[] actual = normalizedSpline.fit();
+        double[] actual = normalizedSpline.evalMid();
         for (int i = 0; i < N-1; i++) {
             assertEquals("predicted i = " + i + " :", rIm[i] , actual[i], 0.0000001 ) ;
         }

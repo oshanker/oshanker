@@ -17,7 +17,8 @@ import riemann.Riemann;
  *
  */
 public class GSeries {
-	final int k0, k1;
+	final int k0;
+    public final int k1;
 	/**
 	 * rotation from F to G:
 	 * G(t) = exp(−i*alpha*t)F(t)

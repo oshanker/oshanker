@@ -67,7 +67,7 @@ public class MoreGSeriesTest {
         //        1.7592847984372848 ** 0.03495629927494104
         final int initialPadding = 40;
         double zeta = evaluateZeta(261.07309238484356, initialPadding, gSeries);
-        System.out.println( " zeta " + zeta);
+        System.out.println( " zeta at Gram " + zeta);
         double[] zero = {261.0016582858428, 261.31522681873514};
         double[] expectedDer = {28.452144305679546, -6.883771986248166};
         for (int i = 0; i < zero.length; i++) {
