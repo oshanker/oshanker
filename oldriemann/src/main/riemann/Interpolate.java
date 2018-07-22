@@ -187,7 +187,7 @@ public class Interpolate {
         System.out.println( gSeries.begin + ", " + zetaCorrection);
         
         int N = Rosser.getParamInt("N");
-        N = 100000;
+        N = 1000200;
         tBaseBD = tBaseBD.add(BigDecimal.valueOf(N*gramIncr));
         System.out.println("**** " + gramIncr + " cf " + Gram.gramInterval(tBaseBD));
         int count = 0;
@@ -282,13 +282,18 @@ public class Interpolate {
         imFGramPoints(h);
     }
     
-    private static void imFGramPoints(double[] imFmid) {
+    private static void imFGramPoints(double[] imFmid) throws FileNotFoundException {
+        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
+                "stats", "imF_Gram_"));
+        PrintStream imF_stream = new PrintStream(imFile);
+        imF_stream.println( "n, ImFGram" );
 
         NormalizedSpline normalizedSpline = new NormalizedSpline(imFmid);
         double[] actual = normalizedSpline.evalMid();
-        for (int i = 0; i < 3; i++) {
-            System.out.println(actual[i]);
+        for (int i = 0; i < actual.length; i++) {
+            imF_stream.println((i+3) + ", " + actual[i]);
         }
+        imF_stream.close();
     }
 
     public static void main(String[] args) throws Exception{

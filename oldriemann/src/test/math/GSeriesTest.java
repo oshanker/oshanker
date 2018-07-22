@@ -117,8 +117,8 @@ public class GSeriesTest {
 	/**
 	 * Test method for t = 2.7E9.
 	 */
-	@Test
-	public void testLargeOffset() {
+	@Test @Ignore
+	public void testE27E9() {
 		int k0 = 1, k1=206393;
 		int R = 10000;
 		long init= System.currentTimeMillis();
@@ -137,7 +137,7 @@ public class GSeriesTest {
 	}
 	
     @Test @Ignore
-    public void testX() throws Exception{
+    public void testGenerateGramE12() throws Exception{
         int R = 30040;
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin = Gram.gram(offset, 243.77756012466054 );
@@ -160,14 +160,14 @@ public class GSeriesTest {
 	 * Test method for calculating calculating and storing G at E12.
 	 */
 	@Test  @Ignore 
-	public void test1E12() throws Exception{
+	public void testStoreGE12() throws Exception{
         for (int i = 0; i < gramE12.length; i++) {
-            testE12(gramE12[i][1], gramE12[i][0]);
+            storeGE12(gramE12[i][1], gramE12[i][0]);
         }
 	}
 
     @Test @Ignore 
-    public void testReadX() throws Exception{
+    public void testSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
         File file = new File("out/6.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
@@ -208,14 +208,14 @@ public class GSeriesTest {
     }
     
     @Test @Ignore
-    public void testRead1E12() throws Exception{
+    public void testWriteZetaPhiE12() throws Exception{
         File file = new File("out/gzetaE12/gzeta6.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         PrintWriter out = new PrintWriter(file);
         for (int i = 0; i < gramE12.length; i++) {
-            testReadE12(i, out );
+            writeZetaPhi(i, out );
         }
         out.close();
     }
@@ -247,7 +247,7 @@ public class GSeriesTest {
         out.close();
     }
 
-    private void testReadE12(int sampleIndex, PrintWriter out) throws Exception{
+    private void writeZetaPhi(int sampleIndex, PrintWriter out) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getGSeries(t0, offset);
@@ -320,7 +320,7 @@ public class GSeriesTest {
         return gAtBeta;
     }
 
-    private void testE12(double zero, double t0) throws IOException, FileNotFoundException {
+    private void storeGE12(double zero, double t0) throws IOException, FileNotFoundException {
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin = Gram.gram(offset, t0 );

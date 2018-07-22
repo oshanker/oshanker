@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -28,9 +29,65 @@ public class MoreGSeriesTest {
         nf.setMaximumFractionDigits(8);
         nf.setGroupingUsed(false);
     }
+    
+    @Test 
+    public void testSymmetryRelations() throws Exception{
+        //check the symmetry and antisymmetry relations from the output of distributions
+        File file = new File("out/kurtosis6.txt");
+        BufferedReader zeroIn = new BufferedReader(new FileReader(file));
+        int k = 12;
+        double[][] vals = new double[k][3];
+        for (int i = 0; i < k; i++) {
+            String in = zeroIn.readLine();
+            String[] line = in.split("\\s+");
+            for (int j = 0; j < vals[i].length; j++) {
+                vals[i][j]= Double.parseDouble(line[j+1].trim());
+            }
+        }
+        double skewSum = 0;
+        for (int i = 0; i < k; i++) {
+            double skew = vals[i][1];
+            skewSum += skew;
+        }
+        skewSum /= k;
+        System.out.println("skewSum " + skewSum);
+        double skewCoefficient = (vals[0][1]-skewSum);
+        for (int i = 0; i < k; i++) {
+            double skew = vals[i][1];
+            System.out.println(
+                    (skew-skewSum)+ ", " + skewCoefficient*Math.cos(i*2.0*Math.PI/k)
+                    );
+        }
+       
+        zeroIn.close();
+    }
 
-    @Test
+    @Test @Ignore
     public void testInterpolate() throws Exception{
+        int N = 1000000;
+        GSeries gSeries = createGseries(N);
+        //[261.0016582858428, 28.452144305679546, 2.3693797179877887], 261.07309238484356, 
+        //[261.31522681873514, -6.883771986248166, 0.08672183144103376]
+        //        1.7592847984372848 ** 0.03495629927494104
+        final int initialPadding = 40;
+        double zeta = evaluateZeta(261.07309238484356, initialPadding, gSeries);
+        System.out.println( " zeta at Gram " + zeta + " cf 1.7592847984372848" );
+        double[] zero = {261.0016582858428, 261.31522681873514};
+        double[] expectedDer = {28.452144305679546, -6.883771986248166};
+        for (int i = 0; i < zero.length; i++) {
+            validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
+        }
+
+        File file = new File("out/gzetaE12/gzeta6.csv");
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        PrintWriter out = new PrintWriter(file);
+        writeZetaPhi(N, out, initialPadding);
+        out.close();
+    }
+
+    public static GSeries createGseries(int N) throws IOException, FileNotFoundException {
         Rosser.readConfig("data/RosserConfig.txt");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
@@ -52,7 +109,6 @@ public class MoreGSeriesTest {
         BufferedReader imFReader = new BufferedReader(new FileReader(imFile));
         reFReader.readLine();
         imFReader.readLine();
-        int N = 99;
         double[][] fAtBeta = new double[N-1][2];
         for (int i = 0; i < fAtBeta.length; i++) {
             String[] reF = reFReader.readLine().split(",");
@@ -62,18 +118,52 @@ public class MoreGSeriesTest {
         }
         gSeries.rotateFtoG(fAtBeta);
         gSeries.setgAtBeta(fAtBeta);
-        //[261.0016582858428, 28.452144305679546, 2.3693797179877887], 261.07309238484356, 
-        //[261.31522681873514, -6.883771986248166, 0.08672183144103376]
-        //        1.7592847984372848 ** 0.03495629927494104
-        final int initialPadding = 40;
-        double zeta = evaluateZeta(261.07309238484356, initialPadding, gSeries);
-        System.out.println( " zeta at Gram " + zeta);
-        double[] zero = {261.0016582858428, 261.31522681873514};
-        double[] expectedDer = {28.452144305679546, -6.883771986248166};
-        for (int i = 0; i < zero.length; i++) {
-            validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
-        }
+        imFReader.close();
+        reFReader.close();
+        return gSeries;
+    }
 
+    private void writeZetaPhi(int N, PrintWriter out, int initialPadding) throws Exception{
+        GSeries gAtBeta = createGseries(N);
+        double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
+        int k = oddsum.length;
+        final double[] zeta = new double[2*k];
+        double incr  = gAtBeta.spacing;
+        final double firstGram = gAtBeta.begin + initialPadding*incr;
+        N -= 2*initialPadding;
+        double gram = firstGram-incr;
+        for (int i = 0; i < N; i++) {
+            gram += incr;
+            for (int j = 0; j < k; j++) {
+                double t = gram + j*incr/k;
+                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
+                        t, 4, initialPadding, 1.6E-9, false);
+                if(i%2==1){
+                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    oddsum[j] += zeta[k+j];
+                } else {
+                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
+                    evensum[j] += zeta[j];
+                }
+            }
+            if(i%2==1){
+                for (int j = 0; j < 2*k; j++) {
+                    if(j>0){out.print(", ");}
+                    out.print(nf.format(zeta[j]));
+                }
+                out.println();
+            }
+        }
+        for (int i = 0; i < oddsum.length; i++) {
+            oddsum[i] *= 2.0/N;
+            evensum[i] *= 2.0/N;
+        }
+        System.out.println(Arrays.toString(oddsum));
+        System.out.println(Arrays.toString(evensum));
+        for (int j = 0; j < k; j++) {
+            assertEquals(-2.00*Math.cos(j*Math.PI/k), oddsum[j], 0.08);
+            assertEquals(2.00*Math.cos(j*Math.PI/k), evensum[j], 0.08);
+        }
     }
     
     @Test @Ignore 
@@ -137,7 +227,7 @@ public class MoreGSeriesTest {
     public static void validateZero(double zero, double expectedDer, final int initialPadding, 
             GSeries gAtBeta, boolean checkAssert) {
         double zeta = evaluateZeta(zero, initialPadding, gAtBeta);
-        System.out.println( " zeta " + zeta);
+        System.out.println( " zeta " + zeta + " cf 0.0" );
         if(checkAssert){
         assertTrue(Math.abs(zeta) < 0.000001);
         }
@@ -147,7 +237,7 @@ public class MoreGSeriesTest {
         double zetaminus = evaluateZeta(zero-delta, initialPadding, gAtBeta);
         //244.92059950582586, 23.85164367971759, 1.0396728565623998
         double der = (zetaplus-zetaminus)/(2*delta);
-        System.out.println("der " + der);
+        System.out.println("der " + der + " cf " + expectedDer);
         if(checkAssert){
         assertEquals(expectedDer,der, 0.001);
         }
