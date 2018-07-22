@@ -66,19 +66,31 @@ public class MoreGSeriesTest {
     public void testInterpolate() throws Exception{
         int N = 1000000;
         GSeries gSeries = createGseries(N);
+        final int initialPadding = 40;
         //[261.0016582858428, 28.452144305679546, 2.3693797179877887], 261.07309238484356, 
         //[261.31522681873514, -6.883771986248166, 0.08672183144103376]
         //        1.7592847984372848 ** 0.03495629927494104
-        final int initialPadding = 40;
-        double zeta = evaluateZeta(261.07309238484356, initialPadding, gSeries);
-        System.out.println( " zeta at Gram " + zeta + " cf 1.7592847984372848" );
-        double[] zero = {261.0016582858428, 261.31522681873514};
-        double[] expectedDer = {28.452144305679546, -6.883771986248166};
+//        double zeta = evaluateZeta(261.07309238484356, initialPadding, gSeries);
+//        System.out.println( " zeta at Gram " + zeta + " cf 1.7592847984372848" );
+//        double[] zero = {261.0016582858428, 261.31522681873514};
+//        double[] expectedDer = {28.452144305679546, -6.883771986248166};
+        
+        /*
+[109.9434127500521, 207.28544365034014, 8.283292860041835], 109.99801991618585, [110.10427375389713, -61.091725512779625, 0.8755383742860865]
+7.852770303334955 ** 
+
+[115.21645409737458, -7.282653909337562, 0.8259045475747673], 115.31471904908707, [115.35911882837084, 17.960412142999786, 0.38874142446558396]
+-0.7183317846044628 ** 
+         */
+        double zeta = evaluateZeta(109.99801991618585, initialPadding, gSeries);
+        System.out.println( " zeta at Gram " + zeta + " cf 7.852770303334955" );
+        double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 115.35911882837084};
+        double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562, 17.960412142999786};
         for (int i = 0; i < zero.length; i++) {
             validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
         }
 
-        File file = new File("out/gzetaE12/gzeta6.csv");
+        File file = new File("out/gzetaE28/gzeta6.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -161,8 +173,8 @@ public class MoreGSeriesTest {
         System.out.println(Arrays.toString(oddsum));
         System.out.println(Arrays.toString(evensum));
         for (int j = 0; j < k; j++) {
-            assertEquals(-2.00*Math.cos(j*Math.PI/k), oddsum[j], 0.08);
-            assertEquals(2.00*Math.cos(j*Math.PI/k), evensum[j], 0.08);
+            assertEquals(-2.00*Math.cos(j*Math.PI/k), oddsum[j], 0.1);
+            assertEquals(2.00*Math.cos(j*Math.PI/k), evensum[j], 0.1);
         }
     }
     
