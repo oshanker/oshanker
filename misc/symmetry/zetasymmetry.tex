@@ -58,18 +58,20 @@ that the properties mentioned in this work do not seem to have been remarked upo
 
 \section{Introduction}
 In this work we discuss the symmetry properties of the distribution of Riemann zeta values on the critical axis. 
- The study of the symmetry properties  will hopefully give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
+ The study of the symmetry properties  should give us insight into the theoretical underpinnings of the location of zeros of the Riemann Zeta Function.
 The new results presented in this work are:
 \begin{enumerate}
 \item An anti-symmetry relation Equation~\ref{eq:antisym},
 \item A symmetry relation Equation~\ref{eq:sym}.
 \end{enumerate}
 Given that these conjectures express fundamental properties of the behavior of the zeta function, it seems surprising that they have not been commented on in the literature. Our current knowledge of the theory of the Riemann zeta function doesn't seem to help us understand the theoretical basis for the symmetries. The new results are stated in Section~\ref{conjectures}, after we set up the
-required notation. 
+required notation. There has been much study on the value distribution of the Riemann zeta function in the literature. In this work we will cite the references which have some bearing on the current results.
+
 The paper is organized as follows.
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function and presents the conjectured symmetry relations. 
 Section~\ref{sec3} provides evidence for the symmetry relations.
+In Section~\ref{sec4} we discuss related work in the literature.
 Section~\ref{conclusions} presents the conclusions.
 
 \section{\label{sec2}Notation for the Riemann zeta function and the symmetry properties}
@@ -85,7 +87,7 @@ For $\mathrm{Re} (s) > 1$ the Riemann Zeta function is defined as
  $\zeta ( s )$ can be continued to
 the complex plane. 
 The mean spacing $\delta$ of the zeros at height $t$ is $\delta = 2\pi(\ln (t/2\pi))^{-1}$. 
-For numerical studies of the Riemann hypothesis one defines Hardy's function 
+For numerical studies of the Riemann hypothesis one defines Hardy's function~\cite{Hardy 1918}
 \begin{equation}
 Z(t)=exp(i\theta(t))\zeta(1/2 +it) 
 \label{eq:hardy}
@@ -270,6 +272,23 @@ $\pi$ & -4.68 & 56.93\\
 }
 \end{table}
 
+\subsection{\label{kurtosis}Skewness and kurtosis}
+Table~\ref{tab:kurtosis4} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  
+Table~\ref{tab:kurtosis6} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$.  
+
+The tables show that the distributions are symmetric for reflections around Gram points ($\phi = 0$ and $\phi= \pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi = \pi/2$ and $\phi = 3\pi/2$). 
+The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 ($\phi=\pi/4$ and $\phi=5\pi/4$) of Table~\ref{tab:kurtosis4}  have anti-symmetric distribution parameters to within the statistical precision. 
+The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table ( $\phi=\pi/4$ and $\phi=7\pi/4$) have the same distribution parameters within statistical precision. Rows 3 and 7 ($\phi=\pi/2$ and $\phi=3\pi/2$) of Table~\ref{tab:kurtosis4} are interesting, in that they are related by both Equation~\ref{eq:sym} and Equation~\ref{eq:antisym}.
+
+The large values of  kurtosis show that the distributions tend to have heavy tails, or outliers. The distributions  also have large skew, except for $\phi = \pi/2$ and $\phi = 3\pi/2$, where the distributions are symmetric. 
+
+
+\subsection{\label{histograms}Histograms}
+Ref.~\cite{Shanker 2018}  presented figures for the histograms at even and odd Gram points, which are the histograms for $\phi=0$ and $\phi=\pi$ respectively. Figs.~\ref{pi2} and \ref{3pi2} show 
+the histograms for $\phi = \pi/2$ and $\phi = 3\pi/2$ respectively. Equation~\ref{eq:sym} predicts that the histograms have the same distribution. The figures validate this prediction to within the statistical precision.
+
+Further, Equation~\ref{eq:antisym} predicts that the histograms are mirror images of each other.  For both relations to be valid, the distributions have to be symmetric. The figures also validate this fact. While  the histograms are symmetric, the distribution is not normal.  This can be seen from the kurtosis values in Table~\ref{tab:kurtosis4}  for $\phi = \pi/2$ and $\phi = 3\pi/2$.
+
 \begin{figure*}
 \centering
 \includegraphics[width=0.8\textwidth]{pi2plot.pdf}
@@ -287,22 +306,13 @@ $\pi$ & -4.68 & 56.93\\
 \end{figure*}
 
 
-\subsection{\label{kurtosis}Skewness and kurtosis}
-Table~\ref{tab:kurtosis4} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/4$.  
-Table~\ref{tab:kurtosis6} shows the skewness and kurtosis for  $Z(t)$  when $\phi$ values are multiples of $\pi/6$.  
+\section{\label{sec4}Related work}
+The value distribution of the Riemann zeta function has been well studied in the literature. We cannot cover all of this in the current work. We refer to Ivi\'c's monograph~\cite{Ivic 2013} for a comprehensive survey of  the field.
+Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is approximately normally distributed with a standard deviation of order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
+similar result~\cite{Selberg 1989, Selberg 1991} for $\log (|Z(t)|)$.
 
-The tables show that the distributions are symmetric for reflections around Gram points ($\phi = 0$ and $\phi= \pi$) and anti-symmetric for reflections around the mid-points of Gram intervals ($\phi = \pi/2$ and $\phi = 3\pi/2$). 
-The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 ($\phi=\pi/4$ and $\phi=5\pi/4$) of Table~\ref{tab:kurtosis4}  have anti-symmetric distribution parameters to within the statistical precision. 
-The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table ( $\phi=\pi/4$ and $\phi=7\pi/4$) have the same distribution parameters within statistical precision. Rows 3 and 7 ($\phi=\pi/2$ and $\phi=3\pi/2$) of Table~\ref{tab:kurtosis4} are interesting, in that they are related by both Equation~\ref{eq:sym} and Equation~\ref{eq:antisym}.
-
-The large values of  kurtosis show that the distributions tend to have heavy tails, or outliers. The distributions  also have large skew, except for $\phi = \pi/2$ and $\phi = 3\pi/2$, where the distributions are symmetric. 
-
-
-\subsection{\label{histograms}Histograms}
-Ref.~\cite{Shanker 2018}  presented figures for the histograms at even and odd Gram points, which are the histograms for $\phi=0$ and $\phi=\pi$ respectively. Figs.~\ref{pi2} and \ref{3pi2} show 
-the histograms for $\phi = \pi/2$ and $\phi = 3\pi/2$ respectively. Equation~\ref{eq:sym} predicts that the histograms have the same distribution. The figures validate this prediction to within the statistical precision.
-
-Further, Equation~\ref{eq:antisym} predicts that the histograms are mirror images of each other.  For both relations to be valid, the distributions have to be symmetric. The figures also validate this fact. While  the histograms are symmetric, the distribution is not normal.  This can be seen from the kurtosis values in Table~\ref{tab:kurtosis4}  for $\phi = \pi/2$ and $\phi = 3\pi/2$.
+Regarding the value distribution at specific points along the Gram interval, we have already mentioned the work of Titchmarsh~\cite{Titchmarsh 1934} and Kalpokas and Steuding~\cite{kalpokas 2009} pertaining to the
+mean value of the Riemann zeta function. Lester's~\cite{Lester 2013} Ph. D. thesis also considers the distribution of $\log (|\zeta(\frac{1}{2} + it)|)$  for specific points along the Gram interval. The anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym} of the current manuscript seem to be new. 
 
 \section{\label{conclusions}Conclusions}
 
@@ -333,6 +343,11 @@ Function,'' Oxford University Press, Second Edition, (1986)
 \bibitem {Edwards(1974)} H. M. Edwards, ``Riemann's Zeta Function,''
 Academic Press,  (1974)
 
+\bibitem{Hardy 1918} G. H. Hardy and J. E. Littlewood,
+``Contributions to the theory of the Riemann
+zeta-function and the distribution of primes",
+{\it Acta Math.} {\bf41}(1918), 119-196
+
 \bibitem{Gram 1903} J. P. Gram, 
 ``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
 {\it Acta Math.} {\bf27}(1903), 289-304
@@ -362,6 +377,24 @@ Function and 175 Million of its Neighbors", report,
 ``The $10^{13}$ first zeros of the Riemann Zeta function,
 and zeros computation at very large height", report,
 \url{http://numbers.computation.free.fr/Constants/Miscellaneous/zetazeros1e13-1e24.pdf}, (2004)
+
+\bibitem {Ivic 2013} Aleksandar Ivi\'c, ``The Theory of Hardy's Z-Function,''
+Cambridge University Press,  (2013)
+
+\bibitem{Hejhal} D. A. Hejhal,
+``On a result of Selberg concerning zeros of linear combinations
+of L-functions", 
+{\it Int. Math. Res. Not.} {\bf11}(2000), 551-577
+
+\bibitem {Selberg 1989} A. Selberg, ``Selected Papers, Vol. I,''
+Springer Verlag,  (1989)
+
+\bibitem {Selberg 1991} A. Selberg, ``Selected Papers, Vol. II,''
+Springer Verlag,  (1991)
+
+\bibitem {Lester 2013} Stephen J. Lester, ``The Distribution of Values of the
+Riemann Zeta-Function,''
+Ph. D. dissertation, University of Rochester,  (2013)
 
 
 \end{thebibliography} 
