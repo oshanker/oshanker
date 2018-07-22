@@ -158,12 +158,12 @@ public class Interpolate {
     private static void readItems(   )
             throws FileNotFoundException, IOException {
         PrintStream out = null;
-        File file = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "imF_midGram_"));
+//        File file = new File(Rosser.getParam("conjecturesOutFile").replace(
+//                "stats", "imF_midGram_"));
         File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
                 "stats", "reF_Gram_"));
         
-        PrintStream imF_stream = new PrintStream(file);
+//        PrintStream imF_stream = new PrintStream(file);
         PrintStream reF_stream = new PrintStream(reFile);
 
         BufferedReader[] zeroIn = getZerosFile();
@@ -178,18 +178,13 @@ public class Interpolate {
         final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
         double begin= baseLimit + (noffset-correction)* (gramIncr);
         
-        BigDecimal tBaseBD = BigDecimal.valueOf(begin).add(
-                offset, Gram.mc);
-        System.out.println("**** " + gramIncr + " cf " + Gram.gramInterval(tBaseBD));
         GSeries gSeries = new GSeries(k0, k1, offset, begin, gramIncr);
         double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
 
-        System.out.println( gSeries.begin + ", " + zetaCorrection);
+        System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection);
         
         int N = Rosser.getParamInt("N");
         N = 1000200;
-        tBaseBD = tBaseBD.add(BigDecimal.valueOf(N*gramIncr));
-        System.out.println("**** " + gramIncr + " cf " + Gram.gramInterval(tBaseBD));
         int count = 0;
         Poly4 poly = null;
         ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
@@ -261,7 +256,7 @@ public class Interpolate {
                 zetaMidMeanEven += zeta;
             }
             double imFmid = ((n%2==0)?-zeta:zeta);
-            imF_stream.println((n+1) + ", " + imFmid);
+//            imF_stream.println((n+1) + ", " + imFmid);
             h[idx] = imFmid;
 //            System.out.println(zetaEstMid + ", " +  upperLimit + " (" + (n+1) +")");
             if (count==N-1) {
@@ -276,8 +271,8 @@ public class Interpolate {
         System.out.println("*** zetaGramMeanEven " + zetaGramMeanEven/N);
         double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
         zetaCorrection = GSeries.correction( predictedSqrtArg1);
-        System.out.println( ": " + zetaCorrection);
-        imF_stream.close();
+        System.out.println( "zetaCorrection: " + zetaCorrection);
+//        imF_stream.close();
         reF_stream.close();
         imFGramPoints(h);
     }
