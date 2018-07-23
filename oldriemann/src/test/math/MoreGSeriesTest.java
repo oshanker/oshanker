@@ -30,7 +30,7 @@ public class MoreGSeriesTest {
         nf.setGroupingUsed(false);
     }
     
-    @Test 
+    @Test @Ignore
     public void testSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
         File file = new File("out/kurtosis6.txt");
@@ -62,9 +62,9 @@ public class MoreGSeriesTest {
         zeroIn.close();
     }
 
-    @Test @Ignore
+    @Test
     public void testInterpolate() throws Exception{
-        int N = 1000000;
+        int N = 199;
         GSeries gSeries = createGseries(N);
         final int initialPadding = 40;
         //[261.0016582858428, 28.452144305679546, 2.3693797179877887], 261.07309238484356, 
@@ -90,13 +90,13 @@ public class MoreGSeriesTest {
             validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
         }
 
-        File file = new File("out/gzetaE28/gzeta6.csv");
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        PrintWriter out = new PrintWriter(file);
-        writeZetaPhi(N, out, initialPadding);
-        out.close();
+//        File file = new File("out/gzetaE28/gzeta6.csv");
+//        if (!file.getParentFile().exists()) {
+//            file.getParentFile().mkdirs();
+//        }
+//        PrintWriter out = new PrintWriter(file);
+//        writeZetaPhi(N, out, initialPadding);
+//        out.close();
     }
 
     public static GSeries createGseries(int N) throws IOException, FileNotFoundException {
@@ -256,7 +256,10 @@ public class MoreGSeriesTest {
     }
 
     public static double evaluateZeta(double zero, final int initialPadding, GSeries gAtBeta) {
-        double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, initialPadding, 1.6E-9, false);
+        double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, 
+                initialPadding, 1.6E-9, false);
+        System.out.println("params " + zero + ", " + gAtBeta.midIdx 
+                + Arrays.toString(gAtBeta.gAtBeta[gAtBeta.midIdx]));
         double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
         return zeta;
     }

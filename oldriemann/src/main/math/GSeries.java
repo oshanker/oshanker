@@ -40,6 +40,8 @@ public class GSeries {
 	double lnsqrtArg1;
 	double basetheta;
 	
+    public int midIdx;
+	
     public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, double[][] gAtBeta){
         this(k0, k1, offset, begin, incr);
         this.gAtBeta = gAtBeta;
@@ -49,7 +51,7 @@ public class GSeries {
 		this(k0, k1, offset, begin, incr);
         BigDecimal tBaseBD = new BigDecimal(begin, Gram.mc).add(
                 offset, Gram.mc);
-        gAtBeta = evaluateWithOffset( R, tBaseBD);
+        gAtBeta = calculateGSeries( R, tBaseBD);
 	}
 
     public  GSeries(int k0, int k1, BigDecimal offset, double begin, double incr) {
@@ -154,7 +156,7 @@ public class GSeries {
 	 * @param R
 	 * @return
 	 */
-	private final  double[][] evaluateWithOffset( int R, BigDecimal tBase){
+	private final  double[][] calculateGSeries( int R, BigDecimal tBase){
 		double[][] gAtBeta = fSeries(k0, k1, spacing, R, tBase);
 		//now ratate the f to g.
 		rotateFtoG(gAtBeta);
@@ -220,7 +222,7 @@ public class GSeries {
 		return g;
 	}
 
-	private  double[] testblfiSum( double t0, int M) {
+	private  double[] testblfiSumSmallT( double t0, int M) {
 		double[] directEval = gSeriesForSmallT(t0);
 		double[] sum = new double[]{0,0};
 		//int midIdx = (int) (t0/spacing);
@@ -249,7 +251,7 @@ public class GSeries {
 	public  double[] diagnosticBLFISumWithOffset( double t0, int M, int terms, double tolerance, boolean print) {
 		double[] sum = new double[]{0,0};
 		double[] oldSum = new double[]{0,0};
-		int midIdx = (int) ((t0-begin)/spacing);
+		midIdx = (int) ((t0-begin)/spacing);
 		SUM:
 		for (int term = 0; term < terms; term++) {
 			oldSum[0] = sum[0];
@@ -287,7 +289,7 @@ public class GSeries {
 		return sum;
 	}
 
-	double[] blfiSumWithOffset( double t0, int M) {
+	double[] blfiSumWithOffsetSmallT( double t0, int M) {
 		double[] sum = new double[]{0,0};
 		int midIdx = (int) ((t0-begin)/spacing);
 		SUM:
@@ -316,7 +318,7 @@ public class GSeries {
 		double[] offsets = { 0.3, 0.5, 0.7};
 		for (int i = 0; i < offsets.length; i++) {
 			double t0 = (minIndex+N/2+offsets[i])*x.spacing;
-			double[] sum = x.testblfiSum( t0, 3);
+			double[] sum = x.testblfiSumSmallT( t0, 3);
 			System.out.println(t0 + " sum " + Arrays.toString(sum) + ": " + Arrays.toString(x.gSeriesForSmallT(t0)));
 		}
 	}

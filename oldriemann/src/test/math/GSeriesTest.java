@@ -130,7 +130,7 @@ public class GSeriesTest {
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
 		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[0], begin));
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
-		double[] gFromBLFI = gAtBeta.blfiSumWithOffset( 1287.5146091794, 4);
+		double[] gFromBLFI = gAtBeta.blfiSumWithOffsetSmallT( 1287.5146091794, 4);
 		double zeta = gAtBeta.riemannZeta(gFromBLFI, 1287.5146091794);
 		System.out.println("g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
 		assertTrue(Math.abs(gFromBLFI[0] - (-0.33143958775035764)) + Math.abs(gFromBLFI[1] - 0.0733285174786178) < 0.000005);
@@ -503,7 +503,7 @@ public class GSeriesTest {
 		System.out.println("calc for " + N + ": " + (end - init) + "ms");
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
-		double[] gFromBLFI = x.blfiSumWithOffset( t0, 2);
+		double[] gFromBLFI = x.blfiSumWithOffsetSmallT( t0, 2);
 		double[] directEval = x.gSeriesForSmallT(t0);
 		assertTrue(Math.abs(gFromBLFI[0] - directEval[0]) + Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
 		System.out.println(t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ": " + Arrays.toString(directEval));
