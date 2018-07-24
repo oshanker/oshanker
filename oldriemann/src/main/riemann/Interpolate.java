@@ -1,5 +1,8 @@
 package riemann;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -160,6 +163,7 @@ public class Interpolate {
         PrintStream out = null;
 
         BufferedReader[] zeroIn = getZerosFile();
+        
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
             correction = Rosser.getParamInt("correction");
@@ -169,8 +173,10 @@ public class Interpolate {
         int noffset = Rosser.getParamInt("noffset");
         final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
         double begin= baseLimit + (noffset-correction)* (gramIncr);
-        
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
+
+        
+        
         double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
 
         System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection);
@@ -263,32 +269,126 @@ public class Interpolate {
         imFGramPoints(h, g);
     }
     
-    private static void imFGramPoints(double[] imFmid, double[][] g) throws FileNotFoundException {
-        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "imF_Gram_"));
-        PrintStream imF_stream = new PrintStream(imFile);
-        imF_stream.println( "n, ImFGram" );
+    private static void imFGramPoints(double[] imFmid, double[][] fAtBeta ) throws IOException {
+//        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
+//                "stats", "imF_Gram_"));
+//        PrintStream imF_stream = new PrintStream(imFile);
+//        imF_stream.println( "n, ImFGram" );
+//        File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
+//                "stats", "reF_Gram_"));
+//        PrintStream reF_stream = new PrintStream(reFile);
+//        for (int i = 0; i < fAtBeta.length; i++) {
+//            reF_stream.println((i+3) + ", " + fAtBeta[i][0]);
+//        }
 
-        File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "reF_Gram_"));
-        PrintStream reF_stream = new PrintStream(reFile);
-        for (int i = 0; i < g.length; i++) {
-            reF_stream.println((i+3) + ", " + g[i][0]);
+        int correction = 0;
+        if(Rosser.configParams.containsKey("correction")){
+            correction = Rosser.getParamInt("correction");
         }
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        int noffset = Rosser.getParamInt("noffset");
+        final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
+        double begin= baseLimit + (noffset-correction-1)* (gramIncr);
+        GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
+        System.out.println( gSeries.begin + ", " );
 
         NormalizedSpline normalizedSpline = new NormalizedSpline(imFmid);
-        double[] actual = normalizedSpline.evalMid();
-        for (int i = 0; i < actual.length; i++) {
-            imF_stream.println((i+3) + ", " + actual[i]);
+        int seriesOffset = 1, position = 1;
+        normalizedSpline.evalMid(fAtBeta, seriesOffset, position);
+
+        gSeries.rotateFtoG(fAtBeta);
+        fAtBeta[0][1] =  Double.MIN_VALUE;      
+        gSeries.setgAtBeta(fAtBeta);
+       
+        int initialPadding = 40;
+        double zeta = evaluateZeta(109.99801991618585, initialPadding , gSeries);
+        System.out.println( " zeta at Gram " + zeta + " cf 7.852770303334955" );
+        double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 115.35911882837084};
+        double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562, 17.960412142999786};
+        for (int i = 0; i < zero.length; i++) {
+            validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
         }
-        
-        imF_stream.close();
-        reF_stream.close();
+
+//        for (int i = 0; i < fAtBeta.length-1; i++) {
+//            imF_stream.println((i+3) + ", " + fAtBeta[i][1]);
+//        }        
+//        imF_stream.close();
+//        reF_stream.close();
     }
 
     public static void main(String[] args) throws Exception{
         Rosser.readConfig("data/RosserConfig.txt");
         readItems();
+    }
+
+    public static void validateZero(double zero, double expectedDer, final int initialPadding, 
+            GSeries gAtBeta, boolean checkAssert) {
+        double zeta = Interpolate.evaluateZeta(zero, initialPadding, gAtBeta);
+        System.out.println( " zeta " + zeta + " cf 0.0" );
+        if(checkAssert){
+           assertTrue(Math.abs(zeta) < 0.000001);
+        }
+        
+        double delta = 0.01*gAtBeta.spacing;
+        double zetaplus = Interpolate.evaluateZeta(zero+delta, initialPadding, gAtBeta);
+        double zetaminus = Interpolate.evaluateZeta(zero-delta, initialPadding, gAtBeta);
+        //244.92059950582586, 23.85164367971759, 1.0396728565623998
+        double der = (zetaplus-zetaminus)/(2*delta);
+        System.out.println("der " + der + " cf " + expectedDer);
+        if(checkAssert){
+        assertEquals(expectedDer,der, 0.001);
+        }
+    }
+
+    public static double evaluateZeta(double zero, final int initialPadding, GSeries gAtBeta) {
+            double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, 
+                    initialPadding, 1.6E-9, false);
+    //        System.out.println("params " + zero + ", " + gAtBeta.midIdx 
+    //                + Arrays.toString(gAtBeta.gAtBeta[gAtBeta.midIdx]));
+            double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
+            return zeta;
+        }
+
+    public static GSeries createGseries(int N) throws IOException, FileNotFoundException {
+        Rosser.readConfig("data/RosserConfig.txt");
+        GSeries gSeries = getRawGSeries();
+        double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
+        System.out.println( gSeries.begin + ", " + zetaCorrection);
+        File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
+                "stats", "reF_Gram_"));
+        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
+                "stats", "imF_Gram_"));
+        BufferedReader reFReader = new BufferedReader(new FileReader(reFile));
+        BufferedReader imFReader = new BufferedReader(new FileReader(imFile));
+        reFReader.readLine();
+        imFReader.readLine();
+        double[][] fAtBeta = new double[N-1][2];
+        for (int i = 0; i < fAtBeta.length; i++) {
+            String[] reF = reFReader.readLine().split(",");
+            fAtBeta[i][0] = Double.parseDouble(reF[1].trim());
+            String[] imF = imFReader.readLine().split(",");
+            fAtBeta[i][1] = Double.parseDouble(imF[1].trim());
+        }
+        gSeries.rotateFtoG(fAtBeta);
+        gSeries.setgAtBeta(fAtBeta);
+        imFReader.close();
+        reFReader.close();
+        return gSeries;
+    }
+
+    private static GSeries getRawGSeries() {
+        int correction = 0;
+        if(Rosser.configParams.containsKey("correction")){
+            correction = Rosser.getParamInt("correction");
+        }
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        int noffset = Rosser.getParamInt("noffset");
+        final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
+        double begin= baseLimit + (noffset-correction)* (gramIncr);
+        GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
+        return gSeries;
     }
 
    

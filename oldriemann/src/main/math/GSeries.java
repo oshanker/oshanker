@@ -30,7 +30,7 @@ public class GSeries {
 	 */
 	double[][] gAtBeta;
     private final double beta;
-	final double spacing;
+	public final double spacing;
 	private final double gamma;
 	private double argalphaBase;
 	public final double begin;

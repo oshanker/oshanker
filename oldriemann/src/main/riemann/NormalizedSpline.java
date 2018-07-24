@@ -2,7 +2,7 @@ package riemann;
 
 import java.util.Arrays;
 
-public class NormalizedSpline {
+public class NormalizedSpline extends BaseNormalizedSpline {
     public static class Splinei {
         public final double xi, originalH;
         public final double yi, yi1;
@@ -50,21 +50,15 @@ public class NormalizedSpline {
     }
     
     final double[] y;
-    final double[] si;
-    final int N;
 
     public NormalizedSpline(double[] y) {
-        super();
+        super(y.length);
         this.y = y;
-        this.N = this.y.length;
-        this.si = new double[N-1];
         fit();
     }
     
-    public void fit(){
-        double[] diag = new double[N-1];
-        double[] rhs = new double[N-1];
-        //init
+
+    protected void initSystem(double[] diag, double[] rhs) {
         diag[1] = 4.0;
         rhs[1] = (5*y[2]-4*y[1]-y[0]);
         for (int i = 2; i < diag.length-1; i++) {
@@ -73,32 +67,6 @@ public class NormalizedSpline {
         }
         diag[diag.length-1] = 4.0;
         rhs[diag.length-1] = (-5*y[N-3]+4*y[N-2]+y[N-1]);
-        
-        int index = N-3;
-        double mult = 1/diag[index+1];
-        diag[index] -= 2.0*mult;
-        rhs[index] -= rhs[index+1]*mult;
-        index--;
-        while(index>=2){
-            mult = 1/diag[index+1];
-            diag[index] -= mult;
-            rhs[index] -= rhs[index+1]*mult;
-            index--;
-        }
-        mult = 2.0/diag[index+1];
-        diag[index] -= mult;
-        rhs[index] -= rhs[index+1]*mult;
-        index--;
-        
-        index = 1;
-        si[index] = rhs[index]/diag[index];
-        index++;
-        while(index<N-2){
-            si[index] = (rhs[index]-si[index-1])/diag[index];
-            index++;
-        }
-        si[index] = (rhs[index]-2*si[index-1])/diag[index];
-        
     }
 
     public double[] evalMid() {
@@ -112,6 +80,17 @@ public class NormalizedSpline {
         }
         rIm[index1] = y[index1-1] + 3*(3*si[index1]+si[index1-1])/8;
         return rIm;
+    }
+
+    public void evalMid(double[][] gSeries, int seriesOffset, int position) {
+        int index1 = 0;
+        gSeries[index1+seriesOffset][position] = y[index1+2] - 3*(3*si[index1+1]+si[index1+2])/8;
+        index1++;
+        while(index1<N-2){
+            gSeries[index1+seriesOffset][position] = (y[index1]+y[index1+1])/2 + (si[index1]-si[index1+1])/8;
+            index1++;
+        }
+        gSeries[index1+seriesOffset][position] = y[index1-1] + 3*(3*si[index1]+si[index1-1])/8;
     }
 
 
