@@ -32,6 +32,7 @@ public class PolyInterpolate {
     public static class Poly5 extends BasePolySecondDer{
         double positionMax;
         double max;
+        private double D;
 
         public Poly5(double z0, double z1, double d0, double d1, 
                 double secondDer, double max) {
@@ -41,7 +42,10 @@ public class PolyInterpolate {
             positionMax = processMax();
         }
         public double eval(double x){
-            throw new IllegalStateException("not implemented");
+            double mult = (x-z0)*(x-z1);
+            mult = mult*mult*(x-z0)/denom;
+            double ret = super.eval2(x)+D*mult;
+            return ret;
         }        
         public double der(double x){
             throw new IllegalStateException("not implemented");
@@ -50,11 +54,17 @@ public class PolyInterpolate {
     }
 
     public static void main(String[] args) {
-        BasePolySecondDer basePolySecondDer = new Poly5(1, 2, -1, 1, 0, -0.25); 
-        System.out.println(basePolySecondDer.eval1(0));
-        System.out.println(basePolySecondDer.eval2(0) );
-        System.out.println( " der " +basePolySecondDer.der(1));
-        System.out.println(basePolySecondDer.eval2(1.5+Math.sqrt(1.25)));
+        double x0 = 2, x1 = 5;
+        for (int i = 0; i < 7; i++) {
+            double x = x0+0.5*i;
+            System.out.println(x + ", " + (Math.pow(x, 5) - 32 - (x-2)*1031));
+        }
+        //4x^4-1031
+        double xmin = Math.sqrt(1031.0/4);
+        xmin = Math.sqrt(xmin);
+        System.out.println(xmin + ", " + (Math.pow(xmin, 5) - 32 - (xmin-2)*1031));
+        
+        
 
     }
 
