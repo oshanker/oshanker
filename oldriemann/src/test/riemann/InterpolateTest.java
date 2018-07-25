@@ -56,8 +56,8 @@ public class InterpolateTest {
         final double d0 = -1, d1 = 1;
         final double max = 0.25;
         Poly4 poly = new Poly4(z0, z1, d0, d1, max);
-        System.out.println(poly.C + ", " + poly.min + ", " 
-        + poly.eval(poly.min)+ ", der " + poly.der(poly.min));
+        System.out.println(poly.C + ", " + poly.positionMax + ", " 
+        + poly.eval(poly.positionMax)+ ", der " + poly.der(poly.positionMax));
         assertEquals(0d, poly.C, 0.0000001);
         int N = 11;
         double incr = (z1-z0)/(N-1);
@@ -90,9 +90,9 @@ public class InterpolateTest {
         assertEquals(-1.283921548, poly4.eval(gram), 0.1);
         System.out.println();
         gram = 251.57272959458808;
-        incr = (gram-poly4.min)/(N-1);
+        incr = (gram-poly4.positionMax)/(N-1);
         for (int i = 0; i < N; i++) {
-            double x = poly4.min + i*incr;
+            double x = poly4.positionMax + i*incr;
             System.out.println("n 33, " + nf.format(x) 
                     + ", " + nf.format(poly4.eval(x))
                     + ", der " + nf.format(poly4.der(x))
@@ -108,7 +108,6 @@ public class InterpolateTest {
         final double max = 30.964994982487042;
         //244.2006260 zetaFromRiemann -0.7453399242908442
         //244.2627835 zetaFromRiemann -1.2321436376486554
-        Poly3 poly = new Poly3(z0, z1, d0, d1);
         Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
         int N = 6;
         double incr = (z1-z0)/(N-1);
@@ -120,9 +119,9 @@ public class InterpolateTest {
                     );
         }
         System.out.println();
-        System.out.println(nf.format(poly4.min) 
-                + ", " + nf.format(poly4.der(poly4.min))
-                + ", " + nf.format(poly4.eval(poly4.min))
+        System.out.println(nf.format(poly4.positionMax) 
+                + ", " + nf.format(poly4.der(poly4.positionMax))
+                + ", " + nf.format(poly4.eval(poly4.positionMax))
         );
         double gram = 251.8163286404921;
         incr = (gram-251.62429374748942)/(N-1);
@@ -131,8 +130,6 @@ public class InterpolateTest {
             System.out.println(nf.format(x) 
                     + ", " + nf.format(poly4.eval(x))
                     + ", der " + nf.format(poly4.der(x))
-                    + ", poly " + nf.format(poly.eval1(x))
-                    + ", der " + nf.format(poly.der(x))
                     );
         }
         assertEquals(30.597, poly4.eval(gram), 0.1);

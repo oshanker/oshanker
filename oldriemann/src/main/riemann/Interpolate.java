@@ -25,7 +25,7 @@ public class Interpolate {
         nf.setGroupingUsed(false);
     }
     
-    public static class Poly3{
+    public abstract static class Poly3{
         final double z0, z1;
         final double d0, d1;
         double denom;
@@ -66,23 +66,9 @@ public class Interpolate {
                 upper[1]=dermin;
             }
         }
-
-        double estimateC( double max, double xmin) {
-            double mult = (xmin-z0)*(xmin-z1);
-            mult = mult*mult/denom;
-            return (max - eval1(xmin))/mult;
-        } 
-    };
-
-    public static class Poly4 extends Poly3{
-        double C;
-        double min;
-        public Poly4(ZeroInfo zeroInput){
-            this(zeroInput.lastZero[0],zeroInput.nextValues[0],zeroInput.lastZero[1],zeroInput.nextValues[1],zeroInput.lastZero[2]);
-        }
-        public Poly4(double z0, double z1, double d0, double d1, double max) {
-            super(z0, z1, d0, d1);
-            if(d0<0){max = -max;}
+        
+        abstract void estimateC(  double xmin) ;
+        protected double processMax( ) {
             double[] oldest = new double[]{z0, d0, 0};
             double[] upper = new double[]{z1, d1, 1};
             double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
@@ -102,7 +88,7 @@ public class Interpolate {
                    xmin = upper[0];
                }
             }
-            C = estimateC( max, xmin);
+            estimateC(xmin);
             oldest = new double[]{z0, d0, 0};
             upper = new double[]{z1, d1, 1};
             double dermin = der(xmin);
@@ -116,7 +102,7 @@ public class Interpolate {
             wts = new double[]{Math.abs(upper[1]),Math.abs(oldest[1])};
             precision = 0.01;
             for (int i = 0; i < 10; i++) {
-               C = estimateC( max, xmin);
+               estimateC(xmin);
                xmin(oldest, upper, wts, precision);
                if(oldest[2]> 99){
                    xmin = oldest[0];
@@ -130,8 +116,31 @@ public class Interpolate {
                    xmin = upper[0];
                }
             }
-            min = xmin;
+            return xmin;
         }
+
+    };
+
+    public static class Poly4 extends Poly3{
+        double C;
+        double positionMax;
+        double max;
+        public Poly4(ZeroInfo zeroInput){
+            this(zeroInput.lastZero[0],zeroInput.nextValues[0],
+                    zeroInput.lastZero[1],zeroInput.nextValues[1],zeroInput.lastZero[2]);
+        }
+        public Poly4(double z0, double z1, double d0, double d1, double max) {
+            super(z0, z1, d0, d1);
+            if(d0<0){max = -max;}
+            this.max= max;
+            positionMax = processMax();
+        }
+        
+        void estimateC(  double xmin) {
+            double mult = (xmin-z0)*(xmin-z1);
+            mult = mult*mult/denom;
+            C = (max - eval1(xmin))/mult;
+        } 
 
         public double eval(double x){
             double mult = (x-z0)*(x-z1);
