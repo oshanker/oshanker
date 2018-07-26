@@ -116,6 +116,7 @@ public class Interpolate {
                    xmin = upper[0];
                }
             }
+            estimateC(xmin);
             return xmin;
         }
 
