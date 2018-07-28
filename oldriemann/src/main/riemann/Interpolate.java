@@ -29,12 +29,14 @@ public class Interpolate {
         final double z0, z1;
         final double d0, d1;
         double denom;
-        public Poly3(double z0, double z1, double d0, double d1) {
+        final double h;
+        Poly3(double z0, double z1, double d0, double d1) {
             this.z0 = z0;
             this.z1 = z1;
             this.d0 = d0;
             this.d1 = d1;
-            denom = (z0-z1)*(z0-z1);
+            h = (z1-z0);
+            denom = h*h;
         }
         public double eval1(double x){
             double ret = (x-z0)*(x-z1)/denom;
@@ -46,9 +48,12 @@ public class Interpolate {
                     (d1+d0)*(x-z0)*(x-z1) + (x-z0)*((x-z0)*d1 + (x-z1)*d0) + (x-z1)*((x-z0)*d1 + (x-z1)*d0)
                     )/denom;
             return ret;
-            
         }
-        
+        public double secondDerRHS(){
+            double ret = 2*(d0+2*d1)/h;
+            return ret;
+        }
+       
         void xmin(double[] oldest, double[] upper, double[] wts, double precision){
             double x0 = oldest[0];
             double x1 = upper[0];
@@ -68,12 +73,14 @@ public class Interpolate {
         }
         
         abstract void estimateC(  double xmin) ;
+        public abstract double eval(double x);
+       
         protected double processMax( ) {
             double[] oldest = new double[]{z0, d0, 0};
             double[] upper = new double[]{z1, d1, 1};
             double[] wts = new double[]{Math.abs(d1),Math.abs(d0)};
             double xmin = z0 - d0*(z1-z0)/(d1-d0);
-            double precision = 0.01*Math.abs(d0);
+            double precision = 0.001*Math.abs(d0);
             for (int i = 0; i < 10; i++) {
                xmin(oldest, upper, wts, precision);
                if(oldest[2]> 99){
@@ -100,7 +107,7 @@ public class Interpolate {
                 upper[1]=dermin;
             }            
             wts = new double[]{Math.abs(upper[1]),Math.abs(oldest[1])};
-            precision = 0.01;
+            precision = 0.0001;
             for (int i = 0; i < 10; i++) {
                estimateC(xmin);
                xmin(oldest, upper, wts, precision);
@@ -154,6 +161,10 @@ public class Interpolate {
             ret += 2*C*(x-z0)*(x-z1)*(2*x-z1-z0)/denom;
             return ret;
         }
+        public double secondDerRHS(){
+            double ret = super.secondDerRHS();
+            return ret += 2*C;        
+        }
     }
 
     public static BufferedReader[] getZerosFile() throws FileNotFoundException {
@@ -192,13 +203,14 @@ public class Interpolate {
         System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection);
         
         int N = Rosser.getParamInt("N");
-        N = 200;
+        N = 1000200;
         int count = 0;
-        Poly4 poly = null;
+        Poly3 poly = null;
         ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
-        
+        double[] lastZeroSeen1 = new double[zeroInput.nextValues.length];
+        System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
         double[] h = new double[N];
         double[][] g = new double[N][2];
         double zetaMidMeanOdd = 0;
@@ -207,15 +219,25 @@ public class Interpolate {
         double zetaGramMeanEven = 0;
         double absMax = 0;
         int idx = 0;
+        int breaks = 0;
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
             if(upperLimit<=zeroInput.nextValues[0]){
                 zeroInput = new ZeroInfo(0, zeroInput);
             } else {
+//                System.out.println("lastZeroSeen " + Arrays.toString(lastZeroSeen));
                 zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                         zeroInput.nextValues);
+                if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
+                    breaks++;
+//                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
+//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
+//                            ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
+//                    break;
+                }
                 poly = new Poly4(zeroInput);
+                System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
             }
             if (zeroInput==null) {
                 break;
@@ -231,8 +253,8 @@ public class Interpolate {
 
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                    ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//            System.out.println(zetaEst + " ** " );
+//                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+//            System.out.println("gram " + zetaEst + ", " +  upperLimit + " (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
             if(upperLimit<=zeroInput.nextValues[0]){
@@ -240,7 +262,15 @@ public class Interpolate {
             } else {
                 zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                         zeroInput.nextValues);
+                if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
+                    breaks++;
+//                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
+//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
+//                            ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
+                    //break;
+                }
                 poly = new Poly4(zeroInput);
+                System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
             }
             
             double zetaEstMid = poly.eval(upperLimit);
@@ -249,7 +279,7 @@ public class Interpolate {
                 if(absMax>130){
                     System.out.println();
                     System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+                            ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
                     System.out.println(zetaEst + " ** " );
                     System.out.println(upperLimit + ", " + zetaEstMid + " (" + (n+1) +")");
                  }
@@ -261,13 +291,14 @@ public class Interpolate {
                 zetaMidMeanEven += zeta;
             }
             h[idx] = ((n%2==0)?-zeta:zeta);
-//            System.out.println(zetaEstMid + ", " +  upperLimit + " (" + (n+1) +")");
+//            System.out.println("mid " + zetaEstMid + ", " +  upperLimit + " (" + (n+1) +")");
             if (count==N-1) {
                 System.out.println("final n " + n );
             }
             idx++;
             count++;
         }
+        System.out.println( "breaks: " + breaks);
         System.out.println("*** zetaMidMeanOdd " + zetaMidMeanOdd/N);
         System.out.println("*** zetaGramMeanOdd " + zetaGramMeanOdd/N);
         System.out.println("*** zetaMidMeanEven " + zetaMidMeanEven/N);

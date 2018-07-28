@@ -50,7 +50,7 @@ public class InterpolateTest {
         System.out.println();
     }
     
-    @Test
+    @Test @Ignore
     public  void debug() {
         final double z0 = 1, z1 = 2;
         final double d0 = -1, d1 = 1;
