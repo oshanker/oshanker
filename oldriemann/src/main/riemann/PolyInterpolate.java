@@ -1,5 +1,7 @@
 package riemann;
 
+import riemann.Rosser.ZeroInfo;
+
 public class PolyInterpolate {
     
     public static class BasePolySecondDer extends Interpolate.Poly3{
@@ -39,12 +41,28 @@ public class PolyInterpolate {
         double max;
         double D;
 
+        public Poly5(ZeroInfo zeroInput, double secondDer){
+            this(zeroInput.lastZero[0],zeroInput.nextValues[0],
+                    zeroInput.lastZero[1],zeroInput.nextValues[1],
+                    secondDer, zeroInput.lastZero[2]);
+            if(!Double.isFinite(D)){
+                System.out.println(": " +  z0 +  ", " +  z1 +  ", " +  d0 +  ", " +  d1 +  
+                        ", " +  secondDer +  ", " +  max);
+                throw new IllegalStateException("NaN"); 
+             }
+        }
+
         public Poly5(double z0, double z1, double d0, double d1, 
                 double secondDer, double max) {
             super(z0, z1, d0, d1, secondDer);
             if(d0<0){max = -max;}
             this.max= max;
             positionMax = processMax();
+            if(positionMax<=z0 || positionMax >= z1){
+                System.out.println(": " +  z0 +  ", " +  z1 +  ", " +  d0 +  ", " +  d1 +  
+                        ", " +  secondDer +  ", " +  max);
+                throw new IllegalStateException("bad data");
+            }
         }
         public double eval(double x){
             double mult = (x-z0)*(x-z1);
