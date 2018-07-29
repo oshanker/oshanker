@@ -97,8 +97,6 @@ public class PolyInterpolate {
             double x = x0+incr*i;
             System.out.println(x + ", " + poly5.eval(x) + ", " + poly5.der(x));
         }
-        
-
     }
 
 }

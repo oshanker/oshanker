@@ -1,6 +1,5 @@
 package riemann;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -14,7 +13,6 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 
 import math.GSeries;
-import math.Quadratic;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
@@ -24,6 +22,12 @@ public class Interpolate {
         nf.setMaximumFractionDigits(7);
         nf.setGroupingUsed(false);
     }
+    final static PrintStream out = null;
+    static BufferedReader[] zeroIn = getZerosFile();
+    static double[] lastZeroSeen1;
+    static ZeroInfo zeroInput;
+    static Poly3 poly = null;
+    static int breaks = 0;
     
     public abstract static class Poly3{
         final double z0, z1;
@@ -167,24 +171,29 @@ public class Interpolate {
         }
     }
 
-    public static BufferedReader[] getZerosFile() throws FileNotFoundException {
-        String zerosFile = Rosser.getParam("zerosFile");
-        System.out.println("zerosFile " + zerosFile);
-        BufferedReader[] zeroIn = 
-                {new BufferedReader(new FileReader(zerosFile)),null,null};
-        String derFile = zerosFile + ".der";
-        zeroIn[1] = new BufferedReader(new FileReader(derFile));
-        String maxFile = zerosFile + ".max";
-        zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+    public static BufferedReader[] getZerosFile()  {
+        try {
+            Rosser.readConfig("data/RosserConfig.txt");
+            String zerosFile = Rosser.getParam("zerosFile");
+            System.out.println("zerosFile " + zerosFile);
+            zeroIn = new BufferedReader[] { new BufferedReader(new FileReader(zerosFile)), null,
+                    null };
+
+            String derFile = zerosFile + ".der";
+            zeroIn[1] = new BufferedReader(new FileReader(derFile));
+            String maxFile = zerosFile + ".max";
+            zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+            lastZeroSeen1 = new double[zeroIn.length];
+        } catch (Exception e){
+            throw new IllegalStateException(e);
+        }
+        
         return zeroIn;
     }
 
     private static void readItems(   )
             throws FileNotFoundException, IOException {
-        PrintStream out = null;
-
-        BufferedReader[] zeroIn = getZerosFile();
-        
+        getZerosFile() ;
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
             correction = Rosser.getParamInt("correction");
@@ -195,8 +204,6 @@ public class Interpolate {
         final BigDecimal offset = new BigDecimal(Rosser.getParam("bdoffset"));
         double begin= baseLimit + (noffset-correction)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
-
-        
         
         double zetaCorrection = GSeries.correction( gSeries.basesqrtArg1);
 
@@ -205,11 +212,9 @@ public class Interpolate {
         int N = Rosser.getParamInt("N");
         N = 1000200;
         int count = 0;
-        Poly3 poly = null;
-        ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
+        zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
-        double[] lastZeroSeen1 = new double[zeroInput.nextValues.length];
         System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
         double[] h = new double[N];
         double[][] g = new double[N][2];
@@ -219,26 +224,10 @@ public class Interpolate {
         double zetaGramMeanEven = 0;
         double absMax = 0;
         int idx = 0;
-        int breaks = 0;
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
-            if(upperLimit<=zeroInput.nextValues[0]){
-                zeroInput = new ZeroInfo(0, zeroInput);
-            } else {
-//                System.out.println("lastZeroSeen " + Arrays.toString(lastZeroSeen));
-                zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
-                        zeroInput.nextValues);
-                if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
-                    breaks++;
-//                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
-//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                            ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//                    break;
-                }
-                poly = new Poly4(zeroInput);
-                System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
-            }
+            updateZeroInput(upperLimit);
             if (zeroInput==null) {
                 break;
             }
@@ -257,21 +246,7 @@ public class Interpolate {
 //            System.out.println("gram " + zetaEst + ", " +  upperLimit + " (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
-            if(upperLimit<=zeroInput.nextValues[0]){
-                zeroInput = new ZeroInfo(0, zeroInput);
-            } else {
-                zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
-                        zeroInput.nextValues);
-                if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
-                    breaks++;
-//                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
-//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                            ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
-                    //break;
-                }
-                poly = new Poly4(zeroInput);
-                System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
-            }
+            updateZeroInput(upperLimit);
             
             double zetaEstMid = poly.eval(upperLimit);
             if(Math.abs(zeroInput.lastZero[2])>absMax){
@@ -309,6 +284,25 @@ public class Interpolate {
         System.out.println( "final zetaCorrection: " + zetaCorrection);
         imFGramPoints(h, g);
     }
+
+    protected static void updateZeroInput(double upperLimit) throws FileNotFoundException, IOException {
+        if(upperLimit<=zeroInput.nextValues[0]){
+            zeroInput = new ZeroInfo(0, zeroInput);
+        } else {
+//                System.out.println("lastZeroSeen " + Arrays.toString(lastZeroSeen));
+            zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
+                    zeroInput.nextValues);
+            if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
+                breaks++;
+//                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
+//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
+//                            ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
+//                    break;
+            }
+            System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, lastZeroSeen1.length);
+            poly = new Poly4(zeroInput);
+        }
+    }
     
     private static void imFGramPoints(double[] imFmid, double[][] fAtBeta ) throws IOException {
 //        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
@@ -345,10 +339,41 @@ public class Interpolate {
         int initialPadding = 40;
         double zeta = evaluateZeta(109.99801991618585, initialPadding , gSeries);
         System.out.println( " zeta at Gram " + zeta + " cf 7.852770303334955" );
-        double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 115.35911882837084};
-        double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562, 17.960412142999786};
+        double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 
+                115.35911882837084};
+        double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562,
+                17.960412142999786};
         for (int i = 0; i < zero.length; i++) {
             validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
+        }
+        if(fAtBeta.length>=906100){
+            /**
+[90977.64166585186, 644.799901929005, 513.7189446414618], 
+90977.65274279183, [90977.97641173516, -1487.416968799948, 23.278025237802503]
+-2.6769851695451377 ** 
+90977.65274279183, 14.152371466468 (905920)
+
+ zeta at Gram 7.852770185092712 cf 7.852770303334955
+ zeta -0.2391473494558046 cf 0.0
+der 202.427236468793 cf 207.28544365034014
+ zeta -0.01766058130254052 cf 0.0
+der -70.05922387162923 cf -61.091725512779625
+ zeta -7.737348062525028E-4 cf 0.0
+der -7.63938703594858 cf -7.282653909337562
+ zeta 0.035443910821259625 cf 0.0
+der 18.39496680176594 cf 17.960412142999786
+
+ zeta -10.065852891326445 cf 0.0
+der 1198.6841000716997 cf 644.799901929005
+ zeta -9.993692389363618 cf 0.0
+der -1445.8444156296428 cf -1487.416968799948
+
+             */
+            double[] zero1 = {90977.64166585186, 90977.97641173516, };
+            double[] expectedDer1 = {644.799901929005, -1487.416968799948, };
+            for (int i = 0; i < zero1.length; i++) {
+                validateZero(zero1[i], expectedDer1[i], initialPadding, gSeries,false);
+            }
         }
 
 //        for (int i = 0; i < fAtBeta.length-1; i++) {
@@ -359,7 +384,6 @@ public class Interpolate {
     }
 
     public static void main(String[] args) throws Exception{
-        Rosser.readConfig("data/RosserConfig.txt");
         readItems();
     }
 
@@ -378,7 +402,11 @@ public class Interpolate {
         double der = (zetaplus-zetaminus)/(2*delta);
         System.out.println("der " + der + " cf " + expectedDer);
         if(checkAssert){
-        assertEquals(expectedDer,der, 0.001);
+            if(Math.abs(expectedDer-der)>0.001){
+                throw new IllegalStateException("Expected " + expectedDer + " but got "
+                        + der);
+            }
+        
         }
     }
 
