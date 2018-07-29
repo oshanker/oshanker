@@ -301,29 +301,24 @@ public class Interpolate {
             } else if(poly != null) {
                 secondDer = poly.secondDerRHS();
             }
-            if(lastZeroSeen1[0]>9144.335 && lastZeroSeen1[0]<9144.374){
-                /**
-9144.335987630979 !=? 9144.335987630979
-breakSeen  false secondDer 2.9522137235535898E17
-lastZeroSeen1  [9144.335987630979, 21.916679002964564, 0.8156186116467504, 0.0]
-[9144.335987630979, 21.916679002964564, 0.8156186116467504], 
-9144.373942729077, [9144.449871243545, -18.66656999447713, 0.44260681775803146]
-                 */
-                System.out.println();
-                System.out.println(lastZeroSeen1[0] + " !=? " + zeroInput.lastZero[0]);
-                System.out.println("breakSeen  " + breakSeen + " secondDer " 
-                        + secondDer);
-                System.out.println("lastZeroSeen1  " + Arrays.toString(lastZeroSeen1));
-                System.out.println(Arrays.toString(zeroInput.lastZero) + ", \n" + upperLimit + ", "
-                        + Arrays.toString(zeroInput.nextValues));
-                System.out.println();
-            }
+//            if(Math.abs(secondDer) > 100000){
+//                /**
+//9144.335987630979 !=? 9144.335987630979
+//breakSeen  false secondDer 2.9522137235535898E17
+//lastZeroSeen1  [9144.335987630979, 21.916679002964564, 0.8156186116467504, 0.0]
+//[9144.335987630979, 21.916679002964564, 0.8156186116467504], 
+//9144.373942729077, [9144.449871243545, -18.66656999447713, 0.44260681775803146]
+//                 */
+//                System.out.println();
+//                System.out.println(lastZeroSeen1[0] + " !=? " + zeroInput.lastZero[0]);
+//                System.out.println("breakSeen  " + breakSeen + " secondDer " 
+//                        + secondDer);
+//                System.out.println("lastZeroSeen1  " + Arrays.toString(lastZeroSeen1));
+//                System.out.println(Arrays.toString(zeroInput.lastZero) + ", \n" + upperLimit + ", "
+//                        + Arrays.toString(zeroInput.nextValues));
+//                System.out.println("____________");
+//            }
             System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
-            if(poly == null || secondDer == Double.MIN_VALUE){
-                poly = new Poly4(zeroInput);
-                return;
-            }
-            //poly = new Poly5(zeroInput, secondDer);
             poly = new Poly4(zeroInput);
         }
     }
@@ -363,13 +358,6 @@ lastZeroSeen1  [9144.335987630979, 21.916679002964564, 0.8156186116467504, 0.0]
         int initialPadding = 40;
         double zeta = evaluateZeta(109.99801991618585, initialPadding , gSeries);
         System.out.println( " zeta at Gram " + zeta + " cf 7.852770303334955" );
-        double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 
-                115.35911882837084};
-        double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562,
-                17.960412142999786};
-        for (int i = 0; i < zero.length; i++) {
-            validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
-        }
         if(fAtBeta.length>=906100){
             /**
 [90977.64166585186, 644.799901929005, 513.7189446414618], 
@@ -391,13 +379,33 @@ der 18.39496680176594 cf 17.960412142999786
 der 1198.6841000716997 cf 644.799901929005
  zeta -9.993692389363618 cf 0.0
 der -1445.8444156296428 cf -1487.416968799948
-
              */
-            double[] zero1 = {90977.64166585186, 90977.97641173516, };
-            double[] expectedDer1 = {644.799901929005, -1487.416968799948, };
+/**
+ 
+[139.51124758750822, 607.7460406187284, 345.8939561736714], 
+139.54081038108032, [139.73362471736786, -7498.504547807271, 480.51147611140493]
+secondDerRHS -64254.25468357052, zetaEstMid 60.46508897339184 (392)
+
+[139.73362471736786, -7498.504547807271, 480.51147611140493], 
+139.74144053703887, [139.9706475762458, 1715.3412115291642, 29.087673391667273]
+secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
+
+            
+ */
+            double[] zero1 = {139.51124758750822, 139.73362471736786, 139.9706475762458, 90977.64166585186, 90977.97641173516, };
+            double[] expectedDer1 = {607.7460406187284, -7498.504547807271, 1715.3412115291642, 644.799901929005, -1487.416968799948, };
             for (int i = 0; i < zero1.length; i++) {
                 validateZero(zero1[i], expectedDer1[i], initialPadding, gSeries,false);
             }
+        } else {
+            double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 
+                    115.35911882837084};
+            double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562,
+                    17.960412142999786};
+            for (int i = 0; i < zero.length; i++) {
+                validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
+            }
+            
         }
 
 //        for (int i = 0; i < fAtBeta.length-1; i++) {
@@ -414,7 +422,7 @@ der -1445.8444156296428 cf -1487.416968799948
     public static void validateZero(double zero, double expectedDer, final int initialPadding, 
             GSeries gAtBeta, boolean checkAssert) {
         double zeta = Interpolate.evaluateZeta(zero, initialPadding, gAtBeta);
-        System.out.println( " zeta " + zeta + " cf 0.0" );
+        System.out.println( "# zero " + zero + " zeta " + zeta + " cf 0.0" );
         if(checkAssert){
            assertTrue(Math.abs(zeta) < 0.000001);
         }

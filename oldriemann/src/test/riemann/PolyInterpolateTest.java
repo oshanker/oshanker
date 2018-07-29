@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import riemann.Interpolate.Poly4;
 import riemann.PolyInterpolate.BasePolySecondDer;
 import riemann.PolyInterpolate.Poly5;
 
@@ -27,6 +28,24 @@ public class PolyInterpolateTest {
         assertEquals(-0.3125,basePolySecondDer.eval(1.5), 0.000001);
         assertEquals(0.0, basePolySecondDer.eval(1), 0.000001);
         assertEquals(0.0, basePolySecondDer.eval(2), 0.000001);
+    }
+
+    @Test
+    public void testPoly5Interpolate() {
+        double x0 = 9144.335987630979, x1 = 9144.449871243545;
+        double d0 = 21.916679002964564, d1 = -18.66656999447713;
+        double max = 0.8156186116467504;
+        Poly5 poly5 = new Poly5(x0, x1, d0, d1, 74.30631140429409,
+                max);
+        System.out.println("second der at x1 " + poly5.secondDerRHS());
+        System.out.println(poly5.positionMax + " " + poly5.eval(poly5.positionMax));
+        System.out.println("poly5.C " + poly5.C);
+        System.out.println("poly5.D " + poly5.D);
+        Poly4 poly4 = new Poly4(x0, x1, d0, d1, 
+                max);
+        System.out.println("poly4 second der at x1 " + poly4.secondDerRHS());
+        System.out.println(poly4.positionMax + " " + poly4.eval(poly4.positionMax));
+        System.out.println("poly4.C " + poly4.C);
     }
 
     @Test
