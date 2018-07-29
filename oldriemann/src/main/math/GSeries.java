@@ -109,6 +109,12 @@ public class GSeries {
     public void setgAtBeta(double[][] gAtBeta) {
         this.gAtBeta = gAtBeta;
     }
+    
+    public void incrementGValueAtIndex(int index, double[] value) {
+        this.gAtBeta[index][0] += value[0];
+        this.gAtBeta[index][1] += value[1];
+    }
+    
 	
 	public double riemannZeta(double[] g, double tincr){
 		tincr -= begin;
@@ -247,6 +253,22 @@ public class GSeries {
 		}
 		return sum;
 	}
+	
+	double factorAtIndex(int i, double t0, int M ){
+        double t = begin + (i )*spacing;
+        double harg = gamma*(t0-t)/M ;
+        if(harg == 0.0d){
+            return 1.0;
+        }
+        double h = Math.pow( Math.sin(harg)/harg, M);
+        double sarg = beta*(t0-t) ;
+        double sin = Math.sin(sarg)/sarg;
+        if(!Double.isFinite(sin)){
+            System.out.println(sarg + " i " + i);
+            throw new IllegalArgumentException("sin NaN");
+        }
+        return h*sin;
+	}
 
 	public  double[] diagnosticBLFISumWithOffset( double t0, int M, int terms, double tolerance, boolean print) {
 		double[] sum = new double[]{0,0};
@@ -291,7 +313,7 @@ public class GSeries {
 
 	double[] blfiSumWithOffsetSmallT( double t0, int M) {
 		double[] sum = new double[]{0,0};
-		int midIdx = (int) ((t0-begin)/spacing);
+		midIdx = (int) ((t0-begin)/spacing);
 		SUM:
 		for (int term = 0; term < 8; term++) {
 			for (int j = 0; j < 2; j++) {

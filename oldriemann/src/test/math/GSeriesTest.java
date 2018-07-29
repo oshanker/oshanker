@@ -424,7 +424,7 @@ public class GSeriesTest {
      * Z(t) = Real(exp(−i*theta(t))F(1,floor(tau); t)) + R(t)
      * dtheta/dt = ln(t/(2pi))/2;
 	 */
-	@Test
+	@Test @Ignore
 	public void testZeroLargeOffset() {
 		double[][] fAtBeta = null;
 		double[] begin = {243.8749480149, 1436233.106281030331450810};
@@ -504,9 +504,19 @@ public class GSeriesTest {
 		int minIndex = 5;
 		double t0 = (minIndex+N/2+0.5)*x.spacing;
 		double[] gFromBLFI = x.blfiSumWithOffsetSmallT( t0, 2);
+        int midIdx = x.midIdx;
+        System.out.println("midIdx " + midIdx);
 		double[] directEval = x.gSeriesForSmallT(t0);
 		assertTrue(Math.abs(gFromBLFI[0] - directEval[0]) + Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
-		System.out.println(t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ": " + Arrays.toString(directEval));
+		System.out.println(" t0 " +  t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] 
+		        + ": " + Arrays.toString(directEval));
+		x.incrementGValueAtIndex(midIdx, new double[]{100, 1000});
+        gFromBLFI = x.blfiSumWithOffsetSmallT( t0, 2);
+        double factorAtIndex = x.factorAtIndex(midIdx, t0, 2);
+        System.out.println(" t0 " +  t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ", " 
+                + factorAtIndex);
+        assertTrue(Math.abs(gFromBLFI[0] - directEval[0]-100*factorAtIndex) 
+                + Math.abs(gFromBLFI[1] - directEval[1]-1000*factorAtIndex) < 0.005);
 	}
 
 }
