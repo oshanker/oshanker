@@ -64,8 +64,8 @@ public class MoreGSeriesTest {
 
     @Test
     public void testInterpolate() throws Exception{
-        int N = 199;
-        GSeries gSeries = Interpolate.createGseries(N);
+        //GSeries gSeries = Interpolate.createGseries(N);
+        GSeries gSeries = Interpolate.readGSeries();
         final int initialPadding = 40;
         //[261.0016582858428, 28.452144305679546, 2.3693797179877887], 261.07309238484356, 
         //[261.31522681873514, -6.883771986248166, 0.08672183144103376]
@@ -95,18 +95,18 @@ public class MoreGSeriesTest {
 //            file.getParentFile().mkdirs();
 //        }
 //        PrintWriter out = new PrintWriter(file);
-//        writeZetaPhi(N, out, initialPadding);
+//        writeZetaPhi( out, initialPadding);
 //        out.close();
     }
 
-    private void writeZetaPhi(int N, PrintWriter out, int initialPadding) throws Exception{
-        GSeries gAtBeta = Interpolate.createGseries(N);
+    private void writeZetaPhi( PrintWriter out, int initialPadding) throws Exception{
+        GSeries gAtBeta = Interpolate.readGSeries();
         double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
         int k = oddsum.length;
         final double[] zeta = new double[2*k];
         double incr  = gAtBeta.spacing;
         final double firstGram = gAtBeta.begin + initialPadding*incr;
-        N -= 2*initialPadding;
+        int N = gAtBeta.gAtBeta.length - 2*initialPadding;
         double gram = firstGram-incr;
         for (int i = 0; i < N; i++) {
             gram += incr;

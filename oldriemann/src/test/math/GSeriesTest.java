@@ -117,7 +117,7 @@ public class GSeriesTest {
 	/**
 	 * Test method for t = 2.7E9.
 	 */
-	@Test @Ignore
+	@Test
 	public void testE27E9() {
 		int k0 = 1, k1=206393;
 		int R = 10000;
@@ -130,8 +130,9 @@ public class GSeriesTest {
 		System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
 		System.out.println(gAtBeta.riemannZeta(gAtBeta.gAtBeta[0], begin));
 		//g  : [-0.33143958775035764, 0.0733285174786178] 1287.5146091794
-		double[] gFromBLFI = gAtBeta.blfiSumWithOffsetSmallT( 1287.5146091794, 4);
-		double zeta = gAtBeta.riemannZeta(gFromBLFI, 1287.5146091794);
+		double zero = 1287.5146091794;
+        double[] gFromBLFI = gAtBeta.blfiSumWithOffsetSmallT( zero, 4);
+		double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
 		System.out.println("g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
 		assertTrue(Math.abs(gFromBLFI[0] - (-0.33143958775035764)) + Math.abs(gFromBLFI[1] - 0.0733285174786178) < 0.000005);
 	}
@@ -493,7 +494,7 @@ public class GSeriesTest {
 	/**
 	 * Test method for small values of t (which don't need BigDecimal).
 	 */
-	@Test
+	@Test @Ignore
 	public void testGSeries() {
 		int k0 = 10, k1=100;
 		int N = 30;

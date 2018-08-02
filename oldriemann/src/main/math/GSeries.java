@@ -28,7 +28,7 @@ public class GSeries {
 	/**
 	 * Store g at n*beta (k is k0 to k1)
 	 */
-	double[][] gAtBeta;
+	public double[][] gAtBeta;
     private final double beta;
 	public final double spacing;
 	private final double gamma;

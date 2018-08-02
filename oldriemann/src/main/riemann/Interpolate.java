@@ -2,15 +2,25 @@ package riemann;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import math.GSeries;
 import riemann.Rosser.ZeroInfo;
@@ -350,13 +360,50 @@ public class Interpolate {
         normalizedSpline.evalMid(fAtBeta, seriesOffset, position);
 
         gSeries.rotateFtoG(fAtBeta);
-        fAtBeta[0][1] =  Double.MIN_VALUE;      
-        gSeries.setgAtBeta(fAtBeta);
+        fAtBeta[0][1] =  Double.MIN_VALUE;   
+        storeG(begin, gramIncr, fAtBeta);
+        
        
+        readAndValidate();
+
+//        for (int i = 0; i < fAtBeta.length-1; i++) {
+//            imF_stream.println((i+3) + ", " + fAtBeta[i][1]);
+//        }        
+//        imF_stream.close();
+//        reF_stream.close();
+    }
+
+    public static GSeries readGSeries() throws FileNotFoundException, IOException {
+        Pattern p = Pattern.compile("\\S*stats(E\\d\\d)\\S*");
+        Matcher m = p.matcher(Rosser.getParam("conjecturesOutFile"));
+        m.matches();
+        String prefix = m.group(1);
+
+        File file = new File("out/gSeries" + prefix + "/gSeries.dat");
+        InputStream is = new FileInputStream(file);
+        // create buffered input stream.
+        BufferedInputStream bis = new BufferedInputStream(is);
+        // create data input stream to read data in form of primitives.
+        DataInputStream in = new DataInputStream(bis);
+        double begin = in.readDouble();
+        double gincr = in.readDouble();
+        int R = in.readInt();
+        double[][] gBeta = new double[R][2];
+        for (int i = 0; i < gBeta.length; i++) {
+            gBeta[i][0] = in.readDouble();
+            gBeta[i][1] = in.readDouble();
+        }
+        GSeries gAtBeta = new GSeries(1, 0, offset,  begin,  gincr, gBeta);
+        in.close();
+        return gAtBeta;
+    }
+
+    private static void readAndValidate() throws FileNotFoundException, IOException {
+        GSeries gSeries = readGSeries();
         int initialPadding = 40;
         double zeta = evaluateZeta(109.99801991618585, initialPadding , gSeries);
         System.out.println( " zeta at Gram " + zeta + " cf 7.852770303334955" );
-        if(fAtBeta.length>=906100){
+        if(gSeries.gAtBeta.length>=906100){
 /**
  
 [139.51124758750822, 607.7460406187284, 345.8939561736714], 
@@ -382,12 +429,36 @@ secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
             }
             
         }
+    }
 
-//        for (int i = 0; i < fAtBeta.length-1; i++) {
-//            imF_stream.println((i+3) + ", " + fAtBeta[i][1]);
-//        }        
-//        imF_stream.close();
-//        reF_stream.close();
+    private static void storeG(double begin, double incr, double[][] gAtBeta) throws IOException, FileNotFoundException {
+        DataOutputStream out = null;
+        // conjecturesOutFile="out/statsE28.csv"
+        Pattern p = Pattern.compile("\\S*stats(E\\d\\d)\\S*");
+        Matcher m = p.matcher(Rosser.getParam("conjecturesOutFile"));
+        m.matches();
+        String prefix = m.group(1);
+
+        File file = new File("out/gSeries" + prefix + "/gSeries.dat");
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            OutputStream os = new FileOutputStream(file);
+            BufferedOutputStream bos = new BufferedOutputStream(os);
+            // create data output stream
+            out = new DataOutputStream(bos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        out.writeDouble(begin);
+        out.writeDouble(incr);
+        out.writeInt(gAtBeta.length);
+        for (int i = 0; i < gAtBeta.length; i++) {
+            out.writeDouble(gAtBeta[i][0]);
+            out.writeDouble(gAtBeta[i][1]);
+        }
+        out.close();
     }
 
     public static void main(String[] args) throws Exception{
