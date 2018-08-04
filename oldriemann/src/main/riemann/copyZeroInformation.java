@@ -80,7 +80,7 @@ public class copyZeroInformation {
     public static void main(String[] args) throws Exception {
         //use 3754 as begin
         ZeroInfo zeroInput = null;
-        int N = 3795;
+        int N = 3800;
         double[] nextValues = null;
         double max = 80;
         int run = 0;
@@ -98,7 +98,7 @@ public class copyZeroInformation {
 //                System.out.println("run at " + beginRun);
 //                break;
 //            }
-            if(i>=3751){
+            if(i>=3754){
                 Poly4 poly = new Poly4(zeroInput);
                 System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
                         ", "  + "positionMax " + poly.positionMax + ", " + poly.eval(poly.positionMax) + ", "   + Arrays.toString(nextValues));
