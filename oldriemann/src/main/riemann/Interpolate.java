@@ -1,7 +1,5 @@
 package riemann;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -24,7 +22,6 @@ import java.util.regex.Pattern;
 
 import math.GSeries;
 import riemann.Rosser.ZeroInfo;
-import riemann.PolyInterpolate.Poly5;
 
 public class Interpolate {
     static NumberFormat nf = NumberFormat.getInstance();
@@ -42,11 +39,12 @@ public class Interpolate {
     static Poly3 poly = null;
     static int breaks = 0;
     static double zetaCorrection1;
-    static         double absMax = 0;
+    static  double absMax = 0;
     static int correction = 0;
     static double baseLimit;
     static double gramIncr;
     static int noffset;
+    private static String prefix;
 
     
     public abstract static class Poly3{
@@ -220,6 +218,10 @@ public class Interpolate {
             baseLimit = Rosser.getParamDouble("baseLimit");
             gramIncr = Rosser.getParamDouble("gramIncr");
             noffset = Rosser.getParamInt("noffset");
+            Pattern p = Pattern.compile("\\S*stats(E\\d\\d)\\S*");
+            Matcher m = p.matcher(Rosser.getParam("conjecturesOutFile"));
+            m.matches();
+            prefix = m.group(1);
             
         } catch (Exception e){
             throw new IllegalStateException(e);
@@ -235,7 +237,7 @@ public class Interpolate {
         System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection1);
         
         int N = Rosser.getParamInt("N");
-        N = 1000200;
+        N = 151;
         int count = 0;
         zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -253,16 +255,16 @@ public class Interpolate {
             double zeta =  getZeta(n, upperLimit, zetaGramMean);
             g[idx][0] = ((n%2==0)?-zeta:zeta);
 
-//            System.out.println();
-//            System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//            System.out.println("gram " + zetaEst + ", " +  upperLimit + " (" + (n+1) +")");
+            System.out.println();
+            System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+            System.out.println("gram " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
             updateZeroInput(upperLimit);
             zeta = getZeta(n, upperLimit, zetaMidMean);
             h[idx] = ((n%2==0)?-zeta:zeta);
-//            System.out.println("mid " + zetaEstMid + ", " +  upperLimit + " (" + (n+1) +")");
+            System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
             if (count==N-1) {
                 System.out.println("final n " + n );
             }
@@ -278,11 +280,16 @@ public class Interpolate {
 //        double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
 //        zetaCorrection1 = GSeries.correction( predictedSqrtArg1);
 //        System.out.println( "final zetaCorrection: " + zetaCorrection1);
-        imFGramPoints(h, g);
+//        imFGramPoints(h, g);
     }
 
     private static double getZeta(int n, double upperLimit, double[] zetaMean) {
         double zetaEstMid = poly.eval(upperLimit);
+        if(poly instanceof Poly4){
+            Poly4 poly4 = (Poly4) poly;
+            System.out.println("positionMax " + poly4.positionMax
+                    + ", " + poly.eval(poly4.positionMax));
+        }
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
             if(absMax>130){
@@ -298,8 +305,6 @@ public class Interpolate {
     }
 
     private static void updateZeroInput(double upperLimit) throws FileNotFoundException, IOException {
-        double secondDer = Double.MIN_VALUE;
-        boolean breakSeen = false;
         if(upperLimit<=zeroInput.nextValues[0]){
             zeroInput = new ZeroInfo(0, zeroInput);
         } else {
@@ -307,15 +312,12 @@ public class Interpolate {
             zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                     zeroInput.nextValues);
             if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
-                // *lzs  *missedZero *current lz
-                breakSeen = true;
                 breaks++;
 //                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
 //                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
 //                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
 //                    break;
             } else if(poly != null) {
-                secondDer = poly.secondDerRHS();
             }
 //            if(Math.abs(secondDer) > 100000){
 //                /**
@@ -361,10 +363,8 @@ public class Interpolate {
 
         gSeries.rotateFtoG(fAtBeta);
         fAtBeta[0][1] =  Double.MIN_VALUE;   
-        storeG(begin, gramIncr, fAtBeta);
-        
-       
-        readAndValidate();
+        //storeG(begin, gramIncr, fAtBeta);
+        //readAndValidate();
 
 //        for (int i = 0; i < fAtBeta.length-1; i++) {
 //            imF_stream.println((i+3) + ", " + fAtBeta[i][1]);
@@ -374,10 +374,6 @@ public class Interpolate {
     }
 
     public static GSeries readGSeries() throws FileNotFoundException, IOException {
-        Pattern p = Pattern.compile("\\S*stats(E\\d\\d)\\S*");
-        Matcher m = p.matcher(Rosser.getParam("conjecturesOutFile"));
-        m.matches();
-        String prefix = m.group(1);
 
         File file = new File("out/gSeries" + prefix + "/gSeries.dat");
         InputStream is = new FileInputStream(file);
@@ -424,6 +420,28 @@ secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
                     115.35911882837084};
             double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562,
                     17.960412142999786};
+            /**
+[109.9434127500521, 207.28544365034014, 8.283292860041835], 
+110.09833499416513, [110.10427375389713, -61.091725512779625, 0.8755383742860865]
+gram 0.21737417505040368, 110.09833499416513 (99)
+positionMax 110.13482549953413
+mid -0.3721158150659786, 110.14849253315477 (99)
+positionMax 110.21670545965252
+
+[115.21645409737458, -7.282653909337562, 0.8259045475747673], 
+115.31471904908707, [115.35911882837084, 17.960412142999786, 0.38874142446558396]
+gram -0.3591642240114277, 115.31471904908707 (151)
+positionMax 115.39665511586186
+mid 0.04981889776567724, 115.36487658807671 (151)
+positionMax 115.39665511586186
+
+[115.35911882837084, 17.960412142999786, 0.38874142446558396], 
+115.41503412706635, [115.43436155012142, -17.74804957545839, 0.6247011678160491]
+gram 0.14326505413359175, 115.41503412706635 (152)
+positionMax 115.48193067441824
+mid -0.26084094586436185, 115.46519166605599 (152)
+positionMax 115.48193067441824
+             */
             for (int i = 0; i < zero.length; i++) {
                 validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
             }
@@ -434,10 +452,6 @@ secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
     private static void storeG(double begin, double incr, double[][] gAtBeta) throws IOException, FileNotFoundException {
         DataOutputStream out = null;
         // conjecturesOutFile="out/statsE28.csv"
-        Pattern p = Pattern.compile("\\S*stats(E\\d\\d)\\S*");
-        Matcher m = p.matcher(Rosser.getParam("conjecturesOutFile"));
-        m.matches();
-        String prefix = m.group(1);
 
         File file = new File("out/gSeries" + prefix + "/gSeries.dat");
         if (!file.getParentFile().exists()) {
@@ -470,7 +484,10 @@ secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
         double zeta = Interpolate.evaluateZeta(zero, initialPadding, gAtBeta);
         System.out.println( "# zero " + zero + " zeta " + zeta + " cf 0.0" );
         if(checkAssert){
-           assertTrue(Math.abs(zeta) < 0.000001);
+           if(Math.abs(zeta) > 0.000001){
+               throw new IllegalStateException("Expected zero but got "
+                       + zeta);
+           }
         }
         
         double delta = 0.01*gAtBeta.spacing;

@@ -63,6 +63,32 @@ public class MoreGSeriesTest {
     }
 
     @Test
+    public void testMin() throws Exception{
+        GSeries gSeries = Interpolate.readGSeries();
+        final int initialPadding = 40;
+        double[] tmin = {
+                110.13482549953413, -0.8755383742860865,
+                110.21670545965252, 0.5730931457175008,
+                115.39665511586186, 0.38874142446558396,
+                115.48193067441824, -0.6247011678160491,
+                };
+        /*
+[109.9434127500521, 207.28544365034014, 8.283292860041835], 
+110.09833499416513, [110.10427375389713, -61.091725512779625, 0.8755383742860865]
+gram 0.21737417505040368, 110.09833499416513 (99)
+positionMax 110.13482549953413, -0.8755383742860865
+mid -0.3721158150659786, 110.14849253315477 (99)
+positionMax 110.21670545965252, 0.5730931457175008
+         */
+        for (int i = 0; i < tmin.length; i++) {
+            double d = tmin[i++];
+            double expected = tmin[i];
+            double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
+            System.out.println(d + ", " + min + ", " + expected);
+        }
+    }
+    
+    @Test @Ignore
     public void testInterpolate() throws Exception{
         //GSeries gSeries = Interpolate.createGseries(N);
         GSeries gSeries = Interpolate.readGSeries();
