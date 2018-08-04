@@ -84,7 +84,7 @@ public class Rosser {
 		//zero, slope, max
 		public  final double[] nextValues;
 		
-		private ZeroInfo(int countZeros2, double[] lastZero, double[] nextValues) {
+		ZeroInfo(int countZeros2, double[] lastZero, double[] nextValues) {
                this.nextValues = nextValues;
                this.countZeros = countZeros2;
                this.lastZero = lastZero;
