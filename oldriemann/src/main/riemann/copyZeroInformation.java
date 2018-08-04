@@ -80,29 +80,32 @@ public class copyZeroInformation {
     public static void main(String[] args) throws Exception {
         //use 3754 as begin
         ZeroInfo zeroInput = null;
-        int N = 3800;
+        int N = 1010800;
         double[] nextValues = null;
-        double max = 80;
+        double max = 70;
         int run = 0;
         int beginRun = 0;
         for (int i = 0; i < N ; i++) {
             zeroInput = readZeros( Interpolate.zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
-//            if(Math.abs(zeroInput.lastZero[1])>max){
-//                run = 0;
-//                beginRun = i;
-//            } else {
-//                run++;
-//            }
-//            if(run>40){
-//                System.out.println("run at " + beginRun);
-//                break;
-//            }
-            if(i>=3754){
-                Poly4 poly = new Poly4(zeroInput);
-                System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
-                        ", "  + "positionMax " + poly.positionMax + ", " + poly.eval(poly.positionMax) + ", "   + Arrays.toString(nextValues));
+            if(i>1003800){
+                if(Math.abs(zeroInput.lastZero[1])>max){
+                    run = 0;
+                    beginRun = i;
+                } else {
+                    run++;
+                }
             }
+            if(run>40){
+                //run at 1003813
+                System.out.println("run at " + beginRun);
+                break;
+            }
+//            if(i>=3754){
+//                Poly4 poly = new Poly4(zeroInput);
+//                System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
+//                        ", "  + "positionMax " + poly.positionMax + ", " + poly.eval(poly.positionMax) + ", "   + Arrays.toString(nextValues));
+//            }
         }
 
     }
