@@ -234,10 +234,15 @@ public class Interpolate {
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
         
         zetaCorrection1 = GSeries.correction( gSeries.basesqrtArg1);
-        System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection1);
+        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(begin), Gram.mc);
+        BigDecimal gramIndex = Gram.theta(tvalsi, Gram.mc).divide(Gram.pi, Gram.mc);
+        gramIndex = 
+                gramIndex.subtract(new BigDecimal("98094362213058141112271182436"), Gram.mc);
+        System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection1
+                + ", gram index " + gramIndex);
         
         int N = Rosser.getParamInt("N");
-        N = 151;
+        N = 41;
         int count = 0;
         zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +

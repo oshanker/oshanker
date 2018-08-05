@@ -27,9 +27,11 @@ conjecturesOutFile="out/statsE15.csv"
 #endComment
 
 
+#beginComment
 noffset = 2
 signumGram = 1
 baseLimit = 100.36777243017612
+#endComment
 
 #beginComment
 noffset = 3
@@ -37,6 +39,11 @@ correction = 1
 signumGram = -1
 baseLimit = 100.46808750815538
 #endComment
+
+noffset = 3754
+#base     = 476.85026008636953 +incr
+# n = 3755 bad
+baseLimit = 100.36777243017612
 
 zerosFile ="/Users/shankero/Documents/tmp/1e28.zeros.1000_10001001"
 header = "n-98094362213058141112271182436L,good, S"
