@@ -44,7 +44,7 @@ public class Interpolate {
     static double baseLimit;
     static double gramIncr;
     static int noffset;
-    private static String prefix;
+    static String prefix;
 
     
     public abstract static class Poly3{
@@ -302,11 +302,6 @@ positionMax 100802.20011163439, 2.5298641775799497,
 
     private static double getZeta(int n, double upperLimit, double[] zetaMean) {
         double zetaEstMid = poly.eval(upperLimit);
-//        if(poly instanceof Poly4){
-//            Poly4 poly4 = (Poly4) poly;
-//            System.out.println("positionMax " + poly4.positionMax
-//                    + ", " + poly.eval(poly4.positionMax));
-//        }
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
             if(absMax>130){
@@ -326,17 +321,11 @@ positionMax 100802.20011163439, 2.5298641775799497,
         if(upperLimit<=zeroInput.nextValues[0]){
             zeroInput = new ZeroInfo(0, zeroInput);
         } else {
-//                System.out.println("lastZeroSeen " + Arrays.toString(lastZeroSeen));
             zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                     zeroInput.nextValues);
             if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
                 breaks++;
-//                    System.out.println("break seen. " + Arrays.toString(lastZeroSeen1));
-//                    System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                            ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//                    break;
-            } else if(poly != null) {
-            }
+            } 
 //            if(Math.abs(secondDer) > 100000){
 //                /**
 //9144.335987630979 !=? 9144.335987630979
@@ -360,17 +349,6 @@ positionMax 100802.20011163439, 2.5298641775799497,
     }
     
     private static void imFGramPoints(double[] imFmid, double[][] fAtBeta ) throws IOException {
-//        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-//                "stats", "imF_Gram_"));
-//        PrintStream imF_stream = new PrintStream(imFile);
-//        imF_stream.println( "n, ImFGram" );
-//        File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-//                "stats", "reF_Gram_"));
-//        PrintStream reF_stream = new PrintStream(reFile);
-//        for (int i = 0; i < fAtBeta.length; i++) {
-//            reF_stream.println((i+3) + ", " + fAtBeta[i][0]);
-//        }
-
         double begin= baseLimit + (noffset-correction-1)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
         System.out.println( gSeries.begin + ", " );
@@ -383,12 +361,6 @@ positionMax 100802.20011163439, 2.5298641775799497,
         fAtBeta[0][1] =  Double.MIN_VALUE;   
         storeG(begin, gramIncr, fAtBeta);
         readAndValidate();
-
-//        for (int i = 0; i < fAtBeta.length-1; i++) {
-//            imF_stream.println((i+3) + ", " + fAtBeta[i][1]);
-//        }        
-//        imF_stream.close();
-//        reF_stream.close();
     }
 
     public static GSeries readGSeries() throws FileNotFoundException, IOException {
@@ -416,19 +388,9 @@ positionMax 100802.20011163439, 2.5298641775799497,
         GSeries gSeries = readGSeries();
         int initialPadding = 40;
         if(gSeries.gAtBeta.length>=906100){
-/**
- 
-[139.51124758750822, 607.7460406187284, 345.8939561736714], 
-139.54081038108032, [139.73362471736786, -7498.504547807271, 480.51147611140493]
-secondDerRHS -64254.25468357052, zetaEstMid 60.46508897339184 (392)
-
-[139.73362471736786, -7498.504547807271, 480.51147611140493], 
-139.74144053703887, [139.9706475762458, 1715.3412115291642, 29.087673391667273]
-secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
- */
-            double[] zero1 = {100415.50500735927, 100415.61036506912, 
+            double[] zero1 = {480.82757562193734, 100415.50500735927, 100415.61036506912, 
                     100797.8878505715, 100798.08697164342,  };
-            double[] expectedDer1 = {-46.06567120662985, 45.21334158268663, 
+            double[] expectedDer1 = {-12.479455830100015, -46.06567120662985, 45.21334158268663, 
                     -152.8048262150694, 83.55187028339371, };
             for (int i = 0; i < zero1.length; i++) {
                 validateZero(zero1[i], expectedDer1[i], initialPadding, gSeries,false);
@@ -438,28 +400,6 @@ secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
                     115.35911882837084};
             double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562,
                     17.960412142999786};
-            /**
-[109.9434127500521, 207.28544365034014, 8.283292860041835], 
-110.09833499416513, [110.10427375389713, -61.091725512779625, 0.8755383742860865]
-gram 0.21737417505040368, 110.09833499416513 (99)
-positionMax 110.13482549953413
-mid -0.3721158150659786, 110.14849253315477 (99)
-positionMax 110.21670545965252
-
-[115.21645409737458, -7.282653909337562, 0.8259045475747673], 
-115.31471904908707, [115.35911882837084, 17.960412142999786, 0.38874142446558396]
-gram -0.3591642240114277, 115.31471904908707 (151)
-positionMax 115.39665511586186
-mid 0.04981889776567724, 115.36487658807671 (151)
-positionMax 115.39665511586186
-
-[115.35911882837084, 17.960412142999786, 0.38874142446558396], 
-115.41503412706635, [115.43436155012142, -17.74804957545839, 0.6247011678160491]
-gram 0.14326505413359175, 115.41503412706635 (152)
-positionMax 115.48193067441824
-mid -0.26084094586436185, 115.46519166605599 (152)
-positionMax 115.48193067441824
-             */
             for (int i = 0; i < zero.length; i++) {
                 validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
             }
@@ -468,21 +408,8 @@ positionMax 115.48193067441824
     }
 
     private static void storeG(double begin, double incr, double[][] gAtBeta) throws IOException, FileNotFoundException {
-        DataOutputStream out = null;
-        // conjecturesOutFile="out/statsE28.csv"
-
         File file = new File("out/gSeries" + prefix + "/gSeries.dat");
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        try {
-            OutputStream os = new FileOutputStream(file);
-            BufferedOutputStream bos = new BufferedOutputStream(os);
-            // create data output stream
-            out = new DataOutputStream(bos);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        DataOutputStream out = outputStream( file);
         out.writeDouble(begin);
         out.writeDouble(incr);
         out.writeInt(gAtBeta.length);
@@ -491,6 +418,18 @@ positionMax 115.48193067441824
             out.writeDouble(gAtBeta[i][1]);
         }
         out.close();
+    }
+
+    public static DataOutputStream outputStream(File file) throws FileNotFoundException {
+        DataOutputStream out;
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+            OutputStream os = new FileOutputStream(file);
+            BufferedOutputStream bos = new BufferedOutputStream(os);
+            // create data output stream
+            out = new DataOutputStream(bos);
+        return out;
     }
 
     public static void main(String[] args) throws Exception{
@@ -512,7 +451,6 @@ positionMax 115.48193067441824
         double delta = 0.01*gAtBeta.spacing;
         double zetaplus = Interpolate.evaluateZeta(zero+delta, initialPadding, gAtBeta);
         double zetaminus = Interpolate.evaluateZeta(zero-delta, initialPadding, gAtBeta);
-        //244.92059950582586, 23.85164367971759, 1.0396728565623998
         double der = (zetaplus-zetaminus)/(2*delta);
         System.out.println("der " + der + " cf " + expectedDer);
         if(checkAssert){
@@ -527,43 +465,9 @@ positionMax 115.48193067441824
     public static double evaluateZeta(double zero, final int initialPadding, GSeries gAtBeta) {
             double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( zero, 4, 
                     initialPadding, 1.6E-9, false);
-    //        System.out.println("params " + zero + ", " + gAtBeta.midIdx 
-    //                + Arrays.toString(gAtBeta.gAtBeta[gAtBeta.midIdx]));
             double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
             return zeta;
         }
-
-    public static GSeries createGseries(int N) throws IOException, FileNotFoundException {
-        Rosser.readConfig("data/RosserConfig.txt");
-        GSeries gSeries = getRawGSeries();
-        System.out.println( gSeries.begin + ", " + zetaCorrection1);
-        File reFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "reF_Gram_"));
-        File imFile = new File(Rosser.getParam("conjecturesOutFile").replace(
-                "stats", "imF_Gram_"));
-        BufferedReader reFReader = new BufferedReader(new FileReader(reFile));
-        BufferedReader imFReader = new BufferedReader(new FileReader(imFile));
-        reFReader.readLine();
-        imFReader.readLine();
-        double[][] fAtBeta = new double[N-1][2];
-        for (int i = 0; i < fAtBeta.length; i++) {
-            String[] reF = reFReader.readLine().split(",");
-            fAtBeta[i][0] = Double.parseDouble(reF[1].trim());
-            String[] imF = imFReader.readLine().split(",");
-            fAtBeta[i][1] = Double.parseDouble(imF[1].trim());
-        }
-        gSeries.rotateFtoG(fAtBeta);
-        gSeries.setgAtBeta(fAtBeta);
-        imFReader.close();
-        reFReader.close();
-        return gSeries;
-    }
-
-    private static GSeries getRawGSeries() {
-        double begin= baseLimit + (noffset-correction)* (gramIncr);
-        GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
-        return gSeries;
-    }
 
    
 }

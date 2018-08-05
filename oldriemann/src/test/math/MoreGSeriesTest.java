@@ -65,26 +65,21 @@ public class MoreGSeriesTest {
     @Test
     public void testMin() throws Exception{
         GSeries gSeries = Interpolate.readGSeries();
+        System.out.println("gSeries.begin " + gSeries.begin);
         final int initialPadding = 40;
         double[] tmin = {
+                480.8478824361364, -0.13155469450002938, 
                 481.0382017785302, -1.7233926754713067, 
                 100415.55752941193, -1.543823256271554, 
                 100797.9832060741, -13.139079349881037,
+                100798.11938493361, 1.2667769416536376,
                 };
-        /*
-[109.9434127500521, 207.28544365034014, 8.283292860041835], 
-110.09833499416513, [110.10427375389713, -61.091725512779625, 0.8755383742860865]
-gram 0.21737417505040368, 110.09833499416513 (99)
-positionMax 110.13482549953413, -0.8755383742860865
-mid -0.3721158150659786, 110.14849253315477 (99)
-positionMax 110.21670545965252, 0.5730931457175008
-         */
         NumberFormat nf1 = NumberFormat.getInstance();
 
-            nf1.setMinimumFractionDigits(2);
-            nf1.setMaximumFractionDigits(2);
-            nf1.setGroupingUsed(false);
-        
+        nf1.setMinimumFractionDigits(2);
+        nf1.setMaximumFractionDigits(2);
+        nf1.setGroupingUsed(false);
+
         for (int i = 0; i < tmin.length; i++) {
             double d = tmin[i++];
             double expected = tmin[i];
@@ -101,10 +96,10 @@ positionMax 110.21670545965252, 0.5730931457175008
         GSeries gSeries = Interpolate.readGSeries();
         final int initialPadding = 40;
         
-        double[] zero = {109.9434127500521, 110.10427375389713, 115.21645409737458, 
-                115.35911882837084};
-        double[] expectedDer = {207.28544365034014, -61.091725512779625, -7.282653909337562,
-                17.960412142999786};
+        double[] zero = {100415.50500735927, 100415.61036506912, 
+                100797.8878505715, 100798.08697164342,  };
+        double[] expectedDer = {-46.06567120662985, 45.21334158268663, 
+                -152.8048262150694, 83.55187028339371, };
         for (int i = 0; i < zero.length; i++) {
             Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
         }
