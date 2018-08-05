@@ -242,7 +242,15 @@ public class Interpolate {
                 + ", gram index " + gramIndex);
         
         int N = Rosser.getParamInt("N");
-        N = 41;
+        N = 1000102;
+        /*
+1003813, [100798.08697164342, 83.55187028339371, 1.2667769416536376], 
+positionMax 100798.11938493361, 1.2667769416536376, 
+[100798.16441952427, -36.22254848718031, 0.8122004163758023]
+
+1003855, [100802.11921688842, 8.444200024049566, 2.5298641775799497], 
+positionMax 100802.20011163439, 2.5298641775799497, 
+         */
         int count = 0;
         zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -260,18 +268,22 @@ public class Interpolate {
             double zeta =  getZeta(n, upperLimit, zetaGramMean);
             g[idx][0] = ((n%2==0)?-zeta:zeta);
 
-            System.out.println();
-            System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-            System.out.println("gram " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
+//            System.out.println();
+//            System.out.println(Arrays.toString(zeroInput.lastZero)  +
+//                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+//            System.out.println("gram " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
             updateZeroInput(upperLimit);
             zeta = getZeta(n, upperLimit, zetaMidMean);
             h[idx] = ((n%2==0)?-zeta:zeta);
-            System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
-            if (count==N-1) {
-                System.out.println("final n " + n );
+//            System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
+            if (count == N - 1) {
+                System.out.println("final n " + n);
+                System.out.println();
+                System.out.println(Arrays.toString(zeroInput.lastZero) + ", \n" + upperLimit + ", "
+                        + Arrays.toString(zeroInput.nextValues));
+                System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
             }
             idx++;
             count++;
@@ -290,18 +302,19 @@ public class Interpolate {
 
     private static double getZeta(int n, double upperLimit, double[] zetaMean) {
         double zetaEstMid = poly.eval(upperLimit);
-        if(poly instanceof Poly4){
-            Poly4 poly4 = (Poly4) poly;
-            System.out.println("positionMax " + poly4.positionMax
-                    + ", " + poly.eval(poly4.positionMax));
-        }
+//        if(poly instanceof Poly4){
+//            Poly4 poly4 = (Poly4) poly;
+//            System.out.println("positionMax " + poly4.positionMax
+//                    + ", " + poly.eval(poly4.positionMax));
+//        }
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
             if(absMax>130){
                 System.out.println();
                 System.out.println(Arrays.toString(zeroInput.lastZero)  +
                         ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-                System.out.println("secondDerRHS " + poly.secondDerRHS() + ", zetaEstMid " + zetaEstMid + " (" + (n+1) +")");
+                System.out.println("secondDerRHS " + poly.secondDerRHS() 
+                + ", zetaEstMid " + zetaEstMid + " (" + (n+1) +")");
              }
         }
         double zeta = (zetaEstMid - zetaCorrection1)/2;
@@ -368,8 +381,8 @@ public class Interpolate {
 
         gSeries.rotateFtoG(fAtBeta);
         fAtBeta[0][1] =  Double.MIN_VALUE;   
-        //storeG(begin, gramIncr, fAtBeta);
-        //readAndValidate();
+        storeG(begin, gramIncr, fAtBeta);
+        readAndValidate();
 
 //        for (int i = 0; i < fAtBeta.length-1; i++) {
 //            imF_stream.println((i+3) + ", " + fAtBeta[i][1]);
@@ -402,8 +415,6 @@ public class Interpolate {
     private static void readAndValidate() throws FileNotFoundException, IOException {
         GSeries gSeries = readGSeries();
         int initialPadding = 40;
-        double zeta = evaluateZeta(109.99801991618585, initialPadding , gSeries);
-        System.out.println( " zeta at Gram " + zeta + " cf 7.852770303334955" );
         if(gSeries.gAtBeta.length>=906100){
 /**
  
@@ -415,8 +426,10 @@ secondDerRHS -64254.25468357052, zetaEstMid 60.46508897339184 (392)
 139.74144053703887, [139.9706475762458, 1715.3412115291642, 29.087673391667273]
 secondDerRHS -146426.16864963295, zetaEstMid -58.434968749337514 (394)
  */
-            double[] zero1 = {139.51124758750822, 139.73362471736786, 139.9706475762458, 90977.64166585186, 90977.97641173516, };
-            double[] expectedDer1 = {607.7460406187284, -7498.504547807271, 1715.3412115291642, 644.799901929005, -1487.416968799948, };
+            double[] zero1 = {100415.50500735927, 100415.61036506912, 
+                    100797.8878505715, 100798.08697164342,  };
+            double[] expectedDer1 = {-46.06567120662985, 45.21334158268663, 
+                    -152.8048262150694, 83.55187028339371, };
             for (int i = 0; i < zero1.length; i++) {
                 validateZero(zero1[i], expectedDer1[i], initialPadding, gSeries,false);
             }
@@ -481,7 +494,8 @@ positionMax 115.48193067441824
     }
 
     public static void main(String[] args) throws Exception{
-        readItems();
+        //readItems();
+        readAndValidate();
     }
 
     public static void validateZero(double zero, double expectedDer, final int initialPadding, 

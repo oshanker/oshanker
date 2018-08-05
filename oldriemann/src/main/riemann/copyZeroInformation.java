@@ -78,9 +78,9 @@ public class copyZeroInformation {
 
 
     public static void main(String[] args) throws Exception {
-        //use 3754 as begin
+        //use 3754 as begin, 1003855 as end
         ZeroInfo zeroInput = null;
-        int N = 1010800;
+        int N = 1003858;
         double[] nextValues = null;
         double max = 70;
         int run = 0;
@@ -88,24 +88,27 @@ public class copyZeroInformation {
         for (int i = 0; i < N ; i++) {
             zeroInput = readZeros( Interpolate.zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
-            if(i>1003800){
-                if(Math.abs(zeroInput.lastZero[1])>max){
-                    run = 0;
-                    beginRun = i;
-                } else {
-                    run++;
-                }
-            }
-            if(run>40){
-                //run at 1003813
-                System.out.println("run at " + beginRun);
+//            if(i>1003800){
+//                if(Math.abs(zeroInput.lastZero[1])>max){
+//                    run = 0;
+//                    beginRun = i;
+//                } else {
+//                    run++;
+//                }
+//            }
+//            if(run>40){
+//                //run at 1003813
+//                System.out.println("run at " + beginRun);
+//                break;
+//            }
+            if(i>=1000000){
+                Poly4 poly = new Poly4(zeroInput);
+                System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
+                      ", \n"  + "positionMax " + poly.positionMax 
+                      + ", " + poly.eval(poly.positionMax) 
+                      + ", \n"   + Arrays.toString(nextValues));
                 break;
             }
-//            if(i>=3754){
-//                Poly4 poly = new Poly4(zeroInput);
-//                System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
-//                        ", "  + "positionMax " + poly.positionMax + ", " + poly.eval(poly.positionMax) + ", "   + Arrays.toString(nextValues));
-//            }
         }
 
     }
