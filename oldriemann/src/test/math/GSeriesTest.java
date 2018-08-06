@@ -117,7 +117,7 @@ public class GSeriesTest {
 	/**
 	 * Test method for t = 2.7E9.
 	 */
-	@Test
+	@Test @Ignore
 	public void testE27E9() {
 		int k0 = 1, k1=206393;
 		int R = 10000;
@@ -494,7 +494,7 @@ public class GSeriesTest {
 	/**
 	 * Test method for small values of t (which don't need BigDecimal).
 	 */
-	@Test @Ignore
+	@Test
 	public void testGSeries() {
 		int k0 = 10, k1=100;
 		int N = 30;

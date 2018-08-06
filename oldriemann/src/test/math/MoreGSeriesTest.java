@@ -63,6 +63,68 @@ public class MoreGSeriesTest {
     }
 
     @Test
+    public void testFix() throws Exception{
+        GSeries gSeries = Interpolate.readGSeries();
+        System.out.println("gSeries.begin " + gSeries.begin);
+        final int initialPadding = 40;
+        double zero = 100798.08697164342;
+        //der 108.0593142659142 cf 83.55187028339371
+        double valAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
+        double derAtZero = Interpolate.evaluateDer(zero, initialPadding, gSeries);
+        int midIdx = gSeries.midIdx;
+        System.out.println(valAtZero + ", gSeries.midIdx " + midIdx
+                + ", derAtZero " + derAtZero);
+        double[] a0 = changeToZeta(gSeries, initialPadding, zero, valAtZero, midIdx);
+        double[] b0 = changeToDer(gSeries, initialPadding, zero, derAtZero, midIdx);
+        
+        // we will evaluate this as a simultaneous equation
+        double[] g0incr = {-valAtZero/(2.0*a0[0]), -valAtZero/(2.0*a0[1])};
+        gSeries.incrementGValueAtIndex(midIdx, g0incr);
+        
+        double newDer = derAtZero;
+        for (int i = 0; i < g0incr.length; i++) {
+            newDer += b0[i]*g0incr[i];
+        }
+        
+        System.out.println(Interpolate.evaluateZeta(zero, initialPadding-1, gSeries)
+               + ", "  + Interpolate.evaluateDer(zero, initialPadding-1, gSeries));
+        System.out.println(" newDer est " + newDer);
+        
+    }
+
+    public static double[] changeToZeta(GSeries gSeries, final int initialPadding, 
+            double zero, double valAtZero, int midIdx) {
+        double[] a0 = {0,0};
+        double increment = 10;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        double a0ValAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
+        a0[0] = (a0ValAtZero-valAtZero)/increment;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+        a0ValAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
+        a0[1] = (a0ValAtZero-valAtZero)/increment;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        return a0;
+    }
+
+    public static double[] changeToDer(GSeries gSeries, final int initialPadding, 
+            double zero, double derAtZero, int midIdx) {
+        double[] a0 = {0,0};
+        double increment = 10;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        double a0ValAtZero = Interpolate.evaluateDer(zero, initialPadding, gSeries);
+        a0[0] = (a0ValAtZero-derAtZero)/increment;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+        a0ValAtZero = Interpolate.evaluateDer(zero, initialPadding, gSeries);
+        a0[1] = (a0ValAtZero-derAtZero)/increment;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        return a0;
+    }
+    
+    @Test @Ignore
     public void testMin() throws Exception{
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);

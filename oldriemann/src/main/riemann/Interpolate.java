@@ -448,10 +448,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
            }
         }
         
-        double delta = 0.01*gAtBeta.spacing;
-        double zetaplus = Interpolate.evaluateZeta(zero+delta, initialPadding, gAtBeta);
-        double zetaminus = Interpolate.evaluateZeta(zero-delta, initialPadding, gAtBeta);
-        double der = (zetaplus-zetaminus)/(2*delta);
+        double der = evaluateDer(zero, initialPadding, gAtBeta);
         System.out.println("der " + der + " cf " + expectedDer);
         if(checkAssert){
             if(Math.abs(expectedDer-der)>0.001){
@@ -460,6 +457,14 @@ positionMax 100802.20011163439, 2.5298641775799497,
             }
         
         }
+    }
+
+    public static double evaluateDer(double zero, final int initialPadding, GSeries gAtBeta) {
+        double delta = 0.01*gAtBeta.spacing;
+        double zetaplus = Interpolate.evaluateZeta(zero+delta, initialPadding, gAtBeta);
+        double zetaminus = Interpolate.evaluateZeta(zero-delta, initialPadding, gAtBeta);
+        double der = (zetaplus-zetaminus)/(2*delta);
+        return der;
     }
 
     public static double evaluateZeta(double zero, final int initialPadding, GSeries gAtBeta) {
