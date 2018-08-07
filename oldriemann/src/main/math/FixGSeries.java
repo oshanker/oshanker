@@ -10,16 +10,16 @@ public class FixGSeries {
     }
 
     public static double[] changeToZeta(GSeries gSeries, final int initialPadding, 
-            double zero, double valAtZero, int midIdx) {
+            double t, double valAtZero, int midIdx) {
         double[] a0 = {0,0};
         double increment = 10;
         gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-        double a0ValAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
+        double a0ValAtZero = Interpolate.evaluateZeta(t, initialPadding, gSeries);
         a0[0] = (a0ValAtZero-valAtZero)/increment;
         gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
         
         gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
-        a0ValAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
+        a0ValAtZero = Interpolate.evaluateZeta(t, initialPadding, gSeries);
         a0[1] = (a0ValAtZero-valAtZero)/increment;
         gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
         return a0;
@@ -42,7 +42,13 @@ public class FixGSeries {
     }
 
     public static double[] evalGSeriesIncrement(GSeries gSeries, int midIdx, 
-            final int initialPadding, double zero, double expectedDer) {
+            final int initialPadding, double[] currentParams) {
+        double zero = currentParams[0],  expectedDer = currentParams[1];
+        double tmin = currentParams[2];
+        double expectedMin = currentParams[3];
+        double xmin = FixGSeries.xmin(gSeries, initialPadding, tmin);
+        double evalAtMin = Interpolate.evaluateZeta(xmin, initialPadding, gSeries);
+
         double valAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
         double derAtZero = Interpolate.evaluateDer(zero, initialPadding, gSeries);
         if(midIdx == -1){
@@ -50,10 +56,12 @@ public class FixGSeries {
         }
         System.out.println(valAtZero + ", gSeries.midIdx " + midIdx
                 + ", derAtZero " + derAtZero);
-        double[][] xy = new double[2][];
+        double[][] xy = new double[3][];
         xy[0] = changeToZeta(gSeries, initialPadding, zero, valAtZero, midIdx);
         xy[1] = changeToDer(gSeries, initialPadding, zero, derAtZero, midIdx);
-        double[] c = {-valAtZero, expectedDer-derAtZero};
+        xy[2] = changeToZeta(gSeries, initialPadding, xmin, evalAtMin, midIdx);
+        
+        double[] c = {-valAtZero, expectedDer-derAtZero, expectedMin-evalAtMin};
         double sumxx = 0, sumxy = 0, sumyy = 0, sumcx = 0, sumcy = 0;
         for (int i = 0; i < xy.length; i++) {
             sumxx += xy[i][0]*xy[i][0];

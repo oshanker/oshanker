@@ -62,20 +62,49 @@ public class MoreGSeriesTest {
         zeroIn.close();
     }
 
-    @Test @Ignore
+    @Test
     public void testFix() throws Exception{
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);
         final int initialPadding = 40;
         double zero = 100798.08697164342;
         double expectedDer = 83.55187028339371;
+        double[] tmin = {
+                100798.11938493361, 1.2667769416536376,
+                };
+        NumberFormat nf1 = NumberFormat.getInstance();
+
+        nf1.setMinimumFractionDigits(2);
+        nf1.setMaximumFractionDigits(2);
+        nf1.setGroupingUsed(false);
+
+        for (int i = 0; i < tmin.length; i++) {
+            double d = tmin[i++];
+            double expected = tmin[i];
+            double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
+            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " 
+            + nf.format(expected)
+            + ", " + nf1.format((min-expected)*100.0/expected)  
+            + ", " + nf1.format((min-expected)));
+        }
         
         int midIdx1 = -1;
-        double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, zero, expectedDer);
+        double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, 
+                new double[]{zero, expectedDer, tmin[0], tmin[1]});
         midIdx1 = gSeries.midIdx;
         gSeries.incrementGValueAtIndex(midIdx1, g0incr);
         System.out.println(Interpolate.evaluateZeta(zero, initialPadding-1, gSeries)
                + ", "  + Interpolate.evaluateDer(zero, initialPadding-1, gSeries));
+
+        for (int i = 0; i < tmin.length; i++) {
+            double d = tmin[i++];
+            double expected = tmin[i];
+            double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
+            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " 
+            + nf.format(expected)
+            + ", " + nf1.format((min-expected)*100.0/expected)  
+            + ", " + nf1.format((min-expected)));
+        }
     }
 
     @Test @Ignore
@@ -86,11 +115,11 @@ public class MoreGSeriesTest {
         double expectedMin = 1.2667769416536376;
         double xmin = FixGSeries.xmin(gSeries, initialPadding, tmin);
         System.out.println("xmin " + xmin);
-        double evalAtMin = Interpolate.evaluateZeta(tmin, initialPadding, gSeries);
+        double evalAtMin = Interpolate.evaluateZeta(xmin, initialPadding, gSeries);
         System.out.println(evalAtMin + ", cf " + expectedMin);
     }
 
-    @Test
+    @Test @Ignore
     public void testMin() throws Exception{
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);
