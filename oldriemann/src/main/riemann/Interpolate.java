@@ -433,8 +433,8 @@ positionMax 100802.20011163439, 2.5298641775799497,
     }
 
     public static void main(String[] args) throws Exception{
-        //readItems();
-        readAndValidate();
+        readItems();
+        //readAndValidate();
     }
 
     public static void validateZero(double zero, double expectedDer, final int initialPadding, 

@@ -44,8 +44,8 @@ public class FixGSeries {
     public static double[] evalGSeriesIncrement(GSeries gSeries, int midIdx, 
             final int initialPadding, double[] currentParams) {
         double zero = currentParams[0],  expectedDer = currentParams[1];
-        double tmin = currentParams[2];
-        double expectedMin = currentParams[3];
+        double tmin = currentParams[3];
+        double expectedMin = expectedDer<0?-currentParams[2]:currentParams[2];
         double xmin = FixGSeries.xmin(gSeries, initialPadding, tmin);
         double evalAtMin = Interpolate.evaluateZeta(xmin, initialPadding, gSeries);
 

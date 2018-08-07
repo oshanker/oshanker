@@ -67,43 +67,35 @@ public class MoreGSeriesTest {
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);
         final int initialPadding = 40;
-        double zero = 100798.08697164342;
-        double expectedDer = 83.55187028339371;
-        double[] tmin = {
-                100798.11938493361, 1.2667769416536376,
+        double[][] tmin = {
+                {480.82757562193734, -12.479455830100015, 0.13155469450002938, 480.8478824361364},
+                {100798.08697164342, 83.55187028339371,  1.2667769416536376, 100798.11938493361, },
                 };
         NumberFormat nf1 = NumberFormat.getInstance();
-
         nf1.setMinimumFractionDigits(2);
         nf1.setMaximumFractionDigits(2);
         nf1.setGroupingUsed(false);
 
-        for (int i = 0; i < tmin.length; i++) {
-            double d = tmin[i++];
-            double expected = tmin[i];
+       for (int i = 0; i < tmin.length; i++) 
+       {
+           System.out.println(); 
+           double d = tmin[i][3];
+            double expectedDer = tmin[i][1];
+            double expected = expectedDer<0?-tmin[i][2]:tmin[i][2];
             double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
-            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " 
-            + nf.format(expected)
-            + ", " + nf1.format((min-expected)*100.0/expected)  
-            + ", " + nf1.format((min-expected)));
-        }
-        
-        int midIdx1 = -1;
-        double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, 
-                new double[]{zero, expectedDer, tmin[0], tmin[1]});
-        midIdx1 = gSeries.midIdx;
-        gSeries.incrementGValueAtIndex(midIdx1, g0incr);
-        System.out.println(Interpolate.evaluateZeta(zero, initialPadding-1, gSeries)
-               + ", "  + Interpolate.evaluateDer(zero, initialPadding-1, gSeries));
+            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expected) + ", "
+                    + nf1.format((min - expected) * 100.0 / expected) + ", " + nf1.format((min - expected)));
 
-        for (int i = 0; i < tmin.length; i++) {
-            double d = tmin[i++];
-            double expected = tmin[i];
-            double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
-            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " 
-            + nf.format(expected)
-            + ", " + nf1.format((min-expected)*100.0/expected)  
-            + ", " + nf1.format((min-expected)));
+            int midIdx1 = -1;
+            double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, tmin[i]);
+            midIdx1 = gSeries.midIdx;
+            gSeries.incrementGValueAtIndex(midIdx1, g0incr);
+            System.out.println(Interpolate.evaluateZeta(tmin[i][0], initialPadding - 1, gSeries) + ", "
+                    + Interpolate.evaluateDer(tmin[i][0], initialPadding - 1, gSeries));
+
+            min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
+            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expected) + ", "
+                    + nf1.format((min - expected) * 100.0 / expected) + ", " + nf1.format((min - expected)));
         }
     }
 
