@@ -68,9 +68,11 @@ public class MoreGSeriesTest {
         System.out.println("gSeries.begin " + gSeries.begin);
         final int initialPadding = 40;
         double[][] tmin = {
-                {480.82757562193734, -12.479455830100015, 0.13155469450002938, 480.8478824361364},
-                {100798.08697164342, 83.55187028339371,  1.2667769416536376, 100798.11938493361, },
-                };
+            {480.82757562193734, -12.479455830100015, 0.13155469450002938, 480.8478824361364},
+            {3811.050548669376, 570.9429277899857, 386.1396790368941, 3811.2260977681094,},
+            {90977.64166585186, 644.799901929005, 513.7189446414618, 90977.81218358524,},
+            {100798.08697164342, 83.55187028339371,  1.2667769416536376, 100798.11938493361, },
+          };
         NumberFormat nf1 = NumberFormat.getInstance();
         nf1.setMinimumFractionDigits(2);
         nf1.setMaximumFractionDigits(2);
@@ -90,8 +92,9 @@ public class MoreGSeriesTest {
             double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, tmin[i]);
             midIdx1 = gSeries.midIdx;
             gSeries.incrementGValueAtIndex(midIdx1, g0incr);
-            System.out.println(Interpolate.evaluateZeta(tmin[i][0], initialPadding - 1, gSeries) + ", "
-                    + Interpolate.evaluateDer(tmin[i][0], initialPadding - 1, gSeries));
+            System.out.println("eval zero final " + Interpolate.evaluateZeta(tmin[i][0], initialPadding , gSeries) + ", "
+                    + Interpolate.evaluateDer(tmin[i][0], initialPadding , gSeries)
+                    + " cf " + expectedDer);
 
             min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
             System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expected) + ", "

@@ -307,6 +307,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
             if(absMax>130){
                 System.out.println();
                 System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                        ", \n positionMax " + (poly instanceof Poly4?((Poly4)poly).positionMax :"unknown") +
                         ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
                 System.out.println("secondDerRHS " + poly.secondDerRHS() 
                 + ", zetaEstMid " + zetaEstMid + " (" + (n+1) +")");

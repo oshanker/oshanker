@@ -54,12 +54,12 @@ public class FixGSeries {
         if(midIdx == -1){
            midIdx = gSeries.midIdx;
         }
-        System.out.println(valAtZero + ", gSeries.midIdx " + midIdx
+        System.out.println("valAtZero " + valAtZero + ", gSeries.midIdx " + midIdx
                 + ", derAtZero " + derAtZero);
-        double[][] xy = new double[3][];
+        double[][] xy = new double[2][];
         xy[0] = changeToZeta(gSeries, initialPadding, zero, valAtZero, midIdx);
         xy[1] = changeToDer(gSeries, initialPadding, zero, derAtZero, midIdx);
-        xy[2] = changeToZeta(gSeries, initialPadding, xmin, evalAtMin, midIdx);
+        //xy[2] = changeToZeta(gSeries, initialPadding, xmin, evalAtMin, midIdx);
         
         double[] c = {-valAtZero, expectedDer-derAtZero, expectedMin-evalAtMin};
         double sumxx = 0, sumxy = 0, sumyy = 0, sumcx = 0, sumcy = 0;
