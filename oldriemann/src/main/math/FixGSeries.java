@@ -27,7 +27,7 @@ public class FixGSeries {
         nf1.setMaximumFractionDigits(2);
         nf1.setGroupingUsed(false);
 
-        int N = 1000102;
+        int N = 1000022;
         for (int midIdx1 = 39; midIdx1 < 39+N ; midIdx1++) 
         {
             for (int i1 = 0; i1 < tmin.length; i1++) 
