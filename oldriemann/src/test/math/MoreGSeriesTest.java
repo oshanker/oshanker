@@ -69,17 +69,18 @@ public class MoreGSeriesTest {
         final int initialPadding = 40;
         double[][] tmin = {
             {480.82757562193734, -12.479455830100015, 0.13155469450002938, 480.8478824361364},
+            {710.5642631336118, 1511.1436494073869, 167.70620377103543, 710.6839237435237,},
             {3811.050548669376, 570.9429277899857, 386.1396790368941, 3811.2260977681094,},
             {90977.64166585186, 644.799901929005, 513.7189446414618, 90977.81218358524,},
-            {100798.08697164342, 83.55187028339371,  1.2667769416536376, 100798.11938493361, },
+            {100798.08697164342, 83.55187028339371,  1.2667769416536376, 100798.11938493361,},
           };
         NumberFormat nf1 = NumberFormat.getInstance();
         nf1.setMinimumFractionDigits(2);
         nf1.setMaximumFractionDigits(2);
         nf1.setGroupingUsed(false);
 
-       for (int i = 0; i < tmin.length; i++) 
-       {
+        for (int i = 0; i < tmin.length; i++) 
+        {
            System.out.println(); 
            double d = tmin[i][3];
             double expectedDer = tmin[i][1];

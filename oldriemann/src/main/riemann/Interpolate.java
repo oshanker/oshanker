@@ -36,7 +36,7 @@ public class Interpolate {
     static BufferedReader[] zeroIn;
     static double[] lastZeroSeen1;
     static ZeroInfo zeroInput;
-    static Poly3 poly = null;
+    static Poly4 poly = null;
     static int breaks = 0;
     static double zetaCorrection1;
     static  double absMax = 0;
@@ -44,7 +44,7 @@ public class Interpolate {
     static double baseLimit;
     static double gramIncr;
     static int noffset;
-    static String prefix;
+    public static String prefix;
 
     
     public abstract static class Poly3{
@@ -367,11 +367,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
     public static GSeries readGSeries() throws FileNotFoundException, IOException {
 
         File file = new File("out/gSeries" + prefix + "/gSeries.dat");
-        InputStream is = new FileInputStream(file);
-        // create buffered input stream.
-        BufferedInputStream bis = new BufferedInputStream(is);
-        // create data input stream to read data in form of primitives.
-        DataInputStream in = new DataInputStream(bis);
+        DataInputStream in = dataInputStream(file);
         double begin = in.readDouble();
         double gincr = in.readDouble();
         int R = in.readInt();
@@ -419,6 +415,15 @@ positionMax 100802.20011163439, 2.5298641775799497,
             out.writeDouble(gAtBeta[i][1]);
         }
         out.close();
+    }
+
+    public static DataInputStream dataInputStream(File file) throws FileNotFoundException {
+        InputStream is = new FileInputStream(file);
+        // create buffered input stream.
+        BufferedInputStream bis = new BufferedInputStream(is);
+        // create data input stream to read data in form of primitives.
+        DataInputStream in = new DataInputStream(bis);
+        return in;
     }
 
     public static DataOutputStream outputStream(File file) throws FileNotFoundException {

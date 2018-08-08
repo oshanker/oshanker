@@ -1,6 +1,7 @@
 package riemann;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -82,7 +83,7 @@ public class copyZeroInformation {
     public static void main(String[] args) throws Exception {
         //use 3754 as begin, 1003855 as end
         File file = new File("out/gSeries" + Interpolate.prefix + "/zeros.dat");
-        DataOutputStream out = Interpolate.outputStream( file);
+//        DataOutputStream out = Interpolate.outputStream( file);
         ZeroInfo zeroInput = null;
         int N = 1003814;
         double[] nextValues = null;
@@ -121,8 +122,18 @@ public class copyZeroInformation {
 //            }
 //            out.writeDouble(poly.positionMax);
         }
-        out.close();
-
+//        out.close();
+//        DataInputStream in = Interpolate.dataInputStream( file);
+//        double[] tmin = new double[4];
+//        for (int i = 0; i < N-3792 ; i++) 
+//        {
+//            for (int i1 = 0; i1 < tmin.length; i1++) 
+//            {
+//                tmin[i1] = in.readDouble();
+//            }
+//            System.out.println(Arrays.toString(tmin));
+//        }
+//        in.close();
     }
 
 }
