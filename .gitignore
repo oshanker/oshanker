@@ -13,6 +13,7 @@ oldriemann/bin
 oldriemann/out/
 misc/gramwriteup/RiemannZeta.pdf
 misc/symmetry/zetasymmetry.pdf
+misc/valuedistribution/*/*pdf
 octave-workspace
 octave/out
 
