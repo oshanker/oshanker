@@ -44,7 +44,7 @@
 \begin{document}
 
 % \title[short text for running head]{full title}
-\title{Value distribution of Riemann Zeta Function values on critical axis}
+\title{Value distribution of Hardy's Z function on critical axis}
 
 %    Only \author and \address are required; other information is
 %    optional.  Remove any unused author tags.
@@ -53,23 +53,19 @@
 % \author[short version for running head]{name for top of paper}
 \author{O. Shanker}
 \address{200 East Dana Street, B41, Mountain View, CA 94041, U. S. A.}
-\curraddr{}
 \email{oshanker@gmail.com}
-\thanks{}
 
 %    author two information
 
 %    \subjclass is required.
-\subjclass[2010]{Primary }
+\subjclass[2010]{Primary 11M06, 11-04; Secondary 11K31, 11Y35}
 
 \date{}
 
-\dedicatory{}
 
 %    Abstract is required.
 \begin{abstract}
-The paper deals with the values of Hardy's Z-function at generalized Gram points (phi-points, in author's terminology). This question is quite interesting, and some results in this direction can be proved rigorously (these results are cited in the paper). At the same time, the present state of Riemann zeta function theory does not allow one to prove something about value distribution of Z(t) at discrete sequences of points. For example, we are not able 
-to prove the analogue of famous Selberg's theorem for the sequence of Gram points. Moreover, possibly these analogues should differ significantly from continuous case. That's why the numerical data have some interest...
+The question of the values of Hardy's Z-function at a discrete sequence of points on the crtiical axis is quite interesting. Some results in this direction can be proved rigorously. At the same time, the present state of Riemann zeta function theory gives limited information about the value distribution of Z(t) at discrete sequences of points. Moreover, possibly these analogues could differ significantly from the continuous case. To investigate the question we perform a numerical study of the value distribution of Hardy's Z-function at generalized Gram points. 
 
 \end{abstract}
 
@@ -79,8 +75,6 @@ to prove the analogue of famous Selberg's theorem for the sequence of Gram point
 
 %    Bibliographies can be prepared with BibTeX using amsplain,
 %    amsalpha, or (for "historical" overviews) natbib style.
-\bibliographystyle{amsplain}
-%    Insert the bibliography data here.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,7 +103,8 @@ Section~\ref{sec2} establishes the required notation for the
 Riemann Zeta Function and presents the conjectured symmetry relations. 
 Section~\ref{sec3} provides evidence for the symmetry relations.
 In Section~\ref{sec4} we discuss related work in the literature.
-Section~\ref{conclusions} presents the conclusions.
+Section~\ref{conclusions} presents the conclusions. In the Appendix we discuss
+the nature of the probability distribution a little more in depth.
 
 \section{\label{sec2}Notation for the Riemann zeta function and the symmetry properties}
 
@@ -146,20 +141,26 @@ $\theta (g_n) = n\pi$. A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
 Ref.~\cite{Shanker 2018} studied empirically the distribution of $Z(t)$ values at Gram points. We will generalize the study to other points on
 the critical axis, as defined below. In analogy with Gram points, we can associate an angle $\phi$ with a point $t$ on the critical axis as follows:
 \begin{definition}\label{phi}
-For $t \ge 7$, $t$ is said to be a phi point if
+For $t \ge 7$, $t$ is said to be a generalized Gram point with value phi if
 $\theta (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
 \end{definition}
 We will study the distribution of $Z(t)$ values at a given value of $\phi$, and investigate symmetry and anti-symmetry relations for the 
-distributions at different values of $\phi$. The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that  we can divide the sample space into a small number of sub-intervals, where $\ln (t)$ can be considered to be effectively constant over each sub-interval. 
-The latter condition is not essential but is convenient, in that it simplifies the numerical work. The notation $\ln (t)$ stands for the natural logarithm of $t$.  We define $p_{\phi}(y)$, the probability distribution function for $Z(t)$ at phi points:
+distributions at different values of $\phi$. The sample space for all the distributions in this work is an interval  at height $t$ which is large compared to the Gram interval, but small enough that $\ln (t)$ can be considered to be effectively constant over  the interval. 
+The latter condition is not essential but is convenient, in that it simplifies the numerical work. The notation $\ln (t)$ stands for the natural logarithm of $t$.  We define $p_{\phi}(y)$, the probability distribution function for $Z(t)$ at generalized Gram  points:
 \begin{definition}\label{pphi}
 \begin{equation}
 \int\limits_{a}^{b} p_{\phi}(y)dy
 \label{eq:pdfphi}
 \end{equation}
-is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of phi points in the sample space. 
+is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ for a large number of generalized Gram points in the sample space. 
 \end{definition}
-The probability density  $p_{\phi}(y)$ depends on the sample space (i.e., on the height $t$ and on the size of the sample space). In practice the densities are not sensitive to the choice of the sample space as long as the height $t$ is large enough and the length of the interval from which the sample is collected is large enough (but not too large on log scale).
+The probability density  $p_{\phi}(y)$ depends on the sample space (i.e., on the height $t$ and on the size of the sample space). In practice the densities are not sensitive to the choice of the sample space as long as the height $t$ is large enough and the length of the interval from which the sample is collected is large enough (but not too large on log scale). The emphasis in this work on the empirical study of the distribution. There are important open theoretical questions about the distribution that we do not cover, and we mention those questions in the Appendix.
+ In particular, Laurincikas~\cite{Laurincikas} showed  that $|\zeta(1/2+it)|$
+ possesses a limiting distribution only if one does a power norming (see section 3.3 of Ref. \cite{Laurincikas}). This makes the regularities that we observe all the more remarkable (a symmetry which manifests
+ itself very clearly, but which may be broken at a larger scale, leads to quite deep results, as the analogy with the weak interactions in physics 
+ illustrates nicely).
+
+
 
 \subsection{\label{conjectures}Conjectures}
 
@@ -317,7 +318,7 @@ The tables show that the distributions are symmetric for reflections around Gram
 The anti-symmetry condition Equation~\ref{eq:antisym} can be checked, for example, by validating that rows 2 and 6 ($\phi=\pi/4$ and $\phi=5\pi/4$) of Table~\ref{tab:kurtosis4}  have anti-symmetric distribution parameters to within the statistical precision. 
 The symmetry condition Equation~\ref{eq:sym} can be checked by verifying, for example, that rows 2 and 8 of the table ( $\phi=\pi/4$ and $\phi=7\pi/4$) have the same distribution parameters within statistical precision. Rows 3 and 7 ($\phi=\pi/2$ and $\phi=3\pi/2$) of Table~\ref{tab:kurtosis4} are interesting, in that they are related by both Equation~\ref{eq:sym} and Equation~\ref{eq:antisym}.
 
-The large values of  kurtosis show that the distributions tend to have heavy tails, or outliers. The distributions  also have large skew, except for $\phi = \pi/2$ and $\phi = 3\pi/2$, where the distributions are symmetric. 
+The large values of  kurtosis show that the distributions tend to have heavy tails, or outliers. Because of these heavy tails, the higher moments of the distribution function are likely to diverge logarithmically (we already saw that the mean is finite and well-behaved). The distributions  also have large skew, except for $\phi = \pi/2$ and $\phi = 3\pi/2$, where the distributions are symmetric. 
 
 
 \subsection{\label{histograms}Histograms}
@@ -346,52 +347,40 @@ Further, Equation~\ref{eq:antisym} predicts that the histograms are mirror image
 \section{\label{sec4}Related work}
 The value distribution of the Riemann zeta function has been well studied in the literature. We cannot cover all of this in the current work. We refer to Ivi\'c's monograph~\cite{Ivic 2013} for a comprehensive survey of  the field.
 Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is approximately normally distributed with a standard deviation of order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
-similar result~\cite{Selberg 1989, Selberg 1991} for $\log (|Z(t)|)$.
+similar result~\cite{Selberg 1989, Selberg 1991} for $\log (|Z(t)|)$. Laurincikas~\cite{Laurincikas}  used probabilistic number theory to prove various results about the distribution of the Riemann zeta function.
 
 Regarding the value distribution at specific points along the Gram interval, we have already mentioned the work of Titchmarsh~\cite{Titchmarsh 1934} and Kalpokas and Steuding~\cite{kalpokas 2009} pertaining to the
 mean value of the Riemann zeta function. Lester's~\cite{Lester 2013} Ph. D. thesis also considers the distribution of $\log (|\zeta(\frac{1}{2} + it)|)$  for specific points along the Gram interval. The anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym} of the current manuscript seem to be new. 
 
 \section{\label{conclusions}Conclusions}
 
-In this work we defined phi points on the critical axis, in analogy with Gram points. We used this definition to  formulate two new conjectures about the distribution of $Z(t)$ on the critical axis. We empirically observed  the mean value condition  Equation \ref{eq:mean}. This was stated and proved for Gram points by Ref.~\cite{Titchmarsh 1934}  and, as we discovered later,  for all $\phi$ points in Ref.~\cite{kalpokas 2009}. 
+In this work we defined generalized Gram points on the critical axis, in analogy with Gram points. We used this definition to  formulate two new conjectures about the distribution of $Z(t)$ on the critical axis. We empirically observed  the mean value condition  Equation \ref{eq:mean}. This was stated and proved for Gram points by Ref.~\cite{Titchmarsh 1934}  and, as we discovered later,  for all $\phi$ in Ref.~\cite{kalpokas 2009}. 
 Our two new results are the anti-symmetry condition  Equation \ref{eq:antisym} and the symmetry condition  Equation \ref{eq:sym}. Equation \ref{eq:antisym} is a generalization of Conjecture 1 in 
-Ref.~\cite{Shanker 2018} to phi points.
-
+Ref.~\cite{Shanker 2018} to generalized Gram points.
 The relations seem to hint at  profound new aspects of the behavior of the zeta function which have not yet been discovered. Theoretical study of the relations presented here needs to be done.
 
 
 \section*{\label{appendix} Appendix}
-A more precise definition for the function $p_{phi}(y)$ is provided.  In particular, note that $|Zeta(1/2+it)|$
- does not possess a limiting distribution (see Laurincikas '' Limit Theorems for the Riemann Zeta-Function" Chapter 3) . 
-
-
-%    Ordinary theorem and proof
-\begin{theorem}[Optional addition to theorem head]
-% text of theorem
-\end{theorem}
-
-\begin{proof}[Optional replacement proof heading]
-% text of proof
-\end{proof}
-
-
-%    Mathematical displays; for additional information, see the amsmath
-%    user's guide, linked from http://www.ams.org/tex/amslatex.html .
-
-% Numbered equation
+A more precise definition for the function $p_{phi}(y)$ is provided. We consider the interval along the critical axis specified by $(T_1, T_2)$. While empirical studies necessarily use large but finite  $T_1, T_2$, we are interested in the limit 
+$T_1 \rightarrow \infty, T_2 \rightarrow \infty,  T_1-T_2 \rightarrow \infty,$ however
 \begin{equation}
+T_2 - T_1  \ll T_1. 
+\label{eq:interval}
 \end{equation}
+Because of Equation \ref{eq:interval}, we can consider  $\ln (t)$  to be effectively constant over  the interval. A probability space $W$ is defined by a sample space of elementary events $\Omega$, a $\sigma$ algebra of all considered events $\mathcal{F}$, and a probability measure $P$. Our space of elementary events $\Omega$ is the set of all generalized Gram points with value phi in the interval. This is easily seen to be a discrete space. If we denote $\theta (T_1) = 2k_1\pi + \phi$, $\theta (T_2) = 2k_2\pi + \phi$, then we can index the set of generalized Gram points in the interval by the integer  $k$, where $k$ lies in the interval $(k_1, k_2)$. Since the mean spacing $\delta$ of the zeros at height $t$ is $\delta = 2\pi(\ln (t/2\pi))^{-1}$, the cardinality of this set is $(T_2 - T_1)*(\ln (T_1/2\pi))/(2\pi)$. Since we are dealing with a discrete space, we follow standard practice and choose $\mathcal{F}$,  the  $\sigma$ algebra, to be the collection of all subsets of $\Omega$ . Finally, the random variable whose probability distribution we wish to study is the value of $Z(t)$ at the generalized Gram point $t$.
 
-% Unnumbered equation
-\begin{equation*}
-\end{equation*}
-
-% Aligned equations
-\begin{align}
-  & xx \\
-  & zz
-\end{align}
-
+It is not known whether the limiting probability distribution exists for $Z(t)$ at generalized Gram points. However, we can get some insight from the studies of Kalpokas and Steuding \cite{kalpokas 2009}. They show that
+\begin{equation}
+\sum_{0 < t < T, \zeta(\frac{1}{2}+it) \in e^{i\phi_1}\mathbb{R}} \zeta(\frac{1}{2}+it) = (2e^{i\phi_1}\cos(\phi))\frac{T}{2\pi}\ln (\frac{T}{2\pi}) + O_\epsilon(T^{(\frac{1}{2}+\epsilon}).
+\label{eq:kalpokas1}
+\end{equation}
+From Equation~\ref{eq:kalpokas1} and the cardinality of our sample space, it follows that a finite mean can be defined for the value distribution in our sample space. This gives support to the existence of a limiting distribution. We now consider the possibility of defining higher order moments for the value distribution. Kalpokas and Steuding  also show that
+\begin{equation}
+\sum_{0 < t < T, \zeta(\frac{1}{2}+it) \in e^{i\phi_1}\mathbb{R}} |\zeta(\frac{1}{2}+it)|^2 = \frac{T}{2\pi}(\ln (\frac{T}{2\pi}))^2 + (2\gamma+2\cos(2\phi))\frac{T}{2\pi}\ln (\frac{T}{2\pi}) + \frac{T}{2\pi} + O_\epsilon(T^{(\frac{1}{2}+\epsilon}).
+\label{eq:kalpokas2}
+\end{equation}
+From Equation~\ref{eq:kalpokas2} and the cardinality of our sample space it seems that higher order moments of the value distribution diverge logarithmically. Thus, it seems likely that a limiting value distribution exists, it has a finite well-defined mean, and higher moments diverge logarithmically. Distributions which do not have all moments defined are used in applications, for example, the Cauchy-Lorentz distribution~\cite{feller}.
+ 
 
 \bibliographystyle{amsplain}
 \begin{thebibliography}{10}
@@ -419,6 +408,10 @@ Academic Press,  (1974)
 zeta-function and the distribution of primes",
 {\it Acta Math.} {\bf41}(1918), 119-196
 
+\bibitem{Laurincikas} A. Laurincikas,
+``Limit Theorems for the Riemann Zeta-Function",
+Kluwer, Dordrecht, 1996
+
 \bibitem{Gram 1903} J. P. Gram, 
 ``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
 {\it Acta Math.} {\bf27}(1903), 289-304
@@ -428,8 +421,8 @@ zeta-function and the distribution of primes",
 {\it Quart. J. Math. Oxford Ser.} {\bf5}(1934), 98-105
 
 \bibitem{kalpokas 2009} J. Kalpokas and J. Steuding,
-``On the value-distribution of the Riemann zeta-function on the critical line", arXiv preprint arXiv:0907.1910,
-\url{https://arxiv.org/pdf/0907.1910}, (2009)
+``On the value-distribution of the Riemann zeta-function on the critical line", 
+{\it Moscow Journal of Combinatorics andNumber Theory} {\bf1}(2011), 26-42
 
 \bibitem{hiary 2010} G. A. Hiary,
 ``An amortized-complexity method to compute the Riemann zeta function", 
@@ -466,6 +459,10 @@ Springer Verlag,  (1991)
 \bibitem {Lester 2013} Stephen J. Lester, ``The Distribution of Values of the
 Riemann Zeta-Function,''
 Ph. D. dissertation, University of Rochester,  (2013)
+
+\bibitem{feller} William feller,
+``An Introduction to Probability Theory and Its Applications, Volume II (2 ed.)",
+John Wiley and Sons, New York, 1971
 
 
 \end{thebibliography} 
