@@ -12,24 +12,24 @@ import riemann.Gram;
 public class UTSumTest {
     @Test
     public void testZeroLargeOffset() {
-        //1183ms
-//        long offset = (long) 1.0E12;
-//        double[] begin = {243.8749480149, 1436233.106281030331450810};
+        //1415ms
+        long offset = (long) 1.0E12;
+        double[] begin = {243.8749480149, 1436233.106281030331450810};
         
-        //9855ms
+        //9870ms
 //        long offset = (long) 1.0E15;
 //        double[] begin = {192.309350419702134727, 200.446361911804399436};
         
-        //27866 
-        long offset = (long) 1.0E16;
-        double[] begin = {179.701837722056461444, 180.110245349184374800};
+        //27522 
+//        long offset = (long) 1.0E16;
+//        double[] begin = {179.701837722056461444, 180.110245349184374800};
 
         //254759ms
         //-ea -Xmx2G -Xms2G 
 //        long offset = (long) 1.0E18;
 //        double[] begin = {158.997193245871834444, 168.073334879216515686};
 
-        //1183ms
+        //??
 //        long offset = (long) 1.0E20;
 //        double[] begin = {142.285612643329601679, 145.088695674076487929};
 
