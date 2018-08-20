@@ -6,9 +6,13 @@ public class PolyInterpolate {
     
     public static class BasePolySecondDer extends Interpolate.Poly3{
         double C;
+        final double cdenom;
+        final double sum2;
         public BasePolySecondDer(double z0, double z1, double d0, double d1, double secondDer) {
             super(z0, z1, d0, d1);
             C = secondDer/2 + (2*d0+d1)/(z1-z0);
+            cdenom = 4*C/denom;
+            sum2 = (z1+z0)/2.0;
         }
 
         public double eval(double x){
@@ -20,7 +24,12 @@ public class PolyInterpolate {
 
         public double der(double x){
             double ret = super.der(x);
-            ret += 2*C*(x-z0)*(x-z1)*(2*x-z1-z0)/denom;
+            ret += (x-z0)*(x-z1)*(x-sum2)*cdenom;
+            return ret;
+        }
+        public double secondDer(double x){
+            double ret = super.secondDer(x);
+            ret += ((x-z0)*(x-z1) + 2*(x-sum2)*(x-sum2))*cdenom;
             return ret;
         }
         public double secondDerRHS(){
@@ -70,6 +79,9 @@ public class PolyInterpolate {
             double ret = super.eval(x)+D*mult;
             return ret;
         }        
+        public double secondDer(){
+            throw new IllegalStateException("not implemented");
+        }
         public double der(double x){
             double ret = super.der(x);
             ret += 2*D*(x-z0)*(x-z0)*(x-z0)*(x-z1)/denom

@@ -21,6 +21,7 @@ public class PolyInterpolateTest {
                 z0, z1, d0, d1,  secondDer 
                 ); 
         assertEquals(-5.0,basePolySecondDer.C, 0.000001);
+        assertEquals(-12.0,basePolySecondDer.secondDer(z1), 0.000001);
         assertEquals(-12.0,basePolySecondDer.secondDerRHS(), 0.000001);
         assertEquals(-2.0, basePolySecondDer.eval(0), 0.000001);
         assertEquals(-1.0, basePolySecondDer.der(1), 0.000001);
@@ -65,6 +66,7 @@ public class PolyInterpolateTest {
         System.out.println(poly.C + ", " + poly.eval(1) + ", (5) " + poly5.eval(1));
         assertEquals(xmin, poly5.positionMax, 0.000001);
         assertEquals(9.0, poly5.D, 0.000001);
+        assertEquals(2446.0, poly.secondDer(x1), 0.000001);
         assertEquals(2500.0, poly5.secondDerRHS(), 0.000001);
         assertEquals(minValue, poly5.eval(poly5.positionMax), 0.000001);
         assertEquals(-1031, poly5.der(0), 0.000001);
@@ -76,15 +78,15 @@ public class PolyInterpolateTest {
         final int z0 = 1;
         final int z1 = 2;
         final int secondDer = 0;
-        Poly5 basePolySecondDer = new Poly5(z0, z1, -1, 1, secondDer, -0.3125); 
-        assertEquals(2.0, basePolySecondDer.eval1(0), 0.000001);
-        assertEquals(-2.0, basePolySecondDer.eval(0), 0.000001);
-        assertEquals(-1.0, basePolySecondDer.der(1), 0.000001);
-        assertEquals(0.0, basePolySecondDer.der(1.5), 0.000001);
-        assertEquals(-0.3125,basePolySecondDer.eval(1.5), 0.000001);
-        assertEquals(0.0, basePolySecondDer.eval(1.5+Math.sqrt(1.25)), 0.000001);
-        assertEquals(-1.0, basePolySecondDer.C, 0.000001);
-        assertEquals(-0.0, basePolySecondDer.D, 0.000001);
+        Poly5 poly5 = new Poly5(z0, z1, -1, 1, secondDer, -0.3125); 
+        assertEquals(2.0, poly5.eval1(0), 0.000001);
+        assertEquals(-2.0, poly5.eval(0), 0.000001);
+        assertEquals(-1.0, poly5.der(1), 0.000001);
+        assertEquals(0.0, poly5.der(1.5), 0.000001);
+        assertEquals(-0.3125,poly5.eval(1.5), 0.000001);
+        assertEquals(0.0, poly5.eval(1.5+Math.sqrt(1.25)), 0.000001);
+        assertEquals(-1.0, poly5.C, 0.000001);
+        assertEquals(-0.0, poly5.D, 0.000001);
     }
 
     @Test 

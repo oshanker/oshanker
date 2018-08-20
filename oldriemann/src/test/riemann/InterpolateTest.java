@@ -50,15 +50,19 @@ public class InterpolateTest {
         System.out.println();
     }
     
-    @Test @Ignore
+    @Test 
     public  void debug() {
         final double z0 = 1, z1 = 2;
         final double d0 = -1, d1 = 1;
-        final double max = 0.25;
+        final double max = -0.25;
         Poly4 poly = new Poly4(z0, z1, d0, d1, max);
+        final double derAtMin = poly.der(poly.positionMax);
         System.out.println(poly.C + ", " + poly.positionMax + ", " 
-        + poly.eval(poly.positionMax)+ ", der " + poly.der(poly.positionMax));
+        + poly.eval(poly.positionMax)+ ", der " + derAtMin);
+        assertEquals(2.0d, poly.secondDerRHS(), 0.0000001);
+        assertEquals(2.0d, poly.secondDer(1.75), 0.0000001);
         assertEquals(0d, poly.C, 0.0000001);
+        assertEquals(0d, derAtMin, 0.0000001);
         int N = 11;
         double incr = (z1-z0)/(N-1);
         for (int i = 0; i < N; i++) {

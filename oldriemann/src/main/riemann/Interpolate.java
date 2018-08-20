@@ -91,7 +91,13 @@ public class Interpolate {
                     + pow0);
             return ret;
         }
-        
+
+        public double secondDer(double x){
+            double ret = (6*x*pow2 
+                    + pow1);
+            return ret;
+        }
+
         public double secondDerRHS(){
             double ret = 2*(d0+2*d1)/h;
             return ret;
@@ -152,6 +158,8 @@ public class Interpolate {
         double C;
         double positionMax;
         double max;
+        final double cdenom;
+        final double sum2;
         public Poly4(ZeroInfo zeroInput){
             this(zeroInput.lastZero[0],zeroInput.nextValues[0],
                     zeroInput.lastZero[1],zeroInput.nextValues[1],zeroInput.lastZero[2]);
@@ -160,6 +168,8 @@ public class Interpolate {
             super(z0, z1, d0, d1);
             this.max= max;
             positionMax = processMax();
+            cdenom = 4*C/denom;
+            sum2 = (z1+z0)/2.0;
         }
         
         void estimateC(  double xmin) {
@@ -176,7 +186,12 @@ public class Interpolate {
         }        
         public double der(double x){
             double ret = super.der(x);
-            ret += 2*C*(x-z0)*(x-z1)*(2*x-z1-z0)/denom;
+            ret += (x-z0)*(x-z1)*(x-sum2)*cdenom;
+            return ret;
+        }
+        public double secondDer(double x){
+            double ret = super.secondDer(x);
+            ret += ((x-z0)*(x-z1) + 2*(x-sum2)*(x-sum2))*cdenom;
             return ret;
         }
         public double secondDerRHS(){
