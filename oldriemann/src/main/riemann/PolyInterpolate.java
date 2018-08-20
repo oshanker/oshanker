@@ -55,9 +55,9 @@ public class PolyInterpolate {
         public Poly5(double z0, double z1, double d0, double d1, 
                 double secondDer, double max) {
             super(z0, z1, d0, d1, secondDer);
-            if(d0<0){max = -max;}
             this.max= max;
             positionMax = processMax();
+            System.out.println(positionMax + ", D " + D);
             if(positionMax<=z0 || positionMax >= z1){
                 System.out.println(": " +  z0 +  ", " +  z1 +  ", " +  d0 +  ", " +  d1 +  
                         ", " +  secondDer +  ", " +  max);
