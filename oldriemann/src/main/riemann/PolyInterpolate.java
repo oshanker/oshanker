@@ -66,7 +66,6 @@ public class PolyInterpolate {
             super(z0, z1, d0, d1, secondDer);
             this.max= max;
             positionMax = processMax();
-            System.out.println(positionMax + ", D " + D);
             if(positionMax<=z0 || positionMax >= z1){
                 System.out.println(": " +  z0 +  ", " +  z1 +  ", " +  d0 +  ", " +  d1 +  
                         ", " +  secondDer +  ", " +  max);

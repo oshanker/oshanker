@@ -132,7 +132,7 @@ public class Interpolate {
             double dermin = der(xmin);
             Interpolate.fixLimits(oldest, upper, xmin, dermin);            
             wts = new double[]{Math.abs(upper[1]),Math.abs(oldest[1])};
-            precision = 0.0001;
+            precision = 0.0000001;
             for (int i = 0; i < 10; i++) {
                estimateC(xmin);
                Interpolate.xmin(oldest, upper, wts, precision, (x)->der(x));

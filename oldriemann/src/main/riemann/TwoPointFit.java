@@ -8,6 +8,24 @@ public class TwoPointFit {
     final double D;
     final double E;
     final double F;
+    static double mid(double h, double y0, double d0, double dd0,
+             double y1, double d1, double dd1)
+    {
+        double h2 = h*h;
+//        final double A = y1/h;
+//        final double B = -y0/h;
+//        final double C = (d1-A-B)/h2;
+//        final double D = (d0-A-B)/h2;
+//      final double E = (dd1-2*h*(2*C+D))/(4*h2);
+//      final double F = (dd0+2*h*(C+2*D))/(-4*h2);
+        final double CD = (d1-d0)/h;
+        final double EF = -(dd0+dd1-2*CD)/(16);
+        double ret = (y1+y0)/2;
+        double prod = -h2/4;
+        ret += prod*(EF+CD/2);
+        return ret;
+    }
+
     public TwoPointFit(double x0, double y0, double d0, double dd0,
             double x1, double y1, double d1, double dd1)
     {
@@ -22,9 +40,6 @@ public class TwoPointFit {
         double h3 = h2*h;
         E = (dd1-2*h*(2*C+D))/(2*h3);
         F = (dd0+2*h*(C+2*D))/(-2*h3);
-        System.out.println("A " + A + " B " + B);
-        System.out.println("C " + C + " D " + D);
-        System.out.println("E " + E + " F " + F);
     }
     
     public double eval(double x){
