@@ -4,8 +4,8 @@ public class TwoPointFit {
     private final double x0,  x1;
     private final double A;
     private final double B;
-    private final double C;
-    private final double D;
+    final double C;
+    final double D;
     final double E;
     final double F;
     public TwoPointFit(double x0, double y0, double d0, double dd0,

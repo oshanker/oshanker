@@ -109,7 +109,12 @@ public class copyZeroInformation {
             if(i<3792 ){
                 continue;
             }
-            Poly4 poly = new Poly4(zeroInput);
+            final double z0 = zeroInput.lastZero[0];
+            final double z1 = zeroInput.nextValues[0];
+            final double d0 = zeroInput.lastZero[1];
+            final double d1 = zeroInput.nextValues[1];
+            final double maxFromInput = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
+            Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
             if(i==3792 || i==1003813){
                 //gSeries.begin 476.85026008636953
                 System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +

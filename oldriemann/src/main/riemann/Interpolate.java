@@ -160,10 +160,6 @@ public class Interpolate {
         double max;
         final double cdenom;
         final double sum2;
-        public Poly4(ZeroInfo zeroInput){
-            this(zeroInput.lastZero[0],zeroInput.nextValues[0],
-                    zeroInput.lastZero[1],zeroInput.nextValues[1],zeroInput.lastZero[2]);
-        }
         public Poly4(double z0, double z1, double d0, double d1, double max) {
             super(z0, z1, d0, d1);
             this.max= max;
@@ -382,7 +378,13 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //                System.out.println("____________");
 //            }
             System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
-            poly = new Poly4(zeroInput);
+            final double z0 = zeroInput.lastZero[0];
+            final double z1 = zeroInput.nextValues[0];
+            final double d0 = zeroInput.lastZero[1];
+            final double d1 = zeroInput.nextValues[1];
+            final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
+            poly = new Poly4(z0,z1, d0,d1,max);
+
         }
     }
     
