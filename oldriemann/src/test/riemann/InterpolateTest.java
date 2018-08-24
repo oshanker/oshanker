@@ -74,11 +74,42 @@ public class InterpolateTest {
         }
     }
 
+    @Test 
+    public void testE28() {
+        final double z0 = 66093.28515358719, z1 = 66093.56881530148;
+        final double d0 = 1866.9381635238121, d1 = -1323.4908633876328;
+        final double max = 392.08238609990934;
+        Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
+        int N = 6;
+        System.out.println(" positionMax " + poly4.positionMax
+               +  ", der " + poly4.der(poly4.positionMax)
+               + ", eval " + poly4.eval(poly4.positionMax));
+        assertEquals(max, poly4.eval(poly4.positionMax),0.000001);
+        assertEquals(0d, poly4.der(poly4.positionMax),0.000001);
+    }
+    
+
+    @Test
+    public void testInterpolate() {
+        // x^4-16 - (x-2)*(625-16)/3 
+        // 4x^3-303 :4.231173938822708
+        // 12x 
+        double z0 = 2, z1 = 5;
+        double d0 = -271, d1 = 197;
+        double xmin = 4.231173938822708;
+        double max = (xmin*xmin-4)*(xmin*xmin+4)- (xmin-2)*303;
+        Poly4 poly = new Poly4(z0, z1, d0, d1, max);
+        final double derAtMin = poly.der(poly.positionMax);
+        System.out.println(poly.C + ", " + poly.positionMax + ", " 
+        + poly.eval(poly.positionMax)+ ", der " + derAtMin);
+        assertEquals(max, poly.eval(poly.positionMax),0.000001);
+        assertEquals(0d, Math.abs(derAtMin), 0.0000001);
+    }
     @Test @Ignore
     public void testConvergence() {
         final double z0 = 251.306919355202, z1 = 251.62429374748942;
         final double d0 = -51.032529476335846, d1 = 174.60414605716676;
-        final double max = 11.500212986748618;
+        final double max = -11.500212986748618;
         Poly4 poly4 = new Poly4(z0, z1, d0, d1, max);
         int N = 6;
         double incr = (z1-z0)/(N-1);

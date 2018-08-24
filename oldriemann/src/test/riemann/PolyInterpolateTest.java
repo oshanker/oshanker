@@ -75,6 +75,7 @@ public class PolyInterpolateTest {
     @Test 
     public void testPoly5() {
         //(x^2-3x+2)(1-(...))
+        //y -0.25 dy 0 ddy 2
         final int z0 = 1;
         final int z1 = 2;
         final int secondDer = 0;
@@ -87,6 +88,18 @@ public class PolyInterpolateTest {
         assertEquals(0.0, poly5.eval(1.5+Math.sqrt(1.25)), 0.000001);
         assertEquals(-1.0, poly5.C, 0.000001);
         assertEquals(-0.0, poly5.D, 0.000001);
+        
+        Poly4 poly4 = new Poly4(z0, z1, -1, 1,  -0.3125); 
+        assertEquals(2.0, poly4.eval1(0), 0.000001);
+        assertEquals(-2.0, poly4.eval(0), 0.000001);
+        assertEquals(-1.0, poly4.der(z0), 0.000001);
+        assertEquals(secondDer, poly4.secondDer(z0), 0.000001);
+        assertEquals(0.0, poly4.der(1.5), 0.000001);
+        assertEquals(3.0, poly4.secondDer(1.5), 0.000001);
+        assertEquals(-0.3125,poly4.eval(1.5), 0.000001);
+        assertEquals(0.0, poly4.eval(1.5+Math.sqrt(1.25)), 0.000001);
+        assertEquals(-1.0, poly4.C, 0.000001);
+
     }
 
     @Test 

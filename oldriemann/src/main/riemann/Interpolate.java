@@ -36,6 +36,8 @@ public class Interpolate {
     final static PrintStream out = null;
     static BufferedReader[] zeroIn;
     static double[] lastZeroSeen1;
+    static double[][] gramDer;
+    static double[][] imFmid;
     static ZeroInfo zeroInput;
     static Poly4 poly = null;
     static int breaks = 0;
@@ -74,21 +76,21 @@ public class Interpolate {
             pow1 = 2*(pow2*(-z0-z1) - cross);
         }
         public double eval1(double x){
-//            double ret = (x-z0)*(x-z1)/denom;
-//            ret *= ((x-z0)*d1 + (x-z1)*d0);
-            double ret = (x-z0)*(x-z1);
-            ret *= pow2*x - cross;
+            double ret = (x-z0)*(x-z1)/denom;
+            ret *= ((x-z0)*d1 + (x-z1)*d0);
+//            double ret = (x-z0)*(x-z1);
+//            ret *= pow2*x - cross;
             return ret;
         }
         
         public double der(double x){
-//            double ret = (
-//                  (d1+d0)*(x-z0)*(x-z1) + (x-z0)*((x-z0)*d1 
-//                  + (x-z1)*d0) + (x-z1)*((x-z0)*d1 + (x-z1)*d0)
-//                               )/denom;
-            double ret = (3*x*x*pow2 
-                    + x*pow1
-                    + pow0);
+            double ret = (
+                  (d1+d0)*(x-z0)*(x-z1) + (x-z0)*((x-z0)*d1 
+                  + (x-z1)*d0) + (x-z1)*((x-z0)*d1 + (x-z1)*d0)
+                               )/denom;
+//            double ret = (3*x*x*pow2 
+//                    + x*pow1
+//                    + pow0);
             return ret;
         }
 
@@ -148,7 +150,6 @@ public class Interpolate {
                    xmin = upper[0];
                }
             }
-            estimateC(xmin);
             return xmin;
         }
 
@@ -158,7 +159,7 @@ public class Interpolate {
         double C;
         double positionMax;
         double max;
-        final double cdenom;
+        double cdenom;
         final double sum2;
         public Poly4(double z0, double z1, double d0, double d1, double max) {
             super(z0, z1, d0, d1);
@@ -172,6 +173,7 @@ public class Interpolate {
             double mult = (xmin-z0)*(xmin-z1);
             mult = mult*mult/denom;
             C = (max - eval1(xmin))/mult;
+            cdenom = 4*C/denom;
         } 
 
         public double eval(double x){
@@ -182,7 +184,8 @@ public class Interpolate {
         }        
         public double der(double x){
             double ret = super.der(x);
-            ret += (x-z0)*(x-z1)*(x-sum2)*cdenom;
+            //ret += (x-z0)*(x-z1)*(x-sum2)*cdenom;
+            ret += 2*C*(x-z0)*(x-z1)*(2*x-z1-z0)/denom;
             return ret;
         }
         public double secondDer(double x){
@@ -261,7 +264,7 @@ public class Interpolate {
     }
 
     private static void readItems(   )
-            throws FileNotFoundException, IOException {
+            throws Exception {
         double begin= baseLimit + (noffset-correction)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
         
@@ -288,17 +291,16 @@ positionMax 100802.20011163439, 2.5298641775799497,
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
         System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
-        double[][] h = new double[N][2];
+        imFmid = new double[N][2];
         double[][] g = new double[N][2];
+        gramDer = new double[N][2];
         double[] zetaMidMean = {0, 0};
         double[] zetaGramMean = {0, 0};
         int idx = 0;
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
-            updateZeroInput(upperLimit);
-            double zeta =  getZeta(n, upperLimit, zetaGramMean);
-            g[idx][0] = ((n%2==0)?-zeta:zeta);
+            double zeta =  getZeta(n, idx, upperLimit, zetaGramMean, g, 0);
 
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -306,9 +308,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //            System.out.println("gram " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
-            updateZeroInput(upperLimit);
-            zeta = getZeta(n, upperLimit, zetaMidMean);
-            h[idx][1] = ((n%2==0)?-zeta:zeta);
+            zeta = getZeta(n, idx, upperLimit, zetaMidMean,imFmid,1);
 //            System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
             if (count == N - 1) {
                 System.out.println("final n " + n);
@@ -329,10 +329,12 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //        double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
 //        zetaCorrection1 = GSeries.correction( predictedSqrtArg1);
 //        System.out.println( "final zetaCorrection: " + zetaCorrection1);
-//        imFGramPoints(h, g);
+        imFGramPoints( g);
     }
 
-    private static double getZeta(int n, double upperLimit, double[] zetaMean) {
+    private static double getZeta(int n, int idx, double upperLimit, 
+            double[] zetaMean, double[][] h, int i) throws Exception {
+        updateZeroInput(upperLimit);
         double zetaEstMid = poly.eval(upperLimit);
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
@@ -347,11 +349,31 @@ positionMax 100802.20011163439, 2.5298641775799497,
              }
         }
         double zeta = (zetaEstMid - zetaCorrection1)/2;
-        zetaMean[n%2] += zeta;
+        final int nmod2 = n%2;
+        zetaMean[nmod2] += zeta;
+        //i == 0, Gram
+        switch(nmod2){
+        case 0:
+            h[idx][i] = (-zeta);
+            if(i==0){
+                gramDer[idx][0] = -poly.der(upperLimit);
+                gramDer[idx][0] = -poly.secondDer(upperLimit);
+            }
+            break;
+        case 1:
+            h[idx][i] = (zeta);
+            if(i==0){
+                gramDer[idx][0] = poly.der(upperLimit);
+                gramDer[idx][0] = poly.secondDer(upperLimit);
+            }
+        }
+        if(idx>0 && i==0){
+            imFmid[idx-1][0] = -100;
+        }
         return zeta;
     }
 
-    private static void updateZeroInput(double upperLimit) throws FileNotFoundException, IOException {
+    private static final void updateZeroInput(double upperLimit) throws FileNotFoundException, IOException {
         if(upperLimit<=zeroInput.nextValues[0]){
             zeroInput = new ZeroInfo(0, zeroInput);
         } else {
@@ -384,23 +406,30 @@ positionMax 100802.20011163439, 2.5298641775799497,
             final double d1 = zeroInput.nextValues[1];
             final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
             poly = new Poly4(z0,z1, d0,d1,max);
-
         }
     }
     
-    private static void imFGramPoints(double[] imFmid, double[][] fAtBeta ) throws IOException {
+    private static void imFGramPoints( double[][] fAtBeta ) throws IOException {
+        double[] y = new double[imFmid.length];
+        for (int i = 0; i < y.length; i++) {
+            y[i] = imFmid[i][1];
+        }
+        
         double begin= baseLimit + (noffset-correction-1)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
-        System.out.println( gSeries.begin + ", " );
+        System.out.println( "begin: " + gSeries.begin + ", " );
 
-        NormalizedSpline normalizedSpline = new NormalizedSpline(imFmid);
+        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
         int seriesOffset = 1, position = 1;
         normalizedSpline.evalMid(fAtBeta, seriesOffset, position);
 
         gSeries.rotateFtoG(fAtBeta);
-        fAtBeta[0][1] =  Double.MIN_VALUE;   
-        storeG(begin, gramIncr, fAtBeta);
-        readAndValidate();
+        fAtBeta[0][1] =  Double.NEGATIVE_INFINITY;  
+        gSeries.setgAtBeta(fAtBeta);
+        checkZeros(gSeries);
+        checkMax(gSeries);
+        //        storeG(begin, gramIncr, fAtBeta);
+//        readAndValidate();
     }
 
     public static GSeries readGSeries() throws FileNotFoundException, IOException {
@@ -473,7 +502,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
             final int initialPadding, 
             GSeries gAtBeta, boolean checkAssert) {
         double zeta = Interpolate.evaluateZeta(postionMax, initialPadding, gAtBeta);
-        System.out.println( "zeta " + nf.format(zeta) + " cf " + expectedMax
+        System.out.println( "(max) zeta " + nf.format(zeta) + " cf " + expectedMax
                 + " postionMax " + postionMax );
         if(checkAssert){
            if(Math.abs(zeta) > 0.000001){
@@ -482,8 +511,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
            }
         }
         double der = evaluateDer(postionMax, initialPadding, gAtBeta);
-        System.out.println("der " + nf.format(der) + " cf 0" 
-        );
+        System.out.println("der " + nf.format(der) + " cf 0" );
         if(checkAssert){
             if(Math.abs(der)>0.001){
                 throw new IllegalStateException("Expected 0 "  + " but got "
@@ -517,7 +545,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
     }
 
     public static double evaluateDer(double zero, final int initialPadding, GSeries gAtBeta) {
-        double delta = 0.01*gAtBeta.spacing;
+        double delta = 0.001*gAtBeta.spacing;
         double zetaplus = Interpolate.evaluateZeta(zero+delta, initialPadding, gAtBeta);
         double zetaminus = Interpolate.evaluateZeta(zero-delta, initialPadding, gAtBeta);
         double der = (zetaplus-zetaminus)/(2*delta);
@@ -538,6 +566,10 @@ positionMax 100802.20011163439, 2.5298641775799497,
 
     private static void checkMax() throws FileNotFoundException, IOException {
         GSeries gSeries = readGSeries();
+        checkMax(gSeries);
+    }
+
+    private static void checkMax(GSeries gSeries) {
         double[] zero1 = { 682.7988048955597, 3811.2260977681094, 
                 66093.42494812438, 
                 };
