@@ -34,6 +34,7 @@ public class Interpolate {
     }
     static BigDecimal offset;
     final static PrintStream out = null;
+    static PrintStream validateOut = null;
     static BufferedReader[] zeroIn;
     static double[] lastZeroSeen1;
     static double[][] gramDer;
@@ -329,7 +330,9 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //        double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
 //        zetaCorrection1 = GSeries.correction( predictedSqrtArg1);
 //        System.out.println( "final zetaCorrection: " + zetaCorrection1);
-        imFGramPoints( g);
+        //imFGramPoints( g);
+        reFMidGramPoints(g);
+        validateOut.close();
     }
 
     private static double getZeta(int n, int idx, double upperLimit, 
@@ -410,6 +413,9 @@ positionMax 100802.20011163439, 2.5298641775799497,
     }
     
     private static void imFGramPoints( double[][] fAtBeta ) throws IOException {
+        File file = new File(Rosser.getParam("conjecturesOutFile")
+                .replace("stats", "validate"));
+        validateOut = new PrintStream(file);
         double[] y = new double[imFmid.length];
         for (int i = 0; i < y.length; i++) {
             y[i] = imFmid[i][1];
@@ -426,6 +432,31 @@ positionMax 100802.20011163439, 2.5298641775799497,
         gSeries.rotateFtoG(fAtBeta);
         fAtBeta[0][1] =  Double.NEGATIVE_INFINITY;  
         gSeries.setgAtBeta(fAtBeta);
+        checkZeros(gSeries);
+        checkMax(gSeries);
+        //        storeG(begin, gramIncr, fAtBeta);
+//        readAndValidate();
+    }
+    
+    private static void reFMidGramPoints( double[][] fAtBeta ) throws IOException {
+        File file = new File(Rosser.getParam("conjecturesOutFile")
+                .replace("stats", "validateMid"));
+        validateOut = new PrintStream(file);
+        double[] y = new double[imFmid.length];
+        for (int i = 0; i < y.length; i++) {
+            y[i] = fAtBeta[i][0];
+        }
+        
+        double begin= baseLimit + (noffset-correction-1+0.5)* (gramIncr);
+        GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
+        System.out.println( "begin: " + gSeries.begin + ", " );
+
+        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
+        int seriesOffset = 0, position = 0;
+        normalizedSpline.evalMid(imFmid, seriesOffset, position);
+
+        gSeries.rotateFtoG(imFmid);
+        gSeries.setgAtBeta(imFmid);
         checkZeros(gSeries);
         checkMax(gSeries);
         //        storeG(begin, gramIncr, fAtBeta);
@@ -512,6 +543,14 @@ positionMax 100802.20011163439, 2.5298641775799497,
         }
         double der = evaluateDer(postionMax, initialPadding, gAtBeta);
         System.out.println("der " + nf.format(der) + " cf 0" );
+        if(validateOut != null){
+            validateOut.println(" postionMax, " + postionMax
+                    + ", " + nf.format(zeta)
+                    + ", <-, " + nf.format(expectedMax)
+                    + ", " + nf.format(der) 
+                    + ", " + nf.format(Math.abs(expectedMax-zeta)) 
+                    );
+        }
         if(checkAssert){
             if(Math.abs(der)>0.001){
                 throw new IllegalStateException("Expected 0 "  + " but got "
@@ -536,6 +575,14 @@ positionMax 100802.20011163439, 2.5298641775799497,
         double der = evaluateDer(zero, initialPadding, gAtBeta);
         System.out.println("der " + nf.format(der) + " cf " 
         + nf.format(expectedDer));
+        if(validateOut != null){
+            validateOut.println(" zero, " + zero
+                    + ", " + nf.format(zeta)
+                    + ", ->, " + nf.format(expectedDer)
+                    + ", " + nf.format(der) 
+                    + ", " + nf.format(Math.abs(expectedDer-der)) 
+                    );
+        }
         if(checkAssert){
             if(Math.abs(expectedDer-der)>0.001){
                 throw new IllegalStateException("Expected " + expectedDer + " but got "
