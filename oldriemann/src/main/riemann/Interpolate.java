@@ -450,7 +450,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
         checkZeros(gSeries);
         checkMax(gSeries);
         validateOut.close();
-        //        storeG(begin, gramIncr, fAtBeta);
+        //        storeG(gSeries.begin, gSeries.spacing, gSeries.gAtBeta);
 //        readAndValidate();
     }
         
