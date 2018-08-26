@@ -1,8 +1,16 @@
 package riemann;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class NormalizedSpline extends BaseNormalizedSpline {
+    static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMinimumFractionDigits(6);
+        nf.setMaximumFractionDigits(6);
+        nf.setGroupingUsed(false);
+    }
+
     public static class Splinei {
         public final double xi, originalH;
         public final double yi, yi1;
@@ -56,7 +64,6 @@ public class NormalizedSpline extends BaseNormalizedSpline {
         this.y = y;
         fit();
     }
-    
 
     protected void initSystem(double[] diag, double[] rhs) {
         diag[1] = 4.0;
@@ -69,6 +76,10 @@ public class NormalizedSpline extends BaseNormalizedSpline {
         rhs[diag.length-1] = (-5*y[N-3]+4*y[N-2]+y[N-1]);
     }
 
+    /**
+     * used in tests
+     * @return
+     */
     public double[] evalMid() {
         int index1 = 0;
         double[] rIm = new double[N-1];
@@ -99,15 +110,20 @@ public class NormalizedSpline extends BaseNormalizedSpline {
         int N = 7;
         double[] y = new double[N];
         double[] rIm = new double[N];
+        double[] slope = new double[N];
         for (int i = 0; i < N; i++) {
             double x = 2*i;
             y[i] = f(x);
+            slope[i] = 3*x*x - 16*x;
             rIm[i] = f(x+1);
-            System.out.println(i + ", " + y[i] + ", " +  rIm[i]);
         }
+        System.out.println("in " + Arrays.toString(y));
+        System.out.println("expected " + Arrays.toString(rIm));
         NormalizedSpline normalizedSpline = new NormalizedSpline(y);
         double[] actual = normalizedSpline.evalMid();
-        System.out.println(Arrays.toString(actual));
+        System.out.println("actual " + Arrays.toString(actual));
+        System.out.println("expected slopes " + Arrays.toString(slope));
+        System.out.println("actual slopes " + Arrays.toString(normalizedSpline.si));
     }
 
     private static double f(double x){

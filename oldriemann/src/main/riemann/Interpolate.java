@@ -38,6 +38,7 @@ public class Interpolate {
     static BufferedReader[] zeroIn;
     static double[] lastZeroSeen1;
     static double[][] gramDer;
+    static double[][] fAtBeta;
     static double[][] imFmid;
     static ZeroInfo zeroInput;
     static Poly4 poly = null;
@@ -293,7 +294,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
         System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
         imFmid = new double[N][2];
-        double[][] g = new double[N][2];
+        fAtBeta = new double[N][2];
         gramDer = new double[N][2];
         double[] zetaMidMean = {0, 0};
         double[] zetaGramMean = {0, 0};
@@ -301,7 +302,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
-            double zeta =  getZeta(n, idx, upperLimit, zetaGramMean, g, 0);
+            double zeta =  getZeta(n, idx, upperLimit, zetaGramMean, fAtBeta, 0);
 
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -330,9 +331,9 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //        double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
 //        zetaCorrection1 = GSeries.correction( predictedSqrtArg1);
 //        System.out.println( "final zetaCorrection: " + zetaCorrection1);
-        //imFGramPoints( g);
-        reFMidGramPoints(g);
-        validateOut.close();
+        //imFGramPoints( );
+        //reFMidGramPoints();
+        consolidatedF();
     }
 
     private static double getZeta(int n, int idx, double upperLimit, 
@@ -412,7 +413,48 @@ positionMax 100802.20011163439, 2.5298641775799497,
         }
     }
     
-    private static void imFGramPoints( double[][] fAtBeta ) throws IOException {
+    private static void consolidatedF(  ) throws IOException {
+        File file = new File(Rosser.getParam("conjecturesOutFile")
+                .replace("stats", "validateConsolidatedF"));
+        validateOut = new PrintStream(file);
+        double[] yF = new double[imFmid.length];
+        for (int i = 0; i < yF.length; i++) {
+            yF[i] = imFmid[i][1];
+        }
+        
+        NormalizedSpline normalizedSplineF = new NormalizedSpline(yF);
+        normalizedSplineF.evalMid(fAtBeta, 1, 1);
+
+        double[] yIm = new double[imFmid.length];
+        for (int i = 0; i < yIm.length; i++) {
+            yIm[i] = fAtBeta[i][0];
+        }
+        
+        NormalizedSpline normalizedSplineIm = new NormalizedSpline(yIm);
+        normalizedSplineIm.evalMid(imFmid, 0, 0);
+
+        double[][] consolidated = new double[2*imFmid.length][2];
+        for (int i = 0; i < imFmid.length; i++) {
+            consolidated[2*i][0] = fAtBeta[i][0];
+            consolidated[2*i][1] = fAtBeta[i][1];
+            consolidated[2*i+1][0] = imFmid[i][0];
+            consolidated[2*i+1][1] = imFmid[i][1];
+        }
+        double begin= baseLimit + (noffset-correction-1)* (gramIncr);
+        GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr/2);
+        System.out.println( "begin: " + gSeries.begin + ", " );
+
+        gSeries.rotateFtoG(consolidated);
+        consolidated[0][1] =  Double.NEGATIVE_INFINITY;  
+        gSeries.setgAtBeta(consolidated);
+        checkZeros(gSeries);
+        checkMax(gSeries);
+        validateOut.close();
+        //        storeG(begin, gramIncr, fAtBeta);
+//        readAndValidate();
+    }
+        
+    private static void imFGramPoints(  ) throws IOException {
         File file = new File(Rosser.getParam("conjecturesOutFile")
                 .replace("stats", "validate"));
         validateOut = new PrintStream(file);
@@ -421,44 +463,46 @@ positionMax 100802.20011163439, 2.5298641775799497,
             y[i] = imFmid[i][1];
         }
         
+        int seriesOffset = 1, position = 1;
+        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
+        normalizedSpline.evalMid(fAtBeta, seriesOffset, position);
+
         double begin= baseLimit + (noffset-correction-1)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
         System.out.println( "begin: " + gSeries.begin + ", " );
-
-        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
-        int seriesOffset = 1, position = 1;
-        normalizedSpline.evalMid(fAtBeta, seriesOffset, position);
 
         gSeries.rotateFtoG(fAtBeta);
         fAtBeta[0][1] =  Double.NEGATIVE_INFINITY;  
         gSeries.setgAtBeta(fAtBeta);
         checkZeros(gSeries);
         checkMax(gSeries);
+        validateOut.close();
         //        storeG(begin, gramIncr, fAtBeta);
 //        readAndValidate();
     }
     
-    private static void reFMidGramPoints( double[][] fAtBeta ) throws IOException {
+    private static void reFMidGramPoints(  ) throws IOException {
         File file = new File(Rosser.getParam("conjecturesOutFile")
                 .replace("stats", "validateMid"));
         validateOut = new PrintStream(file);
-        double[] y = new double[imFmid.length];
-        for (int i = 0; i < y.length; i++) {
-            y[i] = fAtBeta[i][0];
+        double[] yIm = new double[imFmid.length];
+        for (int i = 0; i < yIm.length; i++) {
+            yIm[i] = fAtBeta[i][0];
         }
         
+        int seriesOffset = 0, position = 0;
+        NormalizedSpline normalizedSplineIm = new NormalizedSpline(yIm);
+        normalizedSplineIm.evalMid(imFmid, seriesOffset, position);
+
         double begin= baseLimit + (noffset-correction-1+0.5)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr);
         System.out.println( "begin: " + gSeries.begin + ", " );
-
-        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
-        int seriesOffset = 0, position = 0;
-        normalizedSpline.evalMid(imFmid, seriesOffset, position);
 
         gSeries.rotateFtoG(imFmid);
         gSeries.setgAtBeta(imFmid);
         checkZeros(gSeries);
         checkMax(gSeries);
+        validateOut.close();
         //        storeG(begin, gramIncr, fAtBeta);
 //        readAndValidate();
     }

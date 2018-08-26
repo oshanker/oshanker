@@ -1,6 +1,9 @@
 package riemann;
 
 public abstract class BaseNormalizedSpline {
+    /**
+     * si is double the slope.
+     */
     final double[] si;
     final int N;
     public BaseNormalizedSpline( int N) {
@@ -14,6 +17,8 @@ public abstract class BaseNormalizedSpline {
         double[] rhs = new double[N-1];
         //init
         initSystem(diag, rhs);
+        
+        si[0] = Double.NEGATIVE_INFINITY;
         
         int index = N-3;
         double mult = 1/diag[index+1];

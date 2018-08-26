@@ -2,6 +2,8 @@ package riemann;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -12,23 +14,34 @@ public class NormalizedSplineTest {
         return x*x*x - 8*x*x + 5*x - 40 ;
     }
 
+    private static double der(double x){
+        return 3*x*x - 16*x + 5;
+    }
 
-    @Test
+
+    @Test 
     public void testMid() {
         int N = 8;
         double[] y = new double[N];
         double[] rIm = new double[N];
+        double[] slope = new double[N];
         for (int i = 0; i < N; i++) {
             double x = 2*i;
             y[i] = f(x);
             rIm[i] = f(x+1);
+            slope[i] = der(x);
         }
         NormalizedSpline normalizedSpline = new NormalizedSpline(y);
         double[] actual = normalizedSpline.evalMid();
         for (int i = 0; i < N-1; i++) {
             assertEquals("predicted i = " + i + " :", rIm[i] , actual[i], 0.0000001 ) ;
         }
-    }
+        System.out.println("in " + Arrays.toString(y));
+        System.out.println("expected " + Arrays.toString(rIm));
+        System.out.println("actual " + Arrays.toString(actual));
+        System.out.println("expected slopes " + Arrays.toString(slope));
+        System.out.println("actual slopes " + Arrays.toString(normalizedSpline.si));
+     }
     
     @Test @Ignore
     public void test() {
@@ -51,7 +64,7 @@ public class NormalizedSplineTest {
          */
         for (int i = 2; i < N-1; i++) {
             System.out.println("From second der at i = " + i + " :" 
-               + ((si[i+1]+4*si[i]+si[i-1])/(N-1)) 
+               + ((si[i+1]+4*si[i]+si[i-1])/4) 
                     + ", " + (3*(y[i+1]-y[i-1])));
             assertEquals("From second der at i = " + i 
                     + " :", ((si[i+1]+4*si[i]+si[i-1])/4) 
