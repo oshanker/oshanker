@@ -334,6 +334,18 @@ positionMax 100802.20011163439, 2.5298641775799497,
         //imFGramPoints( );
         //reFMidGramPoints();
         consolidatedF();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
+                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
+            }
+        }
+        for (int i = fAtBeta.length-2; i < fAtBeta.length; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
+                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
+            }
+        }
     }
 
     private static double getZeta(int n, int idx, double upperLimit, 
@@ -530,9 +542,13 @@ positionMax 100802.20011163439, 2.5298641775799497,
     }
 
     private static void checkZeros(GSeries gSeries) {
-        double[] zero1 = {480.82757562193734, 100415.50500735927, 100415.61036506912, 
+        double[] zero1 = {480.82757562193734, 
+                90977.64166585186, 90977.97641173516, 
+                100415.50500735927, 100415.61036506912, 
                 100797.8878505715, 100798.08697164342,  };
-        double[] expectedDer1 = {-12.479455830100015, -46.06567120662985, 45.21334158268663, 
+        double[] expectedDer1 = {-12.479455830100015, 
+                644.799901929005, -1487.416968799948,
+                -46.06567120662985, 45.21334158268663, 
                 -152.8048262150694, 83.55187028339371, };
         for (int i = 0; i < zero1.length; i++) {
             validateZero(zero1[i], expectedDer1[i], initialPadding, gSeries,false);
@@ -662,10 +678,10 @@ positionMax 100802.20011163439, 2.5298641775799497,
 
     private static void checkMax(GSeries gSeries) {
         double[] zero1 = { 682.7988048955597, 3811.2260977681094, 
-                66093.42494812438, 
+                66093.42494812438, 90977.81218358524, 
                 };
         double[] expectedDer1 = { 138.61973697485362, 386.1396790368941, 
-                392.08238609990934
+                392.08238609990934, 513.7189446414618
                 };
         for (int i = 0; i < zero1.length; i++) {
             validateMax(zero1[i], expectedDer1[i], initialPadding , 
