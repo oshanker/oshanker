@@ -144,43 +144,49 @@ public class MoreGSeriesTest {
         }
     }
     
-    @Test @Ignore
+    @Test 
     public void testInterpolate() throws Exception{
-        GSeries gSeries = Interpolate.readGSeries();
+        File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
+        GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
         
-        double[] zero = {100415.50500735927, 100415.61036506912, 
-                100797.8878505715, 100798.08697164342,  };
-        double[] expectedDer = {-46.06567120662985, 45.21334158268663, 
-                -152.8048262150694, 83.55187028339371, };
-        for (int i = 0; i < zero.length; i++) {
-            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
-        }
-
-//        File file = new File("out/gzetaE28/gzeta6.csv");
-//        if (!file.getParentFile().exists()) {
-//            file.getParentFile().mkdirs();
+//        double[] zero = {100415.50500735927, 100415.61036506912, 
+//                100797.8878505715, 100798.08697164342,  };
+//        double[] expectedDer = {-46.06567120662985, 45.21334158268663, 
+//                -152.8048262150694, 83.55187028339371, };
+//        for (int i = 0; i < zero.length; i++) {
+//            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
 //        }
-//        PrintWriter out = new PrintWriter(file);
-//        writeZetaPhi( out, initialPadding);
-//        out.close();
+
+        File file = new File("out/gzetaE28/gzeta6.csv");
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        PrintWriter out = new PrintWriter(file);
+        writeZetaPhi( out, gSeries, initialPadding, 2*gSeries.spacing);
+        out.close();
     }
 
-    private void writeZetaPhi( PrintWriter out, int initialPadding) throws Exception{
-        GSeries gAtBeta = Interpolate.readGSeries();
+    private void writeZetaPhi( PrintWriter out, GSeries gAtBeta, 
+            int initialPadding, double incr) throws Exception{
         double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
         int k = oddsum.length;
         final double[] zeta = new double[2*k];
-        double incr  = gAtBeta.spacing;
         final double firstGram = gAtBeta.begin + initialPadding*incr;
-        int N = gAtBeta.gAtBeta.length - 2*initialPadding;
-        double gram = firstGram-incr;
+        int N = gAtBeta.gAtBeta.length/2 - 2*initialPadding;
+        double gram = firstGram;
         for (int i = 0; i < N; i++) {
             gram += incr;
             for (int j = 0; j < k; j++) {
                 double t = gram + j*incr/k;
-                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
-                        t, 4, initialPadding, 1.6E-9, false);
+                double[] gFromBLFI;
+                try {
+                    gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
+                            t, 4, initialPadding, 1.6E-9, false);
+                } catch (Exception e) {
+                    System.out.println("i " + i);
+                    throw e;
+                }
                 if(i%2==1){
                     zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     oddsum[j] += zeta[k+j];

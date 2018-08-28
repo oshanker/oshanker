@@ -1,4 +1,4 @@
-df <- read.csv("../oldriemann/out/gzetaE12/gzeta6.csv", header = FALSE);
+df <- read.csv("../oldriemann/out/gzetaE28/gzeta6.csv", header = FALSE);
 for (i in 1:length(df)) {
 	x<-as.matrix(df[i]);
 	x<-as.vector(x);

@@ -281,7 +281,7 @@ public class GSeries {
 			for (int j = 0; j < 2; j++) {
 				int i = midIdx + (j==0?-term:(term+1));
 				if(i>=gAtBeta.length || i < 0){
-					throw new IllegalStateException("index out of bounds " + i);
+					throw new IllegalStateException(t0 + ", index out of bounds " + i);
 				}
 				double t = begin + (i)*spacing;
 				double harg = gamma*(t0-t)/M ;

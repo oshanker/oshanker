@@ -462,7 +462,8 @@ positionMax 100802.20011163439, 2.5298641775799497,
         checkZeros(gSeries);
         checkMax(gSeries);
         validateOut.close();
-        //        storeG(gSeries.begin, gSeries.spacing, gSeries.gAtBeta);
+        File gFile = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
+        storeG(gSeries.begin, gSeries.spacing, gSeries.gAtBeta, gFile);
 //        readAndValidate();
     }
         
@@ -522,6 +523,10 @@ positionMax 100802.20011163439, 2.5298641775799497,
     public static GSeries readGSeries() throws FileNotFoundException, IOException {
 
         File file = new File("out/gSeries" + prefix + "/gSeries.dat");
+        return readGSeries(file);
+    }
+
+    public static GSeries readGSeries(File file) throws FileNotFoundException, IOException {
         DataInputStream in = dataInputStream(file);
         double begin = in.readDouble();
         double gincr = in.readDouble();
@@ -557,6 +562,11 @@ positionMax 100802.20011163439, 2.5298641775799497,
 
     private static void storeG(double begin, double incr, double[][] gAtBeta) throws IOException, FileNotFoundException {
         File file = new File("out/gSeries" + prefix + "/gSeries.dat");
+        storeG(begin, incr, gAtBeta, file);
+    }
+
+    private static void storeG(double begin, double incr, double[][] gAtBeta, File file)
+            throws FileNotFoundException, IOException {
         DataOutputStream out = outputStream( file);
         out.writeDouble(begin);
         out.writeDouble(incr);
