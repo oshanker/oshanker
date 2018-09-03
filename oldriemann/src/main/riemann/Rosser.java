@@ -321,6 +321,7 @@ public class Rosser {
 			} else {
                 badIntervalCounts[zeroInput.countZeros]++;
 			}
+
 			S += zeroInput.countZeros - 1;
 			if(Math.abs(S) > maxS ){
 				System.out.println("S " + S + ", n " + n + ", zeroInput.countZeros " + zeroInput.countZeros );
@@ -436,6 +437,13 @@ public class Rosser {
                     intervalCounts[j][i] = 0;
                 }
             }
+            for (int i = 0; i < goodIntervalCounts.length; i++) {
+                goodIntervalCounts[i] = 0;
+            }
+            for (int i = 0; i < badIntervalCounts.length; i++) {
+                badIntervalCounts[i] = 0;
+            }
+            goodBad = 0; badGood = 0; goodGood = 0; badBad = 0;
             System.out.println("displacement " + displacement);
             readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10 );
             TreeSet<String>[] stats = new TreeSet[10];
@@ -528,7 +536,8 @@ public class Rosser {
             double count = goodCount+badCount;
             double pGood = ((double)goodCount)/count ;
             double pBad = ((double)badCount)/count;
-            System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad);
+            System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad
+                    + "\n sum " + (goodGood +  badGood +  goodBad +  badBad));
             System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
             System.out.println("Table 10: pEvenBad/pEvenGood " +( ((double)badGood)/badCount )/(((double)goodBad)/goodCount)
                     + " pGood/pBad " + pGood/pBad);
