@@ -11,10 +11,8 @@
 
 %     Remove any commented or uncommented macros you do not use.
 
-\documentclass{amsart}
-
-%     If you need symbols beyond the basic set, uncomment this command.
-%\usepackage{amssymb}
+\documentclass[twoside]{article}
+\usepackage{amsmath,amsthm,amssymb,verbatim}
 
 %     If your article includes graphics, uncomment this command.
 \usepackage{graphicx}
@@ -24,6 +22,22 @@
 
 \usepackage{url}
 
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
+
+	\addtolength{\oddsidemargin}{1cm}
+	\addtolength{\evensidemargin}{-1cm}
+
+\setcounter{page}{435}
+
+\begin{document}
+
+%     If you need symbols beyond the basic set, uncomment this command.
+%\usepackage{amssymb}
 % comment out if using  amsart.cls
 %\usepackage{amsmath,amsthm,amssymb,verbatim}
 
@@ -41,51 +55,35 @@
 
 \numberwithin{equation}{section}
 
-\begin{document}
+
+\date{}
+\lhead[]{}
+\chead[\underline{xxx}]{\it{AMO - Advanced Modeling and Optimization, Volume 20, Number 2, 2018}}
+\rhead[]{}
 
 % \title[short text for running head]{full title}
-\title{Symmetry properties of distribution of Riemann Zeta Function values on critical axis}
+\title{\bf{Symmetry properties of distribution of Riemann Zeta Function values on critical axis}}
+
+\maketitle
 
 %    Only \author and \address are required; other information is
 %    optional.  Remove any unused author tags.
 
 %    author one information
 % \author[short version for running head]{name for top of paper}
-\author{O. Shanker}
-\thanks{ Mountain View, CA 94041, U. S. A.
-email: oshanker@gmail.com}
+\author{{\textbf{O. Shanker}},}
+\thanks{ Mountain View, CA 94041, U. S. A. email: oshanker@gmail.com}
 
-%    author two information
-
-%    \subjclass is required.
-\subjclass[2010]{Primary 11M06, 11-04; }
-
-\date{}
-\maketitle
-
+\thispagestyle{fancy}
 
 %    Abstract is required.
 \begin{abstract}
 The question of the values of Hardy's $Z$-function at a discrete sequence of points on the critical axis is quite interesting. Some results in this direction can be proved rigorously. At the same time, the present state of Riemann zeta function theory gives limited information about the value distribution of $Z(t)$ at discrete sequences of points. Moreover, possibly these analogues could differ significantly from the continuous case. To investigate the question we perform a numerical study of the value distribution of Hardy's $Z$-function at generalized Gram points. 
 
 \end{abstract}
-{\bf Keywords:} Riemann zeta, Value Distribution, Symmetry, Hardy's function
 
 
-%    Text of article.
-
-%    Bibliographies can be prepared with BibTeX using amsplain,
-%    amsalpha, or (for "historical" overviews) natbib style.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%    Templates for common elements of a journal article; for additional
-%    information, see the file Author_Handbook_Journals.pdf, included
-%    in the MCOM author package, and the amsthm user's guide, linked
-%    from http://www.ams.org/tex/amslatex.html .
-
-%    Section headings
+\symbolfootnote[0]{\bf{*AMO - Advanced Modeling and Optimization. ISSN: 1841-4311}}
 
 
 \section{Introduction}
@@ -106,6 +104,10 @@ Section~\ref{sec3} provides evidence for the symmetry relations.
 In Section~\ref{sec4} we discuss related work in the literature.
 Section~\ref{conclusions} presents the conclusions. In the Appendix we discuss
 the nature of the probability distribution a little more in depth.
+
+%\clearpage
+\chead[\underline{O. Shanker}]{\underline{Symmetry properties of distribution of Riemann Zeta Function}}
+
 
 \section{\label{sec2}Notation for the Riemann zeta function and the symmetry properties}
 
