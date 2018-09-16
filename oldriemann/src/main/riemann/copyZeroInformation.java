@@ -15,7 +15,7 @@ import riemann.Rosser.ZeroInfo;
 
 public class copyZeroInformation {
     
-    public static ZeroInfo readZeros(   
+    public static ZeroInfo readSingleZero(   
             BufferedReader[] zeroIn,  double[] nextValues)
             throws FileNotFoundException, IOException {
         String[] input = new String[zeroIn.length];
@@ -91,7 +91,7 @@ public class copyZeroInformation {
         int run = 0;
         int beginRun = 0;
         for (int i = 0; i < N ; i++) {
-            zeroInput = readZeros( Interpolate.zeroIn, nextValues);
+            zeroInput = readSingleZero( Interpolate.zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
 //            if(i>1003800){
 //                if(Math.abs(zeroInput.lastZero[1])>max){
@@ -114,9 +114,9 @@ public class copyZeroInformation {
             final double d0 = zeroInput.lastZero[1];
             final double d1 = zeroInput.nextValues[1];
             final double maxFromInput = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
-            Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
             if(i==3792 || i==1003813){
                 //gSeries.begin 476.85026008636953
+                Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
                 System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
                       ", \n"  + "positionMax " + poly.positionMax 
                       + ", " + poly.eval(poly.positionMax) 
