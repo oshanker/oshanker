@@ -25,13 +25,66 @@ import riemann.Interpolate;
 public class MoreGSeriesTest {
     static NumberFormat nf = NumberFormat.getInstance();
     static {
-        nf.setMinimumFractionDigits(8);
-        nf.setMaximumFractionDigits(8);
+//        nf.setMinimumIntegerDigits(2);
+        nf.setMinimumFractionDigits(4);
+        nf.setMaximumFractionDigits(4);
         nf.setGroupingUsed(false);
     }
-    
-    @Test @Ignore
+
+    @Test  
     public void testSymmetryRelations() throws Exception{
+        //check the symmetry and antisymmetry relations from the output of distributions
+        File file = new File("out/gzetaE28/6.txt");
+        BufferedReader zeroIn = new BufferedReader(new FileReader(file));
+        int k = 12;
+        double[][] vals = new double[k][6];
+        for (int i = 0; i < k; i++) {
+            String in = zeroIn.readLine();
+             String[] line = in.split("\\s+");
+            for (int j = 0; j < vals[i].length; j++) {
+                vals[i][j]= Double.parseDouble(line[j+2].trim());
+            }
+        }
+        zeroIn.close();
+        //anti
+        System.out.println("antisymmetry");
+        for (int i = 0; i < k/2; i++) {
+            for (int j = 1; j < vals[i].length-1; j++) {
+               double diff = -100;
+               if(j == 2 || j ==3){
+                   diff = vals[i][j] + vals[i+k/2][j];
+               } else {
+                   diff = vals[i][j] + vals[i+k/2][6-1-j];
+               }
+                System.out.print(nf.format(diff) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("symmetry");
+        //symm
+        for (int i = 1; i < k/2; i++) {
+            for (int j = 1; j < vals[i].length-1; j++) {
+                double diff = -100;
+                diff = vals[i][j] - vals[k-i][j];
+                System.out.print(nf.format(diff) + " ");
+            }
+            System.out.println();
+        }
+        //median/mode
+        System.out.println("median/mode");
+        for (int i = 0; i < k; i++) {
+           {
+                double diff =  vals[i][2]/ vals[i][3];
+                System.out.print(i + " " + 
+                        nf.format(diff) + " " + nf.format(vals[i][4]- vals[i][1]));
+            }
+            System.out.println();
+        }
+    }
+    
+    
+    @Test @Ignore 
+    public void testKurtosisSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
         File file = new File("out/kurtosis6.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
@@ -62,7 +115,7 @@ public class MoreGSeriesTest {
         zeroIn.close();
     }
 
-    @Test
+    @Test @Ignore 
     public void testFix() throws Exception{
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);
@@ -144,7 +197,7 @@ public class MoreGSeriesTest {
         }
     }
     
-    @Test 
+    @Test @Ignore  
     public void testInterpolate() throws Exception{
         File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
         GSeries gSeries = Interpolate.readGSeries(gFile);
