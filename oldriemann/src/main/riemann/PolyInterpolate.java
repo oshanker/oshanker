@@ -118,7 +118,7 @@ public class PolyInterpolate {
         System.out.println(xmin + ", " + minValue);
         System.out.println(xmin + ", der " + (5*Math.pow(xmin, 4)  - 1031));
         Poly5 poly5 = new Poly5(2, 5, -951.0, 2094.0, 160,
-                -minValue);
+                minValue);
         System.out.println();
         System.out.println(poly5.positionMax +  ", " + poly5.C 
                 + ", " + poly5.D + ", secod der " + poly5.secondDerRHS());

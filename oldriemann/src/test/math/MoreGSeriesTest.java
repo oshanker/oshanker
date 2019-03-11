@@ -40,9 +40,10 @@ public class MoreGSeriesTest {
         double[][] vals = new double[k][6];
         for (int i = 0; i < k; i++) {
             String in = zeroIn.readLine();
-             String[] line = in.split("\\s+");
+            in = in.replace("\\\\", "");
+            String[] line = in.split("[&\\s]+");
             for (int j = 0; j < vals[i].length; j++) {
-                vals[i][j]= Double.parseDouble(line[j+2].trim());
+                vals[i][j]= Double.parseDouble(line[j+1].trim());
             }
         }
         zeroIn.close();
