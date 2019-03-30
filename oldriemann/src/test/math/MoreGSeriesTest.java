@@ -34,7 +34,7 @@ public class MoreGSeriesTest {
     @Test  
     public void testSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
-        File file = new File("out/gzetaE28/6.txt");
+        File file = new File("data/gzetaE28/6.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k = 12;
         double[][] vals = new double[k][6];
