@@ -34,7 +34,9 @@ public class MoreGSeriesTest {
     @Test  
     public void testSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
-        File file = new File("data/gzetaE28/6.txt");
+    	//input can come from zetaHist.R
+    	//input for zetaHist.R can come from testInterpolate()
+        File file = new File("data/gzetaE28/real6.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k = 12;
         double[][] vals = new double[k][6];
@@ -200,6 +202,8 @@ public class MoreGSeriesTest {
     
     @Test @Ignore  
     public void testInterpolate() throws Exception{
+    	//input can come from riemann.Interpolate.consolidatedF()
+    	//That method stores the output G series from riemann.Interpolate.readItems()
         File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
         GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
