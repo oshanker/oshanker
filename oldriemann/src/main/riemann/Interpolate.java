@@ -272,11 +272,11 @@ public class Interpolate {
         
         zetaCorrection1 = GSeries.correction( gSeries.basesqrtArg1);
         BigDecimal tvalsi = offset.add(BigDecimal.valueOf(begin), Gram.mc);
-        BigDecimal gramIndex = Gram.theta(tvalsi, Gram.mc).divide(Gram.pi, Gram.mc);
-        gramIndex = 
-                gramIndex.subtract(new BigDecimal("98094362213058141112271182436"), Gram.mc);
+        BigDecimal gramIndex1 = Gram.theta(tvalsi, Gram.mc).divide(Gram.pi, Gram.mc);
+        gramIndex1 = 
+                gramIndex1.subtract(new BigDecimal("98094362213058141112271182436"), Gram.mc);
         System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection1
-                + ", gram index " + gramIndex);
+                + ", gram index " + gramIndex1);
         
         int N = Rosser.getParamInt("N");
         N = 1000102;
@@ -454,13 +454,13 @@ positionMax 100802.20011163439, 2.5298641775799497,
         }
         double begin= baseLimit + (noffset-correction-1)* (gramIncr);
         GSeries gSeries = new GSeries(1, 0, offset, begin, gramIncr/2);
-        System.out.println( "begin: " + gSeries.begin + ", " );
+        System.out.println( "gSeries begin: " + gSeries.begin + ", " );
 
         gSeries.rotateFtoG(consolidated);
         consolidated[0][1] =  Double.NEGATIVE_INFINITY;  
         gSeries.setgAtBeta(consolidated);
-        checkZeros(gSeries);
-        checkMax(gSeries);
+//        checkZeros(gSeries);
+//        checkMax(gSeries);
         validateOut.close();
         File gFile = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
         storeG(gSeries.begin, gSeries.spacing, gSeries.gAtBeta, gFile);

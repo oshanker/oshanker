@@ -36,7 +36,7 @@ public class MoreGSeriesTest {
         //check the symmetry and antisymmetry relations from the output of distributions
     	//input can come from zetaHist.R
     	//input for zetaHist.R can come from testInterpolate()
-        File file = new File("data/gzetaE28/real6.txt");
+        File file = new File("data/gzetaE12/real6.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k = 12;
         double[][] vals = new double[k][6];
@@ -216,7 +216,7 @@ public class MoreGSeriesTest {
 //            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
 //        }
 
-        File file = new File("out/gzetaE28/gzeta6.csv");
+        File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta6.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
