@@ -204,6 +204,7 @@ public class MoreGSeriesTest {
     public void testInterpolate() throws Exception{
     	//input can come from riemann.Interpolate.consolidatedF()
     	//That method stores the output G series from riemann.Interpolate.readItems()
+    	//provides input for zetaHist.R 
         File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
         GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
@@ -216,7 +217,7 @@ public class MoreGSeriesTest {
 //            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
 //        }
 
-        File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta6.csv");
+        File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta4.csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -227,7 +228,7 @@ public class MoreGSeriesTest {
 
     private void writeZetaPhi( PrintWriter out, GSeries gAtBeta, 
             int initialPadding, double incr) throws Exception{
-        double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
+        double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
         int k = oddsum.length;
         final double[] zeta = new double[2*k];
         final double firstGram = gAtBeta.begin + initialPadding*incr;

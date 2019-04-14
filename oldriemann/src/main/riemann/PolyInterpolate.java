@@ -98,7 +98,6 @@ public class PolyInterpolate {
             mult = mult*mult*(xmin-z0)/denom;
             D = (max-super.eval(xmin))/mult;
         }
-        
     }
 
     public static void main(String[] args) {
@@ -108,15 +107,15 @@ public class PolyInterpolate {
 //        for (int i = 0; i < N; i++) {
 //            double x = x0+incr*i;
 //            System.out.println(x + ", " + (Math.pow(x, 5) - 32 - (x-2)*1031));
-//            //System.out.println(x + ", der " + (5*Math.pow(x, 4)  - 1031));
+//            System.out.println(x + ", der " + (5*Math.pow(x, 4)  - 1031));
 //        }
         //(y^5-2^5)-(y-2)*1031
         //5x^4-1031
         double xmin = Math.sqrt(1031.0/5);
         xmin = Math.sqrt(xmin);
         double minValue = Math.pow(xmin, 5) - 32 - (xmin-2)*1031;
-        System.out.println(xmin + ", " + minValue);
-        System.out.println(xmin + ", der " + (5*Math.pow(xmin, 4)  - 1031));
+        System.out.println("xmin " + xmin + ", " + minValue
+        		+ ", der " + (5*Math.pow(xmin, 4)  - 1031));
         Poly5 poly5 = new Poly5(2, 5, -951.0, 2094.0, 160,
                 minValue);
         System.out.println();

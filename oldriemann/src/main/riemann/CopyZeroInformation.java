@@ -13,7 +13,7 @@ import java.util.Arrays;
 import riemann.Interpolate.Poly4;
 import riemann.Rosser.ZeroInfo;
 
-public class copyZeroInformation {
+public class CopyZeroInformation {
     
     public static ZeroInfo readSingleZero(   
             BufferedReader[] zeroIn,  double[] nextValues)

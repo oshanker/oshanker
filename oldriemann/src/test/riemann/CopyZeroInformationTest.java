@@ -23,7 +23,7 @@ public class CopyZeroInformationTest {
         int N = 10;
         double[] nextValues = null;
         for (int i = 0; i < N ; i++) {
-            zeroInput = copyZeroInformation.readSingleZero( Interpolate.zeroIn, nextValues);
+            zeroInput = CopyZeroInformation.readSingleZero( Interpolate.zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
             final double z0 = zeroInput.lastZero[0];
             final double z1 = zeroInput.nextValues[0];

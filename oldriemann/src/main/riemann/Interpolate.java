@@ -273,12 +273,15 @@ public class Interpolate {
         zetaCorrection1 = GSeries.correction( gSeries.basesqrtArg1);
         BigDecimal tvalsi = offset.add(BigDecimal.valueOf(begin), Gram.mc);
         BigDecimal gramIndex1 = Gram.theta(tvalsi, Gram.mc).divide(Gram.pi, Gram.mc);
+        String[] line = Rosser.getParam("header").split("[-L]+");
+        
         gramIndex1 = 
-                gramIndex1.subtract(new BigDecimal("98094362213058141112271182436"), Gram.mc);
+                gramIndex1.subtract(new BigDecimal(line[1]), Gram.mc);
         System.out.println( gSeries.begin + ", zetaCorrection " + zetaCorrection1
-                + ", gram index " + gramIndex1);
+                + ", gram index " + gramIndex1 + ", " + line[1]);
         
         int N = Rosser.getParamInt("N");
+        //        N = 12;
         N = 1000102;
         /*
 1003813, [100798.08697164342, 83.55187028339371, 1.2667769416536376], 
@@ -307,11 +310,11 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
 //                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//            System.out.println("gram " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
+            //            System.out.println("gram 2*zeta " + 2*zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
             zeta = getZeta(n, idx, upperLimit, zetaMidMean,imFmid,1);
-//            System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (n+1) +")");
+            //            System.out.println("mid  2*zeta " + 2*zeta + ", " +  upperLimit + " (" + (n+1) +")");
             if (count == N - 1) {
                 System.out.println("final n " + n);
                 System.out.println();

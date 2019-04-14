@@ -1,4 +1,3 @@
-
 zerosFile ="/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002"
 noffset = 2
 signumGram = 1
@@ -35,6 +34,7 @@ correction = 1
 signumGram = -1
 baseLimit = 100.46808750815538
 #endComment
+
 
 #beginComment
 ######################################################################
