@@ -305,7 +305,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
         while (count < N  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
-            double zeta =  getZeta(n, idx, upperLimit, zetaGramMean, fAtBeta, 0);
+            double zeta =  getZetaEstimate(n, idx, upperLimit, zetaGramMean, fAtBeta, 0);
 
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -313,7 +313,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
             //            System.out.println("gram 2*zeta " + 2*zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
-            zeta = getZeta(n, idx, upperLimit, zetaMidMean,imFmid,1);
+            zeta = getZetaEstimate(n, idx, upperLimit, zetaMidMean,imFmid,1);
             //            System.out.println("mid  2*zeta " + 2*zeta + ", " +  upperLimit + " (" + (n+1) +")");
             if (count == N - 1) {
                 System.out.println("final n " + n);
@@ -337,21 +337,39 @@ positionMax 100802.20011163439, 2.5298641775799497,
         //imFGramPoints( );
         //reFMidGramPoints();
         consolidatedF();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
-                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
-            }
-        }
-        for (int i = fAtBeta.length-2; i < fAtBeta.length; i++) {
-            for (int j = 0; j < 2; j++) {
-                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
-                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
-            }
-        }
+        
+        zetaMidMean = new double[]{0, 0};
+        zetaGramMean = new double[]{0, 0};
+        count = 0;
+        GSeries gSeries1 = readGSeries();
+        double base = baseLimit + gramIncr/4;
+        long sampleSize = N-2*initialPadding;
+        while (count < sampleSize  ) {
+            int n = count + noffset+initialPadding;
+            double upperLimit = base + (n-correction-1)* (gramIncr);
+            double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries1);        
+            final int nmod2 = n%2;
+            zetaGramMean[nmod2] += zeta;
+            count++;
+        }   
+        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
+        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
+        
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
+//                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
+//            }
+//        }
+//        for (int i = fAtBeta.length-2; i < fAtBeta.length; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
+//                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
+//            }
+//        }
     }
 
-    private static double getZeta(int n, int idx, double upperLimit, 
+    private static double getZetaEstimate(int n, int idx, double upperLimit, 
             double[] zetaMean, double[][] h, int i) throws Exception {
         updateZeroInput(upperLimit);
         double zetaEstMid = poly.eval(upperLimit);
@@ -376,14 +394,14 @@ positionMax 100802.20011163439, 2.5298641775799497,
             h[idx][i] = (-zeta);
             if(i==0){
                 gramDer[idx][0] = -poly.der(upperLimit);
-                gramDer[idx][0] = -poly.secondDer(upperLimit);
+                gramDer[idx][1] = -poly.secondDer(upperLimit);
             }
             break;
         case 1:
             h[idx][i] = (zeta);
             if(i==0){
                 gramDer[idx][0] = poly.der(upperLimit);
-                gramDer[idx][0] = poly.secondDer(upperLimit);
+                gramDer[idx][1] = poly.secondDer(upperLimit);
             }
         }
         if(idx>0 && i==0){
@@ -464,10 +482,10 @@ positionMax 100802.20011163439, 2.5298641775799497,
         gSeries.setgAtBeta(consolidated);
 //        checkZeros(gSeries);
 //        checkMax(gSeries);
-        validateOut.close();
         File gFile = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
         storeG(gSeries.begin, gSeries.spacing, gSeries.gAtBeta, gFile);
 //        readAndValidate();
+        validateOut.close();
     }
         
     private static void imFGramPoints(  ) throws IOException {
@@ -525,7 +543,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
 
     public static GSeries readGSeries() throws FileNotFoundException, IOException {
 
-        File file = new File("out/gSeries" + prefix + "/gSeries.dat");
+        File file = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
         return readGSeries(file);
     }
 
