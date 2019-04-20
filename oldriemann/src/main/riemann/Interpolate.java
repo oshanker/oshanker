@@ -46,11 +46,11 @@ public class Interpolate {
     static double zetaCorrection1;
     static  double absMax = 0;
     static int correction = 0;
-    static double baseLimit;
-    static double gramIncr;
-    static int noffset;
+    public static double baseLimit;
+    public static double gramIncr;
+    public static int noffset;
     public static String prefix;
-    private static final int initialPadding = 40;
+    public static final int initialPadding = 40;
 
     
     public abstract static class Poly3{

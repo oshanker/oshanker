@@ -275,6 +275,41 @@ public class MoreGSeriesTest {
     }
     
     @Test @Ignore 
+    public void testEstimateE12() throws Exception{
+    	double[] zetaGramMean = new double[]{0, 0};
+        int count = 0;
+        int N = 1000102;
+        String zerosFile = "data/zetaE12.csv";
+        BufferedReader zeroIn = 
+                new BufferedReader(new FileReader(zerosFile));
+        zeroIn.readLine();
+        double base = Interpolate.baseLimit;
+        for (int i = 0; i < 41; i++) {
+            zeroIn.readLine();
+		}
+
+        GSeries gSeries1 = Interpolate.readGSeries();
+//        long sampleSize = N-2*Interpolate.initialPadding;
+        long sampleSize = 5;
+        while (count < sampleSize  ) {
+            int n = count + Interpolate.noffset+Interpolate.initialPadding;
+            double t = base + (n-2)* (Interpolate.gramIncr);
+            double zeta =  Interpolate.evaluateZeta(t, Interpolate.initialPadding, gSeries1);        
+            String input = zeroIn.readLine();
+            String[] parsed = input.split(",");
+            double zetaSaved =  Double.parseDouble(parsed[1]);  
+            System.out.println( n + " " + t + " " + zeta
+            		+ " " + Math.abs(zeta-zetaSaved));
+            final int nmod2 = n%2;
+            zetaGramMean[nmod2] += zeta;
+            count++;
+        }  
+        zeroIn.close();
+//        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
+//        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
+    }
+    
+    @Test @Ignore 
     public void test1E12() throws Exception{
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double t0 = 244.021159171564;
