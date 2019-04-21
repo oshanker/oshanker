@@ -47,7 +47,7 @@ public class ZeroPolyTest {
         }
     }
     
-    @Test @Ignore
+    @Test //@Ignore
     public void test() {
         double[] roots = new double[]{-1, 1};
         double[] slopes = new double[]{-4, 4};

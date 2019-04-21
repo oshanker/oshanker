@@ -41,7 +41,7 @@ public class Interpolate {
     static double[][] fAtBeta;
     static double[][] imFmid;
     static ZeroInfo zeroInput;
-    static Poly4 poly = null;
+    static Poly3 poly = null;
     static int breaks = 0;
     static double zetaCorrection1;
     static  double absMax = 0;
@@ -109,6 +109,7 @@ public class Interpolate {
         
         abstract void estimateC(  double xmin) ;
         public abstract double eval(double x);
+        public abstract double getPositionMax();
        
         protected double processMax( ) {
             double[] oldest = new double[]{z0, d0, 0};
@@ -160,7 +161,12 @@ public class Interpolate {
     public static class Poly4 extends Poly3{
         double C;
         double positionMax;
-        double max;
+
+        @Override
+        public double getPositionMax() {
+			return positionMax;
+		}
+		double max;
         double cdenom;
         final double sum2;
         public Poly4(double z0, double z1, double d0, double d1, double max) {
@@ -378,8 +384,8 @@ positionMax 100802.20011163439, 2.5298641775799497,
             if(absMax>130){
                 System.out.println();
                 System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                        ", \n positionMax " + (poly instanceof Poly4?((Poly4)poly).positionMax :"unknown") +
-                        ", der " + poly.der(poly.positionMax) + 
+                        ", \n positionMax " + (poly instanceof Poly4?poly.getPositionMax() :"unknown") +
+                        ", der " + poly.der(poly.getPositionMax()) + 
                         ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
                 System.out.println("secondDerRHS " + poly.secondDerRHS() 
                 + ", zetaEstMid " + zetaEstMid + " (" + (n+1) +")");

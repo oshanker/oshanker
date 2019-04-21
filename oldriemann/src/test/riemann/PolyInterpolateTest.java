@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import math.ZeroPoly;
 import riemann.Interpolate.Poly4;
 import riemann.PolyInterpolate.BasePolySecondDer;
 import riemann.PolyInterpolate.Poly5;
@@ -99,20 +100,42 @@ public class PolyInterpolateTest {
         assertEquals(-0.3125,poly4.eval(1.5), 0.000001);
         assertEquals(0.0, poly4.eval(1.5+Math.sqrt(1.25)), 0.000001);
         assertEquals(-1.0, poly4.C, 0.000001);
+        double za = 1.5-Math.sqrt(1.25);
+        assertEquals(-12, poly4.secondDer(za), 0.000001);
 
     }
 
     @Test 
     public void testBasePolySecondDer() {
         //(x^2-3x+2)(1-(...))
-        BasePolySecondDer basePolySecondDer = new BasePolySecondDer(1, 2, -1, 1, 0); 
+		final int z0 = 1;
+        final int z1 = 2;
+        double za = 1.5-Math.sqrt(1.25);
+        double zb = 1.5+Math.sqrt(1.25);
+        final int secondDer = 0;
+        double dera = Math.sqrt(5);
+        double d0 = -1;
+        double d1 = 1;
+		BasePolySecondDer basePolySecondDer = new BasePolySecondDer(z0, z1, d0, d1, secondDer); 
         assertEquals(2.0, basePolySecondDer.eval1(0), 0.000001);
         assertEquals(-2.0, basePolySecondDer.eval(0), 0.000001);
-        assertEquals(-1.0, basePolySecondDer.der(1), 0.000001);
+        assertEquals(-1.0, basePolySecondDer.der(z0), 0.000001);
         assertEquals(0.0, basePolySecondDer.der(1.5), 0.000001);
+		assertEquals(dera, basePolySecondDer.der(za ), 0.000001);
         assertEquals(-0.3125,basePolySecondDer.eval(1.5), 0.000001);
-        assertEquals(0.0, basePolySecondDer.eval(1.5+Math.sqrt(1.25)), 0.000001);
+		assertEquals(0.0, basePolySecondDer.eval(za), 0.000001);
+        assertEquals(0.0, basePolySecondDer.eval(zb), 0.000001);
         assertEquals(-1.0, basePolySecondDer.C, 0.000001);
+        
+        double[] roots = new double[]{za, z0, z1};
+		double[] slopes = new double[]{dera, d0, d1};
+        ZeroPoly zeroPoly = new ZeroPoly(roots, slopes);
+        assertEquals(zeroPoly.eval(0), basePolySecondDer.eval(0), 0.000001);
+        assertEquals(zeroPoly.eval(1.5),basePolySecondDer.eval(1.5), 0.000001);
+        assertEquals(zeroPoly.eval(zb), basePolySecondDer.eval(zb), 0.000001);
+        assertEquals(zeroPoly.secondDer(0), -12, 0.000001);
+        assertEquals(zeroPoly.secondDer(1), secondDer, 0.000001);
+        assertEquals(zeroPoly.secondDer(2), 0, 0.000001);
     }
 
 }

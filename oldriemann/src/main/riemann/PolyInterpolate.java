@@ -42,11 +42,23 @@ public class PolyInterpolate {
             // dummy
             throw new IllegalStateException("not implemented");
          }
+
+        @Override
+        public double getPositionMax() {
+            // dummy
+            throw new IllegalStateException("not implemented");
+		}
         
     }
     
     public static class Poly5 extends BasePolySecondDer{
         double positionMax;
+
+        @Override
+        public double getPositionMax() {
+			return positionMax;
+		}
+
         double max;
         double D;
 

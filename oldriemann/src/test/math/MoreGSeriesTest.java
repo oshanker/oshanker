@@ -274,11 +274,11 @@ public class MoreGSeriesTest {
         }
     }
     
-    @Test @Ignore 
+    @Test //@Ignore 
     public void testEstimateE12() throws Exception{
     	double[] zetaGramMean = new double[]{0, 0};
         int count = 0;
-        int N = 1000102;
+        int N = 1000082;
         String zerosFile = "data/zetaE12.csv";
         BufferedReader zeroIn = 
                 new BufferedReader(new FileReader(zerosFile));
@@ -290,7 +290,8 @@ public class MoreGSeriesTest {
 
         GSeries gSeries1 = Interpolate.readGSeries();
 //        long sampleSize = N-2*Interpolate.initialPadding;
-        long sampleSize = 5;
+        long sampleSize = 1005;
+        int deviations = 0;
         while (count < sampleSize  ) {
             int n = count + Interpolate.noffset+Interpolate.initialPadding;
             double t = base + (n-2)* (Interpolate.gramIncr);
@@ -298,13 +299,18 @@ public class MoreGSeriesTest {
             String input = zeroIn.readLine();
             String[] parsed = input.split(",");
             double zetaSaved =  Double.parseDouble(parsed[1]);  
-            System.out.println( n + " " + t + " " + zeta
-            		+ " " + Math.abs(zeta-zetaSaved));
+            double diff = Math.abs(zeta-zetaSaved);
+            if(diff > 0.1) {
+            	deviations++;
+            	System.out.println( n + " " + nf.format(t) + " " + nf.format(zeta)
+            		+ " " + nf.format(diff));
+            }
             final int nmod2 = n%2;
             zetaGramMean[nmod2] += zeta;
             count++;
         }  
         zeroIn.close();
+        System.out.println("deviations " + deviations);
 //        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
 //        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
     }
