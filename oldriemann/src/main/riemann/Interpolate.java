@@ -32,20 +32,20 @@ public class Interpolate {
         nf.setGroupingUsed(false);
         getZerosFile();
     }
-    static BigDecimal offset;
-    final static PrintStream out = null;
+    public static BigDecimal offset;
+    public final static PrintStream out = null;
     static PrintStream validateOut = null;
-    static BufferedReader[] zeroIn;
+    public static BufferedReader[] zeroIn;
     static double[] lastZeroSeen1;
     static double[][] gramDer;
     static double[][] fAtBeta;
     static double[][] imFmid;
     static ZeroInfo zeroInput;
-    static Poly3 poly = null;
+    public static Poly3 poly = null;
     static int breaks = 0;
     static double zetaCorrection1;
     static  double absMax = 0;
-    static int correction = 0;
+    public static int correction = 0;
     public static double baseLimit;
     public static double gramIncr;
     public static int noffset;
@@ -316,7 +316,7 @@ positionMax 100802.20011163439, 2.5298641775799497,
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
 //                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-            //            System.out.println("gram 2*zeta " + 2*zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
+//            System.out.println("gram 2*zeta " + 2*zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
             zeta = getZetaEstimate(n, idx, upperLimit, zetaMidMean,imFmid,1);

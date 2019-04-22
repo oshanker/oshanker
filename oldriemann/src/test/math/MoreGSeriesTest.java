@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -21,6 +22,9 @@ import org.junit.Test;
 
 import riemann.Gram;
 import riemann.Interpolate;
+import riemann.Rosser;
+import riemann.Interpolate.Poly4;
+import riemann.Rosser.ZeroInfo;
 
 public class MoreGSeriesTest {
     static NumberFormat nf = NumberFormat.getInstance();
@@ -275,17 +279,70 @@ public class MoreGSeriesTest {
     }
     
     @Test //@Ignore 
+    public void testGenerateE12() throws Exception{
+    	int noffset = Interpolate.noffset;
+        int correction = Interpolate.correction;
+		double baseLimit = Interpolate.baseLimit;
+		double begin= baseLimit  + 
+        		(noffset-correction )* (Interpolate.gramIncr);
+        double gramIncr = Interpolate.gramIncr;
+		GSeries gSeries = new GSeries(1, 0, Interpolate.offset, begin, gramIncr );
+        
+        double zetaCorrection1 = GSeries.correction( gSeries.basesqrtArg1);
+        PrintStream out = Interpolate.out;
+		BufferedReader[] zeroIn = Interpolate.zeroIn;
+		ZeroInfo zeroInput = Rosser.readZeros(baseLimit, out , zeroIn , null);
+        System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
+        
+        String zetaFile = "data/zetaE12.csv";
+        BufferedReader zetaIn = 
+                new BufferedReader(new FileReader(zetaFile));
+        zetaIn.readLine();
+        for (int i = 0; i < 2; i++) {
+            zetaIn.readLine();
+		}
+
+        long sampleSize = 5;
+        int count = 0;
+		while (count  < sampleSize  ) {
+            int n = count + noffset;
+            double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
+            if(upperLimit<=zeroInput.nextValues[0]){
+                zeroInput = new ZeroInfo(0, zeroInput);
+            } else {
+                zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
+                        zeroInput.nextValues);
+                final double z0 = zeroInput.lastZero[0];
+                final double z1 = zeroInput.nextValues[0];
+                final double d0 = zeroInput.lastZero[1];
+                final double d1 = zeroInput.nextValues[1];
+                final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
+                Interpolate.poly = new Poly4(z0,z1, d0,d1,max);
+            }
+            double zeta = Interpolate.poly.eval(upperLimit)- zetaCorrection1;
+            System.out.println("gram zeta " + zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
+            String input = zetaIn.readLine();
+            String[] parsed = input.split(",");
+            System.out.println(Arrays.toString(parsed));
+            count++;
+            //double zeta =  getZetaEstimate(n, idx, upperLimit, zetaGramMean, fAtBeta, 0);
+        }    
+        zetaIn.close();
+	}
+    
+    @Test //@Ignore 
     public void testEstimateE12() throws Exception{
     	double[] zetaGramMean = new double[]{0, 0};
         int count = 0;
         int N = 1000082;
-        String zerosFile = "data/zetaE12.csv";
-        BufferedReader zeroIn = 
-                new BufferedReader(new FileReader(zerosFile));
-        zeroIn.readLine();
+        String zetaFile = "data/zetaE12.csv";
+        BufferedReader zetaIn = 
+                new BufferedReader(new FileReader(zetaFile));
+        zetaIn.readLine();
         double base = Interpolate.baseLimit;
         for (int i = 0; i < 41; i++) {
-            zeroIn.readLine();
+            zetaIn.readLine();
 		}
 
         GSeries gSeries1 = Interpolate.readGSeries();
@@ -296,7 +353,7 @@ public class MoreGSeriesTest {
             int n = count + Interpolate.noffset+Interpolate.initialPadding;
             double t = base + (n-2)* (Interpolate.gramIncr);
             double zeta =  Interpolate.evaluateZeta(t, Interpolate.initialPadding, gSeries1);        
-            String input = zeroIn.readLine();
+            String input = zetaIn.readLine();
             String[] parsed = input.split(",");
             double zetaSaved =  Double.parseDouble(parsed[1]);  
             double diff = Math.abs(zeta-zetaSaved);
@@ -309,7 +366,7 @@ public class MoreGSeriesTest {
             zetaGramMean[nmod2] += zeta;
             count++;
         }  
-        zeroIn.close();
+        zetaIn.close();
         System.out.println("deviations " + deviations);
 //        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
 //        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
