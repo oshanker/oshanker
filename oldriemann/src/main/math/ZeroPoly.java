@@ -19,7 +19,6 @@ public class ZeroPoly {
     }
     
     public double prodExclude(double t, int excludeIndex0, int excludeIndex1){
-        if(roots.length == 2) {return 0;}
     	double val = 1;
         for (int i = 0; i < roots.length; i++) {
             if(i == excludeIndex0 || i == excludeIndex1){continue;}
@@ -110,8 +109,8 @@ public class ZeroPoly {
      * @param args
      */
     public static void main(String[] args) {
-        double[] roots = new double[]{1, 2, 3};
-        double[] slopes = new double[]{2, -1, 2};
+        double[] roots = new double[]{-1, 1};
+        double[] slopes = new double[]{-2,  2};
         ZeroPoly zeroPoly = new ZeroPoly(roots, slopes);
         double eval = zeroPoly.eval(0.0);
         System.out.println("eval " + eval);
