@@ -52,6 +52,7 @@ public class PolyInterpolateTest {
 
     @Test
     public void testPoly5SecondDer() {
+    	double xa = -6.078287348440645;
         double x0 = 2, x1 = 5;
         double xmin = Math.sqrt(1031.0/5);
         xmin = Math.sqrt(xmin);
@@ -62,6 +63,18 @@ public class PolyInterpolateTest {
         final int secondDer = 160;
         Poly5 poly5 = new Poly5(x0, x1, d0, d1, secondDer,
                 minValue);
+//        double xa0 = -6.07828734844065, incr = (-6.078287348440645-xa0)/2.0;
+//        for (int i = 0; i < 3; i++) {
+//        	double x = xa0 + i*incr;
+//        	System.out.println(x + ",  " + poly5.eval(x)
+//        	+ ",  " + poly5.der(x));
+//		}
+        double[] roots = new double[]{xa, x0, x1};
+		double dera = 5793.878294812024;
+		double[] slopes = new double[]{dera , d0, d1};
+        ZeroPoly zeroPoly = new ZeroPoly(roots, slopes);
+        assertEquals(zeroPoly.secondDer(1), secondDer, 0.000001);
+        assertEquals(zeroPoly.eval(0), poly5.eval(0), 0.000001);
         BasePolySecondDer poly = new BasePolySecondDer(x0, x1, d0, d1, 
                 secondDer);
         System.out.println(poly.C + ", " + poly.eval(1) + ", (5) " + poly5.eval(1));

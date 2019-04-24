@@ -313,6 +313,8 @@ public class MoreGSeriesTest {
             } else {
                 zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                         zeroInput.nextValues);
+                System.out.println(Arrays.toString(zeroInput.lastZero)  +
+                        ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
                 final double z0 = zeroInput.lastZero[0];
                 final double z1 = zeroInput.nextValues[0];
                 final double d0 = zeroInput.lastZero[1];
@@ -331,7 +333,7 @@ public class MoreGSeriesTest {
         zetaIn.close();
 	}
     
-    @Test //@Ignore 
+    @Test @Ignore 
     public void testEstimateE12() throws Exception{
     	double[] zetaGramMean = new double[]{0, 0};
         int count = 0;
