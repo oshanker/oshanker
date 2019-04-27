@@ -40,6 +40,13 @@ public class Rosser {
 	private static int goodCount;
 	private static int badCount;
     public static Map<String,String> configParams;
+    
+    public static double[] zeros = new double[] {Double.NEGATIVE_INFINITY, 
+    		Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
+    };
+    public static double[] derivatives = new double[] {Double.NEGATIVE_INFINITY, 
+    		Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
+    };
 	
 	// one instance per type of Gram Block and pattern
 	public static class GramBlock{
@@ -148,6 +155,7 @@ public class Rosser {
                     input[i] = input[i].trim();
                     nextValues[i] = Double.parseDouble(input[i]);
                 }
+                update(nextValues);
 			}
 			if(zero >= upperLimit){
 				break;
@@ -169,6 +177,16 @@ public class Rosser {
 		return new ZeroInfo(countZeros.size(), lastValue, nextValues);
 	}
 	
+	private static void update(double[] nextValues) {
+		zeros[0] = zeros[1];
+		zeros[1] = zeros[2];
+		zeros[2] = nextValues[0];
+		derivatives[0] = derivatives[1];
+		derivatives[1] = derivatives[2];
+		derivatives[2] = nextValues[1];
+		
+	}
+
 	public static Map<String,String> readConfig(String configFile) throws IOException{
 	    configParams = new HashMap<>();
         try(BufferedReader configIn = new BufferedReader(

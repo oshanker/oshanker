@@ -23,7 +23,9 @@ import org.junit.Test;
 import riemann.Gram;
 import riemann.Interpolate;
 import riemann.Rosser;
+import riemann.Interpolate.Poly3;
 import riemann.Interpolate.Poly4;
+import riemann.PolyInterpolate;
 import riemann.Rosser.ZeroInfo;
 
 public class MoreGSeriesTest {
@@ -305,9 +307,15 @@ public class MoreGSeriesTest {
 
         long sampleSize = 5;
         int count = 0;
+        Poly3 poly = null;
 		while (count  < sampleSize  ) {
             int n = count + noffset;
             double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
+            double z0 = 0;
+            double z1 = 0;
+            double d0 = 0;
+            double d1 = 0;
+            double max = 0;
             if(upperLimit<=zeroInput.nextValues[0]){
                 zeroInput = new ZeroInfo(0, zeroInput);
             } else {
@@ -315,11 +323,11 @@ public class MoreGSeriesTest {
                         zeroInput.nextValues);
                 System.out.println(Arrays.toString(zeroInput.lastZero)  +
                         ", " + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-                final double z0 = zeroInput.lastZero[0];
-                final double z1 = zeroInput.nextValues[0];
-                final double d0 = zeroInput.lastZero[1];
-                final double d1 = zeroInput.nextValues[1];
-                final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
+                z0 = zeroInput.lastZero[0];
+                z1 = zeroInput.nextValues[0];
+                d0 = zeroInput.lastZero[1];
+                d1 = zeroInput.nextValues[1];
+                max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
                 Interpolate.poly = new Poly4(z0,z1, d0,d1,max);
             }
             double zeta = Interpolate.poly.eval(upperLimit)- zetaCorrection1;
@@ -327,6 +335,16 @@ public class MoreGSeriesTest {
             String input = zetaIn.readLine();
             String[] parsed = input.split(",");
             System.out.println(Arrays.toString(parsed));
+            if(Double.isFinite(Rosser.zeros[0])) {
+	            System.out.println("* " + Arrays.toString(Rosser.zeros)
+	            		+ Arrays.toString(Rosser.derivatives));
+	            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+	            double zeta1 = zeroPoly.eval(upperLimit)- zetaCorrection1;
+	            double secondDer = zeroPoly.secondDer(1);
+	            poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+	            double zeta5 = poly.eval(upperLimit)- zetaCorrection1;
+	            System.out.println("cf zeta " + zeta1 + " zeta5 " + zeta5);
+            }
             count++;
             //double zeta =  getZetaEstimate(n, idx, upperLimit, zetaGramMean, fAtBeta, 0);
         }    
