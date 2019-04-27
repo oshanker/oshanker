@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import math.GSeries;
+import math.ZeroPoly;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
@@ -40,7 +41,7 @@ public class Interpolate {
     static double[][] gramDer;
     static double[][] fAtBeta;
     static double[][] imFmid;
-    static ZeroInfo zeroInput;
+    public static ZeroInfo zeroInput;
     public static Poly3 poly = null;
     static int breaks = 0;
     static double zetaCorrection1;
@@ -448,7 +449,14 @@ positionMax 100802.20011163439, 2.5298641775799497,
             final double d0 = zeroInput.lastZero[1];
             final double d1 = zeroInput.nextValues[1];
             final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
-            poly = new Poly4(z0,z1, d0,d1,max);
+//            if(Double.isFinite(Rosser.zeros[0])) {
+//	            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+//	            double secondDer = zeroPoly.secondDer(1);
+//	            poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+//            	
+//            } else {
+            	poly = new Poly4(z0,z1, d0,d1,max);
+//            }
         }
     }
     
