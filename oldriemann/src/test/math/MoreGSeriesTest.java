@@ -424,7 +424,65 @@ public class MoreGSeriesTest {
 //        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
     }
     
-    @Test @Ignore 
+    @Test 
+    public void testMode() throws Exception{
+    	int k = 100;
+    	int[][] zetaMode = new int[k+2][2];
+    	double[] zmin = {-0.5, -3.0};
+    	double[] zmax = {-zmin[1],-zmin[0]};
+    	double delta = (zmax[0]+zmax[1])/k;
+        int count = 0;
+        int N = 1000002;
+        String zetaFile = "data/zetaE12.csv";
+        BufferedReader zetaIn = 
+                new BufferedReader(new FileReader(zetaFile));
+        zetaIn.readLine();
+
+        //Math.round(a);
+        long sampleSize = N;
+        int deviations = 0;
+        while (count < sampleSize  ) {
+            String input = zetaIn.readLine();
+            String[] parsed = input.split(",");
+            int n = Integer.parseInt(parsed[0]);
+            double zetaSaved =  Double.parseDouble(parsed[1]); 
+            final int nmod2 = n%2;
+            int index = 0;
+            if(zetaSaved < zmin[nmod2]) {
+            	index = 0;
+            } else if(zetaSaved >= zmax[nmod2]) {
+            	index = k+1;
+            } else {
+            	index = 1 + (int)(k*(zetaSaved-zmin[nmod2])/(zmax[nmod2]-zmin[nmod2]));
+            }
+            zetaMode[index][nmod2]++;
+            count++;
+        }  
+        
+        zetaIn.close();
+        
+    	double modeEstimate = 0.13;
+		int indexEstimate = 1 + (int)(k*(modeEstimate -zmin[0])/(zmax[0]-zmin[0]));
+		System.out.println(indexEstimate);
+
+        int upper = indexEstimate+4;
+        int lower = indexEstimate-4;
+        for (int i = 0; i < zetaMode.length; i++) {
+        	if(i>upper && i < (k-upper)) {continue;}
+        	if(i<lower || i > (k-lower)) {continue;}
+        	double zeroVal = (i-1)*(zmax[0]-zmin[0])/k + zmin[0] + delta/2;
+        	double oneVal = (i-1)*(zmax[1]-zmin[1])/k + zmin[1] + delta/2;
+        	System.out.println(
+        			(k+1-i) + " | " + 
+        			nf.format(zeroVal) + " " + Arrays.toString(zetaMode[i])
+        	+ " " + nf.format(oneVal) + " | " + i);
+		}
+        //System.out.println("deviations " + deviations);
+//        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
+//        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
+    }
+    
+   @Test @Ignore 
     public void test1E12() throws Exception{
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double t0 = 244.021159171564;
