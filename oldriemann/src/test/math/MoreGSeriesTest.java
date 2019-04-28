@@ -42,11 +42,13 @@ public class MoreGSeriesTest {
         //check the symmetry and antisymmetry relations from the output of distributions
     	//input can come from zetaHist.R
     	//input for zetaHist.R can come from testInterpolate()
-        File file = new File("data/gzetaE12/real6.txt");
+    	int k = 12;
+        File file = new File("data/gzetaE12/real"
+        		+ k +  ".txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
-        int k = 12;
-        double[][] vals = new double[k][6];
-        for (int i = 0; i < k; i++) {
+        int k2 = 2*k;
+        double[][] vals = new double[k2][6];
+        for (int i = 0; i < k2; i++) {
             String in = zeroIn.readLine();
             in = in.replace("\\\\", "");
             String[] line = in.split("[&\\s]+");
@@ -57,37 +59,38 @@ public class MoreGSeriesTest {
         zeroIn.close();
         //anti
         System.out.println("antisymmetry");
-        for (int i = 0; i < k/2; i++) {
+        for (int i = 0; i < k2/2; i++) {
             for (int j = 1; j < vals[i].length-1; j++) {
                double diff = -100;
                if(j == 2 || j ==3){
-                   diff = vals[i][j] + vals[i+k/2][j];
+            	   // median, mean
+                   diff = vals[i][j] + vals[i+k2/2][j];
                } else {
-                   diff = vals[i][j] + vals[i+k/2][6-1-j];
+                   diff = vals[i][j] + vals[i+k2/2][6-1-j];
                }
                 System.out.print(nf.format(diff) + " ");
             }
-            System.out.println();
+            System.out.println(" | " + i);
         }
         System.out.println("symmetry");
         //symm
-        for (int i = 1; i < k/2; i++) {
+        for (int i = 1; i < k2/2; i++) {
             for (int j = 1; j < vals[i].length-1; j++) {
                 double diff = -100;
-                diff = vals[i][j] - vals[k-i][j];
+                diff = vals[i][j] - vals[k2-i][j];
                 System.out.print(nf.format(diff) + " ");
             }
-            System.out.println();
+            System.out.println(" | " + i);
         }
         //median/mode
         System.out.println("median/mode");
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < k2; i++) {
            {
                 double diff =  vals[i][2]/ vals[i][3];
                 System.out.print(i + " " + 
                         nf.format(diff) + " " + nf.format(vals[i][4]- vals[i][1]));
             }
-            System.out.println();
+           System.out.println(" | " + i);
         }
     }
     
@@ -211,6 +214,7 @@ public class MoreGSeriesTest {
     	//input can come from riemann.Interpolate.consolidatedF()
     	//That method stores the output G series from riemann.Interpolate.readItems()
     	//provides input for zetaHist.R 
+    	// after that is run, use the testSymmetryRelations method
         File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
         GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
@@ -223,19 +227,20 @@ public class MoreGSeriesTest {
 //            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
 //        }
 
-        File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta4.csv");
+        int k = 12;
+        File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta"
+        		+ k + ".csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         PrintWriter out = new PrintWriter(file);
-        writeZetaPhi( out, gSeries, initialPadding, 2*gSeries.spacing);
+        writeZetaPhi( out, gSeries, initialPadding, 2*gSeries.spacing, k);
         out.close();
     }
 
     private void writeZetaPhi( PrintWriter out, GSeries gAtBeta, 
-            int initialPadding, double incr) throws Exception{
-        double[] oddsum = {0, 0, 0, 0}, evensum = {0, 0, 0, 0};
-        int k = oddsum.length;
+            int initialPadding, double incr, int k) throws Exception{
+        double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];
         final double firstGram = gAtBeta.begin + initialPadding*incr;
         int N = gAtBeta.gAtBeta.length/2 - 2*initialPadding;
@@ -272,15 +277,20 @@ public class MoreGSeriesTest {
             oddsum[i] *= 2.0/N;
             evensum[i] *= 2.0/N;
         }
-        System.out.println(Arrays.toString(oddsum));
         System.out.println(Arrays.toString(evensum));
         for (int j = 0; j < k; j++) {
+            System.out.print(nf.format(oddsum[j]) + " ");
             assertEquals(-2.00*Math.cos(j*Math.PI/k), oddsum[j], 0.1);
+        }
+        System.out.println();
+        for (int j = 0; j < k; j++) {
+            System.out.print(nf.format(evensum[j]) + " ");
             assertEquals(2.00*Math.cos(j*Math.PI/k), evensum[j], 0.1);
         }
+        System.out.println();
     }
     
-    @Test //@Ignore 
+    @Test @Ignore 
     public void testGenerateE12() throws Exception{
     	double[][] zetaGramMean = {{0, 0},{0, 0}};
     	double[][] zetaMidMean = {{0, 0},{0, 0}};
