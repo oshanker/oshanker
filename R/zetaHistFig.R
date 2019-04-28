@@ -1,18 +1,23 @@
-df <- read.csv("../oldriemann/out/gzetaE12/gzeta6.csv", header = FALSE);
-i = 10;
+rm(list=ls())
+df <- read.csv("../oldriemann/out/gzetaE12/gzeta_calc12.csv", header = FALSE);
+len1=length(df)
+i = 13
+#for (i in 1:len1) {
 	x<-as.matrix(df[i]);
 	x<-as.vector(x);
-	x<-log(abs(x));
-library(moments)
-#qqnorm(x, main = paste("Normal Q-Q Plot for ln(|Z(t)|) at ", expression(phi),
-#   " = 3", expression(pi), "/2"),
-#       xlab = "Theoretical Quantiles", ylab = "Sample Quantiles"); qqline(x, col = 2)
-	s = skewness(x)
-	k = kurtosis(x)
-	print(c( s, k))
-       
-b=seq(-10,10,0.5)
+	summary <- as.vector(summary(x))
+#	print(summary(x))
+	summary <- c((i), summary)
+    conv = format( summary, scientific = FALSE, drop0trailing = TRUE, digits = 4, width =8)
+#    conv = as.numeric(conv)
+    print(conv, quote = FALSE)
+#}
+
+
+lower = -1
+upper = 1       
+b=seq(lower,upper,0.1)
 yy = range(x)
-#b=c(yy[1],b,yy[2])
-#h=hist(x,breaks=b,xlim=c(-10,10),xlab='Z',
-# main = paste("Histogram of Z for 3" , expression(pi), "/2"))
+b=c(yy[1],b,yy[2])
+h=hist(x,breaks=b,xlim=c(lower,upper),xlab='Z',
+   main = paste("Histogram of Z for " , (i-1),  expression(pi), "/12"))
