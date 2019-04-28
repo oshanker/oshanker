@@ -43,8 +43,8 @@ public class MoreGSeriesTest {
     	//input can come from zetaHist.R
     	//input for zetaHist.R can come from testInterpolate()
     	int k = 12;
-        //File file = new File("data/gzetaE12/real" + k +  ".txt");
-        File file = new File("data/gzetaE12/calc12.txt");
+        File file = new File("data/gzetaE28/real" + k +  ".txt");
+        //File file = new File("data/gzetaE12/calc12.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k2 = 2*k;
         double[][] vals = new double[k2][6];
@@ -70,6 +70,7 @@ public class MoreGSeriesTest {
                    diff = vals[i][j] + vals[i+k2/2][6-1-j];
                }
                 System.out.print(nf.format(diff) + " ");
+                assertEquals(0, diff, 0.02);
             }
             System.out.println(" | " + i);
         }
@@ -81,6 +82,7 @@ public class MoreGSeriesTest {
                 double diff = -100;
                 diff = vals[i][j] - vals[k2-i][j];
                 System.out.print(nf.format(diff) + " ");
+                assertEquals(0, diff, 0.025);
             }
             System.out.println(" | " + i);
         }
