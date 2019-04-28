@@ -166,57 +166,18 @@ public class GSeriesTest {
             storeGE12(gramE12[i][1], gramE12[i][0]);
         }
 	}
-
-    @Test @Ignore 
-    public void testSymmetryRelations() throws Exception{
-        //check the symmetry and antisymmetry relations from the output of distributions
-        File file = new File("out/6.txt");
-        BufferedReader zeroIn = new BufferedReader(new FileReader(file));
-        int k = 12;
-        double[][] vals = new double[k][6];
-        for (int i = 0; i < k; i++) {
-            String in = zeroIn.readLine();
-            in = in.replace("\\", "");
-            String[] line = in.split("&");
-            for (int j = 0; j < vals[i].length; j++) {
-                vals[i][j]= Double.parseDouble(line[j+1].trim());
-            }
-        }
-        //anti
-        for (int i = 0; i < k/2; i++) {
-            for (int j = 0; j < vals[i].length; j++) {
-               double diff = -100;
-               if(j == 2 || j ==3){
-                   diff = vals[i][j] + vals[i+k/2][j];
-               } else {
-                   diff = vals[i][j] + vals[i+k/2][6-1-j];
-               }
-                System.out.print(nf.format(diff) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("symmetry");
-        //symm
-        for (int i = 1; i < k/2; i++) {
-            for (int j = 0; j < vals[i].length; j++) {
-                double diff = -100;
-                diff = vals[i][j] - vals[k-i][j];
-                System.out.print(nf.format(diff) + " ");
-            }
-            System.out.println();
-        }
-        zeroIn.close();
-    }
     
     @Test @Ignore
     public void testWriteZetaPhiE12() throws Exception{
-        File file = new File("out/gzetaE12/gzeta6.csv");
+    	int k = 12;
+        File file = new File("out/gzetaE12/gzeta_calc"
+        		+ k + ".csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         PrintWriter out = new PrintWriter(file);
         for (int i = 0; i < gramE12.length; i++) {
-            writeZetaPhi(i, out );
+            writeZetaPhi(i, out, k );
         }
         out.close();
     }
@@ -248,12 +209,11 @@ public class GSeriesTest {
         out.close();
     }
 
-    private void writeZetaPhi(int sampleIndex, PrintWriter out) throws Exception{
+    private void writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getGSeries(t0, offset);
-        double[] oddsum = {0, 0, 0, 0, 0, 0}, evensum = {0, 0, 0, 0, 0, 0};
-        int k = oddsum.length;
+        double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];
         final double firstGram = Gram.gram(offset, t0 + 0.001 );
         final int N = 29999;

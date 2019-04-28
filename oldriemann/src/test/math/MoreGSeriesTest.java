@@ -43,8 +43,8 @@ public class MoreGSeriesTest {
     	//input can come from zetaHist.R
     	//input for zetaHist.R can come from testInterpolate()
     	int k = 12;
-        File file = new File("data/gzetaE12/real"
-        		+ k +  ".txt");
+        //File file = new File("data/gzetaE12/real" + k +  ".txt");
+        File file = new File("data/gzetaE12/calc12.txt");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k2 = 2*k;
         double[][] vals = new double[k2][6];
@@ -59,6 +59,7 @@ public class MoreGSeriesTest {
         zeroIn.close();
         //anti
         System.out.println("antisymmetry");
+        System.out.println("q1 median mean q3");
         for (int i = 0; i < k2/2; i++) {
             for (int j = 1; j < vals[i].length-1; j++) {
                double diff = -100;
@@ -73,6 +74,7 @@ public class MoreGSeriesTest {
             System.out.println(" | " + i);
         }
         System.out.println("symmetry");
+        System.out.println("q1 median mean q3");
         //symm
         for (int i = 1; i < k2/2; i++) {
             for (int j = 1; j < vals[i].length-1; j++) {
