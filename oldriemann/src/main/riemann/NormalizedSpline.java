@@ -11,6 +11,11 @@ public class NormalizedSpline extends BaseNormalizedSpline {
         nf.setGroupingUsed(false);
     }
 
+    /**
+     * used only in test
+     * @author shankero
+     *
+     */
     public static class Splinei {
         public final double xi, originalH;
         public final double yi, yi1;
@@ -62,9 +67,15 @@ public class NormalizedSpline extends BaseNormalizedSpline {
     public NormalizedSpline(double[] y) {
         super(y.length);
         this.y = y;
-        fit();
+        /**
+         * si is being calculated
+         */
+       fit();
     }
 
+    /**
+     * populate diag and rhs with values needed by fitting procedure
+     */
     protected void initSystem(double[] diag, double[] rhs) {
         diag[1] = 4.0;
         rhs[1] = (5*y[2]-4*y[1]-y[0]);
@@ -118,11 +129,17 @@ public class NormalizedSpline extends BaseNormalizedSpline {
             rIm[i] = f(x+1);
         }
         System.out.println("in " + Arrays.toString(y));
+        //rIm is f(x) at 1, 3, ..., 13
         System.out.println("expected " + Arrays.toString(rIm));
+        // y is f(x) at 0, 2, ..., 12
         NormalizedSpline normalizedSpline = new NormalizedSpline(y);
         double[] actual = normalizedSpline.evalMid();
         System.out.println("actual " + Arrays.toString(actual));
+        // slope is fprime(x) at 0, 2, ..., 12
         System.out.println("expected slopes " + Arrays.toString(slope));
+        /**
+         * si is double the slope.
+         */
         System.out.println("actual slopes " + Arrays.toString(normalizedSpline.si));
     }
 

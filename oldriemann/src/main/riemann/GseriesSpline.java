@@ -1,5 +1,10 @@
 package riemann;
 
+/**
+ * Not used
+ * @author shankero
+ *
+ */
 public class GseriesSpline extends BaseNormalizedSpline {
     final double[][] y;
 

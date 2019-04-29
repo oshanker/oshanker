@@ -304,9 +304,10 @@ public class MoreGSeriesTest {
 		double begin= baseLimit  + 
         		(noffset-correction )* (Interpolate.gramIncr);
         double gramIncr = Interpolate.gramIncr;
+        //used to calculate zetaCorrection1
 		GSeries gSeries = new GSeries(1, 0, Interpolate.offset, begin, gramIncr );
-        
         double zetaCorrection1 = GSeries.correction( gSeries.basesqrtArg1);
+        
         PrintStream out = Interpolate.out;
 		BufferedReader[] zeroIn = Interpolate.zeroIn;
 		Interpolate.zeroInput = Rosser.readZeros(baseLimit, out , zeroIn , null);
@@ -344,26 +345,21 @@ public class MoreGSeriesTest {
         System.out.println("*** zetaMid_MeanEven poly " + nf.format(2*zetaMidMean[0][0]/sampleSize));
         System.out.println("*** zetaMid_MeanOdd poly5 " + nf.format(2*zetaMidMean[1][1]/sampleSize));
         System.out.println("*** zetaMid_MeanEven poly5 " + nf.format(2*zetaMidMean[0][1]/sampleSize));
-}
+    }
 
 
 	private Poly3 updateZero(double[][] zetaGramMean, double zetaCorrection1, PrintStream out, BufferedReader[] zeroIn,
 			Poly3 poly, int n, double upperLimit) throws FileNotFoundException, IOException {
-		double z0;
-		double z1;
-		double d0;
-		double d1;
-		double max;
 		if(upperLimit<=Interpolate.zeroInput.nextValues[0]){
 			Interpolate.zeroInput = new ZeroInfo(0, Interpolate.zeroInput);
 		} else {
 			Interpolate.zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
 					Interpolate.zeroInput.nextValues);
-		    z0 = Interpolate.zeroInput.lastZero[0];
-		    z1 = Interpolate.zeroInput.nextValues[0];
-		    d0 = Interpolate.zeroInput.lastZero[1];
-		    d1 = Interpolate.zeroInput.nextValues[1];
-		    max = d0>0?Interpolate.zeroInput.lastZero[2]:-Interpolate.zeroInput.lastZero[2];
+		    double z0 = Interpolate.zeroInput.lastZero[0];
+		    double z1 = Interpolate.zeroInput.nextValues[0];
+		    double d0 = Interpolate.zeroInput.lastZero[1];
+		    double d1 = Interpolate.zeroInput.nextValues[1];
+		    double max = d0>0?Interpolate.zeroInput.lastZero[2]:-Interpolate.zeroInput.lastZero[2];
 		    Interpolate.poly = new Poly4(z0,z1, d0,d1,max);
 		    
 		    ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
@@ -371,10 +367,6 @@ public class MoreGSeriesTest {
 		    poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
 		}
 		double zeta = Interpolate.poly.eval(upperLimit)- zetaCorrection1;
-//            System.out.println("gram zeta " + zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
-//            String input = zetaIn.readLine();
-//            String[] parsed = input.split(",");
-//            System.out.println(Arrays.toString(parsed));
 		final int nmod2 = n%2;
 		zetaGramMean[nmod2][0] += zeta;
 		

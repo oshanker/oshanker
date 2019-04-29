@@ -12,6 +12,9 @@ public abstract class BaseNormalizedSpline {
         this.N = N;
     }
 
+    /**
+     * si is being calculated
+     */
     public void fit(){
         double[] diag = new double[N-1];
         double[] rhs = new double[N-1];
