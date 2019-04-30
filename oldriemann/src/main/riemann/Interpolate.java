@@ -341,8 +341,8 @@ public class Interpolate {
 //        System.out.println( "final zetaCorrection: " + zetaCorrection1);
         //imFGramPoints( );
         //reFMidGramPoints();
-        double[][] consolidated = consolidatedF();
-        ;
+        consolidatedF();
+        double[][] consolidated = new double[2*imFmid.length][2];
 		for (int i = 0; i < imFmid.length; i++) {
             consolidated[2*i][0] = fAtBeta[i][0];
             consolidated[2*i][1] = fAtBeta[i][1];
@@ -390,7 +390,7 @@ public class Interpolate {
 //        }
     }
 
-    private static double getZetaEstimate(int nprime, int idx, double upperLimit, 
+    public static double getZetaEstimate(int nprime, int idx, double upperLimit, 
             double[] zetaMean, double[][] fStorageReIm, int gramOrMid) throws Exception {
     	double zetaEstMid = updateZeroInput(upperLimit);
         if(Math.abs(zeroInput.lastZero[2])>absMax){
@@ -467,7 +467,7 @@ public class Interpolate {
         return zetaEstMid;
     }
     
-    public static double[][]  consolidatedF(  ) throws IOException {
+    public static void  consolidatedF(  ) throws IOException {
 //        File file = new File(Rosser.getParam("conjecturesOutFile")
 //                .replace("stats", "validateConsolidatedF"));
 //        validateOut = new PrintStream(file);
@@ -487,8 +487,6 @@ public class Interpolate {
         NormalizedSpline normalizedSplineIm = new NormalizedSpline(yIm);
         normalizedSplineIm.evalMid(imFmid, 0, 0);
         
-        double[][] consolidated = new double[2*imFmid.length][2];
-        return consolidated;
 //        readAndValidate();
 //        validateOut.close();
     }

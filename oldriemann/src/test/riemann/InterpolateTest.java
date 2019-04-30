@@ -2,12 +2,16 @@ package riemann;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
+import math.GSeries;
 import riemann.Interpolate.Poly3;
 import riemann.Interpolate.Poly4;
 
@@ -105,6 +109,78 @@ public class InterpolateTest {
         assertEquals(max, poly.eval(poly.positionMax),0.000001);
         assertEquals(0d, Math.abs(derAtMin), 0.0000001);
     }
+    
+    @Test @Ignore
+    public void testReadItems(   ) throws Exception {
+        double begin= Interpolate.baseLimit + 
+        		(Interpolate.noffset-Interpolate.correction)* (Interpolate.gramIncr);
+        GSeries gSeries1 = new GSeries(1, 0, Interpolate.offset, begin, Interpolate.gramIncr);
+        
+        Interpolate.zetaCorrection1 = GSeries.correction( gSeries1.basesqrtArg1);
+        
+        BigDecimal tvalsi = Interpolate.offset.add(BigDecimal.valueOf(begin), Gram.mc);
+        BigDecimal gramIndex1 = Gram.theta(tvalsi, Gram.mc).divide(Gram.pi, Gram.mc);
+        String[] line = Rosser.getParam("header").split("[-L]+");
+        
+        gramIndex1 = 
+                gramIndex1.subtract(new BigDecimal(line[1]), Gram.mc);
+        System.out.println( gSeries1.begin + ", zetaCorrection " + Interpolate.zetaCorrection1
+                + ", gram index " + gramIndex1 + ", " + line[1]);
+        
+        int N = 10;
+        Interpolate.zeroInput = Rosser.readZeros(
+        		Interpolate.baseLimit, 
+        		Interpolate.out, Interpolate.zeroIn, null);
+        System.out.println(Arrays.toString(Interpolate.zeroInput.lastZero)  +
+                ", " + Interpolate.baseLimit + ", " + 
+        		Arrays.toString(Interpolate.zeroInput.nextValues));
+        System.arraycopy(Interpolate.zeroInput.nextValues, 0, 
+        		Interpolate.lastZeroSeen1, 0, Interpolate.zeroIn.length);
+        //f at Mid. 0 -> real. 1 -> im
+        Interpolate.imFmid = new double[N][2];
+        //f at Gram. 0 -> real. 1 -> im
+        Interpolate.fAtBeta = new double[N][2];
+        Interpolate.gramDer = new double[N][2];
+        double[] zetaMidMean = {0, 0};
+        double[] zetaGramMean = {0, 0};
+        double[] zetaMid = new double[N];
+        double[] zetaGram = new double[N];
+        int idx = 0;
+        while (idx < N  ) {
+        	//this n is actually n-1!!!
+        	//idx = 0, n = 3 in zetaE12.csv
+            int nprime = idx + Interpolate.noffset;
+            double upperLimit = Interpolate.baseLimit + 
+            		(nprime-Interpolate.correction-1)* (Interpolate.gramIncr);
+            // populate fAtBeta,  zetaGramMean
+            zetaGram[idx] =  2*Interpolate.getZetaEstimate(nprime, idx, upperLimit, 
+            		zetaGramMean,	Interpolate.fAtBeta, 0);
+
+            
+            upperLimit += Interpolate.gramIncr/2;
+            zetaMid[idx] = 2*Interpolate.getZetaEstimate(nprime, idx, upperLimit, zetaMidMean,
+            		Interpolate.imFmid,1);
+            idx++;
+        }
+        System.out.println( "breaks: " + Interpolate.breaks);
+        System.out.println("*** zetaMidMeanOdd " + zetaMidMean[1]/N);
+        System.out.println("*** zetaGramMeanOdd " + zetaGramMean[1]/N);
+        System.out.println("*** zetaMidMeanEven " + zetaMidMean[0]/N);
+        System.out.println("*** zetaGramMeanEven " + zetaGramMean[0]/N);
+        
+        Interpolate.consolidatedF();
+        File file = new File("out/gSeriesE12/fseriesEstimate.csv");
+        PrintWriter out = new PrintWriter(file);
+        out.println("n-3945951431270L,  f.real, f.im, zeta");
+        for (int i = 1; i <= N; i++) {
+            out.println((i+2) + ", " + nf.format(Interpolate.fAtBeta[i-1][0])
+                + ", " + nf.format(Interpolate.fAtBeta[i-1][1]) + ", " + nf.format(zetaGram[i-1]));
+            out.println((i+2) + ", " + nf.format(Interpolate.imFmid[i-1][0])
+                + ", " + nf.format(Interpolate.imFmid[i-1][1]) + ", " + nf.format(zetaMid[i-1]));
+        }
+        out.close();
+    }
+    
     @Test @Ignore
     public void testConvergence() {
         final double z0 = 251.306919355202, z1 = 251.62429374748942;

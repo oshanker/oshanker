@@ -208,6 +208,47 @@ public class GSeriesTest {
         }
         out.close();
     }
+	
+    /**
+     * Test method for fseries at gram points 1.0E12.
+     * Exact calculation, compare with riemann.InterpolateTest.testReadItems()
+     * @throws FileNotFoundException 
+     */
+    @Test @Ignore
+    public void test1E12F() throws FileNotFoundException {
+        int k0 = 1, k1=398942;
+        Gram.initLogVals(k1);
+        int R = 10;
+        BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        //gram [GramInfo [grampt=1000000000243.77756012466052947405878015472510, idx=3945951431271], 
+        //      GramInfo [grampt=1000000000244.02115917156451839965694310614387, idx=3945951431272]]
+        //0.24359904690398881 tincr 0.24359904690399015
+        double incr  = 0.24359904590398668;
+        double begin = 243.77756012466052947405878015472510 + 2*incr;
+        BigDecimal tval = new BigDecimal(begin, Gram.mc).add(
+              offset, Gram.mc);
+        double[][] fAtBeta = GSeries.fSeries(k0, k1, incr/2, 2*R, tval);
+
+        BigDecimal sqrtArg1 = Gram.sqrt(tval.divide(Gram.pi_2, Gram.mc), Gram.mc, 1.0E-21);
+        double predictedSqrtArg1 = sqrtArg1.doubleValue();
+        double cos = -1;
+        double correction = GSeries.correction( predictedSqrtArg1);
+        
+        File file = new File("out/gSeriesE12/fseries.csv");
+        PrintStream out = new PrintStream(file);
+        //PrintStream out = System.out;
+        out.println("n-3945951431270L,  f.real, f.im, zeta");
+        for (int i = 0; i < R; i++) {
+            double rotatedSum = 2*( cos*fAtBeta[2*i][0]);
+            double zeta = rotatedSum + correction;
+            cos = -cos;
+            out.println((i+3) + ", " + nf.format(fAtBeta[2*i][0]) + ", " 
+            + nf.format(fAtBeta[2*i][1]) + ", " + nf.format(zeta));
+            out.println((i+3) + ", " + nf.format(fAtBeta[2*i+1][0]) + 
+            		", " + nf.format(fAtBeta[2*i+1][1]));
+        }
+        out.close();
+    }
 
     private void writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
         double t0 = gramE12[sampleIndex][0];
