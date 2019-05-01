@@ -218,7 +218,7 @@ public class GSeriesTest {
     public void test1E12F() throws FileNotFoundException {
         int k0 = 1, k1=398942;
         Gram.initLogVals(k1);
-        int R = 10;
+        int R = 20;
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         //gram [GramInfo [grampt=1000000000243.77756012466052947405878015472510, idx=3945951431271], 
         //      GramInfo [grampt=1000000000244.02115917156451839965694310614387, idx=3945951431272]]

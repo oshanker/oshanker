@@ -2,7 +2,9 @@ package riemann;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -110,8 +112,9 @@ public class InterpolateTest {
         assertEquals(0d, Math.abs(derAtMin), 0.0000001);
     }
     
-    @Test @Ignore
+    @Test //@Ignore
     public void testReadItems(   ) throws Exception {
+    	//run math.GSeriesTest.test1E12F() first
         double begin= Interpolate.baseLimit + 
         		(Interpolate.noffset-Interpolate.correction)* (Interpolate.gramIncr);
         GSeries gSeries1 = new GSeries(1, 0, Interpolate.offset, begin, Interpolate.gramIncr);
@@ -127,7 +130,7 @@ public class InterpolateTest {
         System.out.println( gSeries1.begin + ", zetaCorrection " + Interpolate.zetaCorrection1
                 + ", gram index " + gramIndex1 + ", " + line[1]);
         
-        int N = 10;
+        int N = 20;
         Interpolate.zeroInput = Rosser.readZeros(
         		Interpolate.baseLimit, 
         		Interpolate.out, Interpolate.zeroIn, null);
@@ -169,16 +172,40 @@ public class InterpolateTest {
         System.out.println("*** zetaGramMeanEven " + zetaGramMean[0]/N);
         
         Interpolate.consolidatedF();
-        File file = new File("out/gSeriesE12/fseriesEstimate.csv");
-        PrintWriter out = new PrintWriter(file);
-        out.println("n-3945951431270L,  f.real, f.im, zeta");
+        
+        File file = new File("out/gSeriesE12/fseries.csv");
+        BufferedReader calcInput = new BufferedReader(new FileReader(file));
+        calcInput.readLine();
+        File outfile = new File("out/gSeriesE12/fseriesEstimate.csv");
+        PrintWriter out = new PrintWriter(outfile);
+        out.println("n-3945951431270L,  f.real, f.im, zeta, diff");
         for (int i = 1; i <= N; i++) {
+        	//Gram
+            String cf = calcInput.readLine();
+            String[] parsed = cf.split("[,\\s]+");
+            double cfImF = Double.parseDouble(parsed[2]);
+            String diff = ", ";
+            if(i>1) {
+            	diff += nf.format(Math.abs(cfImF-Interpolate.fAtBeta[i-1][1]));
+            }
             out.println((i+2) + ", " + nf.format(Interpolate.fAtBeta[i-1][0])
-                + ", " + nf.format(Interpolate.fAtBeta[i-1][1]) + ", " + nf.format(zetaGram[i-1]));
-            out.println((i+2) + ", " + nf.format(Interpolate.imFmid[i-1][0])
-                + ", " + nf.format(Interpolate.imFmid[i-1][1]) + ", " + nf.format(zetaMid[i-1]));
+                + ", " + nf.format(Interpolate.fAtBeta[i-1][1]) + 
+                ", " + nf.format(zetaGram[i-1]) + diff
+                );
+            //mid
+            cf = calcInput.readLine();
+            parsed = cf.split("[,\\s]+");
+            double cfReF = Double.parseDouble(parsed[1]);
+            diff = ", ";
+            if(i<N) {
+            	diff += nf.format(Math.abs(cfReF-Interpolate.imFmid[i-1][0]));
+            }
+            out.println( ", " + nf.format(Interpolate.imFmid[i-1][0])
+                + ", " + nf.format(Interpolate.imFmid[i-1][1]) 
+                + ", " + nf.format(zetaMid[i-1]) + diff);
         }
         out.close();
+        calcInput.close();
     }
     
     @Test @Ignore
