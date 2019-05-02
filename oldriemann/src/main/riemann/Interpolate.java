@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import math.GSeries;
 import math.ZeroPoly;
-import riemann.PolyInterpolate.Poly5;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
@@ -32,6 +31,11 @@ public class Interpolate {
 		USE_MIXED,
 		USE_POLY5,
 	};
+	
+	public enum GramOrMid{
+		GRAM,
+		MID
+	}
 	
     static NumberFormat nf = NumberFormat.getInstance();
     static {
@@ -321,7 +325,7 @@ public class Interpolate {
             int nprime = count + noffset;
             double upperLimit = baseLimit + (nprime-correction-1)* (gramIncr);
             // populate fAtBeta,  zetaGramMean
-            double zeta =  getZetaEstimate(nprime, idx, upperLimit, zetaGramMean, fAtBeta, 0);
+            double zeta =  getZetaEstimate(nprime, idx, upperLimit, zetaGramMean, fAtBeta,  GramOrMid.GRAM);
 
 //            System.out.println();
 //            System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -329,7 +333,7 @@ public class Interpolate {
 //            System.out.println("gram 2*zeta " + 2*zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
-            zeta = getZetaEstimate(nprime, idx, upperLimit, zetaMidMean,imFmid,1);
+            zeta = getZetaEstimate(nprime, idx, upperLimit, zetaMidMean,imFmid, GramOrMid.MID);
             //            System.out.println("mid  2*zeta " + 2*zeta + ", " +  upperLimit + " (" + (n+1) +")");
             if (count == N - 1) {
                 System.out.println("final n " + nprime);
@@ -402,8 +406,8 @@ public class Interpolate {
     }
 
     public static double getZetaEstimate(int nprime, int idx, double upperLimit, 
-            double[] zetaMean, double[][] fStorageReIm, int gramOrMid) throws Exception {
-    	double zetaEstMid = updateZeroInput(upperLimit, gramOrMid);
+            double[] zetaMean, double[][] fStorageReIm, GramOrMid gramOrMidEnum) throws Exception {
+    	double zetaEstMid = updateZeroInput(upperLimit, gramOrMidEnum);
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
             if(absMax>130){
@@ -420,19 +424,30 @@ public class Interpolate {
         final int nmod2 = nprime%2;
         // mean of zeta
         zetaMean[nmod2] += zeta;
-        //i == 0, Gram
+        int gramOrMidIndex;
+        switch (gramOrMidEnum) {
+		case GRAM:
+			gramOrMidIndex = 0;
+			break;
+
+		default:
+			gramOrMidIndex = 1;
+			break;
+		}
+        
+		//i == 0, Gram
         switch(nmod2){
         case 0:
-            fStorageReIm[idx][gramOrMid] = (-zeta);
-            if(gramOrMid==0){
+            fStorageReIm[idx][gramOrMidIndex] = (-zeta);
+            if(gramOrMidIndex==0){
                 //i == 0, Gram
                 gramDer[idx][0] = -poly.der(upperLimit);
                 gramDer[idx][1] = -poly.secondDer(upperLimit);
             }
             break;
         case 1:
-            fStorageReIm[idx][gramOrMid] = (zeta);
-            if(gramOrMid==0){
+            fStorageReIm[idx][gramOrMidIndex] = (zeta);
+            if(gramOrMidIndex==0){
                 gramDer[idx][0] = poly.der(upperLimit);
                 gramDer[idx][1] = poly.secondDer(upperLimit);
             }
@@ -447,7 +462,7 @@ public class Interpolate {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static final double updateZeroInput(double upperLimit, int gramOrMid
+    private static final double updateZeroInput(double upperLimit, GramOrMid gramOrMid
     		) throws FileNotFoundException, IOException {
         if(upperLimit<=zeroInput.nextValues[0]){
             zeroInput = new ZeroInfo(0, zeroInput);
@@ -496,12 +511,15 @@ public class Interpolate {
         double zetaEstMid;
         switch (polyOption) {
 		case USE_MIXED:
-            if(gramOrMid==0){
-                //i == 0, Gram
+	        switch (gramOrMid) {
+			case GRAM:
     			zetaEstMid = poly5.eval(upperLimit);
-            } else {
+				break;
+
+			default:
     			zetaEstMid = poly.eval(upperLimit);
-            }
+				break;
+			}
 			break;
 		default:
 			zetaEstMid = poly.eval(upperLimit);

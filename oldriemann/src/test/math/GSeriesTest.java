@@ -214,7 +214,7 @@ public class GSeriesTest {
      * Exact calculation, compare with riemann.InterpolateTest.testReadItems()
      * @throws FileNotFoundException 
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void test1E12F() throws FileNotFoundException {
         int k0 = 1, k1=398942;
         Gram.initLogVals(k1);

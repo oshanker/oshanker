@@ -418,9 +418,9 @@ public class MoreGSeriesTest {
     
     @Test 
     public void testMode() throws Exception{
-    	int k = 100;
+    	int k = 50;
     	int[][] zetaMode = new int[k+2][2];
-    	double[] zmin = {-0.5, -3.0};
+    	double[] zmin = {-0.35, -0.85};
     	double[] zmax = {-zmin[1],-zmin[0]};
     	double delta = (zmax[0]+zmax[1])/k;
         int count = 0;
@@ -432,7 +432,6 @@ public class MoreGSeriesTest {
 
         //Math.round(a);
         long sampleSize = N;
-        int deviations = 0;
         while (count < sampleSize  ) {
             String input = zetaIn.readLine();
             String[] parsed = input.split(",");
