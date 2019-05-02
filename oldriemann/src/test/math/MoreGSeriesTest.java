@@ -213,7 +213,7 @@ public class MoreGSeriesTest {
         }
     }
     
-    @Test @Ignore  
+    @Test //@Ignore  
     public void testInterpolate() throws Exception{
     	//input can come from riemann.Interpolate.consolidatedF()
     	//That method stores the output G series from riemann.Interpolate.readItems()
