@@ -23,9 +23,16 @@ import java.util.regex.Pattern;
 
 import math.GSeries;
 import math.ZeroPoly;
+import riemann.PolyInterpolate.Poly5;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
+	public enum PolyOption{
+		USE_POLY4,
+		USE_MIXED,
+		USE_POLY5,
+	};
+	
     static NumberFormat nf = NumberFormat.getInstance();
     static {
         nf.setMinimumFractionDigits(7);
@@ -41,8 +48,12 @@ public class Interpolate {
     static double[][] gramDer;
     static double[][] fAtBeta;
     static double[][] imFmid;
+    
     public static ZeroInfo zeroInput;
     public static Poly3 poly = null;
+    public static Poly3 poly5 = null;
+    public static PolyOption polyOption = PolyOption.USE_MIXED;
+    
     static int breaks = 0;
     static double zetaCorrection1;
     static  double absMax = 0;
@@ -392,7 +403,7 @@ public class Interpolate {
 
     public static double getZetaEstimate(int nprime, int idx, double upperLimit, 
             double[] zetaMean, double[][] fStorageReIm, int gramOrMid) throws Exception {
-    	double zetaEstMid = updateZeroInput(upperLimit);
+    	double zetaEstMid = updateZeroInput(upperLimit, gramOrMid);
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
             if(absMax>130){
@@ -426,9 +437,6 @@ public class Interpolate {
                 gramDer[idx][1] = poly.secondDer(upperLimit);
             }
         }
-        if(idx>0 && gramOrMid==0){
-            imFmid[idx-1][0] = -100;
-        }
         return zeta;
     }
 
@@ -439,7 +447,8 @@ public class Interpolate {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static final double updateZeroInput(double upperLimit) throws FileNotFoundException, IOException {
+    private static final double updateZeroInput(double upperLimit, int gramOrMid
+    		) throws FileNotFoundException, IOException {
         if(upperLimit<=zeroInput.nextValues[0]){
             zeroInput = new ZeroInfo(0, zeroInput);
         } else {
@@ -454,17 +463,52 @@ public class Interpolate {
             final double d0 = zeroInput.lastZero[1];
             final double d1 = zeroInput.nextValues[1];
             final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
-//            if(Double.isFinite(Rosser.zeros[0])) {
-//	            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
-//	            double secondDer = zeroPoly.secondDer(1);
-//	            poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
-//            	
-//            } else {
-            	poly = new Poly4(z0,z1, d0,d1,max);
-//            }
+            switch (polyOption) {
+			case USE_POLY4:
+				poly = new Poly4(z0,z1, d0,d1,max);
+				break;
+
+			case USE_MIXED:
+				poly = new Poly4(z0,z1, d0,d1,max);
+	            if(Double.isFinite(Rosser.zeros[0])) {
+		            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+		            double secondDer = zeroPoly.secondDer(1);
+		            poly5 = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+	            	
+	            } else {
+	            	poly5 = new Poly4(z0,z1, d0,d1,max);
+	            }
+				break;
+
+			default:
+				//use poly5
+	            if(Double.isFinite(Rosser.zeros[0])) {
+		            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+		            double secondDer = zeroPoly.secondDer(1);
+		            poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+	            	
+	            } else {
+	            	poly = new Poly4(z0,z1, d0,d1,max);
+	            }
+				break;
+			}
         }
-        double zetaEstMid = poly.eval(upperLimit);
-        return zetaEstMid;
+        double zetaEstMid;
+        switch (polyOption) {
+		case USE_MIXED:
+            if(gramOrMid==0){
+                //i == 0, Gram
+    			zetaEstMid = poly5.eval(upperLimit);
+            } else {
+    			zetaEstMid = poly.eval(upperLimit);
+            }
+			break;
+		default:
+			zetaEstMid = poly.eval(upperLimit);
+			break;
+        
+        }
+       return zetaEstMid;
     }
     
     public static void  consolidatedF(  ) throws IOException {

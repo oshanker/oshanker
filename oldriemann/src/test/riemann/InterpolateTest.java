@@ -156,6 +156,7 @@ public class InterpolateTest {
             double upperLimit = Interpolate.baseLimit + 
             		(nprime-Interpolate.correction-1)* (Interpolate.gramIncr);
             // populate fAtBeta,  zetaGramMean
+            //factor of 2 in correction
             zetaGram[idx] =  2*Interpolate.getZetaEstimate(nprime, idx, upperLimit, 
             		zetaGramMean,	Interpolate.fAtBeta, 0);
 
@@ -184,7 +185,7 @@ public class InterpolateTest {
             String cf = calcInput.readLine();
             String[] parsed = cf.split("[,\\s]+");
             double cfImF = Double.parseDouble(parsed[2]);
-            String diff = ", ";
+            String diff = ", , ";
             if(i>1) {
             	diff += nf.format(Math.abs(cfImF-Interpolate.fAtBeta[i-1][1]));
             }
@@ -198,7 +199,8 @@ public class InterpolateTest {
             double cfReF = Double.parseDouble(parsed[1]);
             diff = ", ";
             if(i<N) {
-            	diff += nf.format(Math.abs(cfReF-Interpolate.imFmid[i-1][0]));
+            	diff += nf.format(Math.abs(cfReF-Interpolate.imFmid[i-1][0]))
+            			+ ",";
             }
             out.println( ", " + nf.format(Interpolate.imFmid[i-1][0])
                 + ", " + nf.format(Interpolate.imFmid[i-1][1]) 
