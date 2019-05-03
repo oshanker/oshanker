@@ -418,10 +418,13 @@ public class MoreGSeriesTest {
     
     @Test 
     public void testMode() throws Exception{
-    	int k = 50;
+    	int k = 60;
     	int[][] zetaMode = new int[k+2][2];
     	double[] zmin = {-0.35, -0.85};
     	double[] zmax = {-zmin[1],-zmin[0]};
+    	int[] maxIndex = {-1, -1};
+    	int[] maxValue = {-1, -1};
+
     	double delta = (zmax[0]+zmax[1])/k;
         int count = 0;
         int N = 1000002;
@@ -444,25 +447,33 @@ public class MoreGSeriesTest {
             } else if(zetaSaved >= zmax[nmod2]) {
             	index = k+1;
             } else {
-            	index = 1 + (int)(k*(zetaSaved-zmin[nmod2])/(zmax[nmod2]-zmin[nmod2]));
+             	index = 1 + (int)((zetaSaved-zmin[nmod2])/delta);
             }
             zetaMode[index][nmod2]++;
+            if(index>0 && index<k+1 && 
+            		zetaMode[index][nmod2]>=maxValue[nmod2]) {
+            	maxValue[nmod2]=zetaMode[index][nmod2];
+            	maxIndex[nmod2]=index;
+            }
             count++;
         }  
         
         zetaIn.close();
-        
-    	double modeEstimate = 0.13;
-		int indexEstimate = 1 + (int)(k*(modeEstimate -zmin[0])/(zmax[0]-zmin[0]));
-		System.out.println(indexEstimate);
+        System.out.println("maxIndex " + Arrays.toString(maxIndex));
+    	double zeroVal = (maxIndex[0]-1)*delta + zmin[0] + delta/2;
+    	double oneVal = (maxIndex[1]-1)*delta + zmin[1] + delta/2;
+        System.out.println("histMid " + nf.format(zeroVal) + ", "
+        + nf.format(oneVal));
+        System.out.println("maxValue " + (maxValue[0]) + ", "
+        + (maxValue[1]));
 
-        int upper = indexEstimate+4;
-        int lower = indexEstimate-4;
+        int upper = maxIndex[0]+4;
+        int lower = maxIndex[0]-4;
         for (int i = 0; i < zetaMode.length; i++) {
         	if(i>upper && i < (k-upper)) {continue;}
         	if(i<lower || i > (k-lower)) {continue;}
-        	double zeroVal = (i-1)*(zmax[0]-zmin[0])/k + zmin[0] + delta/2;
-        	double oneVal = (i-1)*(zmax[1]-zmin[1])/k + zmin[1] + delta/2;
+        	zeroVal = (i-1)*delta + zmin[0] + delta/2;
+        	oneVal = (i-1)*delta + zmin[1] + delta/2;
         	System.out.println(
         			(k+1-i) + " | " + 
         			nf.format(zeroVal) + " " + Arrays.toString(zetaMode[i])
