@@ -418,47 +418,55 @@ public class MoreGSeriesTest {
     
     @Test 
     public void testMode() throws Exception{
-    	int k = 60;
-    	int[][] zetaMode = new int[k+2][2];
-    	double[] zmin = {-0.35, -0.85};
+    	int k = 80;
+    	int[][] zetaHist = new int[k+2][2];
+    	double[] zetaMean = {0, -0};
+    	double[] zmin = {-0.5, -0.4};
     	double[] zmax = {-zmin[1],-zmin[0]};
     	int[] maxIndex = {-1, -1};
     	int[] maxValue = {-1, -1};
 
     	double delta = (zmax[0]+zmax[1])/k;
         int count = 0;
-        int N = 1000002;
-        String zetaFile = "data/zetaE12.csv";
+//        String zetaFile = "data/zetaE12.csv";
+        String zetaFile = "out/gzetaE12/gzeta12.csv";
         BufferedReader zetaIn = 
                 new BufferedReader(new FileReader(zetaFile));
-        zetaIn.readLine();
+//        zetaIn.readLine();
 
-        //Math.round(a);
-        long sampleSize = N;
-        while (count < sampleSize  ) {
-            String input = zetaIn.readLine();
-            String[] parsed = input.split(",");
-            int n = Integer.parseInt(parsed[0]);
-            double zetaSaved =  Double.parseDouble(parsed[1]); 
-            final int nmod2 = n%2;
-            int index = 0;
-            if(zetaSaved < zmin[nmod2]) {
-            	index = 0;
-            } else if(zetaSaved >= zmax[nmod2]) {
-            	index = k+1;
-            } else {
-             	index = 1 + (int)((zetaSaved-zmin[nmod2])/delta);
-            }
-            zetaMode[index][nmod2]++;
-            if(index>0 && index<k+1 && 
-            		zetaMode[index][nmod2]>=maxValue[nmod2]) {
-            	maxValue[nmod2]=zetaMode[index][nmod2];
-            	maxIndex[nmod2]=index;
-            }
+        String input;
+        while ((input = zetaIn.readLine()) != null  ) {
+            String[] parsed = input.split(", ");
+//            double zetaSaved =  Double.parseDouble(parsed[1]); 
+//            String[] parsed = input.split(",");
+//            int n = Integer.parseInt(parsed[0]);
+//            double zetaSaved =  Double.parseDouble(parsed[1]); 
+//            final int nmod2 = n%2;
+            int phiIdx = 0;
+            for (int nmod2 = 0; nmod2 < 2; nmod2++) {
+                int zetaIdx = nmod2 == 0? phiIdx : 12+phiIdx;
+				double zetaSaved =  Double.parseDouble(parsed[zetaIdx ]); 
+				int index;
+				zetaMean[nmod2] += zetaSaved;
+				if (zetaSaved < zmin[nmod2]) {
+					index = 0;
+				} else if (zetaSaved >= zmax[nmod2]) {
+					index = k + 1;
+				} else {
+					index = 1 + (int) ((zetaSaved - zmin[nmod2]) / delta);
+				}
+				zetaHist[index][nmod2]++;
+				if (index > 0 && index < k + 1 && zetaHist[index][nmod2] >= maxValue[nmod2]) {
+					maxValue[nmod2] = zetaHist[index][nmod2];
+					maxIndex[nmod2] = index;
+				}
+			}
             count++;
         }  
-        
+        System.out.println(zetaIn.readLine());
         zetaIn.close();
+        System.out.println("Mean " + nf.format(zetaMean[0]/count) + ", "
+        + nf.format(zetaMean[1]/count));
         System.out.println("maxIndex " + Arrays.toString(maxIndex));
     	double zeroVal = (maxIndex[0]-1)*delta + zmin[0] + delta/2;
     	double oneVal = (maxIndex[1]-1)*delta + zmin[1] + delta/2;
@@ -467,21 +475,18 @@ public class MoreGSeriesTest {
         System.out.println("maxValue " + (maxValue[0]) + ", "
         + (maxValue[1]));
 
-        int upper = maxIndex[0]+4;
-        int lower = maxIndex[0]-4;
-        for (int i = 0; i < zetaMode.length; i++) {
-        	if(i>upper && i < (k-upper)) {continue;}
-        	if(i<lower || i > (k-lower)) {continue;}
-        	zeroVal = (i-1)*delta + zmin[0] + delta/2;
-        	oneVal = (i-1)*delta + zmin[1] + delta/2;
-        	System.out.println(
-        			(k+1-i) + " | " + 
-        			nf.format(zeroVal) + " " + Arrays.toString(zetaMode[i])
-        	+ " " + nf.format(oneVal) + " | " + i);
+        for (int i = 0; i < zetaHist.length; i++) {
+        	int diff1 = Math.abs(maxIndex[0]-i);
+        	int diff2 = Math.abs(maxIndex[1]-i);
+        	if(diff1<4 | diff2<4) {
+	        	zeroVal = (i-1)*delta + zmin[0] + delta/2;
+	        	oneVal = (i-1)*delta + zmin[1] + delta/2;
+	        	System.out.println(
+	        			(k+1-i) + " | " + 
+	        			nf.format(zeroVal) + " " + Arrays.toString(zetaHist[i])
+	        	+ " " + nf.format(oneVal) + " | " + i);
+        	}
 		}
-        //System.out.println("deviations " + deviations);
-//        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
-//        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
     }
     
    @Test @Ignore 
