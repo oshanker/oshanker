@@ -1,5 +1,5 @@
 basedir<-"../oldriemann/out/gzetaE28"
-intable <- read.table(paste0(basedir,"/percentile.txt"), header = FALSE);
+intable <- read.csv(paste0(basedir,"/percentile.csv"));
 outtable<-matrix(nrow =  2, ncol = 12, byrow = TRUE)
 meanValues<- c(1:12)
 slopes<- c(1:12)
