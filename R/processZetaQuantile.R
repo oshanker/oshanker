@@ -11,6 +11,6 @@ for (i in 2:12) {
 }
 outtable[1,1:length(meanValues)]<-meanValues
 outtable[2,1:length(slopes)]<-slopes
-write.csv(outtable,file=paste0(basedir,"/quantileSlopes.csv"))
+write.csv(outtable,file=paste0(basedir,"/quantileSlopes.csv"), row.names = FALSE)
 mytest=read.csv(paste0(basedir,"/quantileSlopes.csv"))
 print(mytest)
