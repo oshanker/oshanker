@@ -213,12 +213,13 @@ public class MoreGSeriesTest {
         }
     }
     
-    @Test //@Ignore  
+    @Test @Ignore  
     public void testInterpolate() throws Exception{
     	//input can come from riemann.Interpolate.consolidatedF()
     	//That method stores the output G series from riemann.Interpolate.readItems()
     	//provides input for zetaHist.R 
     	// after that is run, use the testSymmetryRelations method
+    	//zetaQuantile.R
     	
     	//for exact g at e12, math.GSeriesTest.testWriteZetaPhiE12()
         File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
@@ -233,7 +234,7 @@ public class MoreGSeriesTest {
 //            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
 //        }
 
-        int k = 12;
+        int k = 6;
         File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta"
         		+ k + ".csv");
         if (!file.getParentFile().exists()) {

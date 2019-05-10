@@ -167,7 +167,7 @@ public class GSeriesTest {
         }
 	}
     
-    @Test //@Ignore
+    @Test @Ignore
     public void testWriteZetaPhiE12() throws Exception{
     	//zetaQuantile.R
     	int k = 6;
