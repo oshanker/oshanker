@@ -167,9 +167,10 @@ public class GSeriesTest {
         }
 	}
     
-    @Test @Ignore
+    @Test //@Ignore
     public void testWriteZetaPhiE12() throws Exception{
-    	int k = 12;
+    	//zetaQuantile.R
+    	int k = 6;
         File file = new File("out/gzetaE12/gzeta_calc"
         		+ k + ".csv");
         if (!file.getParentFile().exists()) {
@@ -214,7 +215,7 @@ public class GSeriesTest {
      * Exact calculation, compare with riemann.InterpolateTest.testReadItems()
      * @throws FileNotFoundException 
      */
-    @Test //@Ignore
+    @Test @Ignore
     public void test1E12F() throws FileNotFoundException {
         int k0 = 1, k1=398942;
         Gram.initLogVals(k1);

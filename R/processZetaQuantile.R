@@ -1,16 +1,17 @@
-basedir<-"../oldriemann/out/gzetaE28"
-intable <- read.csv(paste0(basedir,"/percentile.csv"));
-outtable<-matrix(nrow =  2, ncol = 12, byrow = TRUE)
-meanValues<- c(1:12)
-slopes<- c(1:12)
-for (i in 2:12) {
+basedir<-"../oldriemann/out/gzetaE12"
+intable <- read.csv(paste0(basedir,"/percentile_calc.csv"),header=TRUE);
+meanValues<- c(1:13)
+slopes<- c(1:13)
+for (i in 2:13) {
 	x<-as.matrix(intable[i]);
 	x<-as.vector(x);
+	print(x)
+	print(paste('is',i))
 	meanValues[i]=mean(x) 
-	slopes[i]=(x[4]-x[10])/2.828
+	slopes[i]=(x[3]-x[5])/2
 }
-outtable[1,1:length(meanValues)]<-meanValues
-outtable[2,1:length(slopes)]<-slopes
-write.csv(outtable,file=paste0(basedir,"/quantileSlopes.csv"), row.names = FALSE)
-mytest=read.csv(paste0(basedir,"/quantileSlopes.csv"))
-print(mytest)
+    conv = format( meanValues, scientific = FALSE, drop0trailing = TRUE, digits = 4, width =8)
+#    conv = as.numeric(conv)
+    print(conv, quote = FALSE)
+#print(meanValues)
+print(slopes)

@@ -219,6 +219,8 @@ public class MoreGSeriesTest {
     	//That method stores the output G series from riemann.Interpolate.readItems()
     	//provides input for zetaHist.R 
     	// after that is run, use the testSymmetryRelations method
+    	
+    	//for exact g at e12, math.GSeriesTest.testWriteZetaPhiE12()
         File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
         GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
