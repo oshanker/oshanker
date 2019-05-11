@@ -1,9 +1,9 @@
-#basedir<-"../oldriemann/out/gzetaE12"
-basedir<-"../oldriemann/out/gzetaE28"
-intable <- read.csv(paste0(basedir,"/percentileE28.csv"),header=TRUE);
-#intable <- read.csv(paste0(basedir,"/percentile_calc.csv"),header=TRUE);
-#outfile<-"/quantileFitted_calc6.csv"
-outfile<-"/quantileFittedE28.csv"
+basedir<-"../oldriemann/out/gzetaE12"
+#basedir<-"../oldriemann/out/gzetaE28"
+intable <- read.csv(paste0(basedir,"/percentile_calc.csv"),header=TRUE);
+#intable <- read.csv(paste0(basedir,"/percentileE28.csv"),header=TRUE);
+outfile<-"/quantileFitted_calc6.csv"
+#outfile<-"/quantileFittedE28.csv"
 
 colcount = dim(intable)[2]
 print(paste("colcount",colcount))
