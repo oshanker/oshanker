@@ -1,12 +1,19 @@
-basedir<-"../oldriemann/out/gzetaE12"
-intable <- read.csv(paste0(basedir,"/percentile_calc.csv"),header=TRUE);
-fitted<-matrix(nrow=3,ncol=13)
-meanValues<- c(1:13)
-slopes<- c(1:13)
-	x<-as.matrix(intable[13]);
+#basedir<-"../oldriemann/out/gzetaE12"
+basedir<-"../oldriemann/out/gzetaE28"
+intable <- read.csv(paste0(basedir,"/percentileE28.csv"),header=TRUE);
+#intable <- read.csv(paste0(basedir,"/percentile_calc.csv"),header=TRUE);
+#outfile<-"/quantileFitted_calc6.csv"
+outfile<-"/quantileFittedE28.csv"
+
+colcount = dim(intable)[2]
+print(paste("colcount",colcount))
+fitted<-matrix(nrow=3,ncol=colcount)
+meanValues<- c(1:colcount)
+slopes<- c(1:colcount)
+	x<-as.matrix(intable[colcount]);
 	x<-as.vector(x);
 
-for (i in 2:12) {
+for (i in 2:(colcount-1)) {
 	y<-as.matrix(intable[i]);
 	y<-as.vector(y);
 #	print(x)
@@ -24,8 +31,4 @@ conv = format( meanValues, scientific = FALSE, drop0trailing = TRUE, digits = 4,
 print(conv, quote = FALSE)
 print(slopes)
 
- outtable<-matrix(nrow=2,ncol=length(meanValues))
- outtable[1,1:dim(outtable)[2]]<-meanValues
- outtable[2,1:dim(outtable)[2]]<-slopes
- write.csv(outtable,file=paste0(basedir,"/quantileSlopes_calc6.csv"), row.names = FALSE)
-write.csv(fitted,file=paste0(basedir,"/quantileFitted_calc6.csv"), row.names = FALSE)
+write.csv(fitted,file=paste0(basedir, outfile), row.names = FALSE)
