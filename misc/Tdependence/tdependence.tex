@@ -88,7 +88,7 @@ related to the famed Riemann zeta function.
 
 \section{Introduction}
 
-The symmetries exhibited by any system are fundamental aspects of the system. Thus, it is very exciting when we find a new symmetry in studying any phenomenon. In this work, we present a symmetry property and an anti-symmetry property for the value
+The symmetries exhibited by a system are fundamental aspects of the system. Thus, it is very exciting when we find a new symmetry in studying any phenomenon. In this work, we present a symmetry property and an anti-symmetry property for the value
 distribution of the Hardy $Z$ function at discrete points.
 
 Our symmetries will be expressed in terms of Gram points~\cite{Gram 1903}. Gram points and  Gram intervals are well known topics of study in the literature pertaining to the Riemann Hypothesis. For completeness we present the definitions in Section~\ref{sec2}.
@@ -151,7 +151,7 @@ T_2 - T_1  \ll T_1.
 \end{equation}
 Because of Equation \ref{eq:interval}, we can consider  $\ln (t)$  to be effectively constant over  the interval.
 We use
-$10^6$ Gram intervals in our samples. We studied  two samples, $T_1=10^{12}$ and  $T_1=10^{28}$. We chose these samples because  Ref~\cite{hiary 2010} has evaluated all the zeros in these ranges. 
+$10^6$ Gram intervals in our samples. We studied  two samples, $T_1=10^{12}$ and  $T_1=10^{28}$. We chose these samples because  Ref~\cite{hiary 2010} has evaluated all the zeros in these ranges. We consider all $Z(t)$ values for a given $\phi$ in the sample space.
 
 We will present the symmetry properties in terms of the quantiles~\cite{Feller 1971} for the sample space. This is because for any sample space the quantiles are well defined and always exist. We recall that in statistics, given a fraction $f$ between $0$ and $1$, the quantile $q_f$ is the value such that fraction $f$  of the sample population is at or below $q_f$. For example, $q_{0.5}$ is the median of the sample.
 For $f$ very close to $0$ or $1$, in the limiting case $q_f$ will diverge. However we will assume that there is a range of $f$ for which well-defined limits exist (if necessary we can normalize the $Z$ values by some power of $\ln(T/2\pi)$ which does not affect the symmetry properties). Certainly, for our two samples separated by several orders of magnitude, we find that the quantile distribution changes very little. The anti-symmetry relation is
@@ -264,6 +264,7 @@ for $\phi=\pi/6$ and $f=0.25$ is $0.017$, while it is $-0.016$ for $\phi=5\pi/6$
 We found that there is a linear dependence of the quantiles on $\cos(\phi)$. Table~\ref{tab:fit12} shows the intercept and slope when $q_f$ for any $f$ is fitted to
 $2\cos(\phi))$. The observation of this relation itself verifies the symmetry condition Eq.~\ref{eq:sym}. The anti-symmetry condition Eq.~\ref{eq:antisym} implies that the intercept is anti-symmetric for reflection around $f=0.5$, while the slope is symmetric for such a reflection. This can be verified from the table. It must be pointed out that Eq.~\ref{eq:antisym} and Eq.~\ref{eq:sym} do not require the
 existence of the linear relationship of $q_f$ to $\cos(\phi)$. However, the linear relationship is consistent with the symmetry relations.
+The linear dependence and the symmetry properties imply that the quartile range $q_{1-f}-q_f$ is independent of $\phi$.
 
 \begin{table}
 \centering \(\begin{array}{cc}
@@ -329,13 +330,13 @@ R^2&0.999&0.999&0.998&0.994&0.993&1.000&0.992&0.994&0.998&1.000&0.999\\
 \end{table}
 
 
-At $T=10^{28}$ we used the  zeros from Ref~\cite{hiary 2010} to get the coefficients in the series for band limited function interpolation. We could then use this series to evaluate  $Z(t)$  at several points in the Gram interval.
+To perform a rigorous test of the symmetry relations, we repeat the study for another $T$ separated from the first sample by $16$ orders of magnitude. At $T=10^{28}$ we used the  zeros from Ref~\cite{hiary 2010} to get the coefficients in the series for band limited function interpolation. We could then use this series to evaluate  $Z(t)$  at several points in the Gram interval.
 Table~\ref{tab:mean28} shows the mean value for $Z(T)$ at $12$ equally spaced values of $\phi$ at $T=10^{28}$. The table verifies that the values are $2\cos(\phi)$, to a few parts in a thousand. Table~\ref{tab:quantiles28} shows the quantiles for $Z(T)$.  Eq.~\ref{eq:antisym} can be verified, for example, by noting that $q_f$ in Table~\ref{tab:quantiles28}
 for $\phi=\pi/6$ and $f=0.25$ is $-0.135$, while it is $0.134$ for $\phi=5\pi/6$ and $f=0.75$. Eq.~\ref{eq:sym} can be verified, for example, by noting that $q_f$ is $-0.133$ for $\phi=11\pi/6$ and $f=0.25$. Table~\ref{tab:fit28} verifies the linear relationship of $q_f$ to $\cos(\phi)$. The anti-symmetry condition Eq.~\ref{eq:antisym}  and the symmetry condition Eq.~\ref{eq:sym} are also verified in the table.
 
 \section{\label{conclusions}Conclusions}
 
-The most exciting new result is the discovery of anti-symmetry and symmetry properties for the value distribution of the Hardy Z function at discrete points. It is also interesting that the quantile distributions change very little when the height $T$ spans several orders of magnitude. Another intriguing observation is the linear dependence of the quantiles on $\cos(\phi)$.
+The most exciting new result is the discovery of anti-symmetry and symmetry properties for the value distribution of the Hardy Z function at discrete points. It is also noteworthy that the quantile distributions change very little when the height $T$ spans $16$ orders of magnitude. Another intriguing observation is the linear dependence of the quantiles on $\cos(\phi)$. The linear dependence and the symmetry properties imply that the quartile range $q_{1-f}-q_f$ is independent of $\phi$.
 
 
 \bibliographystyle{amsplain}
