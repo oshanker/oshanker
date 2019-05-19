@@ -8,8 +8,8 @@ y<-matrix(nrow=length(ranges),ncol=4)
 	print(dim(y))
 
 intable <- read.csv(paste0(basedir[1],infile[1]),header=FALSE);
-	x<-as.matrix(intable[1,ranges]);
-	x<-as.vector(x);
+	f<-as.matrix(intable[1,ranges]);
+	f<-as.vector(x);
 
 	y0<-as.matrix(intable[plotindex,ranges]);
 	y0<-as.vector(y0);
@@ -22,39 +22,38 @@ intable1 <- read.csv(paste0(basedir[2],infile[2]),header=FALSE);
 	
 	y[1:length(x),2]<-y1
 
-print(x)
+print(f)
 print(y)
 
-f=0.1
-den=0.25-f^2
-a=(y[7,1:2]-y[5,1:2])*den/(2*f)
+ind=c(rep(0,10),rep(1,10))
+xxvec=f-0.5
+xx2=xxvec ^2
+	xx2trun=c(xx2[1:5],xx2[7:11],xx2[1:5],xx2[7:11])
+	xxtrun=c(xxvec[1:5],xxvec[7:11],xxvec[1:5],xxvec[7:11])
+	q=c(y[1:5,1],y[7:11,1],y[1:5,2],y[7:11,2])
+	xxq=xxtrun/q
+	lm.fit2=lm(xx2trun~ ind+xxq )
+	store=coef(lm.fit2)
+	print(summary (lm.fit2))
+	print(store)
 
-f=x[11]-0.5
-den=0.25-f^2
-b=(y[11,1:2]*den-a*f)/(f*f*f)
 
-print(paste(c("a12","a28"),a))
-print(paste(c("b12","b28"),b))
-
-xxvec=x-0.5
-poles=c(0.516^2, 0.501^2)
+poles=c(0.263, 0.250)
+#poles=c(store[1],store[1]+store[2])
 for (i in 1:2) {
 	pp=rep(poles[i],11)
-    denvec=pp-xxvec ^2
-	yy0=y[1:length(x),i]*denvec
+    denvec=pp-xx2
+	yy0=y[1:length(xxvec),i]*denvec
 	lm.fit2=lm(yy0~ xxvec )
 	#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
 	print(summary (lm.fit2))
 	fit0=coef(lm.fit2)
-	a[i] = fit0[2]
-	#b[i] = fit0[3]
-	b[i] = 0
-	y[1:length(x),i+2]=(a[i]*xxvec+b[i]*xxvec^3)/denvec
+	y[1:length(xxvec),i+2]=(fit0[2]*xxvec)/denvec
 }
 
 
 
-matplot(x, y, type = "b", xaxt = "n",#
+matplot(f, y, type = "b", xaxt = "n",#
         main = "Quantile",#
         pch = "1*ab", 
         ylab = expression("mean Z"), # only 1st is taken#
