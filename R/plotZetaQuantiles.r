@@ -37,21 +37,21 @@ print(paste(c("a12","a28"),a))
 print(paste(c("b12","b28"),b))
 
 xxvec=x-0.5
-denvec=0.25-xxvec ^2
+poles=c(0.516^2, 0.501^2)
 for (i in 1:2) {
+	pp=rep(poles[i],11)
+    denvec=pp-xxvec ^2
 	yy0=y[1:length(x),i]*denvec
-	lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
+	lm.fit2=lm(yy0~ xxvec )
+	#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
 	print(summary (lm.fit2))
 	fit0=coef(lm.fit2)
 	a[i] = fit0[2]
-	b[i] = fit0[3]
+	#b[i] = fit0[3]
+	b[i] = 0
+	y[1:length(x),i+2]=(a[i]*xxvec+b[i]*xxvec^3)/denvec
 }
 
-for (i in 1:length(x)) {
-   xx=x[i]-0.5
-   den=0.25-xx^2
-   y[i,3:4]=(a*xx+b*xx*xx*xx)/den
-}
 
 
 matplot(x, y, type = "b", xaxt = "n",#
