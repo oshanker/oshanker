@@ -9,18 +9,19 @@ y<-matrix(nrow=length(ranges),ncol=4)
 
 intable <- read.csv(paste0(basedir[1],infile[1]),header=FALSE);
 	f<-as.matrix(intable[1,ranges]);
-	f<-as.vector(x);
+	f<-as.vector(f);
+
 
 	y0<-as.matrix(intable[plotindex,ranges]);
 	y0<-as.vector(y0);
 	
-	y[1:length(x),1]<-y0
+	y[1:length(f),1]<-y0
 
 intable1 <- read.csv(paste0(basedir[2],infile[2]),header=FALSE);
 	y1<-as.matrix(intable1[plotindex,ranges]);
 	y1<-as.vector(y1);
 	
-	y[1:length(x),2]<-y1
+	y[1:length(f),2]<-y1
 
 print(f)
 print(y)
@@ -38,7 +39,7 @@ xx2=xxvec ^2
 	print(store)
 
 
-poles=c(0.263, 0.250)
+poles=c(0.263, 0.251)
 #poles=c(store[1],store[1]+store[2])
 for (i in 1:2) {
 	pp=rep(poles[i],11)
