@@ -26,9 +26,11 @@ intable1 <- read.csv(paste0(basedir[2],infile[2]),header=FALSE);
 print(f)
 print(y)
 
-ind=c(rep(0,10),rep(1,10))
 xxvec=f-0.5
 xx2=xxvec ^2
+runpolefit=FALSE
+if(runpolefit) {
+    ind=c(rep(0,10),rep(1,10))
 	xx2trun=c(xx2[1:5],xx2[7:11],xx2[1:5],xx2[7:11])
 	xxtrun=c(xxvec[1:5],xxvec[7:11],xxvec[1:5],xxvec[7:11])
 	q=c(y[1:5,1],y[7:11,1],y[1:5,2],y[7:11,2])
@@ -37,31 +39,34 @@ xx2=xxvec ^2
 	store=coef(lm.fit2)
 	print(summary (lm.fit2))
 	print(store)
+}
 
-
-poles=c(0.263, 0.251)
+b=1:2
+poles=c(0.28, 0.251)
 #poles=c(store[1],store[1]+store[2])
 for (i in 1:2) {
-	pp=rep(poles[i],11)
+	pp=rep(poles[i],length(xxvec))
     denvec=pp-xx2
 	yy0=y[1:length(xxvec),i]*denvec
 	lm.fit2=lm(yy0~ xxvec )
 	#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
 	print(summary (lm.fit2))
 	fit0=coef(lm.fit2)
+	b[i]=fit0[2]
 	y[1:length(xxvec),i+2]=(fit0[2]*xxvec)/denvec
 }
-
-
-
+root2=(b[1]*poles[2]-b[2]*poles[1])*(b[1]*poles[2]+b[2]*poles[1])
+root2=root2/((b[1]-b[2])*(b[1]+b[2]))
+print(paste('root2', sqrt(root2) ) )
+symbols="12a*"
 matplot(f, y, type = "b", xaxt = "n",#
         main = "Quantile",#
-        pch = "1*ab", 
+        pch = symbols, 
         ylab = expression("mean Z"), # only 1st is taken#
         xlab = expression("f")#
         )#
 axis(1)
 text(0.84,3.9, "E28")
 text(0.9,2.8, "E12")
-legend("topleft", c("E12","E28","fit E12","fit E28"),pch = "1*ab")
+legend("topleft", c("E12","E28","fit E12","fit E28"),pch = symbols)
 grid()
