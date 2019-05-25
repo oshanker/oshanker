@@ -42,6 +42,7 @@ if(runpolefit) {
 }
 
 b=1:2
+a=1:2
 poles2=c(0.28, 0.251)
 #poles=c(store[1],store[1]+store[2])
 for (i in 1:2) {
@@ -52,13 +53,11 @@ for (i in 1:2) {
 	#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
 	print(summary (lm.fit2))
 	fit0=coef(lm.fit2)
-	b[i]=sqrt(fit0[2])
+	a[i]=(fit0[2])
 	y[1:length(xxvec),i+2]=(fit0[2]*xxvec)/denvec
 }
-poles=sqrt(poles2)
-root2=(b[1]*poles[2]-b[2]*poles[1])*(b[1]*poles[2]+b[2]*poles[1])
-root2=root2/((b[1]-b[2])*(b[1]+b[2]))
-print(paste('root2', sqrt(root2) ) )
+rootcheck=(a[1]*poles2[2]-a[2]*poles2[1])/(a[1]-a[2])
+print(paste('rootcheck', sqrt(rootcheck) ) )
 symbols="12a*"
 matplot(f, y, type = "b", xaxt = "n",#
         main = "Quantile",#
