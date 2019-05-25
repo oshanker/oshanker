@@ -2,7 +2,7 @@ basedir<-c("../oldriemann/data/gzetaE12","../oldriemann/data/gzetaE28")
 infile<-c("/quantileFitted_calc6.csv", "/quantileFittedE28.csv")
 #basedir1<-"../oldriemann/data/gzetaE28"
 #infile1<-"/quantileFittedE28.csv"
-ranges=3:13
+ranges=4:12
 plotindex<-2
 y<-matrix(nrow=length(ranges),ncol=4)
 	print(dim(y))
@@ -42,19 +42,20 @@ if(runpolefit) {
 }
 
 b=1:2
-poles=c(0.28, 0.251)
+poles2=c(0.28, 0.251)
 #poles=c(store[1],store[1]+store[2])
 for (i in 1:2) {
-	pp=rep(poles[i],length(xxvec))
+	pp=rep(poles2[i],length(xxvec))
     denvec=pp-xx2
 	yy0=y[1:length(xxvec),i]*denvec
 	lm.fit2=lm(yy0~ xxvec )
 	#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
 	print(summary (lm.fit2))
 	fit0=coef(lm.fit2)
-	b[i]=fit0[2]
+	b[i]=sqrt(fit0[2])
 	y[1:length(xxvec),i+2]=(fit0[2]*xxvec)/denvec
 }
+poles=sqrt(poles2)
 root2=(b[1]*poles[2]-b[2]*poles[1])*(b[1]*poles[2]+b[2]*poles[1])
 root2=root2/((b[1]-b[2])*(b[1]+b[2]))
 print(paste('root2', sqrt(root2) ) )
