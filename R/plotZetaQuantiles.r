@@ -3,7 +3,7 @@ infile<-c("/quantileFitted_calc6.csv", "/quantileFittedE28.csv")
 #basedir1<-"../oldriemann/data/gzetaE28"
 #infile1<-"/quantileFittedE28.csv"
 ranges=3:13
-plotindex<-2
+plotindex<-3
 y<-matrix(nrow=length(ranges),ncol=4)
 	print(dim(y))
 
@@ -41,23 +41,40 @@ if(runpolefit) {
 	print(store)
 }
 
-b=1:2
-a=1:2
-poles2=c(0.29, 0.252)
-#poles=c(store[1],store[1]+store[2])
-for (i in 1:2) {
-	pp=rep(poles2[i],length(xxvec))
-    denvec=pp-xx2
-	yy0=y[1:length(xxvec),i]*denvec
-	lm.fit2=lm(yy0~ xxvec )
-	#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
-	print(summary (lm.fit2))
-	fit0=coef(lm.fit2)
-	a[i]=(fit0[2])
-	y[1:length(xxvec),i+2]=(fit0[2]*xxvec)/denvec
+legendposition="topleft"
+if(plotindex==2){
+	a=1:2
+	poles2=c(0.29, 0.252)
+	#poles=c(store[1],store[1]+store[2])
+	for (i in 1:2) {
+		pp=rep(poles2[i],length(xxvec))
+	    denvec=pp-xx2
+		yy0=y[1:length(xxvec),i]*denvec
+		lm.fit2=lm(yy0~ xxvec )
+		#lm.fit2=lm(yy0~ xxvec +I(xxvec ^3))
+		print(summary (lm.fit2))
+		fit0=coef(lm.fit2)
+		a[i]=(fit0[2])
+		y[1:length(xxvec),i+2]=(fit0[2]*xxvec)/denvec
+	}
+	rootcheck=(a[1]*poles2[2]-a[2]*poles2[1])/(a[1]-a[2])
+	print(paste('rootcheck', sqrt(rootcheck) ) )
+} else if(plotindex==3){
+	legendposition="center"
+	poles2=c(0.41, 0.45)
+	for (i in 1:2) {
+		pp=rep(poles2[i],length(xxvec))
+	    denvec=pp-xx2
+		yy0=y[1:length(xxvec),i]*denvec
+		lm.fit2=lm(yy0~I(xx2))
+		print(summary (lm.fit2))
+		fit0=coef(lm.fit2)
+		print(fit0)
+		y[1:length(xxvec),i+2]=(fit0[1] + fit0[2]*xx2)/denvec
+
+	}
+	
 }
-rootcheck=(a[1]*poles2[2]-a[2]*poles2[1])/(a[1]-a[2])
-print(paste('rootcheck', sqrt(rootcheck) ) )
 symbols="12a*"
 matplot(f, y, type = "b", xaxt = "n",#
         main = "Quantile",#
@@ -68,5 +85,5 @@ matplot(f, y, type = "b", xaxt = "n",#
 axis(1)
 text(0.84,3.9, "E28")
 text(0.9,2.8, "E12")
-legend("topleft", c("E12","E28","fit E12","fit E28"),pch = symbols)
+legend(legendposition, c("E12","E28","fit E12","fit E28"),pch = symbols)
 grid()
