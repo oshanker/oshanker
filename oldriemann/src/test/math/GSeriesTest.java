@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -208,6 +207,101 @@ public class GSeriesTest {
             out.println();
         }
         out.close();
+    }
+
+    private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
+        int index = (int) Math.floor(t0);
+        BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        double begin =  t0;
+        int k0 = 1, k1=398942;
+        DataOutputStream out = null;
+        File file = new File("out/" + Integer.toString(index) +"E12.dat");
+        boolean output = false;
+        if (output) {
+              if (!file.getParentFile().exists()) {
+                  file.getParentFile().mkdirs();
+              }
+              try {
+                  OutputStream os = new FileOutputStream(file);
+                  BufferedOutputStream bos = new BufferedOutputStream(os);
+                  // create data output stream
+                  out = new DataOutputStream(bos);
+              } catch (FileNotFoundException e) {
+                  e.printStackTrace();
+              }
+        }
+        long init= System.currentTimeMillis();
+        double incr  = Math.PI/(Math.log((offset.doubleValue()+begin)/(2*Math.PI)));
+        int R = 500+2*initialPadding;
+        System.out.println("incr " + incr);
+        begin -= initialPadding*incr;
+        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, R);
+        long end = System.currentTimeMillis();
+        System.out.println("evaluateWithOffset calc for " + R + ": " + (end - init) + "ms");
+        if (output) {
+            out.writeDouble(begin);
+            out.writeDouble(incr);
+            for (int i = 0; i < gAtBeta.gAtBeta.length; i++) {
+                out.writeDouble(gAtBeta.gAtBeta[i][0]);
+                out.writeDouble(gAtBeta.gAtBeta[i][1]);
+            }
+            out.close();
+        }
+        
+        return gAtBeta;
+    }
+    
+   @Test //@Ignore 
+    public void test1E12Zeros() throws Exception{
+		BigDecimal offset = BigDecimal.valueOf(1.0E12);
+		double t0 = 244.021159171564;
+		long gramIndex = Gram.gramIndex(offset, t0);
+		System.out.println(nf.format(t0) + ", " + gramIndex);
+		double zero = 244.920599505825;
+		double expectedDer = 23.85164367971759;
+		int currentIndex = 40;
+		final int initialPadding = currentIndex;
+		GSeries gAtBeta = calculateGSeriesE12(t0, initialPadding);
+		
+		double[] gAtGram = gAtBeta.gAtBeta[currentIndex];
+		double riemannZeta = gAtBeta.riemannZeta(gAtGram, t0);
+		System.out.println(t0 + ", " + riemannZeta+ ", " + gAtBeta.spacing);
+		assertEquals(1.92649807303971, riemannZeta, 0.0000015);
+		String zerosFile = "data/gzetaE12/zerosE12.csv";
+		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
+		String in = zeroIn.readLine();
+		for (int i = 0; i < 1; i++) {
+			in = zeroIn.readLine();
+		}
+		//t0 += gAtBeta.spacing;
+		while (in != null) {
+			String[] line = in.split(",\\s+");
+			zero = Double.parseDouble(line[0]);
+			expectedDer = Double.parseDouble(line[1]);
+			while(zero>t0) {
+				System.out.println("Gram " + t0 + " " + riemannZeta);
+				t0 += 2*gAtBeta.spacing;
+				currentIndex += 2;
+				gAtGram = gAtBeta.gAtBeta[currentIndex];
+				riemannZeta = gAtBeta.riemannZeta(gAtGram, t0);
+			}
+
+			double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero, 4, initialPadding, 1.6E-9, false);
+			double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
+			System.out.println("zero " + zero + " zeta " + nf.format(zeta) + " cf 0.0");
+			assertEquals(0.0, zeta, 0.000001);
+			double delta = 0.001 * gAtBeta.spacing;
+			gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero + delta, 4, initialPadding, 1.6E-9, false);
+			double zetaplus = gAtBeta.riemannZeta(gFromBLFI, zero + delta);
+			gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero - delta, 4, initialPadding, 1.6E-9, false);
+			double zetaminus = gAtBeta.riemannZeta(gFromBLFI, zero - delta);
+			double der = (zetaplus - zetaminus) / (2 * delta);
+			System.out.println("der " + nf.format(der) + " cf " + nf.format(expectedDer));
+			assertEquals(expectedDer, der, 0.001);
+			in = zeroIn.readLine();
+		}
+
+		zeroIn.close();
     }
 	
     /**
