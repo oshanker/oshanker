@@ -31,6 +31,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import riemann.Gram;
+import riemann.Interpolate;
 import riemann.Riemann;
 import riemann.Riemann.GramInfo;
 import riemann.Rosser;
@@ -265,21 +266,34 @@ public class GSeriesTest {
 		
 		double[] gAtGram = gAtBeta.gAtBeta[currentIndex];
 		double riemannZeta = gAtBeta.riemannZeta(gAtGram, t0);
-		System.out.println(t0 + ", " + riemannZeta+ ", " + gAtBeta.spacing);
+		System.out.println(t0 + ", " + riemannZeta + ", " + gAtBeta.spacing);
 		assertEquals(1.92649807303971, riemannZeta, 0.0000015);
+		
+        String zetaFile = "data/zetaE12.csv";
+        BufferedReader zetaIn = 
+                new BufferedReader(new FileReader(zetaFile));
+        String input = zetaIn.readLine();
+        for (int i = 0; i < 2; i++) {
+        	input = zetaIn.readLine();
+		}
 		String zerosFile = "data/gzetaE12/zerosE12.csv";
 		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
 		String in = zeroIn.readLine();
 		for (int i = 0; i < 1; i++) {
 			in = zeroIn.readLine();
 		}
-		//t0 += gAtBeta.spacing;
+
 		while (in != null) {
 			String[] line = in.split(",\\s+");
 			zero = Double.parseDouble(line[0]);
 			expectedDer = Double.parseDouble(line[1]);
 			while(zero>t0) {
-				System.out.println("Gram " + t0 + " " + riemannZeta);
+	            String[] parsed = input.split(",");
+	            double zetaSaved =  Double.parseDouble(parsed[1]);  
+				assertEquals(zetaSaved, riemannZeta, 0.000001);
+	        	input = zetaIn.readLine();
+
+	        	System.out.println("*Gram " + parsed[0] + " " + t0 + " " + riemannZeta);
 				t0 += 2*gAtBeta.spacing;
 				currentIndex += 2;
 				gAtGram = gAtBeta.gAtBeta[currentIndex];
@@ -296,12 +310,13 @@ public class GSeriesTest {
 			gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero - delta, 4, initialPadding, 1.6E-9, false);
 			double zetaminus = gAtBeta.riemannZeta(gFromBLFI, zero - delta);
 			double der = (zetaplus - zetaminus) / (2 * delta);
-			System.out.println("der " + nf.format(der) + " cf " + nf.format(expectedDer));
-			assertEquals(expectedDer, der, 0.001);
+			System.out.println("  der " + nf.format(der) + " cf " + nf.format(expectedDer));
+			assertEquals(expectedDer, der, 0.0001);
 			in = zeroIn.readLine();
 		}
 
 		zeroIn.close();
+		zetaIn.close();
     }
 	
     /**
