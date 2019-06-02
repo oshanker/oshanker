@@ -29,9 +29,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import javafx.util.Pair;
+
 
 import riemann.Gram;
-import riemann.Interpolate;
 import riemann.Riemann;
 import riemann.Riemann.GramInfo;
 import riemann.Rosser;
@@ -256,8 +257,7 @@ public class GSeriesTest {
     public void test1E12Zeros() throws Exception{
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		double t0 = 244.021159171564;
-		long gramIndex = Gram.gramIndex(offset, t0);
-		System.out.println(nf.format(t0) + ", " + gramIndex);
+		System.out.println(nf.format(t0) + ", " + Gram.gramIndex(offset, t0));
 		double zero = 244.920599505825;
 		double expectedDer = 23.85164367971759;
 		int currentIndex = 40;
@@ -265,16 +265,17 @@ public class GSeriesTest {
 		GSeries gAtBeta = calculateGSeriesE12(t0, initialPadding);
 		
 		double[] gAtGram = gAtBeta.gAtBeta[currentIndex];
-		double riemannZeta = gAtBeta.riemannZeta(gAtGram, t0);
-		System.out.println(t0 + ", " + riemannZeta + ", " + gAtBeta.spacing);
-		assertEquals(1.92649807303971, riemannZeta, 0.0000015);
+		Pair<double[], Double> fAndZGram = gAtBeta.fAndZ(gAtGram, t0);
+		System.out.println(t0 + ", " + fAndZGram.getValue() + ", " + gAtBeta.spacing);
+		assertEquals(1.92649807303971, fAndZGram.getValue(), 0.0000015);
 		
+		double correction = gAtBeta.correctionAtT(zero);
         String zetaFile = "data/zetaE12.csv";
         BufferedReader zetaIn = 
                 new BufferedReader(new FileReader(zetaFile));
-        String input = zetaIn.readLine();
+        String Zinput = zetaIn.readLine();
         for (int i = 0; i < 2; i++) {
-        	input = zetaIn.readLine();
+        	Zinput = zetaIn.readLine();
 		}
 		String zerosFile = "data/gzetaE12/zerosE12.csv";
 		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
@@ -283,36 +284,51 @@ public class GSeriesTest {
 			in = zeroIn.readLine();
 		}
 
+		int gramIndex = Integer.MAX_VALUE;
 		while (in != null) {
 			String[] line = in.split(",\\s+");
 			zero = Double.parseDouble(line[0]);
 			expectedDer = Double.parseDouble(line[1]);
 			while(zero>t0) {
-	            String[] parsed = input.split(",");
+	            String[] parsed = Zinput.split(",");
 	            double zetaSaved =  Double.parseDouble(parsed[1]);  
-				assertEquals(zetaSaved, riemannZeta, 0.000001);
-	        	input = zetaIn.readLine();
+	            gramIndex = Integer.parseInt(parsed[0]);
+				assertEquals(zetaSaved, fAndZGram.getValue(), 0.000001);
+	        	Zinput = zetaIn.readLine();
 
-	        	System.out.println("*Gram " + parsed[0] + " " + t0 + " " + riemannZeta);
+	        	System.out.println("*Gram " + gramIndex + " " + t0 + " " +  fAndZGram.getValue());
+	        	System.out.println("*F " +   Arrays.toString(fAndZGram.getKey()));
 				t0 += 2*gAtBeta.spacing;
 				currentIndex += 2;
 				gAtGram = gAtBeta.gAtBeta[currentIndex];
-				riemannZeta = gAtBeta.riemannZeta(gAtGram, t0);
+				fAndZGram = gAtBeta.fAndZ(gAtGram, t0);
 			}
 
-			double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero, 4, initialPadding, 1.6E-9, false);
-			double zeta = gAtBeta.riemannZeta(gFromBLFI, zero);
-			System.out.println("zero " + zero + " zeta " + nf.format(zeta) + " cf 0.0");
+			double[] gFromBLFI0 = gAtBeta.diagnosticBLFISumWithOffset(zero, 4, 
+					initialPadding, 1.6E-9, false);
+			double theta = gAtBeta.theta(zero);
+			double cos = Math.cos(theta);
+			double sin = Math.sin(theta);
+			
+			Pair<double[], Double> fAndZero = gAtBeta.fAndZ(gFromBLFI0, zero);
+			double zeta = fAndZero.getValue();
+			double[] f = fAndZero.getKey();
+        	System.out.println("*F zero" +   Arrays.toString(fAndZero.getKey()));
+			System.out.println("zero " + zero + " zeta " + nf.format(zeta ) + " cf 0.0");
 			assertEquals(0.0, zeta, 0.000001);
-			double delta = 0.001 * gAtBeta.spacing;
-			gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero + delta, 4, initialPadding, 1.6E-9, false);
-			double zetaplus = gAtBeta.riemannZeta(gFromBLFI, zero + delta);
-			gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset(zero - delta, 4, initialPadding, 1.6E-9, false);
-			double zetaminus = gAtBeta.riemannZeta(gFromBLFI, zero - delta);
-			double der = (zetaplus - zetaminus) / (2 * delta);
-			System.out.println("  der " + nf.format(der) + " cf " + nf.format(expectedDer));
-			assertEquals(expectedDer, der, 0.0001);
+			
+			Pair<double[], Double> fZprime = gAtBeta.der(zero, initialPadding);
+			double der = fZprime.getValue();
+			double[] fprime = fZprime.getKey();
+			double zPrime = 2*(cos*fprime[0] + sin*fprime[1])
+					+ 2*gAtBeta.lnsqrtArg1*(-sin*f[0] + cos*f[1])
+					;
+			assertEquals(expectedDer, zPrime, 0.00003);
+			assertEquals(expectedDer, der, 0.00003);
 			in = zeroIn.readLine();
+//			if (gramIndex>1) {
+//				break;
+//			}
 		}
 
 		zeroIn.close();

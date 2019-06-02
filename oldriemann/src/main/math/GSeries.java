@@ -3,6 +3,7 @@ package math;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import javafx.util.Pair;
 import riemann.Gram;
 import riemann.Riemann;
 
@@ -42,11 +43,29 @@ public class GSeries {
 	
     public int midIdx;
 	
+    /**
+     * create GSeries with pre-calculated gAtBeta
+     * @param k0
+     * @param k1
+     * @param offset
+     * @param begin
+     * @param incr
+     * @param gAtBeta
+     */
     public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, double[][] gAtBeta){
         this(k0, k1, offset, begin, incr);
         this.gAtBeta = gAtBeta;
     }
 
+    /**
+     * Calculate GSeries at R points
+     * @param k0
+     * @param k1
+     * @param offset
+     * @param begin
+     * @param incr
+     * @param R
+     */
 	public GSeries(int k0, int k1, BigDecimal offset, double begin, double incr, int R){
 		this(k0, k1, offset, begin, incr);
         BigDecimal tBaseBD = new BigDecimal(begin, Gram.mc).add(
@@ -54,6 +73,14 @@ public class GSeries {
         gAtBeta = calculateGSeries( R, tBaseBD);
 	}
 
+	/**
+	 * initialize basic constants
+	 * @param k0
+	 * @param k1
+	 * @param offset
+	 * @param begin
+	 * @param incr
+	 */
     public  GSeries(int k0, int k1, BigDecimal offset, double begin, double incr) {
         this.k0 = k0;
 		this.begin = begin;
@@ -117,9 +144,33 @@ public class GSeries {
     
 	
 	public double riemannZeta(double[] g, double tincr){
+		return fAndZ(g, tincr).getValue();
+	}
+
+	/**
+	 * Derivative
+	 * @param zero
+	 * @param initialPadding
+	 * @return
+	 */
+	public Pair<double[], Double> der(double zero, final int initialPadding) {
+		double delta = 0.001 * spacing;
+		double[] gFromBLFI1 = diagnosticBLFISumWithOffset(zero + delta, 4, initialPadding, 1.6E-9, false);
+		Pair<double[], Double> fAndZplus = fAndZ(gFromBLFI1, zero + delta);
+		double zetaplus = fAndZplus.getValue();
+		gFromBLFI1 = diagnosticBLFISumWithOffset(zero - delta, 4, initialPadding, 1.6E-9, false);
+		Pair<double[], Double> fAndZminus = fAndZ(gFromBLFI1, zero - delta);
+		double zetaminus = fAndZminus.getValue();
+		double der = (zetaplus - zetaminus) / (2 * delta);
+		double fr = (fAndZplus.getKey()[0] - fAndZminus.getKey()[0]) / (2 * delta);
+		double fi = (fAndZplus.getKey()[1] - fAndZminus.getKey()[1]) / (2 * delta);
+		double[] fprime = {fr, fi};
+		return new Pair<double[], Double>(fprime, der);
+	}
+	
+	public Pair<double[], Double> fAndZ(double[] g, double tincr){
+		double theta = theta(tincr);
 		tincr -= begin;
-		double theta = (basetheta + lnsqrtArg1*tincr
-				+tincr*tincr/(4*tbase))%(2*Math.PI);
 		double predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
 		double[] fAtBeta = new double[2];
 		double argalphat = (argalphaBase + alpha*tincr)%(2*Math.PI);
@@ -131,7 +182,20 @@ public class GSeries {
 		double rotatedSum = 2*( Math.cos(theta)*fAtBeta [0]+Math.sin(theta)*fAtBeta[1]);
 		double correction = GSeries.correction( predictedSqrtArg1);
 		double zeta = rotatedSum + correction;
-		return zeta;
+		return new Pair<double[], Double>(fAtBeta, zeta);
+	}
+
+	public double theta(double tincr) {
+		tincr -= begin;
+		double theta = (basetheta + lnsqrtArg1*tincr
+				+tincr*tincr/(4*tbase))%(2*Math.PI);
+		return theta;
+	}
+	
+	public  double correctionAtT( double tincr ) {
+		tincr -= begin;
+		double predictedSqrtArg1 = basesqrtArg1 + dsqrtArg1*tincr;
+		return GSeries.correction( predictedSqrtArg1);
 	}
 	
 	public static double correction( double sqrtArg1 ) {
@@ -270,7 +334,8 @@ public class GSeries {
         return h*sin;
 	}
 
-	public  double[] diagnosticBLFISumWithOffset( double t0, int M, int terms, double tolerance, boolean print) {
+	public  double[] diagnosticBLFISumWithOffset( double t0, int M, 
+			int terms, double tolerance, boolean print) {
 		double[] sum = new double[]{0,0};
 		double[] oldSum = new double[]{0,0};
 		midIdx = (int) ((t0-begin)/spacing);
