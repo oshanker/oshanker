@@ -168,7 +168,7 @@ public class GSeriesTest {
         }
 	}
     
-    @Test @Ignore
+    @Test //@Ignore
     public void testWriteZetaPhiE12() throws Exception{
     	//zetaQuantile.R
     	int k = 6;
@@ -178,10 +178,12 @@ public class GSeriesTest {
             file.getParentFile().mkdirs();
         }
         PrintWriter out = new PrintWriter(file);
+        double cross = 0;
         for (int i = 0; i < gramE12.length; i++) {
-            writeZetaPhi(i, out, k );
+            cross += writeZetaPhi(i, out, k );
         }
         out.close();
+        System.out.println("** cross " + cross/gramE12.length);
     }
     
     @Test @Ignore
@@ -376,7 +378,7 @@ public class GSeriesTest {
         out.close();
     }
 
-    private void writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
+    private double writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getGSeries(t0, offset);
@@ -391,6 +393,8 @@ public class GSeriesTest {
         System.out.println("****** " + (gramIndex-3945951431271L));
         
         double gram = firstGram-incr;
+        double cross = 0;
+        double saved = 0;
         for (int i = 0; i < N; i++) {
             if(i>0 && i*3%N == 0){
                 tvalsi = tvalsi.add(BigDecimal.valueOf(N*incr/3), Gram.mc);
@@ -404,9 +408,16 @@ public class GSeriesTest {
                 if(i%2==0){
                     zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     oddsum[j] += zeta[k+j];
+                    if(i>0 && j==0) {
+                        cross += saved*zeta[k];
+                    }
                 } else {
                     zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     evensum[j] += zeta[j];
+                    if( j==0) {
+                        cross += zeta[0]*zeta[k];
+                    	saved = zeta[0];
+                    }
                 }
             }
             if(i%2==1){
@@ -417,6 +428,8 @@ public class GSeriesTest {
                 out.println();
             }
         }
+        cross /= N;
+        System.out.println("**cross " + cross);
         for (int j = 0; j < k; j++) {
             assertEquals(-2.00*Math.cos(j*Math.PI/k), 2*oddsum[j]/N, 0.05);
             assertEquals(2.00*Math.cos(j*Math.PI/k), 2*evensum[j]/N, 0.05);
@@ -424,6 +437,7 @@ public class GSeriesTest {
         long actual = (gramIndex-3945951431271L)%N;
 //        assertTrue("index " + actual, actual==0 || actual==1);
         System.out.println(firstGram + incr*N);
+        return cross;
     }
 
     private GSeries getGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
