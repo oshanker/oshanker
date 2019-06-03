@@ -168,24 +168,6 @@ public class GSeriesTest {
         }
 	}
     
-    @Test //@Ignore
-    public void testWriteZetaPhiE12() throws Exception{
-    	//zetaQuantile.R
-    	int k = 6;
-        File file = new File("out/gzetaE12/gzeta_calc"
-        		+ k + ".csv");
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        PrintWriter out = new PrintWriter(file);
-        double cross = 0;
-        for (int i = 0; i < gramE12.length; i++) {
-            cross += writeZetaPhi(i, out, k );
-        }
-        out.close();
-        System.out.println("** cross " + cross/gramE12.length);
-    }
-    
     @Test @Ignore
     public void testCorrelationE12() throws Exception{
         nf.setMinimumFractionDigits(3);
@@ -213,7 +195,37 @@ public class GSeriesTest {
         out.close();
     }
 
-    private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
+    @Test //@Ignore
+	public void testWriteZetaPhiE12() throws Exception{
+		//zetaQuantile.R
+		int k = 6;
+	    File file = new File("out/gzetaE12/gzeta_calc"
+	    		+ k + ".csv");
+	    if (!file.getParentFile().exists()) {
+	        file.getParentFile().mkdirs();
+	    }
+	    //PrintWriter out = new PrintWriter(file);
+	    PrintWriter out = null;
+        final double[][] gramSum = new double[2][2*k];
+		for (int i = 0; i < gramE12.length; i++) {
+			double[][] cross = writeZetaPhi(i, out, k );
+	        for (int j = 0; j < 2*k; j++) {
+	        	gramSum[0][j] += cross[0][j];
+	        	gramSum[1][j] += cross[1][j];
+	        }
+	    }
+		double crossNorm = 2*(1.577)*gramE12.length;
+        for (int j = 0; j < 2*k; j++) {
+        	gramSum[0][j] /= gramE12.length;
+        	gramSum[1][j] /= crossNorm;
+            assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.001);
+            System.out.print(" " + nf.format(gramSum[1][j]));
+        }
+	    if(out != null) {out.close();}
+	    System.out.println();
+	}
+
+	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin =  t0;
@@ -255,7 +267,69 @@ public class GSeriesTest {
         return gAtBeta;
     }
     
-   @Test //@Ignore 
+   private double[][] writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
+	        double t0 = gramE12[sampleIndex][0];
+	        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+	        GSeries gAtBeta = getGSeries(t0, offset);
+	        //double[] oddsum = new double[k], evensum = new double[k];
+	        final double[] zeta = new double[2*k];
+	        final double firstGram = Gram.gram(offset, t0 + 0.001 );
+	        final int N = 29999;
+	        long gramIndex = Gram.gramIndex(offset, firstGram);
+	        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+firstGram)/(2*Math.PI)));
+	        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*incr/6), Gram.mc);
+	        incr = Gram.gramInterval(tvalsi);
+	        System.out.println("****** " + (gramIndex-3945951431271L));
+	        
+	        double gram = firstGram-incr;
+	        final double[][] gramSum = new double[2][2*k];
+	        double[] saved =  new double[k];
+	        for (int i = 0; i < N; i++) {
+	            if(i>0 && i*3%N == 0){
+	                tvalsi = tvalsi.add(BigDecimal.valueOf(N*incr/3), Gram.mc);
+	                incr = Gram.gramInterval(tvalsi);
+	            }
+	            gram += incr;
+	            for (int j = 0; j < k; j++) {
+	                double t = gram + j*incr/k;
+	                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
+	                        t, 4, 40, 1.6E-9, false);
+	                if(i%2==0){
+	                	// we begin with odd.
+	                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
+	                    gramSum[0][j+k] += zeta[k+j];
+	                    if(i>0 ) {
+	                    	gramSum[1][j+k] += saved[j]*zeta[j+k];
+	                    }
+	                } else {
+	                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
+	                    gramSum[0][j] += zeta[j];
+					    gramSum[1][j] += zeta[j] * zeta[j+k];
+					    saved[j] = zeta[j];
+	                }
+	            }
+	            if(out!=null && i%2==1){
+	                for (int j = 0; j < 2*k; j++) {
+	                    if(j>0){out.print(", ");}
+	                    out.print(nf.format(zeta[j]));
+	                }
+	                out.println();
+	            }
+	        }
+	        for (int j = 0; j < 2*k; j++) {
+	        	gramSum[0][j] *= 2.0/N;
+	        	gramSum[1][j] *= 2.0/N;
+	        }
+	        for (int j = 0; j < 2*k; j++) {
+	            assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.05);
+	        }
+	        long actual = (gramIndex-3945951431271L)%N;
+	//        assertTrue("index " + actual, actual==0 || actual==1);
+	        System.out.println(firstGram + incr*N);
+	        return gramSum;
+	    }
+
+    @Test //@Ignore 
     public void test1E12Zeros() throws Exception{
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		double t0 = 244.021159171564;
@@ -376,68 +450,6 @@ public class GSeriesTest {
             		", " + nf.format(fAtBeta[2*i+1][1]));
         }
         out.close();
-    }
-
-    private double writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
-        double t0 = gramE12[sampleIndex][0];
-        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-        GSeries gAtBeta = getGSeries(t0, offset);
-        double[] oddsum = new double[k], evensum = new double[k];
-        final double[] zeta = new double[2*k];
-        final double firstGram = Gram.gram(offset, t0 + 0.001 );
-        final int N = 29999;
-        long gramIndex = Gram.gramIndex(offset, firstGram);
-        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+firstGram)/(2*Math.PI)));
-        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*incr/6), Gram.mc);
-        incr = Gram.gramInterval(tvalsi);
-        System.out.println("****** " + (gramIndex-3945951431271L));
-        
-        double gram = firstGram-incr;
-        double cross = 0;
-        double saved = 0;
-        for (int i = 0; i < N; i++) {
-            if(i>0 && i*3%N == 0){
-                tvalsi = tvalsi.add(BigDecimal.valueOf(N*incr/3), Gram.mc);
-                incr = Gram.gramInterval(tvalsi);
-            }
-            gram += incr;
-            for (int j = 0; j < k; j++) {
-                double t = gram + j*incr/k;
-                double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
-                        t, 4, 40, 1.6E-9, false);
-                if(i%2==0){
-                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
-                    oddsum[j] += zeta[k+j];
-                    if(i>0 && j==0) {
-                        cross += saved*zeta[k];
-                    }
-                } else {
-                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
-                    evensum[j] += zeta[j];
-                    if( j==0) {
-                        cross += zeta[0]*zeta[k];
-                    	saved = zeta[0];
-                    }
-                }
-            }
-            if(i%2==1){
-                for (int j = 0; j < 2*k; j++) {
-                    if(j>0){out.print(", ");}
-                    out.print(nf.format(zeta[j]));
-                }
-                out.println();
-            }
-        }
-        cross /= N;
-        System.out.println("**cross " + cross);
-        for (int j = 0; j < k; j++) {
-            assertEquals(-2.00*Math.cos(j*Math.PI/k), 2*oddsum[j]/N, 0.05);
-            assertEquals(2.00*Math.cos(j*Math.PI/k), 2*evensum[j]/N, 0.05);
-        }
-        long actual = (gramIndex-3945951431271L)%N;
-//        assertTrue("index " + actual, actual==0 || actual==1);
-        System.out.println(firstGram + incr*N);
-        return cross;
     }
 
     private GSeries getGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
