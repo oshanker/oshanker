@@ -211,18 +211,26 @@ public class GSeriesTest {
 			double[][] cross = writeZetaPhi(i, out, k );
 	        for (int j = 0; j < 2*k; j++) {
 	        	gramSum[0][j] += cross[0][j];
-	        	gramSum[1][j] += cross[1][j];
+	            for (int i1 = 1; i1 < gramSum.length; i1++) {
+	         	   gramSum[i1][j] += cross[i1][j];
+	            }
 	        }
 	    }
 		double crossNorm = 2*(1.577)*gramE12.length;
         for (int j = 0; j < 2*k; j++) {
         	gramSum[0][j] /= gramE12.length;
-        	gramSum[1][j] /= crossNorm;
             assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.001);
-            System.out.print(" " + nf.format(gramSum[1][j]));
+            for (int i = 1; i < gramSum.length; i++) {
+        	   gramSum[i][j] /= crossNorm;
+            }
         }
+        for (int i = 0; i < gramSum.length; i++) {
+            for (int j = 0; j < 2*k; j++) {
+                System.out.print(" " + nf.format(gramSum[i][j]));
+            }
+    	    System.out.println();
+		}
 	    if(out != null) {out.close();}
-	    System.out.println();
 	}
 
 	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
@@ -267,7 +275,7 @@ public class GSeriesTest {
         return gAtBeta;
     }
     
-   private double[][] writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
+    private double[][] writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
 	        double t0 = gramE12[sampleIndex][0];
 	        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
 	        GSeries gAtBeta = getGSeries(t0, offset);
@@ -298,12 +306,14 @@ public class GSeriesTest {
 	                	// we begin with odd.
 	                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
 	                    gramSum[0][j+k] += zeta[k+j];
+	                    
 	                    if(i>0 ) {
 	                    	gramSum[1][j+k] += saved[j]*zeta[j+k];
 	                    }
 	                } else {
 	                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
 	                    gramSum[0][j] += zeta[j];
+	                    
 					    gramSum[1][j] += zeta[j] * zeta[j+k];
 					    saved[j] = zeta[j];
 	                }
@@ -318,7 +328,9 @@ public class GSeriesTest {
 	        }
 	        for (int j = 0; j < 2*k; j++) {
 	        	gramSum[0][j] *= 2.0/N;
-	        	gramSum[1][j] *= 2.0/N;
+	            for (int i1 = 1; i1 < gramSum.length; i1++) {
+		         	   gramSum[i1][j]  *= 2.0/N;
+		        }
 	        }
 	        for (int j = 0; j < 2*k; j++) {
 	            assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.05);
@@ -327,7 +339,7 @@ public class GSeriesTest {
 	//        assertTrue("index " + actual, actual==0 || actual==1);
 	        System.out.println(firstGram + incr*N);
 	        return gramSum;
-	    }
+	}
 
     @Test //@Ignore 
     public void test1E12Zeros() throws Exception{
