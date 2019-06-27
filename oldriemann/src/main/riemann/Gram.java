@@ -252,7 +252,6 @@ public class Gram {
 		BigDecimal sqrtArg1 = Gram.sqrt(arg1, Gram.mc, 1.0E-21);
 		double theta = t.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
 				.subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
-		System.out.println("theta "+ theta+ " t "  + t);
 		return theta;
 	}
 	

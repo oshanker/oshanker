@@ -215,6 +215,8 @@ public class GSeriesTest {
 	         	   gramSum[i1][j] += cross[i1][j];
 	            }
 	        }
+	        System.out.println(nf.format(gramSum[1][0]/(3.154*(i+1))) +
+	        		"\t " + nf.format(gramSum[1][k]/(3.154*(i+1))));
 	    }
 		double crossNorm = 2*(1.577)*gramE12.length;
         for (int j = 0; j < 2*k; j++) {
@@ -287,7 +289,7 @@ public class GSeriesTest {
 	        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+firstGram)/(2*Math.PI)));
 	        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*incr/6), Gram.mc);
 	        incr = Gram.gramInterval(tvalsi);
-	        System.out.println("****** " + (gramIndex-3945951431271L));
+//	        System.out.println("****** " + (gramIndex-3945951431271L));
 	        
 	        double gram = firstGram-incr;
 	        final double[][] gramSum = new double[2][2*k];
@@ -337,7 +339,7 @@ public class GSeriesTest {
 	        }
 	        long actual = (gramIndex-3945951431271L)%N;
 	//        assertTrue("index " + actual, actual==0 || actual==1);
-	        System.out.println(firstGram + incr*N);
+//	        System.out.println(firstGram + incr*N);
 	        return gramSum;
 	}
 
