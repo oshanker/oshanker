@@ -16,6 +16,7 @@ misc/symmetry/zetasymmetry.pdf
 misc/valuedistribution/*/*pdf
 octave-workspace
 octave/out
+python/data/pollution.csv
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
