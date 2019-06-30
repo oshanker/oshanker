@@ -15,9 +15,8 @@ import numpy as np
  
 # https://machinelearningmastery.com/multivariate-time-series-forecasting-lstms-keras/
 # convert series to supervised learning
-def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
-	n_vars = 1 if type(data) is list else data.shape[1]
-	df = DataFrame(data)
+def series_to_supervised(df, n_in=1, n_out=1, dropnan=True):
+	n_vars = df.shape[1]
 	cols, names = list(), list()
 	# input sequence (t-n, ... t-1)
 	for i in range(n_in, 0, -1):
@@ -46,11 +45,15 @@ encoder = LabelEncoder()
 values[:,4] = encoder.fit_transform(values[:,4])
 # ensure all data is float
 values = values.astype('float32')
+dataset = DataFrame(values)
+
+
 # normalize features
-scaler = MinMaxScaler(feature_range=(0, 1))
-scaled = scaler.fit_transform(values)
+scaler_x = MinMaxScaler(feature_range=(0, 1))
+scaler_y = MinMaxScaler(feature_range=(0, 1))
+steps = 1
 # frame as supervised learning
-reframed = series_to_supervised(scaled, 1, 1)
+reframed = series_to_supervised( dataset, steps, 1)
 # drop columns we don't want to predict
 reframed.drop(reframed.columns[[9,10,11,12,13,14,15]], axis=1, inplace=True)
 print(reframed.head())
@@ -63,8 +66,10 @@ test = values[n_train_hours:, :]
 # split into input and outputs
 #drop pollution as predictor if start = 1
 start = 0
-train_X, train_y = train[:, start:-1], train[:, -1]
-test_X, test_y = test[:, start:-1], test[:, -1]
+train_X = scaler_x.fit_transform(train[:, start:-1])
+train_y = scaler_y.fit_transform(train[:, -1].reshape(train.shape[0], 1))
+test_X = scaler_x.fit_transform(test[:, start:-1])
+test_y = scaler_y.fit_transform(test[:, -1].reshape(test.shape[0], 1))
 # reshape input to be 3D [samples, timesteps, features]
 train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
 test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
@@ -73,7 +78,8 @@ print(train_X[0, :], train_y[0])
  
 # design network
 model = Sequential()
-model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2]),activation='relu'))
+model.add(Dense(32,activation='relu'))
 model.add(Dense(1))
 model.compile(loss='mae', optimizer='adam')
 # fit network
@@ -85,21 +91,20 @@ def plot_history():
 	pyplot.plot(history.history['val_loss'], label='test')
 	pyplot.legend()
 	pyplot.show()
+plot_history()
  
 # make a prediction
 plotsize = 10000
 yhat = model.predict(test_X)
-test_X = test_X.reshape((test_X.shape[0], test_X.shape[2]))
 # invert scaling for forecast
-inv_yhat = concatenate((yhat, test_X[:, (1-start):]), axis=1)
-inv_yhat = scaler.inverse_transform(inv_yhat)
+inv_yhat = scaler_y.inverse_transform(yhat)
 inv_yhat = inv_yhat[:,0]
 forecast = inv_yhat[0:plotsize]
 #print("forecast ", inv_yhat[0:5])
 # invert scaling for actual
 test_y = test_y.reshape((len(test_y), 1))
-inv_y = concatenate((test_y, test_X[:, (1-start):]), axis=1)
-inv_y = scaler.inverse_transform(inv_y)
+#inv_y = concatenate((test_y, test_X[:, (1-start):]), axis=1)
+inv_y = scaler_y.inverse_transform(test_y)
 inv_y = inv_y[:,0]
 actual = inv_y[0:plotsize]
 #print("actual ", actual)
