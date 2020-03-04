@@ -1,5 +1,5 @@
-# hello-world
-Parking lot for miscellaneous material like experimental material.
+# oshanker
+git clone https://github.com/oshanker/oshanker.git
 
 A respectable amount of Riemann zeta, Gram Points and Band Limited Functional Interpolation 
 code has built up in this repository. My goal was to have a separate repository for that code.
