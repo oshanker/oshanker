@@ -17,7 +17,11 @@ public class CopyZeroInformationTest {
 
     @Test
     public void testReadSingleZero() throws FileNotFoundException, IOException {
-        File file = new File("out/gzeta" + Interpolate.prefix + "/values.csv");
+        File parent = new File("out/gzeta" + Interpolate.prefix );
+        if(!parent.exists()) {
+        	parent.mkdir();
+        }
+        File file = new File(parent, "values.csv");
         PrintStream out = new PrintStream(file);
         ZeroInfo zeroInput = null;
         int N = 10;

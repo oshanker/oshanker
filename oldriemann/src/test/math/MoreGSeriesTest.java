@@ -419,7 +419,7 @@ public class MoreGSeriesTest {
 //        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
     }
     
-    @Test 
+    @Test @Ignore("file not generated")
     public void testMode() throws Exception{
     	int k = 80;
     	int[][] zetaHist = new int[k+2][2];
