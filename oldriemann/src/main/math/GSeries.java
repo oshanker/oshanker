@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import javafx.util.Pair;
 import riemann.Gram;
+import riemann.Interpolate;
 import riemann.Riemann;
 
 /**
@@ -141,7 +142,22 @@ public class GSeries {
         this.gAtBeta[index][0] += value[0];
         this.gAtBeta[index][1] += value[1];
     }
+
+    public  double evaluateDer(double zero, final int initialPadding) {
+        double delta = 0.001*spacing;
+        double zetaplus = evaluateZeta(zero+delta, initialPadding );
+        double zetaminus = evaluateZeta(zero-delta, initialPadding);
+        double der = (zetaplus-zetaminus)/(2*delta);
+        return der;
+    }
     
+    public  double evaluateZeta(double zero, final int initialPadding) {
+        double[] gFromBLFI = diagnosticBLFISumWithOffset( zero, 4, 
+                initialPadding, 1.6E-9, false);
+        double zeta = riemannZeta(gFromBLFI, zero);
+        return zeta;
+    }
+
 	
 	public double riemannZeta(double[] g, double tincr){
 		return fAndZ(g, tincr).getValue();

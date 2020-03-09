@@ -33,6 +33,7 @@ import javafx.util.Pair;
 
 
 import riemann.Gram;
+import riemann.Interpolate;
 import riemann.Riemann;
 import riemann.Riemann.GramInfo;
 import riemann.Rosser;
@@ -342,6 +343,54 @@ public class GSeriesTest {
 //	        System.out.println(firstGram + incr*N);
 	        return gramSum;
 	}
+    
+    /**
+     * Test calculate Z using F, G from saved file
+     * @throws Exception
+     */
+	@Test //@Ignore
+	public void testGetGSeries() throws Exception{
+		double t = 247.149;
+		int idx = findFile(t);
+		
+        double t0 = gramE12[idx][0];
+        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        GSeries gAtBeta = getGSeries(t0, offset);
+		String zerosFile = "data/gzetaE12/zerosE12.csv";
+		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
+		String in = zeroIn.readLine();
+		for (int i = 0; i < 1; i++) {
+			in = zeroIn.readLine();
+		}
+		while (in != null) {
+			String[] line = in.split(",\\s+");
+			double zero = Double.parseDouble(line[0]);
+			double expectedDer = Double.parseDouble(line[1]);
+			double zeta = gAtBeta.evaluateZeta(zero, 40 );
+			assertEquals(0.0, zeta, 0.000001);
+			double der = gAtBeta.evaluateDer(zero, 40 );
+			assertEquals(expectedDer, der, 0.00006);
+			in = zeroIn.readLine();
+		}		
+		zeroIn.close();
+        System.out.println("done");
+	}
+
+	public int findFile(double t) {
+		int idx = 0;
+		if(t<gramE12[0][0]) {
+			throw new IllegalArgumentException("out of range: " + t);
+		}
+		if(t>gramE12[gramE12.length-1][1]) {
+			throw new IllegalArgumentException("out of range: " + t);
+		}
+		if(t>gramE12[gramE12.length-1][0]) {
+			idx = gramE12.length-1;
+		} else while(t>gramE12[idx+1][0]) {
+			idx++;
+		}
+		return idx;
+	}
 
     @Test //@Ignore 
     public void test1E12Zeros() throws Exception{
@@ -535,7 +584,7 @@ public class GSeriesTest {
 		System.out.println("** g  : " + Arrays.toString(gFromBLFI) + " zeta " + zeta);
 		assertTrue(Math.abs(zeta) < 0.000001);
     }
-
+	
     private int testCorrelationE12(int sampleIndex, PrintWriter out, double[][] prod) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
