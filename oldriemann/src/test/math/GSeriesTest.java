@@ -386,7 +386,7 @@ public class GSeriesTest {
 		}
 		if(t>gramE12[gramE12.length-1][0]) {
 			idx = gramE12.length-1;
-		} else while(t>gramE12[idx+1][0]) {
+		} else while(t>=gramE12[idx+1][0]) {
 			idx++;
 		}
 		return idx;
