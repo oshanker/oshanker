@@ -1,3 +1,3 @@
 #R
-source("~/home/hello-world/R/plotTest.R")
+source("./plotTest.R")
 q()
