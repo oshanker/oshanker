@@ -201,6 +201,9 @@ public class GSeriesTest {
 		//zetaQuantile.R
     	
     	//calculate Z, mean(Z), store Z
+    	//This could provide input for zetaHist.R 
+    	// after that is run, use the testSymmetryRelations method (MoreGseriesTest)
+    	//zetaQuantile.R
     	
 		int k = 6;
 	    File file = new File("out/gzetaE12/gzeta_calc"
@@ -208,8 +211,8 @@ public class GSeriesTest {
 	    if (!file.getParentFile().exists()) {
 	        file.getParentFile().mkdirs();
 	    }
-	    //PrintWriter out = new PrintWriter(file);
-	    PrintWriter out = null;
+	    //PrintWriter outputZ = new PrintWriter(file);
+	    PrintWriter outputZ = null;
         final double[][] gramSum = new double[1][2*k];
         
         //if we want cross-product
@@ -217,7 +220,7 @@ public class GSeriesTest {
         
 		for (int i = 0; i < gramE12.length; i++) {
 	        double[][] cross = new double[gramSum.length][2*k];
-			writeZetaPhi(i, out, cross);
+			writeZetaPhi(i, outputZ, cross);
 	        for (int j = 0; j < 2*k; j++) {
 	        	gramSum[0][j] += cross[0][j];
 	            for (int i1 = 1; i1 < gramSum.length; i1++) {
@@ -244,7 +247,7 @@ public class GSeriesTest {
             }
     	    System.out.println();
 		}
-	    if(out != null) {out.close();}
+	    if(outputZ != null) {outputZ.close();}
 	}
 
 	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
@@ -289,7 +292,7 @@ public class GSeriesTest {
         return gAtBeta;
     }
     
-    private double[][] writeZetaPhi(int sampleIndex, PrintWriter out, double[][] gramSum
+    private double[][] writeZetaPhi(int sampleIndex, PrintWriter outputZ, double[][] gramSum
     		) throws Exception{
 	        double t0 = gramE12[sampleIndex][0];
 	        final boolean calculateCross = gramSum.length > 1;
@@ -337,12 +340,12 @@ public class GSeriesTest {
 					    saved[j] = zeta[j];
 	                }
 	            }
-	            if(out!=null && i%2==1){
+	            if(outputZ!=null && i%2==1){
 	                for (int j = 0; j < 2*k; j++) {
-	                    if(j>0){out.print(", ");}
-	                    out.print(nf.format(zeta[j]));
+	                    if(j>0){outputZ.print(", ");}
+	                    outputZ.print(nf.format(zeta[j]));
 	                }
-	                out.println();
+	                outputZ.println();
 	            }
 	        }
 	        for (int j = 0; j < 2*k; j++) {
@@ -354,7 +357,7 @@ public class GSeriesTest {
 	        for (int j = 0; j < 2*k; j++) {
 	            assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.05);
 	        }
-	        long actual = (gramIndex-3945951431271L)%N;
+	//        long actual = (gramIndex-3945951431271L)%N;
 	//        assertTrue("index " + actual, actual==0 || actual==1);
 //	        System.out.println(firstGram + incr*N);
 	        return gramSum;
