@@ -199,6 +199,9 @@ public class GSeriesTest {
     @Test //@Ignore
 	public void testWriteZetaPhiE12() throws Exception{
 		//zetaQuantile.R
+    	
+    	//calculate Z, mean(Z), store Z
+    	
 		int k = 6;
 	    File file = new File("out/gzetaE12/gzeta_calc"
 	    		+ k + ".csv");
@@ -207,17 +210,22 @@ public class GSeriesTest {
 	    }
 	    //PrintWriter out = new PrintWriter(file);
 	    PrintWriter out = null;
-        final double[][] gramSum = new double[2][2*k];
+        final double[][] gramSum = new double[1][2*k];
+        
+        //if we want cross-product
+        //final double[][] gramSum = new double[2][2*k];
+        
 		for (int i = 0; i < gramE12.length; i++) {
-			double[][] cross = writeZetaPhi(i, out, k );
+	        double[][] cross = new double[gramSum.length][2*k];
+			writeZetaPhi(i, out, cross);
 	        for (int j = 0; j < 2*k; j++) {
 	        	gramSum[0][j] += cross[0][j];
 	            for (int i1 = 1; i1 < gramSum.length; i1++) {
 	         	   gramSum[i1][j] += cross[i1][j];
 	            }
 	        }
-	        System.out.println(nf.format(gramSum[1][0]/(3.154*(i+1))) +
-	        		"\t " + nf.format(gramSum[1][k]/(3.154*(i+1))));
+//	        System.out.println(nf.format(gramSum[1][0]/(3.154*(i+1))) +
+//	        		"\t " + nf.format(gramSum[1][k]/(3.154*(i+1))));
 	    }
 		double crossNorm = 2*(1.577)*gramE12.length;
         for (int j = 0; j < 2*k; j++) {
@@ -230,6 +238,9 @@ public class GSeriesTest {
         for (int i = 0; i < gramSum.length; i++) {
             for (int j = 0; j < 2*k; j++) {
                 System.out.print(" " + nf.format(gramSum[i][j]));
+                if(i==0) {
+                    assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.001);
+                }
             }
     	    System.out.println();
 		}
@@ -278,22 +289,25 @@ public class GSeriesTest {
         return gAtBeta;
     }
     
-    private double[][] writeZetaPhi(int sampleIndex, PrintWriter out, int k) throws Exception{
+    private double[][] writeZetaPhi(int sampleIndex, PrintWriter out, double[][] gramSum
+    		) throws Exception{
 	        double t0 = gramE12[sampleIndex][0];
+	        final boolean calculateCross = gramSum.length > 1;
 	        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
 	        GSeries gAtBeta = getGSeries(t0, offset);
 	        //double[] oddsum = new double[k], evensum = new double[k];
-	        final double[] zeta = new double[2*k];
 	        final double firstGram = Gram.gram(offset, t0 + 0.001 );
 	        final int N = 29999;
 	        long gramIndex = Gram.gramIndex(offset, firstGram);
 	        double incr  = 2*Math.PI/(Math.log((offset.doubleValue()+firstGram)/(2*Math.PI)));
 	        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(firstGram+ N*incr/6), Gram.mc);
 	        incr = Gram.gramInterval(tvalsi);
-//	        System.out.println("****** " + (gramIndex-3945951431271L));
+	        System.out.println("****** " + (gramIndex-3945951431271L));
 	        
 	        double gram = firstGram-incr;
-	        final double[][] gramSum = new double[2][2*k];
+	        int k = gramSum[0].length/2;
+	        final double[] zeta = new double[2*k];
+	        //final double[][] gramSum = new double[2][2*k];
 	        double[] saved =  new double[k];
 	        for (int i = 0; i < N; i++) {
 	            if(i>0 && i*3%N == 0){
@@ -310,14 +324,16 @@ public class GSeriesTest {
 	                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
 	                    gramSum[0][j+k] += zeta[k+j];
 	                    
-	                    if(i>0 ) {
+	                    if(calculateCross && i>0 ) {
 	                    	gramSum[1][j+k] += saved[j]*zeta[j+k];
 	                    }
 	                } else {
 	                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
 	                    gramSum[0][j] += zeta[j];
 	                    
-					    gramSum[1][j] += zeta[j] * zeta[j+k];
+	                    if(calculateCross) {
+	                    	gramSum[1][j] += zeta[j] * zeta[j+k];
+	                    }
 					    saved[j] = zeta[j];
 	                }
 	            }
