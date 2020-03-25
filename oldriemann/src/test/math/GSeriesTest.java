@@ -206,21 +206,30 @@ public class GSeriesTest {
     	//zetaQuantile.R
     	
 		int k = 6;
-	    File file = new File("out/gzetaE12/gzeta_calc"
-	    		+ k + ".csv");
-	    if (!file.getParentFile().exists()) {
-	        file.getParentFile().mkdirs();
+		File baseDir = new File("out/gzetaE12/");
+	    File outputZFile = new File(baseDir,
+	    		"gzeta_calc" + k + ".csv");
+	    if (!outputZFile.getParentFile().exists()) {
+	        outputZFile.getParentFile().mkdirs();
 	    }
-	    //PrintWriter outputZ = new PrintWriter(file);
-	    PrintWriter outputZ = null;
+	    PrintWriter outputZ = new PrintWriter(outputZFile);
+	    //PrintWriter outputZ = null;
+	    
         final double[][] gramSum = new double[1][2*k];
+        Histogram[] hist = new Histogram[2*k];
+		double min = -5;
+		double max = 5;
+		int binCount = 10;
+        for (int i = 0; i < hist.length; i++) {
+			hist[i] = new Histogram(min, max, binCount);
+		}
         
         //if we want cross-product
         //final double[][] gramSum = new double[2][2*k];
         
 		for (int i = 0; i < gramE12.length; i++) {
 	        double[][] cross = new double[gramSum.length][2*k];
-			writeZetaPhi(i, outputZ, cross);
+			writeZetaPhi(i, outputZ, cross, hist);
 	        for (int j = 0; j < 2*k; j++) {
 	        	gramSum[0][j] += cross[0][j];
 	            for (int i1 = 1; i1 < gramSum.length; i1++) {
@@ -247,6 +256,11 @@ public class GSeriesTest {
             }
     	    System.out.println();
 		}
+        for (int j = 0; j < 2*k; j++) {
+            System.out.print(" " + nf.format(hist[j].mean()));
+            assertEquals(2.00*Math.cos(j*Math.PI/k), hist[j].mean(), 0.001);
+        }
+	    System.out.println();
 	    if(outputZ != null) {outputZ.close();}
 	}
 
@@ -292,8 +306,8 @@ public class GSeriesTest {
         return gAtBeta;
     }
     
-    private double[][] writeZetaPhi(int sampleIndex, PrintWriter outputZ, double[][] gramSum
-    		) throws Exception{
+    private double[][] writeZetaPhi(int sampleIndex, PrintWriter outputZ, double[][] gramSum, 
+    		Histogram[] hist) throws Exception{
 	        double t0 = gramE12[sampleIndex][0];
 	        final boolean calculateCross = gramSum.length > 1;
 	        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
@@ -326,13 +340,14 @@ public class GSeriesTest {
 	                	// we begin with odd.
 	                    zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
 	                    gramSum[0][j+k] += zeta[k+j];
-	                    
+	                    hist[j+k].addPoint(zeta[k+j]);
 	                    if(calculateCross && i>0 ) {
 	                    	gramSum[1][j+k] += saved[j]*zeta[j+k];
 	                    }
 	                } else {
 	                    zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
 	                    gramSum[0][j] += zeta[j];
+	                    hist[j].addPoint(zeta[j]);
 	                    
 	                    if(calculateCross) {
 	                    	gramSum[1][j] += zeta[j] * zeta[j+k];
