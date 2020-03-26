@@ -15,7 +15,7 @@ public class Histogram {
 	final double max;
 	final int binCount;
 	final int[] hist;
-	private final double delta;
+	public final double delta;
 	
 	double sumSquares = 0;
 	double sumY = 0;
@@ -61,7 +61,7 @@ public class Histogram {
 	}
 
 	public static void main(String[] args) {
-		double sigma = 1.7;
+		double sigma = 1;
 		double mean = 2.3;
 		double min = mean - 3*sigma;
 		double max = mean + 3*sigma;
@@ -88,7 +88,8 @@ public class Histogram {
 		int sum = 0;
 		for(int i = 0; i < hist.hist.length; i++) {
 			sum += hist.hist[i];
-			System.out.println(nf.format(hist.yForIndex(i)) + ", " + hist.hist[i]+ ", " + sum);
+			System.out.println(nf.format(hist.yForIndex(i)) + ", " 
+			  + nf.format((double)hist.hist[i]/hist.sampleSize) + ", " + sum);
 		}		
 
 	}

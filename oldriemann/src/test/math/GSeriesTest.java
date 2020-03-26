@@ -217,9 +217,9 @@ public class GSeriesTest {
 	    
         final double[][] gramSum = new double[1][2*k];
         Histogram[] hist = new Histogram[2*k];
-		double min = -5;
-		double max = 5;
-		int binCount = 10;
+		double min = -9;
+		double max = 9;
+		int binCount = 36;
         for (int i = 0; i < hist.length; i++) {
 			hist[i] = new Histogram(min, max, binCount);
 		}
@@ -261,7 +261,25 @@ public class GSeriesTest {
             assertEquals(2.00*Math.cos(j*Math.PI/k), hist[j].mean(), 0.001);
         }
 	    System.out.println();
-	    if(outputZ != null) {outputZ.close();}
+        for (int j = 0; j < 2*k; j++) {
+            System.out.print(" " + nf.format(hist[j].stdDev()));
+        }
+	    System.out.println();
+	    if(outputZ != null) {
+	    	outputZ.close();
+		    File outputHistFile = new File(baseDir,
+		    		"calcHist" + k + ".csv");
+		    PrintWriter outputHist = new PrintWriter(outputHistFile);
+		    outputHist.println(",0,30,60,90,120,150,180,210,240,270,300,330,");
+			for(int i = 0; i < hist[0].hist.length; i++) {
+		        outputHist.print(nf.format(hist[0].yForIndex(i)+hist[0].delta/2.0) + ", " );
+		        for (int j = 0; j < 2*k; j++) {
+		        	outputHist.print(nf.format((double)hist[j].hist[i]/hist[j].sampleSize) + ", ");
+		        }
+		        outputHist.println();
+			}	
+			outputHist.close();
+	    }
 	}
 
 	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
