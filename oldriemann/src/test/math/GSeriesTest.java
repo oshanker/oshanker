@@ -43,7 +43,8 @@ import riemann.Rosser;
  *
  */
 public class GSeriesTest {
-    static NumberFormat nf = NumberFormat.getInstance();
+    private static final int zRange = 39;
+	static NumberFormat nf = NumberFormat.getInstance();
     static {
         nf.setMinimumFractionDigits(8);
         nf.setMaximumFractionDigits(8);
@@ -196,14 +197,14 @@ public class GSeriesTest {
         out.close();
     }
 
-    @Test @Ignore  
+    @Test //@Ignore  
     public void testSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
     	int k = 12;
         File file = new File("out/gzetaE12/calcHist" + k +  ".csv");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
         int k2 = 2*k;
-        double[][] vals = new double[38][k2];
+        double[][] vals = new double[zRange][k2];
         String in = zeroIn.readLine();
         in = zeroIn.readLine();
         int i = 0;
@@ -218,10 +219,10 @@ public class GSeriesTest {
         zeroIn.close();
         //antisymmetry
         double maxdiff = 0;
-        for (i = 0; i < 38; i++) {
+        for (i = 0; i < zRange; i++) {
             for (int j = 0; j < k; j++) {
                 double diff = -100;
-                final double other = vals[37-i][k+j];
+                final double other = vals[zRange-1-i][k+j];
 				diff = Math.abs( vals[i][j] - other);
 				if(diff> maxdiff) {maxdiff =diff;}
                 System.out.print( j + " " + nf.format(vals[i][j]) + " "
@@ -234,7 +235,7 @@ public class GSeriesTest {
         System.out.println(" | " + maxdiff);
         //symmetry
         maxdiff = 0;
-        for (i = 0; i < 38; i++) {
+        for (i = 0; i < zRange; i++) {
             for (int j = 1; j < k; j++) {
                 double diff = -100;
                 final double other = vals[i][k2-j];
@@ -250,7 +251,7 @@ public class GSeriesTest {
         System.out.println(" | " + maxdiff);
     }
 
-    @Test //@Ignore
+    @Test @Ignore
 	public void testWriteZetaPhiE12() throws Exception{
 		//zetaQuantile.R
     	
@@ -271,9 +272,9 @@ public class GSeriesTest {
 	    
         final double[][] gramSum = new double[1][2*k];
         final Histogram[] hist = new Histogram[2*k];
-        final double min = -9;
-        final double max = 9;
-        final int binCount = 36;
+        final double min = -9.25;
+        final double max = 9.25;
+        final int binCount = zRange-2;
         for (int i = 0; i < hist.length; i++) {
 			hist[i] = new Histogram(min, max, binCount);
 		}
