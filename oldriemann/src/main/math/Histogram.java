@@ -61,17 +61,14 @@ public class Histogram {
 	}
 
 	public static void main(String[] args) {
-		double sigma = 1;
-		double mean = 2.3;
-		double min = mean - 3*sigma;
-		double max = mean + 3*sigma;
-		int binCount = 6;
-		Histogram hist = new Histogram(min, max, binCount);
-		for(double y = min-sigma; y<= max; y += sigma) {
-			System.out.println(nf.format(y) + "," + hist.index(y));
-		}
+		final double sigma = 1;
+		final double mean = 0;
+		final double min = mean - 4.5*sigma +0.25;
+		final double max = mean + 4.5*sigma+0.25;
+		final int binCount = 18;
+		final Histogram hist = new Histogram(min, max, binCount);
 		
-		Random generator = new Random(1781);
+		final Random generator = new Random(1781);
 		double sumSquares = 0;
 		int sampleCount = 1000000;
 		for(int i = 0; i < sampleCount; i++) {
@@ -85,11 +82,31 @@ public class Histogram {
 		System.out.println(" mean " + nf.format(hist.mean()) + ", sigma "
 				+ nf.format(hist.stdDev()));
 		
-		int sum = 0;
-		for(int i = 0; i < hist.hist.length; i++) {
-			sum += hist.hist[i];
-			System.out.println(nf.format(hist.yForIndex(i)) + ", " 
-			  + nf.format((double)hist.hist[i]/hist.sampleSize) + ", " + sum);
+		final double norm = hist.sampleSize*hist.delta;
+		final double predNorm = 1.0/Math.sqrt(2*Math.PI*sigma);
+		double sum = 0;
+		double prevIncrement = 0.0d;
+		double increment = 0.0d;
+		
+		final int length = hist.hist.length;
+		for(int i = 0; i < length; i++) {
+			increment = hist.hist[i];
+			if(i==0) {
+				sum = increment;
+			} else if(i==length-1) {
+				sum += prevIncrement/2.0 + increment;			
+			} else if(i==1) {
+				sum += increment/2.0;			
+			} else {
+				sum += prevIncrement/2.0 + increment/2.0;
+			}
+			prevIncrement = increment;
+			final double x = hist.yForIndex(i)+hist.delta/2;
+			final double pred = Math.exp(-(x-mean)*(x-mean)/(2*sigma))*predNorm;
+			System.out.println(nf.format(x) + ", " 
+			  + nf.format((double)hist.hist[i]/norm) 
+			  + ", " + nf.format(pred)
+			  + ", " + nf.format(((double)sum)/hist.sampleSize));
 		}		
 
 	}
