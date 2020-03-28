@@ -9,7 +9,7 @@ import riemann.Spline.Splinei;
 
 public class SplineTest {
 
-    @Test @Ignore
+    @Test //@Ignore
     public void testSplinei() {
         double xi = 1, h = 0.5;
         double yi = 2, yi1 = 2;
@@ -26,7 +26,51 @@ public class SplineTest {
          * h*(si2+4si1+si)=3*(yi2-yi)
          */
        }
-
+    
+    @Test //@Ignore
+    public void test1() {
+        double xi = 0, x2 = 3;
+        double yi = -40, y2 = -70;
+        double slopei = 5, slope2 = -16;
+        //47.125
+        Splinei splinei = new Splinei(xi, x2, yi, y2, slopei, slope2);
+        assertEquals(-47.125, splinei.eval(1.5), 0.00001);
+    }   
+    
+    @Test //@Ignore
+    public void test2() {
+        double xi = 3, x2 = 6;
+        double yi = -70, y2 = -82;
+        double slopei = -16, slope2 = 17;
+        //47.125
+        Splinei splinei = new Splinei(0, x2-xi, yi, y2, slopei, slope2);
+        assertEquals(-88.375, splinei.eval(1.5), 0.00001);
+    }   
+	    @Test //@Ignore
+	    public void testSplinei2() {
+	        double xi = 0, xmax = 10;
+	        double yi = 0, yi1 = 200;
+	        double slopei = 0, slopei1 = 140;
+	        //x^3-8x^2
+	        //3*x*x-16*x
+	        Splinei splinei = new Splinei(xi, xmax, yi, yi1, slopei, slopei1);
+	        int N = 5;
+	        double[] si = new double[N];
+	        double[] y = new double[N];
+	        for (int i = 0; i < N; i++) {
+	            double x = 2*i;
+	            si[i] = splinei.der(x);
+	            assertEquals(3*x*x-16*x, si[i], 0.0001);
+	            y[i] = splinei.eval(x);
+	            System.out.println(i + ", " + x + ", " + y[i] + ", " 
+	            + si[i] + ", " + splinei.seconddDer(x));
+	        }
+	        /**
+	         * h*(si2+4si1+si)=3*(yi2-yi)
+	         */
+	        System.out.println("From second der at x = 4 :" + (2*(si[3]+4*si[2]+si[1])) + ", " + (3*(y[3]-y[1])));
+	    }
+	    
         @Test
         public void testDerivativeMatching() {
             double xi = 0;

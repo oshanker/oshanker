@@ -64,6 +64,10 @@ public class NormalizedSpline extends BaseNormalizedSpline {
     
     final double[] y;
 
+    /**
+     * x is from 0 to N-1
+     * @param y
+     */
     public NormalizedSpline(double[] y) {
         super(y.length);
         this.y = y;
