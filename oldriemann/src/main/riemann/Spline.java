@@ -8,6 +8,7 @@ public class Spline {
         public final double yi, yi1;
         public final double si, si1;
         //first argument should be 0, (zero based)!!!
+        // or maybe, just take h as the increment?
         public Splinei(double xi, double h, double yi, double yi1,
                  double si, double si1) {
             this.xi = xi;
