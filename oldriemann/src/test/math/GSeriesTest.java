@@ -196,6 +196,60 @@ public class GSeriesTest {
         out.close();
     }
 
+    @Test @Ignore  
+    public void testSymmetryRelations() throws Exception{
+        //check the symmetry and antisymmetry relations from the output of distributions
+    	int k = 12;
+        File file = new File("out/gzetaE12/calcHist" + k +  ".csv");
+        BufferedReader zeroIn = new BufferedReader(new FileReader(file));
+        int k2 = 2*k;
+        double[][] vals = new double[38][k2];
+        String in = zeroIn.readLine();
+        in = zeroIn.readLine();
+        int i = 0;
+        while (in != null) {
+            String[] line = in.split(",");
+            for (int j = 1; j <= vals[i].length; j++) {
+                vals[i][j-1]= Double.parseDouble(line[j].trim());
+            }
+            in = zeroIn.readLine();
+            i++;
+        }
+        zeroIn.close();
+        //antisymmetry
+        double maxdiff = 0;
+        for (i = 0; i < 38; i++) {
+            for (int j = 0; j < k; j++) {
+                double diff = -100;
+                final double other = vals[37-i][k+j];
+				diff = Math.abs( vals[i][j] - other);
+				if(diff> maxdiff) {maxdiff =diff;}
+                System.out.print( j + " " + nf.format(vals[i][j]) + " "
+                		 + nf.format(other) + " " + nf.format(diff) + " | ");
+                //System.out.print(i + " " + j + " " + nf.format(diff) + " ");
+                assertEquals("", 0, diff, 0.003);
+            }
+            System.out.println(" | " );
+        }
+        System.out.println(" | " + maxdiff);
+        //symmetry
+        maxdiff = 0;
+        for (i = 0; i < 38; i++) {
+            for (int j = 1; j < k; j++) {
+                double diff = -100;
+                final double other = vals[i][k2-j];
+				diff = Math.abs( vals[i][j] - other);
+				if(diff> maxdiff) {maxdiff =diff;}
+                System.out.print( j + " " + nf.format(vals[i][j]) + " "
+                		 + nf.format(other) + " " + nf.format(diff) + " | ");
+                //System.out.print(i + " " + j + " " + nf.format(diff) + " ");
+                assertEquals("", 0, diff, 0.0035);
+            }
+            System.out.println(" | " );
+        }
+        System.out.println(" | " + maxdiff);
+    }
+
     @Test //@Ignore
 	public void testWriteZetaPhiE12() throws Exception{
 		//zetaQuantile.R
@@ -205,21 +259,21 @@ public class GSeriesTest {
     	// after that is run, use the testSymmetryRelations method (MoreGseriesTest)
     	//zetaQuantile.R
     	
-		int k = 6;
-		File baseDir = new File("out/gzetaE12/");
-	    File outputZFile = new File(baseDir,
+		final int k = 12;
+		final File baseDir = new File("out/gzetaE12/");
+		final File outputZFile = new File(baseDir,
 	    		"gzeta_calc" + k + ".csv");
 	    if (!outputZFile.getParentFile().exists()) {
 	        outputZFile.getParentFile().mkdirs();
 	    }
-	    PrintWriter outputZ = new PrintWriter(outputZFile);
+	    final PrintWriter outputZ = new PrintWriter(outputZFile);
 	    //PrintWriter outputZ = null;
 	    
         final double[][] gramSum = new double[1][2*k];
-        Histogram[] hist = new Histogram[2*k];
-		double min = -9;
-		double max = 9;
-		int binCount = 36;
+        final Histogram[] hist = new Histogram[2*k];
+        final double min = -9;
+        final double max = 9;
+        final int binCount = 36;
         for (int i = 0; i < hist.length; i++) {
 			hist[i] = new Histogram(min, max, binCount);
 		}
@@ -239,7 +293,7 @@ public class GSeriesTest {
 //	        System.out.println(nf.format(gramSum[1][0]/(3.154*(i+1))) +
 //	        		"\t " + nf.format(gramSum[1][k]/(3.154*(i+1))));
 	    }
-		double crossNorm = 2*(1.577)*gramE12.length;
+		final double crossNorm = 2*(1.577)*gramE12.length;
         for (int j = 0; j < 2*k; j++) {
         	gramSum[0][j] /= gramE12.length;
             assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.001);
@@ -267,14 +321,16 @@ public class GSeriesTest {
 	    System.out.println();
 	    if(outputZ != null) {
 	    	outputZ.close();
-		    File outputHistFile = new File(baseDir,
+			final double norm = hist[0].sampleSize*hist[0].delta;
+	    	final File outputHistFile = new File(baseDir,
 		    		"calcHist" + k + ".csv");
-		    PrintWriter outputHist = new PrintWriter(outputHistFile);
-		    outputHist.println(",0,30,60,90,120,150,180,210,240,270,300,330,");
+	    	final PrintWriter outputHist = new PrintWriter(outputHistFile);
+		    //outputHist.println(",0,30,60,90,120,150,180,210,240,270,300,330,");
+		    outputHist.println(",0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345,");
 			for(int i = 0; i < hist[0].hist.length; i++) {
 		        outputHist.print(nf.format(hist[0].yForIndex(i)+hist[0].delta/2.0) + ", " );
 		        for (int j = 0; j < 2*k; j++) {
-		        	outputHist.print(nf.format((double)hist[j].hist[i]/hist[j].sampleSize) + ", ");
+		        	outputHist.print(nf.format((double)hist[j].hist[i]/norm) + ", ");
 		        }
 		        outputHist.println();
 			}	
