@@ -34,6 +34,7 @@ import javafx.util.Pair;
 
 import riemann.Gram;
 import riemann.Interpolate;
+import riemann.NormalizedSpline;
 import riemann.Riemann;
 import riemann.Riemann.GramInfo;
 import riemann.Rosser;
@@ -197,6 +198,65 @@ public class GSeriesTest {
         out.close();
     }
 
+    @Test //@Ignore  
+    public void testSplineFit() throws Exception{
+        //check the symmetry and antisymmetry relations from the output of distributions
+    	int k = 12;
+        File file = new File("out/gzetaE12/calcHist" + k +  ".csv");
+        BufferedReader zeroIn = new BufferedReader(new FileReader(file));
+        int k2 = 2*k;
+        double[][] vals = new double[zRange-2][k2];
+        int i = 0;
+        double[] x = new double[zRange-2];
+        double[] y= new double[zRange-2];
+        double[] y4= new double[zRange-2];
+        double[] y2= new double[zRange-2];
+        String in = zeroIn.readLine();
+        for (i = 0; i < 2; i++) {
+           in = zeroIn.readLine();
+        }
+        int iZero = zRange/2-1;
+        int phiIndex = 12;
+        double phi = phiIndex*Math.PI/12.0;
+        for (i = 0; i < zRange-2; i++) {
+            String[] line = in.split(",");
+            x[i]= Double.parseDouble(line[0].trim());
+            int j = phiIndex + 1; 
+            y[i]= Double.parseDouble(line[j].trim());
+            y4[i]= Double.parseDouble(line[4].trim());
+            y2[i]= Double.parseDouble(line[7].trim());
+            for (j = 1; j <= vals[i].length; j++) {
+                vals[i][j-1]= Double.parseDouble(line[j].trim());
+            }
+            
+            in = zeroIn.readLine();
+        }
+        assertEquals(0, x[iZero], 0.000001);
+        zeroIn.close();
+        NormalizedSpline normalizedSpline = new NormalizedSpline(x[0], x[x.length-1], y);	
+        NormalizedSpline spline4 = new NormalizedSpline(x[0], x[x.length-1], y4);	
+        NormalizedSpline spline2 = new NormalizedSpline(x[0], x[x.length-1], y2);	
+        double mult = vals[iZero][phiIndex]/(y4[iZero]*y2[iZero]);
+        assertEquals(0.33099349, y4[iZero], 0.000001);
+        assertEquals(0.34465536, y2[iZero], 0.000001);
+        assertEquals(0.33099349, vals[iZero][3], 0.000001);
+        assertEquals(0.34465536, vals[iZero][6], 0.000001);
+        System.out.println(phi*180/Math.PI + " check " + mult*0.33099349*0.34465536);
+        final double root2 = Math.sqrt(2.0);
+        		
+        for(i = 10; i<26;i++) {
+        	double xi = x[i];
+        	double pred = mult*spline4.eval(xi*root2*Math.cos(phi))
+        			*spline2.eval(xi*Math.cos(2*phi));
+        	System.out.println(nf.format(xi) + " " 
+             	   + nf.format(vals[i][phiIndex]) + " " 
+            	  // + nf.format(spline2.eval(xi*Math.cos(2*phi))) + " " 
+            	   + nf.format(pred) + " " 
+            	   + nf.format(Math.abs(vals[i][phiIndex]-pred)) + " " 
+        	   );
+        }
+    }
+    
     @Test //@Ignore  
     public void testSymmetryRelations() throws Exception{
         //check the symmetry and antisymmetry relations from the output of distributions
