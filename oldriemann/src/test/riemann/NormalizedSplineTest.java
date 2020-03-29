@@ -34,15 +34,18 @@ public class NormalizedSplineTest {
             slope[i] = der(x[i]);
         }
         //x will be normalized from 0 to N-1
-        NormalizedSpline normalizedSpline = new NormalizedSpline(y);
+        NormalizedSpline normalizedSpline = new NormalizedSpline(x[0], x[N-1], y);
         assertEquals(slope.length-1, normalizedSpline.si.length);
         double[] actual = normalizedSpline.evalMid();
         for (int i = 0; i < N-1; i++) {
         	if(i>0) {
-        		double testx =  mult/3.0;
-                Spline.Splinei splinei = new Spline.Splinei (0, x[i+1]-x[i], y[i], y[i+1], 
+        		double testx =  x[i]+mult/3.0;
+        		if(i<N-2) {
+                    assertEquals("i = " + i + " :", f(testx) , normalizedSpline.eval(testx), 0.0000001 ) ;
+        		}
+                Spline.Splinei splinei = new Spline.Splinei (x[i], x[i+1]-x[i], y[i], y[i+1], 
                 		slope[i], slope[i+1]);
-                assertEquals("i = " + i + " :", f(x[i]+testx) , splinei.eval(testx), 0.0000001 ) ;
+                assertEquals("i = " + i + " :", f(testx) , splinei.eval(testx), 0.0000001 ) ;
 //                System.out.println("x "  + testx + " y " + f(x[i]+testx) + " pred " 
 //                  + splinei.eval(testx));
                 assertEquals("i = " + i + " :", slope[i] , normalizedSpline.si[i]/mult, 0.0000001 ) ;
@@ -54,7 +57,7 @@ public class NormalizedSplineTest {
         System.out.println("expected mid" + Arrays.toString(midPointValues));
         System.out.println("actual mid" + Arrays.toString(actual));
         System.out.println("expected slopes " + Arrays.toString(slope));
-        System.out.println("actual slopes " + Arrays.toString(normalizedSpline.si));
+        System.out.println("actual slopes (*h) " + Arrays.toString(normalizedSpline.si));
      }
     
     @Test @Ignore

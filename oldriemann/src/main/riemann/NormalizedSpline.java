@@ -63,7 +63,16 @@ public class NormalizedSpline extends BaseNormalizedSpline {
     }
     
     final double[] y;
+    double xmin, xmax;
+    double h;
 
+    public NormalizedSpline(double xmin, double xmax, double[] y) {
+    	this(y);
+    	this.xmin = xmin;
+    	this.xmax = xmax;
+    	h = (xmax-xmin)/(N-1);
+    }
+    
     /**
      * x is from 0 to N-1
      * @param y
@@ -75,6 +84,16 @@ public class NormalizedSpline extends BaseNormalizedSpline {
          * si is being calculated
          */
        fit();
+    }
+    
+    public double eval(double x) {
+    	if(x<xmin+h || x>=xmax-h) {
+    		throw new IllegalArgumentException(x + " out of bounds");
+    	}
+    	int i = (int) ((x-xmin)/h);
+        Spline.Splinei splinei = new Spline.Splinei (xmin+i*h, h, y[i], y[i+1], 
+        		si[i]/h, si[i+1]/h);
+        return splinei.eval(x);
     }
 
     /**

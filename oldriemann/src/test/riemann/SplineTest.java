@@ -43,8 +43,8 @@ public class SplineTest {
         double yi = -70, y2 = -82;
         double slopei = -16, slope2 = 17;
         //47.125
-        Splinei splinei = new Splinei(0, x2-xi, yi, y2, slopei, slope2);
-        assertEquals(-88.375, splinei.eval(1.5), 0.00001);
+        Splinei splinei = new Splinei(xi, x2-xi, yi, y2, slopei, slope2);
+        assertEquals(-88.375, splinei.eval(xi+1.5), 0.00001);
     }   
 	    @Test //@Ignore
 	    public void testSplinei2() {
