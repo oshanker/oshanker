@@ -66,19 +66,8 @@ public class Histogram {
 		final double min = mean - 4.5*sigma +0.25;
 		final double max = mean + 4.5*sigma+0.25;
 		final int binCount = 18;
-		final Histogram hist = new Histogram(min, max, binCount);
+		final Histogram hist = normalHist(sigma, mean, min, max, binCount);
 		
-		final Random generator = new Random(1781);
-		double sumSquares = 0;
-		int sampleCount = 1000000;
-		for(int i = 0; i < sampleCount; i++) {
-			double y = sigma*generator.nextGaussian() + mean;
-			sumSquares += y*y;
-			hist.addPoint(y);
-		}
-		
-		System.out.println(" index of mean " + hist.index(mean) + ", sigma "
-				+ nf.format(Math.sqrt(sumSquares/hist.sampleSize-mean*mean)));
 		System.out.println(" mean " + nf.format(hist.mean()) + ", sigma "
 				+ nf.format(hist.stdDev()));
 		
@@ -109,6 +98,20 @@ public class Histogram {
 			  + ", " + nf.format(((double)sum)/hist.sampleSize));
 		}		
 
+	}
+
+	public static Histogram normalHist(final double sigma, final double mean, 
+			final double min, final double max,
+			final int binCount) {
+		final Histogram hist = new Histogram(min, max, binCount);
+		
+		final Random generator = new Random(1781);
+		final int sampleCount = 1000000;
+		for(int i = 0; i < sampleCount; i++) {
+			final double y = sigma*generator.nextGaussian() + mean;
+			hist.addPoint(y);
+		}
+		return hist;
 	}
 
 }
