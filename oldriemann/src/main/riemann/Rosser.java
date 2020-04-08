@@ -181,9 +181,12 @@ public class Rosser {
 		zeros[0] = zeros[1];
 		zeros[1] = zeros[2];
 		zeros[2] = nextValues[0];
-		derivatives[0] = derivatives[1];
-		derivatives[1] = derivatives[2];
-		derivatives[2] = nextValues[1];
+		if (nextValues.length>1) {
+			derivatives[0] = derivatives[1];
+			derivatives[1] = derivatives[2];
+			derivatives[2] = nextValues[1];
+			
+		}
 		
 	}
 
@@ -440,7 +443,8 @@ public class Rosser {
                   e.printStackTrace();
               }
         }
-        int displacementCount = 1;
+        //int displacementCount = 1;
+        int displacementCount = 5;
         if(configParams.containsKey("displacementCount")){
             displacementCount = Integer.parseInt(configParams.get("displacementCount"));
         }
