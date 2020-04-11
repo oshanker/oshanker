@@ -103,10 +103,16 @@ public class Histogram {
 	public static Histogram normalHist(final double sigma, final double mean, 
 			final double min, final double max,
 			final int binCount) {
+		final int sampleCount = 1000000;
+		
+		return normalHist(sigma, mean, min, max, binCount, sampleCount);
+	}
+
+	public static Histogram normalHist(final double sigma, final double mean, final double min, final double max,
+			final int binCount, final int sampleCount) {
 		final Histogram hist = new Histogram(min, max, binCount);
 		
 		final Random generator = new Random(1781);
-		final int sampleCount = 1000000;
 		for(int i = 0; i < sampleCount; i++) {
 			final double y = sigma*generator.nextGaussian() + mean;
 			hist.addPoint(y);
