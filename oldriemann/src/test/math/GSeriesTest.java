@@ -216,7 +216,7 @@ public class GSeriesTest {
            in = zeroIn.readLine();
         }
         int iZero = zRange/2-1;
-        int phiIndex = 12;
+        int phiIndex = 2;
         double phi = phiIndex*Math.PI/12.0;
         for (i = 0; i < zRange-2; i++) {
             String[] line = in.split(",");
@@ -244,10 +244,15 @@ public class GSeriesTest {
         System.out.println(phi*180/Math.PI + " check " + mult*0.33099349*0.34465536);
         final double root2 = Math.sqrt(2.0);
         		
+		final double cosphi = Math.cos(phi);
+    	final double cos2phi = Math.cos(2*phi);
         for(i = 10; i<26;i++) {
         	double xi = x[i];
-        	double pred = mult*spline4.eval(xi*root2*Math.cos(phi))
-        			*spline2.eval(xi*Math.cos(2*phi));
+//			double pred = mult*spline4.eval(xi*root2*cosphi)
+//        			*spline2.eval(xi*cos2phi);
+			double pred = (1+cos2phi)*spline4.eval(xi*root2*cosphi)
+        			-cos2phi*spline2.eval(xi*cos2phi);
+        	
         	System.out.println(nf.format(xi) + " " 
              	   + nf.format(vals[i][phiIndex]) + " " 
             	  // + nf.format(spline2.eval(xi*Math.cos(2*phi))) + " " 
