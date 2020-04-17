@@ -19,17 +19,15 @@ public class HistogramTest {
 		final Histogram hist = Histogram.normalHist(sigma, mean, min, max, binCount, sampleCount);
 		
 		
-		final double norm = hist.sampleSize*hist.delta;
 		final double predNorm = 1.0/Math.sqrt(2*Math.PI*sigma);
 		
 		final int length = hist.hist.length;
 		final double[] x = new double[length];
-		double[] y = new double[length];
+		final double[] y = hist.pdf();
 		double error = 0;
 		for(int i = 0; i < length; i++) {
 			x[i] = hist.yForIndex(i)+hist.delta/2;
 			final double pred = Math.exp(-(x[i]-mean)*(x[i]-mean)/(2*sigma))*predNorm;
-			y[i] = hist.hist[i]/norm;
 			assertEquals(pred, y[i], 0.0011);
 			double currentError = Math.abs(pred - y[i]);
 			if(error<currentError) {error = currentError;}
@@ -40,11 +38,11 @@ public class HistogramTest {
 		}	
 		System.out.println(error + ", hist.delta " + hist.delta);
 		
-        NormalizedSpline normalizedSpline = new NormalizedSpline(x[0], x[length-1], y);	
-		for(int i = 1; i < length-2; i++) {
+        NormalizedSpline pdfSpline = hist.pdfSpline();	
+		for(int i = 2; i < length-3; i++) {
 			double xi = hist.yForIndex(i)+ 0.75*hist.delta;
 			final double pred = Math.exp(-(xi-mean)*(xi-mean)/(2*sigma))*predNorm;
-			final double yi = normalizedSpline.eval(xi);
+			final double yi = pdfSpline.eval(xi);
 			assertEquals(pred, yi, 0.0012);
 		}	
         

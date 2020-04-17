@@ -1,7 +1,10 @@
 package math;
 
+
 import java.text.NumberFormat;
 import java.util.Random;
+
+import riemann.NormalizedSpline;
 
 public class Histogram {
     static final NumberFormat nf = NumberFormat.getInstance();
@@ -47,6 +50,39 @@ public class Histogram {
 		if(i<=0) {return min-delta;}
 		if(i>=hist.length-1) {return max;}
 		double y = (i-1)*delta + min;
+		return y;
+	}
+	
+	
+	/**
+	 * x[i] = yForIndex(i+1)+delta/2;
+	 * don't use end slots, since they are for overflow.
+	 */
+	public NormalizedSpline pdfSpline() {
+		final double norm = sampleSize*delta;
+		final double[] x = new double[binCount];
+		final double[] y = new double[binCount];
+		for(int i = 0; i < binCount; i++) {
+			x[i] = yForIndex(i+1)+delta/2;
+			y[i] = hist[i+1]/norm;
+		}
+        NormalizedSpline pdfSpline = new NormalizedSpline(x[0], x[binCount-1], y);	
+		return pdfSpline;
+	}
+	
+	/**
+	 * x[i] = yForIndex(i)+delta/2;
+	 */
+	public double[] pdf() {
+		final double norm = sampleSize*delta;
+		
+		final int length = hist.length;
+		final double[] x = new double[length];
+		final double[] y = new double[length];
+		for(int i = 0; i < length; i++) {
+			x[i] = yForIndex(i)+delta/2;
+			y[i] = hist[i]/norm;
+		}
 		return y;
 	}
 	
