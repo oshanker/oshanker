@@ -1,7 +1,9 @@
 import sys
 import numpy as np
+import math
 from pandas import read_csv
 from matplotlib import pyplot
+from sklearn.linear_model import LinearRegression
 
 def inspect(colIndex):
     print('col header', dataset.columns[colIndex] )
@@ -19,12 +21,58 @@ def getColPhi():
     groups = np.arange(1, dataset.shape[1], 1)
     print('groups', type(groups))
     print(groups)
-    i = 1
+    
     
     inspect(0)
     inspect(1)
     inspect(groups[-1]-1)
 
+def inspectRow(index):
+    z = dataset.at[index,'Unnamed: 0']
+    print(type(z))
+    print('values for: ', z)
+    
+    row0 = dataset.iloc[index][1:].to_frame() #.reset_index(drop=True)
+    print(row0.head())
+    print(row0.tail())
+    summary = row0.describe()
+    print(summary)
+    values = row0.values
+    print (values)
+    x = []
+    for phi in range(0,360,15):
+        x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
+    x = np.array(x)
+    #x = x.reshape(-1,1)
+    y = values[:, 0]
+    reg = LinearRegression().fit(x, y)
+    print('Score ', reg.score(x, y))
+    #
+    coeff = reg.coef_
+    intercept = reg.intercept_
+    print('X*', coeff, '+', intercept)
+    
+    pyplot.figure()
+    pyplot.subplot(1, 1, 1)
+    pyplot.plot(x[:,0], y)
+    pyplot.title(dataset.at[index,'Unnamed: 0'], y=0.75, loc='right')
+    pyplot.show()
+
+    
+def plotDistribution(groups):
+    
+    values = dataset.values
+    # print('values', type(values))
+    
+    i = 1
+    # plot each column
+    pyplot.figure()
+    for group in groups:
+    	pyplot.subplot(len(groups), 1, i)
+    	pyplot.plot(values[:, 0], values[:, group])
+    	pyplot.title(dataset.columns[group], y=0.75, loc='right')
+    	i += 1
+    pyplot.show()
     
 
 
@@ -35,25 +83,10 @@ dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-print('values for: ', dataset.at[0,'Unnamed: 0'])
-row0 = dataset.iloc[0][1:].to_frame() #.reset_index(drop=True)
-print(row0.head())
-print(row0.tail())
-summary = row0.describe()
-print(summary)
 
-# values = dataset.values
-# print('values', type(values))
+inspectRow(13)
 
+groups = [1]
+#plotDistribution(groups)
 
-# plot each column
-'''
-pyplot.figure()
-for group in groups:
-	pyplot.subplot(len(groups), 1, i)
-	pyplot.plot(values[:, group])
-	pyplot.title(dataset.columns[group], y=0.5, loc='right')
-	i += 1
-pyplot.show()
-'''
 
