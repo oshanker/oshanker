@@ -31,7 +31,9 @@ def getColPhi():
 # python -i plot_distribution.py 
 # load dataset
 dataset = read_csv('../../oldriemann/out/gzetaE12/calcHist12.csv', header=0)
+dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
+#dataset.dtypes
 print('dataset', type(dataset))
 print('values for: ', dataset.at[0,'Unnamed: 0'])
 row0 = dataset.iloc[0][1:-1].to_frame() #.reset_index(drop=True)
