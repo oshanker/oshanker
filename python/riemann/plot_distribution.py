@@ -36,7 +36,7 @@ print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
 print('values for: ', dataset.at[0,'Unnamed: 0'])
-row0 = dataset.iloc[0][1:-1].to_frame() #.reset_index(drop=True)
+row0 = dataset.iloc[0][1:].to_frame() #.reset_index(drop=True)
 print(row0.head())
 print(row0.tail())
 summary = row0.describe()
