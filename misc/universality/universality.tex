@@ -168,9 +168,9 @@ While empirical studies necessarily use large but finite  $T_1, T_2$, we are int
 $T_1 \rightarrow \infty, T_2 \rightarrow \infty,  T_2-T_1 \rightarrow \infty,$ however
 \begin{equation}
 T_2 - T_1  \ll T_1. 
-\label{eq:interval}
+\label{eq:inter}
 \end{equation}
-Because of Equation \ref{eq:interval}, we can consider  $\ln (t)$  to be effectively constant over  the interval.
+Because of Equation~\ref{eq:inter}, we can consider  $\ln (t)$  to be effectively constant over  the interval.
 The latter condition is not essential but is convenient, in that it simplifies the numerical work. 
 The notation $\ln (t)$ stands for the natural logarithm of $t$.  
 We study the probability distribution function for $Z(t)$ at generalized Gram  points,
@@ -207,6 +207,12 @@ p_{\phi}(z) = A(z)\cos(\phi) + B(z)\cos(2\phi) +C(z),
 \label{eq:universality}
 \end{equation}
 where $A(z)$, $B(z)$ and $C(z)$ are universal functions, i.e., they do not depend on $\phi$. 
+
+We estimated $A(z)$, $B(z)$ and $C(z)$ by fitting Eq.~\ref{eq:universality} to the actual
+probability densities for several values of $z$ and $\phi$. Table~\ref{tab:coefficients} gives the fitted values 
+of the universal functions.
+Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions from the universality 
+relation to the actual probability densities, for some values of the argument $z$.
 
 We briefly mention other studies of the value distribution of the Riemann zeta function and the closely related Hardy's function~\cite{Hardy 1918}.  Ivi\'c's monograph~\cite{Ivic 2013} has a comprehensive survey of  the field.
 Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is approximately normally distributed with a standard deviation of order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
@@ -251,7 +257,7 @@ helps fill the gaps.
 \end{array}\)
 \caption{Values of the universal functions $A(z)$, $B(z)$ and $C(z)$ 
 for $z$ in the range $-3.0$ to $3.0$, and the $R^2$ from the fit to actual values.} 
-\label{tab:multicolumn}
+\label{tab:coefficients}
 \end{table}
 
 
@@ -297,7 +303,11 @@ to better than $10^{-6}$.
 \section{\label{conclusions}Conclusions}
 
 The most exciting new result is the discovery of a universality relation for the 
-value distribution of the Hardy Z function at discrete points. 
+value distribution of the Hardy Z function at discrete points. Eq.~\ref{eq:universality}
+states the universality relations. Table~\ref{tab:coefficients} gives the fitted values 
+of the universal functions.
+Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions from the universality 
+relation to the actual probability densities, for some values of the argument $z$.
 
 \section*{\label{appendix} Appendix}
 
