@@ -40,9 +40,12 @@ def inspectRow(index):
     values = row0.values
     # print (values)
     x = []
+    angle = []
     for phi in range(0,360,15):
         x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
+        angle.append(phi)
     x = np.array(x)
+    angle = np.array(angle)
     #x = x.reshape(-1,1)
     y = values[:, 0]
     reg = LinearRegression().fit(x, y)
@@ -57,11 +60,17 @@ def inspectRow(index):
     
     savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
     
-    # pyplot.figure()
-    # pyplot.subplot(1, 1, 1)
-    # pyplot.plot(x[:,0], y)
-    # pyplot.title(dataset.at[index,'Unnamed: 0'], y=0.75, loc='right')
-    # pyplot.show()
+    if doAction == 'plot':
+        pred = np.dot(x, coeff) + intercept
+        pyplot.figure()
+        pyplot.subplot(1, 1, 1)
+        pyplot.scatter(angle, pred,color='black')
+        pyplot.plot(angle, y)
+        title = 'z=' + str(z)
+        pyplot.xlabel('phi')
+        pyplot.ylabel('probability density')
+        pyplot.title(title, y=0.75, loc='right')
+        pyplot.show()
 
     
 def plotDistribution(groups):
@@ -76,8 +85,11 @@ def plotDistribution(groups):
     	pyplot.subplot(len(groups), 1, i)
     	pyplot.plot(values[:, 0], values[:, group])
     	pyplot.title(dataset.columns[group], y=0.75, loc='right')
+        #pyplot.
+    	pyplot.legend('probabilty distribtion')
     	i += 1
     pyplot.show()
+    pyplot.savefig('junk')
     
 
 
@@ -89,11 +101,15 @@ dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-for index in range(13,26):
-    inspectRow(index)
-
-np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
-           fmt='%7.2f,%7.3f,%7.3f,%7.3f,%7.4f', delimiter=',')
+doAction = 'plot'
+if doAction == 'plot':
+    inspectRow(20)
+else:
+    for index in range(13,26):
+        inspectRow(index)
+    
+    np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
+               fmt='%7.2f,%7.5f,%7.5f,%7.5f,%7.5f', delimiter=',')
 
 groups = [1]
 #plotDistribution(groups)
