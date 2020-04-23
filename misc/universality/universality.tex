@@ -86,7 +86,7 @@ of the Riemann zeta function on the critical axis.
 
 The universality relations and symmetries exhibited by a system are fundamental aspects of the system. 
 In this work, we present a universality relation for the value
-distribution of the Hardy $Z$ function at Generalized Gram points.
+distribution of the Riemann zeta function at Generalized Gram points.
 
 Ref.~\cite{Shanker 2018a} studied empirically the distribution of $Z(t)$ values at Gram points and
 showed  that the distribution for even Gram points was the negative  of the distribution for odd Gram points. 
@@ -160,8 +160,36 @@ $\theta (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
 \end{definition}
 
 
+
 \section{\label{sec3}Probability Distribution}
-In this section 
+
+\begin{table}
+\centering \(\begin{array}{ccccccc}
+\hline
+     z     & A   &      B      &   C    &R^2\\
+\hline
+-3.00& -0.028&  0.001&  0.039& 0.99982\\
+  -2.50& -0.036&  0.001&  0.051& 0.99973\\
+  -2.00& -0.047&  0.001&  0.068& 0.99988\\
+  -1.50& -0.063&  0.001&  0.095& 0.99981\\
+  -1.00& -0.086& -0.000&  0.140& 0.99991\\
+  -0.50& -0.115& -0.004&  0.223& 0.99993\\
+   0.00& -0.000& -0.014&  0.332& 0.99403\\
+   0.50&  0.114& -0.004&  0.223& 0.99994\\
+   1.00&  0.086&  0.000&  0.140& 0.99992\\
+   1.50&  0.062&  0.001&  0.095& 0.99989\\
+   2.00&  0.047&  0.001&  0.068& 0.99989\\
+   2.50&  0.036&  0.001&  0.051& 0.99970\\
+   3.00&  0.029&  0.001&  0.039& 0.99982\\
+\hline
+\end{array}\)
+\caption{Values of the universal functions $A(z)$, $B(z)$ and $C(z)$ 
+for $z$ in the range $-3.0$ to $3.0$, and the $R^2$ from the fit to actual values.} 
+\label{tab:coefficients}
+\end{table}
+
+In this section we present the probability distribution function for the Riemann zeta function
+values at Generalized Gram points. We present a universality relation satisfied by these distributions.
 
 The sample space for our study is the interval along the critical axis specified by $(T_1, T_2)$. 
 While empirical studies necessarily use large but finite  $T_1, T_2$, we are interested in the limit 
@@ -191,6 +219,34 @@ There are important open theoretical questions about the distribution that we do
 and we mention those questions in the Appendix.
 
 
+\begin{table}
+\centering \(\begin{array}{ccccccccccc}
+
+\hline
+\phi  &  \multicolumn{2}{c}  {0 }   &    \multicolumn{2}{c}  {\pi/6}&  \multicolumn{2}{c}  { \pi/4}   &    \multicolumn{2}{c}  {\pi/3}&  \multicolumn{2}{c}  {\pi/2 } \\
+z&actual&predict&actual&predict &actual&predict &actual&predict &actual&predict\\
+\hline
+  -3.00&  0.012&  0.012&  0.016&  0.015&  0.019&  0.019&  0.025&  0.024&  0.038&  0.038 \\
+  -2.50&  0.016&  0.016&  0.020&  0.020&  0.025&  0.025&  0.032&  0.032&  0.050&  0.050 \\
+  -2.00&  0.023&  0.022&  0.028&  0.028&  0.035&  0.035&  0.044&  0.044&  0.067&  0.067 \\
+  -1.50&  0.033&  0.033&  0.041&  0.041&  0.050&  0.051&  0.063&  0.063&  0.094&  0.094 \\
+  -1.00&  0.054&  0.054&  0.065&  0.066&  0.079&  0.080&  0.098&  0.097&  0.140&  0.140 \\
+  -0.50&  0.105&  0.105&  0.122&  0.122&  0.143&  0.142&  0.167&  0.168&  0.227&  0.227 \\
+   0.00&  0.316&  0.317&  0.324&  0.324&  0.331&  0.331&  0.337&  0.338&  0.345&  0.345 \\
+   0.50&  0.334&  0.334&  0.320&  0.320&  0.303&  0.304&  0.282&  0.282&  0.227&  0.227 \\
+   1.00&  0.227&  0.226&  0.213&  0.214&  0.200&  0.201&  0.183&  0.183&  0.140&  0.140 \\
+   1.50&  0.157&  0.158&  0.149&  0.150&  0.140&  0.139&  0.127&  0.126&  0.093&  0.095 \\
+   2.00&  0.115&  0.115&  0.109&  0.109&  0.101&  0.101&  0.091&  0.091&  0.068&  0.067 \\
+   2.50&  0.088&  0.088&  0.083&  0.083&  0.077&  0.076&  0.068&  0.069&  0.050&  0.050 \\
+   3.00&  0.069&  0.069&  0.065&  0.064&  0.059&  0.060&  0.054&  0.053&  0.039&  0.039 \\
+\hline
+\end{array}\)
+\caption{Comparison of actual and predicted probability density for some $\phi$   }
+\label{tab:pred}
+\end{table}
+
+
+
 The anti-symmetry relation is
 \begin{equation}
 p_{\phi}(z) = p_{\phi+\pi}(-z).
@@ -209,12 +265,21 @@ p_{\phi}(z) = A(z)\cos(\phi) + B(z)\cos(2\phi) +C(z),
 where $A(z)$, $B(z)$ and $C(z)$ are universal functions, i.e., they do not depend on $\phi$. 
 
 We estimated $A(z)$, $B(z)$ and $C(z)$ by fitting Eq.~\ref{eq:universality} to the actual
-probability densities for several values of $z$ and $\phi$. Table~\ref{tab:coefficients} gives the fitted values 
+probability densities for several values of $z$ and $\phi$. Table~\ref{tab:coefficients} gives the 
+fitted values 
 of the universal functions.
-Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions from the universality 
+Fig~\ref{z05} and Fig.~\ref{z00} and Table~\ref{tab:pred} show the comparison of the predictions 
+from the universality 
 relation to the actual probability densities, for some values of the argument $z$.
 
-We briefly mention other studies of the value distribution of the Riemann zeta function and the closely related Hardy's function~\cite{Hardy 1918}.  Ivi\'c's monograph~\cite{Ivic 2013} has a comprehensive survey of  the field.
+From the symmetry relations Eq.~\ref{eq:sym} and Eq.~\ref{eq:antisym} we find that the function 
+$A(z)$ has to be anti-symmetric in $z$, and $B(z)$ and $C(z)$ have to be symmetric in $z$.
+Table~\ref{tab:coefficients} confirms these properties. The figures, and 
+Table~\ref{tab:pred} show the excellent agreement of the actual probability densities with the
+universality relations prediction.
+
+We briefly mention other studies of the value distribution of the Riemann zeta function and 
+the closely related Hardy's function~\cite{Hardy 1918}.  Ivi\'c's monograph~\cite{Ivic 2013} has a comprehensive survey of  the field.
 Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is approximately normally distributed with a standard deviation of order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
 similar result~\cite{Selberg 1989, Selberg 1991} for $\log (|Z(t)|)$. Laurincikas~\cite{Laurincikas}  used probabilistic number theory to prove various results about the distribution of the Riemann zeta function.
 
@@ -231,34 +296,6 @@ could differ significantly from the continuous case.
 Our numerical studies of the value distribution of Hardy's $Z$-function at discrete points
 helps fill the gaps. 
 
-
-
-\begin{table}
-\centering \(\begin{array}{ccccccc}
-\hline
- \phi    &  \multicolumn{2}{c}  {Median }   &    \multicolumn{2}{c}  {Max.} \\
-  \cline{2-5}  
-               & Quantile   &      x      &              Quantile.    &y\\
-\hline
--3.00& -0.028&  0.001&  0.039& 0.99982\\
-  -2.50& -0.036&  0.001&  0.051& 0.99973\\
-  -2.00& -0.047&  0.001&  0.068& 0.99988\\
-  -1.50& -0.063&  0.001&  0.095& 0.99981\\
-  -1.00& -0.086& -0.000&  0.140& 0.99991\\
-  -0.50& -0.115& -0.004&  0.223& 0.99993\\
-   0.00& -0.000& -0.014&  0.332& 0.99403\\
-   0.50&  0.114& -0.004&  0.223& 0.99994\\
-   1.00&  0.086&  0.000&  0.140& 0.99992\\
-   1.50&  0.062&  0.001&  0.095& 0.99989\\
-   2.00&  0.047&  0.001&  0.068& 0.99989\\
-   2.50&  0.036&  0.001&  0.051& 0.99970\\
-   3.00&  0.029&  0.001&  0.039& 0.99982\\
-\hline
-\end{array}\)
-\caption{Values of the universal functions $A(z)$, $B(z)$ and $C(z)$ 
-for $z$ in the range $-3.0$ to $3.0$, and the $R^2$ from the fit to actual values.} 
-\label{tab:coefficients}
-\end{table}
 
 
 
@@ -284,22 +321,6 @@ to better than $10^{-6}$.
 
 
 
-\begin{table}
-\centering \(\begin{array}{cccccccccccc}
-
-\hline
-0&\pi/6 &\pi/3 &\pi/2 &2\pi/3 &5\pi/6 &\pi &7\pi/6 &4\pi/3 &3\pi/2 &5\pi/3 &11\pi/6 \\
-\hline
-1.995&1.728&0.997&-0.002&-1.000&-1.731&-1.999&-1.731&-1.000&-0.002&0.997&1.728 \\
-7.886&7.816&7.882&8.011&8.054&7.980&7.858&7.796&7.877&8.022&8.078&8.010 \\
-\hline
-\end{array}\)
-\caption{Mean    $Z(t)$ and Standard Deviation at $T=10^{28}$. Row 1: $\phi$, Row 2: mean~$Z$, Row 3: Standard Deviation}
-\label{tab:mean28}
-\end{table}
-
-
-
 \section{\label{conclusions}Conclusions}
 
 The most exciting new result is the discovery of a universality relation for the 
@@ -307,7 +328,9 @@ value distribution of the Hardy Z function at discrete points. Eq.~\ref{eq:unive
 states the universality relations. Table~\ref{tab:coefficients} gives the fitted values 
 of the universal functions.
 Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions from the universality 
-relation to the actual probability densities, for some values of the argument $z$.
+relation to the actual probability densities, for some values of the argument $z$. The figures, and 
+Table~\ref{tab:pred} show the excellent agreement of the actual probability densities with the
+universality relations prediction.
 
 \section*{\label{appendix} Appendix}
 
@@ -350,14 +373,6 @@ argument is normalized by $\sqrt{\frac{T}{2\pi}}$.
 \bibliographystyle{amsplain}
 \begin{thebibliography}{10}
 
-\bibitem{Gram 1903} J. P. Gram, 
-``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
-{\it Acta Math.} {\bf27}(1903), 289-304
-
-\bibitem{Titchmarsh 1934} E. C. Titchmarsh,
-``On van der Corput's method and the zeta-function of Riemann (IV)",
-{\it Quart. J. Math. Oxford Ser.} {\bf5}(1934), 98-105
-
 \bibitem{Shanker 2018a} O. Shanker, 
 ``Good to Bad Gram Point Ratio For Riemann Zeta Function",
 {\it Experimental Mathematics} {\bf doi:10.1080/10586458.2018.1492474}(2018)
@@ -365,10 +380,10 @@ argument is normalized by $\sqrt{\frac{T}{2\pi}}$.
 \bibitem{Shanker 2018b} O. Shanker, ``Symmetry properties of distribution of Riemann Zeta Function values on critical axis''
 {\it Advanced Modeling and Optimization}, {\bf 20}, 435-445, (2018). 
 
+\bibitem{Gram 1903} J. P. Gram, 
+``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
+{\it Acta Math.} {\bf27}(1903), 289-304
 
-\bibitem{hiary 2010} G. A. Hiary,
-``An amortized-complexity method to compute the Riemann zeta function", 
-{\it Mathematics of Computation} {\bf80}(2011), 1785-1796
 
 
 \bibitem{Hardy 1918} G. H. Hardy and J. E. Littlewood,
@@ -396,6 +411,10 @@ Springer Verlag,  (1991)
 ``Limit Theorems for the Riemann Zeta-Function",
 Kluwer, Dordrecht, 1996
 
+\bibitem{Titchmarsh 1934} E. C. Titchmarsh,
+``On van der Corput's method and the zeta-function of Riemann (IV)",
+{\it Quart. J. Math. Oxford Ser.} {\bf5}(1934), 98-105
+
 \bibitem{kalpokas 2009} J. Kalpokas and J. Steuding,
 ``On the value-distribution of the Riemann zeta-function on the critical line", 
 {\it Moscow Journal of Combinatorics and
@@ -422,6 +441,10 @@ and zeros computation at very large height", report,
 \bibitem{Jerri 1977} A. J. Jerri,
 ``The Shannon sampling theorem - its various extensions and applications",
 {\it Proc IEEE} {\bf65}(1977), 1565-1596
+
+\bibitem{hiary 2010} G. A. Hiary,
+``An amortized-complexity method to compute the Riemann zeta function", 
+{\it Mathematics of Computation} {\bf80}(2011), 1785-1796
 
 \bibitem{feller} William Feller,
 ``An Introduction to Probability Theory and Its Applications, Volume II (2 ed.)",

@@ -60,8 +60,8 @@ def inspectRow(index):
     
     savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
     
+    pred = np.dot(x, coeff) + intercept
     if doAction == 'plot':
-        pred = np.dot(x, coeff) + intercept
         pyplot.figure()
         pyplot.subplot(1, 1, 1)
         pyplot.scatter(angle, pred,color='black')
@@ -73,6 +73,16 @@ def inspectRow(index):
         pyplot.title(title, y=0.75, loc='right')
         pyplot.show()
         #pyplot.savefig('junk')
+    elif doAction == 'testfit':
+        out = [z]
+        print(pred)
+        print(angle)
+        print(y)
+        for i in [0, 2, 3, 4, 6]:
+            out.append(y[i])
+            out.append(pred[i])
+        print(len(out))
+        testfit.append(out)
 
     
 def plotDistribution(groups):
@@ -101,15 +111,22 @@ dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-doAction = 'plot1'
+doAction = 'testfit'
 if doAction == 'plot':
     inspectRow(20)
-else:
+elif doAction == 'saveCoeff':
     for index in range(13,26):
         inspectRow(index)
     
     np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
                fmt='%7.2f&%7.3f&%7.3f&%7.3f&%8.5f\\\\', delimiter=',')
+else:
+    testfit = []
+    for index in range(13,26):
+        inspectRow(index)
+    np.savetxt('../../oldriemann/out/gzetaE12/testfit.csv', np.asarray(testfit), 
+               fmt='%7.2f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f \\\\', 
+               delimiter=',')
 
 groups = [1]
 #plotDistribution(groups)
