@@ -67,10 +67,12 @@ def inspectRow(index):
         pyplot.scatter(angle, pred,color='black')
         pyplot.plot(angle, y)
         title = 'z=' + str(z)
+        pyplot.legend(['fit from \nuniversality','actual'])
         pyplot.xlabel('phi')
         pyplot.ylabel('probability density')
         pyplot.title(title, y=0.75, loc='right')
         pyplot.show()
+        #pyplot.savefig('junk')
 
     
 def plotDistribution(groups):
@@ -86,10 +88,8 @@ def plotDistribution(groups):
     	pyplot.plot(values[:, 0], values[:, group])
     	pyplot.title(dataset.columns[group], y=0.75, loc='right')
         #pyplot.
-    	pyplot.legend('probabilty distribtion')
     	i += 1
     pyplot.show()
-    pyplot.savefig('junk')
     
 
 
