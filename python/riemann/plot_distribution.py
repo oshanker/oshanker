@@ -101,7 +101,7 @@ dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-doAction = 'plot'
+doAction = 'plot1'
 if doAction == 'plot':
     inspectRow(20)
 else:
@@ -109,7 +109,7 @@ else:
         inspectRow(index)
     
     np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
-               fmt='%7.2f,%7.5f,%7.5f,%7.5f,%7.5f', delimiter=',')
+               fmt='%7.2f&%7.3f&%7.3f&%7.3f&%8.5f\\\\', delimiter=',')
 
 groups = [1]
 #plotDistribution(groups)

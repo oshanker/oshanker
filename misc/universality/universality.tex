@@ -95,6 +95,8 @@ that the  value
 distribution of the Hardy $Z$ function at discrete points is anti-symmetrical for reflections around the mid-points 
 of 
 the Gram intervals (Eq.~\ref{eq:antisym}) and symmetrical for reflections around the Gram points(Eq.~\ref{eq:sym}). 
+Our new universality relation (Eq.~\ref{eq:universality}) expresses the value distributions 
+at different Generalized Gram points, in terms of three universal functions.
 
 \begin{figure*}
 \centering
@@ -194,13 +196,17 @@ The anti-symmetry relation is
 p_{\phi}(z) = p_{\phi+\pi}(-z).
 \label{eq:antisym}
 \end{equation}
-The symmetry relation ius
+The symmetry relation is
 \begin{equation}
 p_{\phi}(z) = p_{2\pi-\phi}(z).
 \label{eq:sym}
 \end{equation}
-
-
+The universality relation is
+\begin{equation}
+p_{\phi}(z) = A(z)\cos(\phi) + B(z)\cos(2\phi) +C(z),
+\label{eq:universality}
+\end{equation}
+where $A(z)$, $B(z)$ and $C(z)$ are universal functions, i.e., they do not depend on $\phi$. 
 
 We briefly mention other studies of the value distribution of the Riemann zeta function and the closely related Hardy's function~\cite{Hardy 1918}.  Ivi\'c's monograph~\cite{Ivic 2013} has a comprehensive survey of  the field.
 Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is approximately normally distributed with a standard deviation of order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
@@ -224,15 +230,27 @@ helps fill the gaps.
 \begin{table}
 \centering \(\begin{array}{ccccccc}
 \hline
- \phi &     Min.   &  \multicolumn{2}{c}  {Median }   &   Mean   &  \multicolumn{2}{c}  {Max.} \\
-  \cline{3-7}  
- &              & Quantile   &      x      &              & Quantile.    &  y \\
+ \phi    &  \multicolumn{2}{c}  {Median }   &    \multicolumn{2}{c}  {Max.} \\
+  \cline{2-5}  
+               & Quantile   &      x      &              Quantile.    &y\\
 \hline
-0 &-69 &0.1134 &0.8517 &2.0001 &2.5403 &165  \\
-\pi/4 &-97 &-0.1352 &0.5916 &1.4143 &2.1226 &159 \\
+-3.00& -0.028&  0.001&  0.039& 0.99982\\
+  -2.50& -0.036&  0.001&  0.051& 0.99973\\
+  -2.00& -0.047&  0.001&  0.068& 0.99988\\
+  -1.50& -0.063&  0.001&  0.095& 0.99981\\
+  -1.00& -0.086& -0.000&  0.140& 0.99991\\
+  -0.50& -0.115& -0.004&  0.223& 0.99993\\
+   0.00& -0.000& -0.014&  0.332& 0.99403\\
+   0.50&  0.114& -0.004&  0.223& 0.99994\\
+   1.00&  0.086&  0.000&  0.140& 0.99992\\
+   1.50&  0.062&  0.001&  0.095& 0.99989\\
+   2.00&  0.047&  0.001&  0.068& 0.99989\\
+   2.50&  0.036&  0.001&  0.051& 0.99970\\
+   3.00&  0.029&  0.001&  0.039& 0.99982\\
 \hline
 \end{array}\)
-\caption{Quantiles and mean for  $Z(t)$ when $\phi$ values are multiples of $\pi/4$.} 
+\caption{Values of the universal functions $A(z)$, $B(z)$ and $C(z)$ 
+for $z$ in the range $-3.0$ to $3.0$, and the $R^2$ from the fit to actual values.} 
 \label{tab:multicolumn}
 \end{table}
 
