@@ -33,12 +33,12 @@ def inspectRow(index):
     print('values for: ', z)
     
     row0 = dataset.iloc[index][1:].to_frame() #.reset_index(drop=True)
-    print(row0.head())
-    print(row0.tail())
-    summary = row0.describe()
-    print(summary)
+    # print(row0.head())
+    # print(row0.tail())
+    # summary = row0.describe()
+    # print(summary)
     values = row0.values
-    print (values)
+    # print (values)
     x = []
     for phi in range(0,360,15):
         x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
@@ -46,17 +46,22 @@ def inspectRow(index):
     #x = x.reshape(-1,1)
     y = values[:, 0]
     reg = LinearRegression().fit(x, y)
-    print('Score ', reg.score(x, y))
+    r2 = reg.score(x, y)
+    print('Score ', r2)
     #
     coeff = reg.coef_
     intercept = reg.intercept_
     print('X*', coeff, '+', intercept)
     
-    pyplot.figure()
-    pyplot.subplot(1, 1, 1)
-    pyplot.plot(x[:,0], y)
-    pyplot.title(dataset.at[index,'Unnamed: 0'], y=0.75, loc='right')
-    pyplot.show()
+    print(type(coeff))
+    
+    savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
+    
+    # pyplot.figure()
+    # pyplot.subplot(1, 1, 1)
+    # pyplot.plot(x[:,0], y)
+    # pyplot.title(dataset.at[index,'Unnamed: 0'], y=0.75, loc='right')
+    # pyplot.show()
 
     
 def plotDistribution(groups):
@@ -78,13 +83,17 @@ def plotDistribution(groups):
 
 # python -i plot_distribution.py 
 # load dataset
+savedCoeff = []
 dataset = read_csv('../../oldriemann/out/gzetaE12/calcHist12.csv', header=0)
 dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
+for index in range(13,26):
+    inspectRow(index)
 
-inspectRow(13)
+np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
+           fmt='%7.2f,%7.3f,%7.3f,%7.3f,%7.4f', delimiter=',')
 
 groups = [1]
 #plotDistribution(groups)
