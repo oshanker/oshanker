@@ -50,13 +50,10 @@ def inspectRow(index):
     y = values[:, 0]
     reg = LinearRegression().fit(x, y)
     r2 = reg.score(x, y)
-    print('Score ', r2)
     #
     coeff = reg.coef_
     intercept = reg.intercept_
-    print('X*', coeff, '+', intercept)
     
-    print(type(coeff))
     
     savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
     
@@ -75,9 +72,6 @@ def inspectRow(index):
         #pyplot.savefig('junk')
     elif doAction == 'testfit':
         out = [z]
-        print(pred)
-        print(angle)
-        print(y)
         for i in [0, 2, 3, 4, 6]:
             out.append(y[i])
             out.append(pred[i])
@@ -111,16 +105,16 @@ dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-doAction = 'testfit'
+doAction = 'saveCoeff'
 if doAction == 'plot':
     inspectRow(20)
 elif doAction == 'saveCoeff':
-    for index in range(13,26):
+    for index in range(0,39):
         inspectRow(index)
     
     np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
-               fmt='%7.2f&%7.3f&%7.3f&%7.3f&%8.5f\\\\', delimiter=',')
-else:
+               fmt='%7.2f, %7.3f, %7.3f, %7.3f, %8.5f', delimiter=',')
+elif doAction == 'testfit':
     testfit = []
     for index in range(13,26):
         inspectRow(index)
