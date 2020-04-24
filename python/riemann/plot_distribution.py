@@ -29,7 +29,6 @@ def getColPhi():
 
 def inspectRow(index):
     z = dataset.at[index,'Unnamed: 0']
-    print(type(z))
     print('values for: ', z)
     
     row0 = dataset.iloc[index][1:].to_frame() #.reset_index(drop=True)
@@ -59,6 +58,7 @@ def inspectRow(index):
     
     pred = np.dot(x, coeff) + intercept
     if doAction == 'plot':
+        option = 'save'
         pyplot.figure()
         pyplot.subplot(1, 1, 1)
         pyplot.scatter(angle, pred,color='black')
@@ -68,8 +68,11 @@ def inspectRow(index):
         pyplot.xlabel('phi')
         pyplot.ylabel('probability density')
         pyplot.title(title, y=0.75, loc='right')
-        pyplot.show()
-        #pyplot.savefig('junk')
+        if(option == 'save'):
+            fname = 'z' + str(z).replace('.','') + '.eps'
+            pyplot.savefig('../../oldriemann/out/gzetaE12/' + fname)
+        else:
+            pyplot.show()
     elif doAction == 'testfit':
         out = [z]
         for i in [0, 2, 3, 4, 6]:
@@ -105,9 +108,9 @@ dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-doAction = 'saveCoeff'
+doAction = 'plot'
 if doAction == 'plot':
-    inspectRow(20)
+    inspectRow(19)
 elif doAction == 'saveCoeff':
     for index in range(0,39):
         inspectRow(index)
