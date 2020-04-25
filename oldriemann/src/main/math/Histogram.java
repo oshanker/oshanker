@@ -23,6 +23,7 @@ public class Histogram {
 	double sumSquares = 0;
 	double sumY = 0;
 	int sampleSize;
+	private NormalizedSpline cdfSpline;
 	
 	public Histogram(double min, double max, int binCount) {
 		this.min = min;
@@ -68,6 +69,51 @@ public class Histogram {
 		}
         NormalizedSpline pdfSpline = new NormalizedSpline(x[0], x[binCount-1], y);	
 		return pdfSpline;
+	}
+
+	public double findQuartile(double y, double epsilon) {
+		final double xlow = yForIndex(1)+ 0.5*delta;
+		final double xhigh = yForIndex(hist.length-2);
+		if(cdfSpline == null) {
+			cdfSpline();
+		}
+		double x = cdfSpline.findX(xlow, xhigh, y, epsilon );
+		return x;
+	}
+
+	public double findQuartile(final double y, final double xlow, final double epsilon) {
+		final double xhigh = yForIndex(hist.length-2);
+		if(cdfSpline == null) {
+			cdfSpline();
+		}
+		double x = cdfSpline.findX(xlow, xhigh, y, epsilon );
+		return x;
+	}
+	
+	public NormalizedSpline cdfSpline() {
+		double sum = 0;
+		double prevIncrement = 0.0d;
+		double increment = 0.0d;
+		final int length = hist.length;
+		final double[] x = new double[length];
+		final double[] y = new double[length];
+		for(int i = 0; i < length; i++) {
+			increment = hist[i];
+			if(i==0) {
+				sum = increment;
+			} else if(i==length-1) {
+				sum += prevIncrement/2.0 + increment;			
+			} else if(i==1) {
+				sum += increment/2.0;			
+			} else {
+				sum += prevIncrement/2.0 + increment/2.0;
+			}
+			prevIncrement = increment;
+			x[i] = yForIndex(i)+delta/2;
+			y[i] = (sum/sampleSize);
+		}		
+        cdfSpline = new NormalizedSpline(x[0], x[x.length-1], y);	
+		return cdfSpline;
 	}
 	
 	/**
@@ -132,7 +178,9 @@ public class Histogram {
 			  + nf.format((double)hist.hist[i]/norm) 
 			  + ", " + nf.format(pred)
 			  + ", " + nf.format(((double)sum)/hist.sampleSize));
-		}		
+		}	
+		
+		hist.cdfSpline();
 
 	}
 

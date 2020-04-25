@@ -110,6 +110,36 @@ public class NormalizedSpline extends BaseNormalizedSpline {
         rhs[diag.length-1] = (-5*y[N-3]+4*y[N-2]+y[N-1]);
     }
 
+    public double findX(double x0, double x1, double y, double epsilon) {
+    	double x, y0;
+		y0 = eval(x0);
+    	if(y<y0) {
+    		throw new IllegalArgumentException("less side not good");
+    	} else if(y-y0 <= epsilon) {
+    		return x0;
+    	}
+		y0 = eval(x1);
+    	if(y>y0) {
+    		throw new IllegalArgumentException("more side not good");
+    	} else if(y0-y <= epsilon) {
+    		return x1;
+    	}
+    	for (int i = 0; i < 10000; i++) {
+        	x = (x0+x1)/2;
+    		y0 = eval(x);
+    		double diff = y-y0;
+        	if(Math.abs(diff)<= epsilon) {
+        		return x;
+        	}
+        	if(diff>0) {
+        		x0 = x;
+        	} else {
+        		x1 = x;
+        	}
+		}
+    	throw new IllegalStateException("not converged");
+    }
+    
     /**
      * used in tests
      * @return
