@@ -45,6 +45,7 @@ import riemann.Rosser;
  */
 public class GSeriesTest {
     private static final int zRange = 39;
+    final double epsilon = 0.0005;
 	static NumberFormat nf = NumberFormat.getInstance();
     static {
         nf.setMinimumFractionDigits(8);
@@ -316,7 +317,7 @@ public class GSeriesTest {
         System.out.println(" | " + maxdiff);
     }
 
-    @Test @Ignore
+    @Test //@Ignore
 	public void testWriteZetaPhiE12() throws Exception{
 		//zetaQuantile.R
     	
@@ -325,15 +326,15 @@ public class GSeriesTest {
     	// after that is run, use the testSymmetryRelations method (MoreGseriesTest)
     	//zetaQuantile.R
     	
-		final int k = 12;
+		final int k = 6;
 		final File baseDir = new File("out/gzetaE12/");
 		final File outputZFile = new File(baseDir,
 	    		"gzeta_calc" + k + ".csv");
 	    if (!outputZFile.getParentFile().exists()) {
 	        outputZFile.getParentFile().mkdirs();
 	    }
-	    final PrintWriter outputZ = new PrintWriter(outputZFile);
-	    //PrintWriter outputZ = null;
+	    //final PrintWriter outputZ = new PrintWriter(outputZFile);
+	    final PrintWriter outputZ = null;
 	    
         final double[][] gramSum = new double[1][2*k];
         final Histogram[] hist = new Histogram[2*k];
@@ -385,6 +386,27 @@ public class GSeriesTest {
             System.out.print(" " + nf.format(hist[j].stdDev()));
         }
 	    System.out.println();
+		final File outputZquantileFile = new File(baseDir, "gzeta_quantile" + k + ".csv");
+	    final PrintWriter outputZquantile = new PrintWriter(outputZquantileFile);
+	    //final PrintWriter outputZquantile = null;
+	    if(outputZquantile != null) {
+	    	//loop over phi
+	        for (int j = 0; j < 2*k; j++) {
+	        	outputZquantile.print(j + ", ");
+	        	double quantile = hist[j].yForIndex(1)+hist[j].delta/2.0;
+	            NormalizedSpline cdfSpline = hist[j].cdfSpline();	
+	        	for(int fidx = 1; fidx < 10; fidx++) {
+	        		double f = 0.1*fidx;
+	        		quantile = hist[j].findQuartile(f, quantile, epsilon);
+//	        		System.out.println(j + " " + quantile + " " + f);
+//	        		System.out.println(cdfSpline.eval(quantile));
+	        		outputZquantile.print(nf.format(quantile) + ", ");
+	        	}
+		        outputZquantile.println();
+	        }
+	    	outputZquantile.close();
+	    }
+
 	    if(outputZ != null) {
 	    	outputZ.close();
 			final double norm = hist[0].sampleSize*hist[0].delta;
