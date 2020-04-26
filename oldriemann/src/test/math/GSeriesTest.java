@@ -391,17 +391,27 @@ public class GSeriesTest {
 	    //final PrintWriter outputZquantile = null;
 	    if(outputZquantile != null) {
 	    	//loop over phi
+	    	double[] f = {
+	    			-0.1,0.1,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.75,0.8,0.9,1.1	
+	    	};
+	    	outputZquantile.println(
+	    		"phi*6/pi,min,0.1,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.75,0.8,0.9,max,mean"	
+	    	);
 	        for (int j = 0; j < 2*k; j++) {
 	        	outputZquantile.print(j + ", ");
 	        	double quantile = hist[j].yForIndex(1)+hist[j].delta/2.0;
 	            NormalizedSpline cdfSpline = hist[j].cdfSpline();	
-	        	for(int fidx = 1; fidx < 10; fidx++) {
-	        		double f = 0.1*fidx;
-	        		quantile = hist[j].findQuartile(f, quantile, epsilon);
-//	        		System.out.println(j + " " + quantile + " " + f);
+	        	for(int fidx = 0; fidx < f.length; fidx++) {
+	        		if(fidx == 1) {
+	        		    quantile = hist[j].findQuartile(f[fidx], epsilon);
+	        		} else {
+	        		    quantile = hist[j].findQuartile(f[fidx], quantile, epsilon);
+	        		}
+//	        		System.out.println(j + " " + quantile + " " + f[fidx]);
 //	        		System.out.println(cdfSpline.eval(quantile));
 	        		outputZquantile.print(nf.format(quantile) + ", ");
 	        	}
+	        	outputZquantile.print(nf.format(hist[j].mean()) + ", ");
 		        outputZquantile.println();
 	        }
 	    	outputZquantile.close();

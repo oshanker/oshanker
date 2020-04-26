@@ -49,12 +49,6 @@ public class HistogramTest {
 		}	
         
     }
-
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testCDFException() {
-		hist.findQuartile(1.1, epsilon);
-	}
 	
 	@Test
 	public void testCDF() {

@@ -14,6 +14,8 @@ public class Histogram {
         nf.setGroupingUsed(false);
     }
     
+	double actualmin = Double.MAX_VALUE;
+	double actualmax = -Double.MAX_VALUE;
 	final double min;
 	final double max;
 	final int binCount;
@@ -38,6 +40,12 @@ public class Histogram {
 		hist[index(y)]++;
 		sumSquares += y*y;
 		sumY += y;
+		if(y<actualmin) {
+			actualmin = y;
+		}
+		if(y>actualmax) {
+			actualmax = y;
+		}
 	}
 	
 	int index(double y) {
@@ -73,15 +81,16 @@ public class Histogram {
 
 	public double findQuartile(double y, double epsilon) {
 		final double xlow = yForIndex(1)+ 0.5*delta;
-		final double xhigh = yForIndex(hist.length-2);
-		if(cdfSpline == null) {
-			cdfSpline();
-		}
-		double x = cdfSpline.findX(xlow, xhigh, y, epsilon );
-		return x;
+		return findQuartile(y, xlow, epsilon);
 	}
 
 	public double findQuartile(final double y, final double xlow, final double epsilon) {
+		if(y<=0) {
+			return actualmin;
+		}
+		if(y>=1.0) {
+			return actualmax;
+		}
 		final double xhigh = yForIndex(hist.length-2);
 		if(cdfSpline == null) {
 			cdfSpline();
