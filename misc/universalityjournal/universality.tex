@@ -22,6 +22,10 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
+\usepackage{cite}
+
+
+
 \def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
 \long\def\symbolfootnote[#1]#2{\begingroup%
 \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
@@ -75,6 +79,8 @@ We present a remarkable and striking universality property for the value distrib
 of the Riemann zeta function on the critical axis. The observed coefficients 
 in the universality relation imply
 symmetry and anti-symmetry relations for the value distribution.
+We provide empirical verification of the relations for a range of heights along the critical
+axis covering $16$ orders of magnitude.
 
 \end{abstract}
 {\textbf {Keywords}:} Riemann zeta, Value Distribution, Universality, Symmetry, Hardy's function
@@ -82,23 +88,22 @@ symmetry and anti-symmetry relations for the value distribution.
 {\textbf {PACS numbers}:}  02.70.Rr, 05.45.Df, 05.45.Pq
 
 
-\symbolfootnote[0]{\bf{* }}
+%\symbolfootnote[0]{\bf{* }}
 
 
 \section{Introduction}
 The behaviour of the Riemann zeta function on the critical axis is of interest to 
 physicists~\cite{Shanker 2006} because of
 its close connections  to the theory of the spectra of random matrix theories 
-(RMT)~\cite{Wigner 1967, Gaudin 1960, Gaudin 1961, Dyson 1962} 
+(RMT)~\cite{Wigner 1967, Gaudin 1960, Gaudin 1961, Dyson 1962, Bogomolny 1995, Bogomolny 1996, Katz 1999, Keating 2000a, Keating 2000b, Conrey 2000, 
+Hughes 2000, Hughes 2001, Conrey 2002, Conrey 2003} 
 and the spectra of classically chaotic quantum systems in 
 physics~\cite{Berry 1985,Berry 1986,Berry 1987,Berry 1988}. 
 To get some insight into this, 
 in this work
-we look at the symmetry and universality properties of the Riemann zeta function 
-on the critical axis.
+we look at the symmetry and universality properties of the Riemann zeta function value 
+on the critical axis. This provides a complementary way to look at the problem.
 The universality relations and symmetries exhibited by a system are fundamental aspects of the system. 
-In this work, we present symmetry and universality relations for the value
-distribution of the Riemann zeta function at Generalized Gram points.
 
 Ref.~\cite{Shanker 2018a} studied empirically the distribution of $Z(t)$ values at 
 Gram points and
@@ -108,6 +113,8 @@ Further work~\cite{Shanker 2018b}) extended the study to Generalized Gram points
 The new results in this work are as follows. 
 Our new universality relation (Eq.~\ref{eq:universality}) expresses the value distributions 
 at different Generalized Gram points, in terms of three universal functions.
+By universal we mean that the universal functions are independent of the angle $\phi$
+characterizing the  Generalized Gram point.
 We show that the  value
 distribution of the Hardy $Z$ function at discrete points is anti-symmetrical 
 for reflections around the mid-points 
@@ -120,8 +127,7 @@ Section~\ref{sec3} presents the conjectured universality and symmetry relations
 and provides evidence for the universality relations.
 In Section~\ref{sec4} we discuss the evidence for the symmetry relations
 by studying the quantiles of the distributions.
-Section~\ref{conclusions} presents the conclusions. In the Appendix we discuss
-the nature of the probability distribution a little more in depth.
+Section~\ref{conclusions} presents the conclusions. 
 
 
 \begin{figure*}
@@ -187,7 +193,7 @@ $\theta (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
 
 
 
-\section{\label{sec3}Probability Distribution}
+\section{\label{sec3}Universality and symmetry relations}
 
 \begin{table}
 \centering \(\begin{array}{ccccccc}
@@ -240,10 +246,11 @@ generalized Gram points in the sample space.
 The probability density  $p_{\phi}(z)$ depends on the sample space (i.e., on the height $t$ and on the size of 
 the sample space). In practice the densities are not sensitive to the choice of the sample space as long as 
 the height $t$ is large enough and the length of the interval from which the sample is collected is large enough 
-(but not too large on log scale). The emphasis in this work is on the empirical study of the distribution. 
-There are important open theoretical questions about the distribution that we do not cover, 
-and we mention those questions in the Appendix.
-
+(but not too large on log scale). The  study of 
+Kalpokas and Steuding \cite{kalpokas 2009} implies that the standard deviation of $p_{\phi}(z)$  
+is independent of $\phi$ and is proportional to $\frac{T}{2\pi}$.  
+The probability distribution will have a finite standard deviation if the 
+argument is normalized by $\sqrt{\frac{T}{2\pi}}$.
 
 \begin{table}
 \centering \(\begin{array}{ccccccccccc}
@@ -332,7 +339,7 @@ helps fill the gaps.
 \subsection{\label{numerics}Numerical evaluation}
 
 
-Hardy's function $Z(t)$  is evaluated using the Riemann$-$Siegel series
+We evaluate Hardy's function $Z(t)$  using the Riemann$-$Siegel series
 \begin{equation}
 Z(t) = 2\sum^{m}_{n=1}\frac{\cos(\theta(t) - t \ln (n))}{\sqrt{n}} + R(t), 
 \label{eq:RS}
@@ -355,7 +362,7 @@ are accurate
 to better than $10^{-6}$. 
 
 
-\section{\label{sec4}Quantiles}
+\section{\label{sec4}Evidence for the relations from quantiles}
   
 The human mind is attracted by symmetry. Many objects in nature exhibit symmetry.
 Even more remarkable are the symmetries exhibited in the basic laws of the 
@@ -386,7 +393,7 @@ q_{f}(\phi) = -q_{1-f}(\pi-\phi).
 \end{equation}
 Eq.~\ref{eq:antisym}  is a generalization of the result in Ref.~\cite{Shanker 2018a} 
 for the anti-symmetry of the distribution of $Z(t)$ at even and odd Gram points. 
-The  symmetry condition is
+The  symmetry condition Eq.~\ref{eq:rhosym} implies
 \begin{equation}
 q_{f}(\phi) = q_{f}(2\pi-\phi).
 \label{eq:sym}
@@ -546,43 +553,6 @@ Another intriguing observation is the linear dependence of the quantiles
 on $\cos(\phi)$. The linear dependence and the symmetry properties imply that 
 the quartile range $q_{1-f}-q_f$ is independent of $\phi$.
 
-\section*{\label{appendix} Appendix}
-
-A more precise definition for the function $p_{\phi}(y)$ is provided. We consider the interval along 
-the critical axis specified by $(T_1, T_2)$. While empirical studies necessarily use large but 
-finite  $T_1, T_2$, we are interested in the limit 
-$T_1 \rightarrow \infty, T_2 \rightarrow \infty,  T_2-T_1 \rightarrow \infty,$ however
-\begin{equation}
-T_2 - T_1  \ll T_1. 
-\label{eq:interval}
-\end{equation}
-Because of Equation \ref{eq:interval}, we can consider  $\ln (t)$  to be effectively constant over  the interval. A probability space $W$ is defined by a sample space of elementary events $\Omega$, a $\sigma$ algebra of all considered events $\mathcal{F}$, and a probability measure $P$. Our space of elementary events $\Omega$ is the set of all generalized Gram points with value phi in the interval. This is easily seen to be a discrete space. If we denote $\theta (T_1) = 2k_1\pi + \phi$, $\theta (T_2) = 2k_2\pi + \phi$, then we can index the set of generalized Gram points in the interval by the integer  $k$, where $k$ lies in the interval $(k_1, k_2)$. Since the mean spacing $\delta$ of the zeros at height $t$ is $\delta = 2\pi(\ln (t/2\pi))^{-1}$, the cardinality of this set is $(T_2 - T_1)*(\ln (T_1/2\pi))/(2\pi)$. Since we are dealing with a discrete space, we follow standard practice and choose $\mathcal{F}$,  the  $\sigma$ algebra, to be the collection of all subsets of $\Omega$ . Finally, the random variable whose probability distribution we wish to study is the value of $Z(t)$ at the generalized Gram point $t$.
-
-
-We can get some insight into the probability distribution $p_{\phi}(z)$ from the studies of 
-Kalpokas and Steuding \cite{kalpokas 2009}. 
-They show that for $\phi_1$ in the range $[0, \pi)$ 
-\begin{equation}
-\sum_{0 < t < T, \zeta(\frac{1}{2}+it) \in e^{i\phi_1}\mathbb{R}} \zeta(\frac{1}{2}+it) = (2e^{i\phi_1}\cos(\phi_1))\frac{T}{2\pi}\ln (\frac{T}{2\pi}) + O_\epsilon(T^{(\frac{1}{2}+\epsilon}).
-\label{eq:kalpokas1}
-\end{equation}
-From Equation~\ref{eq:kalpokas1} and the cardinality of our sample space, it follows that a finite mean can be defined for the value distribution in our sample space. This gives support to the existence of a limiting distribution. We now consider the possibility of defining higher order moments for the value distribution. Kalpokas and Steuding  also show that
-\begin{equation}
-\sum_{0 < t < T, \zeta(\frac{1}{2}+it) \in e^{i\phi_1}\mathbb{R}} |\zeta(\frac{1}{2}+it)|^2 = \frac{T}{2\pi}(\ln (\frac{T}{2\pi}))^2 + (2\gamma+2\cos(2\phi_1))\frac{T}{2\pi}\ln (\frac{T}{2\pi}) + \frac{T}{2\pi} + O_\epsilon(T^{(\frac{1}{2}+\epsilon}),
-\label{eq:kalpokas2}
-\end{equation}
-where $\gamma$ is Euler's constant. From Equation~\ref{eq:kalpokas2} and the cardinality of our sample space 
-it seems that higher order moments of the value distribution diverge logarithmically. 
-There is a lot of cancellation between positive and negative values of $Z(T)$ for odd moments, 
-so odd moments will  behave better than even moments. It seems likely that a limiting value distribution exists, 
-it has a finite well-defined mean, and higher moments diverge logarithmically. 
-Distributions which do not have all moments defined are used in applications, for example, 
-the Cauchy-Lorentz distribution~\cite{feller}. Equation~\ref{eq:kalpokas1} and \ref{eq:kalpokas2} 
-predict that the standard deviation should be independent of $\phi$. 
-These equations also imply that the probability distribution will have a finite standard deviation if the 
-argument is normalized by $\sqrt{\frac{T}{2\pi}}$.
- 
-
 
 \bibliographystyle{amsplain}
 \begin{thebibliography}{10}
@@ -600,6 +570,27 @@ Nucl. Phys., {\bf 18},
 Nucl. Phys., {\bf 25}, 447-458, (1961).
 \bibitem{Dyson 1962} F. Dyson, “Statistical Theory of Energy Levels III,” 
 J. Math. Phys., {\bf 3}, 166-175, (1962).
+
+\bibitem{Bogomolny 1995} E.B. Bogomolny and J.P. Keating, Random matrix theory and the Riemann zeros I: three- and
+four-point correlations, Nonlinearity, 8:1115–1131, 1995.
+\bibitem{Bogomolny 1996} E.B. Bogomolny and J.P. Keating, Random matrix theory and the Riemann zeros II:n-point
+correlations, Nonlinearity, 9:911–935, 1996.
+\bibitem{Katz 1999} Nicholas M. Katz, Peter Sarnak, Random Matrices, Frobenius Eigenvalues and Monodromy, AMS,
+Providence, Rhode Island, 1999.
+\bibitem{Keating 2000a} J.P. Keating and N.C. Snaith, Random matrix theory and $\zeta(1/2 + it)$, Commun. Math. Phys.,
+214:57–89, 2000.
+\bibitem{Keating 2000b} J.P. Keating and N.C. Snaith, Random matrix theory and L-functions at s = 1/2, Commun.
+Math. Phys, 214:91–110, 2000.
+\bibitem{Conrey 2000} J.B. Conrey and D.W. Farmer, Mean values of L-functions and symmetry, Int. Math. Res.
+Notices, 17:883–908, 2000, arXiv:math.nt/9912107.
+\bibitem{Hughes 2000} C.P. Hughes, J.P. Keating, and N. O’Connell, Random matrix theory and the derivative of the
+Riemann zeta function, Proc. R. Soc. Lond. A, 456:2611–2627, 2000.
+\bibitem{Hughes 2001} C.P. Hughes, J.P. Keating, and N. O’Connell, On the characteristic polynomial of a random
+unitary matrix, Commun. Math. Phys., 220(2):429–451, 2001.
+\bibitem{Conrey 2002} J.B. Conrey, D.W. Farmer, J.P. Keating, M.O. Rubinstein, and N.C. Snaith, Integral moments
+of zeta- and L-functions, preprint, 2002, arXiv:math.nt/0206018.
+\bibitem{Conrey 2003} J.B. Conrey, D.W. Farmer, J.P. Keating, M.O. Rubinstein, and N.C. Snaith, Autocorrelation of
+Random Matrix Polynomials Commun. Math. Phys , 237:365-395, 2003
 
 \bibitem{Berry 1985}  M. V. Berry, “Semiclassical theory of spectral rigidity,” 
 Proc. R. Soc., {\bf A 400} , 229-251, (1985). 
