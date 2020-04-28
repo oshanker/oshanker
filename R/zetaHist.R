@@ -1,4 +1,5 @@
-df <- read.csv("../oldriemann/out/gzetaE28/gzeta12.csv", header = FALSE);
+#input for E28 from math.MoreGSeriesTest.testInterpolate()
+df <- read.csv("../oldriemann/out/gzetaE28/gzeta6.csv", header = FALSE);
 for (i in 1:length(df)) {
 	x<-as.matrix(df[i]);
 	x<-as.vector(x);
