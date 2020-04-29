@@ -54,7 +54,7 @@ def inspectRow(index):
     
     pred = np.dot(x, coeff) + intercept
     if debug:
-        print(angle[3], x[3],y[3])
+        print(angle[3], x[3],'actual', y[3])
         print(coeff, intercept)
         print(x[3,0]*coeff[0] + x[3,1]*coeff[1] + intercept, pred[3])
     savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
@@ -105,7 +105,12 @@ def plotDistribution(groups):
 # python -i plot_distribution.py 
 # load dataset
 savedCoeff = []
-dataset = read_csv('../../oldriemann/out/gzetaE12/percentile_calc.csv', header=0)
+runFor = 1
+fitQuantileCoeff = ['../../oldriemann/out/gzetaE12/fitQuantileCoeff.csv',
+                    '../../oldriemann/out/gzetaE28/fitQuantileCoeff.csv']
+percentile_calc = ['../../oldriemann/out/gzetaE12/percentile_calc.csv',
+    '../../oldriemann/out/gzetaE28/percentileE28.csv']
+dataset = read_csv(percentile_calc[runFor], header=0)
 #dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
@@ -121,7 +126,7 @@ elif doAction == 'saveCoeff':
     for index in range(2,dataset.shape[1]-1):
         inspectRow(index)
     
-    np.savetxt('../../oldriemann/out/gzetaE12/fitQuantileCoeff.csv', np.asarray(savedCoeff), 
+    np.savetxt(fitQuantileCoeff[runFor], np.asarray(savedCoeff), 
                fmt='%7.2f, %7.3f, %7.3f, %7.3f, %8.5f', delimiter=',')
 elif doAction == 'testfit':
     testfit = []
