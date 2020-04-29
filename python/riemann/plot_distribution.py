@@ -102,20 +102,26 @@ def plotDistribution(groups):
 
 # python -i plot_distribution.py 
 # load dataset
+# input generated in math.GSeriesTest.testWriteZetaPhiE12()
 savedCoeff = []
-dataset = read_csv('../../oldriemann/out/gzetaE12/calcHist12.csv', header=0)
+runFor = 0
+fitCoeff_in = ['../../oldriemann/out/gzetaE12/calcHist12.csv',
+                    '../../oldriemann/out/gzetaE28/TBD.csv']
+outFit = ['../../oldriemann/out/gzetaE12/fitCoeff.csv',
+    '../../oldriemann/out/gzetaE28/TBD.csv']
+dataset = read_csv(fitCoeff_in[runFor], header=0)
 dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
-doAction = 'plot'
+doAction = 'saveCoeff'
 if doAction == 'plot':
     inspectRow(19)
 elif doAction == 'saveCoeff':
     for index in range(0,39):
         inspectRow(index)
     
-    np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
+    np.savetxt(outFit[runFor], np.asarray(savedCoeff), 
                fmt='%7.2f, %7.3f, %7.3f, %7.3f, %8.5f', delimiter=',')
 elif doAction == 'testfit':
     testfit = []

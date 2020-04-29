@@ -201,7 +201,7 @@ public class GSeriesTest {
 
     @Test //@Ignore  
     public void testSplineFit() throws Exception{
-        //check the symmetry and antisymmetry relations from the output of distributions
+        //needs fixing
     	int k = 12;
         File file = new File("out/gzetaE12/calcHist" + k +  ".csv");
         BufferedReader zeroIn = new BufferedReader(new FileReader(file));
@@ -324,7 +324,7 @@ public class GSeriesTest {
     	//calculate Z, mean(Z), store Z
     	//This could provide input for zetaHist.R 
     	// after that is run, use the testSymmetryRelations method (MoreGseriesTest)
-    	//zetaQuantile.R
+    	//zetaQuantile.R or oshanker/python/riemann/plot_distribution.py
     	
 		final int k = 6;
 		final File baseDir = new File("out/gzetaE12/");
@@ -419,12 +419,17 @@ public class GSeriesTest {
 
 	    if(outputZ != null) {
 	    	outputZ.close();
+	    }
+    	final File outputHistFile = new File(baseDir,
+	    		"calcHist" + k + ".csv");
+    	final PrintWriter outputHist = new PrintWriter(outputHistFile);
+    	if(outputHist != null) {
 			final double norm = hist[0].sampleSize*hist[0].delta;
-	    	final File outputHistFile = new File(baseDir,
-		    		"calcHist" + k + ".csv");
-	    	final PrintWriter outputHist = new PrintWriter(outputHistFile);
-		    //outputHist.println(",0,30,60,90,120,150,180,210,240,270,300,330,");
-		    outputHist.println(",0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345,");
+			if(k == 6) {
+		       outputHist.println(",0,30,60,90,120,150,180,210,240,270,300,330,");
+			} else {
+		       outputHist.println(",0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345,");
+			}
 			for(int i = 0; i < hist[0].hist.length; i++) {
 		        outputHist.print(nf.format(hist[0].yForIndex(i)+hist[0].delta/2.0) + ", " );
 		        for (int j = 0; j < 2*k; j++) {
@@ -433,7 +438,7 @@ public class GSeriesTest {
 		        outputHist.println();
 			}	
 			outputHist.close();
-	    }
+    	}
 	}
 
 	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
