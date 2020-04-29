@@ -32,48 +32,46 @@ def getColPhi():
     inspect(groups[-1]-1)
 
 def inspectRow(index):
-    z = dataset.at[index,'Unnamed: 0']
+    z = values[0, index]
     print('values for: ', z)
+    debug = True
     
     row0 = dataset.iloc[index][1:].to_frame() #.reset_index(drop=True)
-    # print(row0.head())
-    # print(row0.tail())
-    # summary = row0.describe()
-    # print(summary)
-    values = row0.values
-    # print (values)
     x = []
-    angle = []
-    for phi in range(0,360,15):
+    col = values[1:, index]
+    angle = values[1:, 0]*360/col.shape[0]
+    for phi in angle:
         x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
-        angle.append(phi)
     x = np.array(x)
-    angle = np.array(angle)
     #x = x.reshape(-1,1)
-    y = values[:, 0]
+    y = col
     reg = LinearRegression().fit(x, y)
+    #print(reg.)
     r2 = reg.score(x, y)
     #
     coeff = reg.coef_
     intercept = reg.intercept_
     
-    
+    pred = np.dot(x, coeff) + intercept
+    if debug:
+        print(angle[3], x[3],y[3])
+        print(coeff, intercept)
+        print(x[3,0]*coeff[0] + x[3,1]*coeff[1] + intercept, pred[3])
     savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
     
-    pred = np.dot(x, coeff) + intercept
     if doAction == 'plot':
         option = 'save'
         pyplot.figure()
         pyplot.subplot(1, 1, 1)
         pyplot.scatter(angle, pred,color='black')
         pyplot.plot(angle, y)
-        title = 'z=' + str(z)
-        pyplot.legend(['fit from \nuniversality','actual'])
+        title = 'f=' + str(z)
+        pyplot.legend(['fit','actual'])
         pyplot.xlabel('phi')
-        pyplot.ylabel('probability density')
+        pyplot.ylabel('quantile')
         pyplot.title(title, y=0.75, loc='right')
         if(option == 'save'):
-            fname = 'z' + str(z).replace('.','') + '.eps'
+            fname = 'f' + str(z).replace('.','') + '.eps'
             pyplot.savefig('../../oldriemann/out/gzetaE12/' + fname)
         else:
             pyplot.show()
@@ -113,23 +111,23 @@ print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
 print('dataset', type(dataset))
 print(dataset)
-doAction = 'inspect'
+doAction = 'saveCoeff'
 values = dataset.values
 if doAction == 'inspect':
     getColPhi()
 elif doAction == 'plot':
-    inspectRow(19)
+    inspectRow(dataset.shape[1]-2)
 elif doAction == 'saveCoeff':
-    for index in range(0,39):
+    for index in range(2,dataset.shape[1]-1):
         inspectRow(index)
     
-    np.savetxt('../../oldriemann/out/gzetaE12/fitCoeff.csv', np.asarray(savedCoeff), 
+    np.savetxt('../../oldriemann/out/gzetaE12/fitQuantileCoeff.csv', np.asarray(savedCoeff), 
                fmt='%7.2f, %7.3f, %7.3f, %7.3f, %8.5f', delimiter=',')
 elif doAction == 'testfit':
     testfit = []
     for index in range(13,26):
         inspectRow(index)
-    np.savetxt('../../oldriemann/out/gzetaE12/testfit.csv', np.asarray(testfit), 
+    np.savetxt('../../oldriemann/out/gzetaE12/testQuantilefit.csv', np.asarray(testfit), 
                fmt='%7.2f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f \\\\', 
                delimiter=',')
 
