@@ -323,14 +323,16 @@ public class GSeriesTest {
 		//zetaQuantile.R
     	
     	//calculate Z, mean(Z), store Z
+    	//z, quantile, and hist
     	//This could provide input for zetaHist.R 
     	// after that is run, use the testSymmetryRelations method (MoreGseriesTest)
     	//zetaQuantile.R or oshanker/python/riemann/plot_distribution.py
     	
-		final int k = 6;
+		final int k = 12;
 		final File baseDir = new File("out/gzetaE12/");
 		final File outputZFile = new File(baseDir,
 	    		"gzeta_calc" + k + ".csv");
+		//      "gzeta_calc" + k + ".csv");
 	    if (!outputZFile.getParentFile().exists()) {
 	        outputZFile.getParentFile().mkdirs();
 	    }
@@ -339,8 +341,10 @@ public class GSeriesTest {
 	    
         final double[][] gramSum = new double[1][2*k];
         final Histogram[] hist = new Histogram[2*k];
-        final double min = -9.25;
-        final double max = 9.25;
+//        final double min = -9.25;
+//        final double max = 9.25;
+        final double min = -.925;
+        final double max = 0.925;
         final int binCount = zRange-2;
         for (int i = 0; i < hist.length; i++) {
 			hist[i] = new Histogram(min, max, binCount);
@@ -361,7 +365,12 @@ public class GSeriesTest {
 //	        System.out.println(nf.format(gramSum[1][0]/(3.154*(i+1))) +
 //	        		"\t " + nf.format(gramSum[1][k]/(3.154*(i+1))));
 	    }
-		final double crossNorm = 2*(1.577)*gramE12.length;
+
+	    if(outputZ != null) {
+	    	outputZ.close();
+	    }
+
+	    final double crossNorm = 2*(1.577)*gramE12.length;
         for (int j = 0; j < 2*k; j++) {
         	gramSum[0][j] /= gramE12.length;
             assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.001);
@@ -387,9 +396,11 @@ public class GSeriesTest {
             System.out.print(" " + nf.format(hist[j].stdDev()));
         }
 	    System.out.println();
+	    
+	    //quantile. use R
 		final File outputZquantileFile = new File(baseDir, "gzeta_quantile" + k + ".csv");
-	    final PrintWriter outputZquantile = new PrintWriter(outputZquantileFile);
-	    //final PrintWriter outputZquantile = null;
+	    //final PrintWriter outputZquantile = new PrintWriter(outputZquantileFile);
+	    final PrintWriter outputZquantile = null;
 	    if(outputZquantile != null) {
 	    	//loop over phi
 	    	double[] f = {
@@ -417,12 +428,11 @@ public class GSeriesTest {
 	        }
 	    	outputZquantile.close();
 	    }
-
-	    if(outputZ != null) {
-	    	outputZ.close();
-	    }
+	    
+	    //hist
     	final File outputHistFile = new File(baseDir,
-	    		"calcHist" + k + ".csv");
+	    		"calcHist_fine" + k + ".csv");
+	    //		"calcHist" + k + ".csv");
     	final PrintWriter outputHist = new PrintWriter(outputHistFile);
     	if(outputHist != null) {
 			final double norm = hist[0].sampleSize*hist[0].delta;

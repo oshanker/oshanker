@@ -106,9 +106,13 @@ def plotDistribution(groups):
 # or in math.MoreGSeriesTest.testInterpolate()
 savedCoeff = []
 runFor = 1
-fitCoeff_in = ['../../oldriemann/out/gzetaE12/calcHist12.csv',
-                    '../../oldriemann/out/gzetaE28/calcHist12.csv']
-outFit = ['../../oldriemann/out/gzetaE12/fitCoeff.csv',
+fitCoeff_in = [
+    '../../oldriemann/out/gzetaE12/calcHist12.csv',
+    '../../oldriemann/out/gzetaE12/calcHist_fine12.csv',
+    '../../oldriemann/out/gzetaE28/calcHist12.csv']
+outFit = [
+    '../../oldriemann/out/gzetaE12/fitCoeff.csv',
+    '../../oldriemann/out/gzetaE12/fitCoeff_fine.csv',
     '../../oldriemann/out/gzetaE28/fitCoeff.csv']
 dataset = read_csv(fitCoeff_in[runFor], header=0)
 dataset.drop('Unnamed: 25', axis = 1, inplace = True)
