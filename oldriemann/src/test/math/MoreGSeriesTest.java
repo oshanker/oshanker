@@ -213,17 +213,18 @@ public class MoreGSeriesTest {
         }
     }
     
-    @Test @Ignore  
+    @SuppressWarnings("unused")
+	@Test //@Ignore  
     public void testInterpolate() throws Exception{
     	//input can come from riemann.Interpolate.consolidatedF()
     	//That method stores the output G series from riemann.Interpolate.readItems()
     	//provides input for zetaHist.R 
     	// after that is run, use the testSymmetryRelations method
-    	//zetaQuantile.R
+    	//zetaQuantile.R or oshanker/python/riemann/plot_distribution.py
     	
     	//for exact g at e12, math.GSeriesTest.testWriteZetaPhiE12()
-        File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
-        GSeries gSeries = Interpolate.readGSeries(gFile);
+        final File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
+        final GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
         
 //        double[] zero = {100415.50500735927, 100415.61036506912, 
@@ -234,23 +235,31 @@ public class MoreGSeriesTest {
 //            Interpolate.validateZero(zero[i], expectedDer[i], initialPadding, gSeries,false);
 //        }
 
-        int k = 6;
-        File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta"
+        final int k = 12;
+        final File file = new File("out/gzeta" + Interpolate.prefix + "/gzeta"
         		+ k + ".csv");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        PrintWriter out = new PrintWriter(file);
+        //final PrintWriter out = new PrintWriter(file);
+        final PrintWriter out = null;
         writeZetaPhi( out, gSeries, initialPadding, 2*gSeries.spacing, k);
-        out.close();
+        if(out != null) {out.close();}
     }
 
-    private void writeZetaPhi( PrintWriter out, GSeries gAtBeta, 
-            int initialPadding, double incr, int k) throws Exception{
-        double[] oddsum = new double[k], evensum = new double[k];
+    private void writeZetaPhi( final PrintWriter out, final GSeries gAtBeta, 
+            final int initialPadding, final double incr, final int k) throws Exception{
+        final double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];
+        final Histogram[] hist = new Histogram[2*k];
+        final double min = -9.25;
+        final double max = 9.25;
+        final int binCount = GSeriesTest.zRange-2;
+        for (int i = 0; i < hist.length; i++) {
+			hist[i] = new Histogram(min, max, binCount);
+		}
         final double firstGram = gAtBeta.begin + initialPadding*incr;
-        int N = gAtBeta.gAtBeta.length/2 - 2*initialPadding;
+        final int N = gAtBeta.gAtBeta.length/2 - 2*initialPadding;
         double gram = firstGram;
         for (int i = 0; i < N; i++) {
             gram += incr;
@@ -267,12 +276,14 @@ public class MoreGSeriesTest {
                 if(i%2==1){
                     zeta[k+j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     oddsum[j] += zeta[k+j];
+                    hist[j+k].addPoint(zeta[k+j]);
                 } else {
                     zeta[j] = gAtBeta.riemannZeta(gFromBLFI, t);
                     evensum[j] += zeta[j];
+                    hist[j].addPoint(zeta[j]);
                 }
             }
-            if(i%2==1){
+            if(out != null && i%2==1){
                 for (int j = 0; j < 2*k; j++) {
                     if(j>0){out.print(", ");}
                     out.print(nf.format(zeta[j]));
@@ -284,7 +295,35 @@ public class MoreGSeriesTest {
             oddsum[i] *= 2.0/N;
             evensum[i] *= 2.0/N;
         }
-        System.out.println(Arrays.toString(evensum));
+		final File baseDir = new File("out/gzetaE28/");
+    	final File outputHistFile = new File(baseDir,
+	    		"calcHist" + k + ".csv");
+    	final PrintWriter outputHist = new PrintWriter(outputHistFile);
+    	if(outputHist != null) {
+			final double norm = hist[0].sampleSize*hist[0].delta;
+			if(k == 6) {
+		       outputHist.println(",0,30,60,90,120,150,180,210,240,270,300,330,");
+			} else {
+		       outputHist.println(",0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345,");
+			}
+			for(int i = 0; i < hist[0].hist.length; i++) {
+		        outputHist.print(nf.format(hist[0].yForIndex(i)+hist[0].delta/2.0) + ", " );
+		        for (int j = 0; j < 2*k; j++) {
+		        	outputHist.print(nf.format((double)hist[j].hist[i]/norm) + ", ");
+		        }
+		        outputHist.println();
+			}	
+			outputHist.close();
+    	}
+
+        for (int j = 0; j < 2*k; j++) {
+            System.out.print(" " + nf.format(hist[j].mean()));
+            assertEquals(2.00*Math.cos(j*Math.PI/k), hist[j].mean(), 0.005);
+        }
+        System.out.println();
+
+        //System.out.println(Arrays.toString(evensum));
+        
         for (int j = 0; j < k; j++) {
             System.out.print(nf.format(oddsum[j]) + " ");
             assertEquals(-2.00*Math.cos(j*Math.PI/k), oddsum[j], 0.1);

@@ -44,7 +44,7 @@ import riemann.Rosser;
  *
  */
 public class GSeriesTest {
-    private static final int zRange = 39;
+    static final int zRange = 39;
     final double epsilon = 0.0005;
 	static NumberFormat nf = NumberFormat.getInstance();
     static {
@@ -317,7 +317,8 @@ public class GSeriesTest {
         System.out.println(" | " + maxdiff);
     }
 
-    @Test //@Ignore
+    @SuppressWarnings("unused")
+	@Test //@Ignore
 	public void testWriteZetaPhiE12() throws Exception{
 		//zetaQuantile.R
     	
