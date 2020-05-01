@@ -252,11 +252,12 @@ public class MoreGSeriesTest {
         final double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];
         final Histogram[] hist = new Histogram[2*k];
-        final double min = -9.25;
-        final double max = 9.25;
+        int runFor = 1;
+        final double min[] = {-9.25, -.925};
+        final double max[] = {9.25, 0.925};
         final int binCount = GSeriesTest.zRange-2;
         for (int i = 0; i < hist.length; i++) {
-			hist[i] = new Histogram(min, max, binCount);
+			hist[i] = new Histogram(min[runFor], max[runFor], binCount);
 		}
         final double firstGram = gAtBeta.begin + initialPadding*incr;
         final int N = gAtBeta.gAtBeta.length/2 - 2*initialPadding;
@@ -296,8 +297,11 @@ public class MoreGSeriesTest {
             evensum[i] *= 2.0/N;
         }
 		final File baseDir = new File("out/gzetaE28/");
-    	final File outputHistFile = new File(baseDir,
-	    		"calcHist" + k + ".csv");
+		
+	    //hist
+    	final String[] histOutFile = {"calcHist", "calcHist_fine"};
+		final File outputHistFile = new File(baseDir,
+	    		histOutFile[runFor] + k + ".csv");
     	final PrintWriter outputHist = new PrintWriter(outputHistFile);
     	if(outputHist != null) {
 			final double norm = hist[0].sampleSize*hist[0].delta;
