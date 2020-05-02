@@ -41,11 +41,11 @@ def inspectRow(index):
     x = []
     angle = []
     for phi in range(0,360,15):
-        x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
+        #x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
+        x.append([math.cos(math.pi*phi/180)])
         angle.append(phi)
     x = np.array(x)
     angle = np.array(angle)
-    #x = x.reshape(-1,1)
     y = values[:, 0]
     reg = LinearRegression().fit(x, y)
     r2 = reg.score(x, y)
@@ -53,8 +53,12 @@ def inspectRow(index):
     coeff = reg.coef_
     intercept = reg.intercept_
     
-    
-    savedCoeff.append([z, coeff[0], coeff[1], intercept, r2])
+    line = [z]
+    for value in coeff:
+        line.append(value)
+    line.append(intercept)
+    line.append(r2)
+    savedCoeff.append(line)
     
     pred = np.dot(x, coeff) + intercept
     if doAction == 'plot':
@@ -82,9 +86,8 @@ def inspectRow(index):
         testfit.append(out)
 
     
-def plotDistribution(groups):
+def plotDistribution(groups, values):
     
-    values = dataset.values
     # print('values', type(values))
     
     i = 1
@@ -122,16 +125,26 @@ dataset = read_csv(fitCoeff_in[runFor], header=0)
 dataset.drop('Unnamed: 25', axis = 1, inplace = True)
 print('dataset.columns', dataset.columns, dataset.columns.shape)
 #dataset.dtypes
-print('dataset', type(dataset))
+rows = dataset.shape[0]
+mid = rows//2
+print('dataset', type(dataset), dataset.shape, mid)
 doAction = 'saveCoeff'
 if doAction == 'plot':
-    inspectRow(19)
+    inspectRow(mid)
 elif doAction == 'saveCoeff':
-    for index in range(0,39):
+    for index in range(0, rows):
         inspectRow(index)
-    
-    np.savetxt(outFit[runFor], np.asarray(savedCoeff), 
-               fmt='%7.2f, %7.3f, %7.3f, %7.3f, %8.5f', delimiter=',')
+    saved = np.asarray(savedCoeff)
+    print(saved.shape)
+    if(saved.shape[1]==5):
+        fmt='%7.2f, %7.3f, %7.3f, %7.3f, %8.5f'
+        groups = [1,2]
+    else:
+        fmt='%7.2f, %7.3f, %7.3f,  %8.5f'
+        groups = [1,2]
+    plotDistribution(groups, saved[1:-2,:])
+    np.savetxt(outFit[runFor], saved, 
+               fmt=fmt, delimiter=',')
 elif doAction == 'testfit':
     testfit = []
     for index in range(13,26):
@@ -139,8 +152,9 @@ elif doAction == 'testfit':
     np.savetxt('../../oldriemann/out/gzetaE12/testfit.csv', np.asarray(testfit), 
                fmt='%7.2f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f&%7.3f \\\\', 
                delimiter=',')
-
-groups = [1]
-#plotDistribution(groups)
+elif doAction == 'plotDistribution':
+    values = dataset.values
+    groups = [1,2]
+    plotDistribution(groups, values)
 
 
