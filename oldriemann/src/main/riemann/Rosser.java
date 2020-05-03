@@ -51,31 +51,44 @@ public class Rosser {
 	// one instance per type of Gram Block and pattern
 	public static class GramBlock{
 	    enum TYPE{
-	        I,II,III,NOT_REGULAR
+	        I,II,III,NOT_REGULAR;
+	    	int count;
+	    	TYPE get() {
+	    		count++;
+				return this;
+	    	}
 	    }
 	    TYPE type;
 	    double occurrence;
 	    String pattern;
+	    static int blocks = 0;
         public GramBlock(String pattern, int blockZerosCount) {
+        	blocks++;
             this.occurrence = 1;
             this.pattern = pattern;
             int len = pattern.length();
             if(blockZerosCount==len ){
                 //we are in a regular Gram block
                 if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='0'){
-                    type = TYPE.III;
+                    type = TYPE.III.get();
                 }else if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='2'){
-                    type = TYPE.II;
+                    type = TYPE.II.get();
                 }else if(pattern.charAt(0)=='2' && pattern.charAt(len-1)=='0'){
-                    type = TYPE.I;
+                    type = TYPE.I.get();
                 }else {
                     throw new IllegalStateException();
                 }
             }else{
-                type = TYPE.NOT_REGULAR;
+                type = TYPE.NOT_REGULAR.get();
             }
         }
-	    public void increment(){
+	    @Override
+		public String toString() {
+			return "GramBlock [type=" + type + ", occurrence=" + occurrence + ", pattern=" + pattern + "]";
+		}
+		public void increment(){
+        	blocks++;
+			type.get();
 	        occurrence++;
 	    }
 	}
@@ -236,12 +249,11 @@ public class Rosser {
         return zeroIn;
     }
 	
-	private static void readItems(  PrintStream out, double baseLimit)
+	private static void readItems(  PrintStream out, double baseLimit, int N)
 			throws FileNotFoundException, IOException {
 	    BufferedReader[] zeroIn = getZerosFile();
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int signumGram = Rosser.getParamInt("signumGram");
-        int N = Rosser.getParamInt("N");
         int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
         if(Rosser.configParams.containsKey("correction")){
@@ -467,7 +479,7 @@ public class Rosser {
             }
             goodBad = 0; badGood = 0; goodGood = 0; badBad = 0;
             System.out.println("displacement " + displacement);
-            readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10 );
+            readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10, N );
             TreeSet<String>[] stats = new TreeSet[10];
             for (int i = 0; i < stats.length; i++) {
                 stats[i] = new TreeSet<String>();
@@ -478,14 +490,22 @@ public class Rosser {
                 ratio[i] = new double[]{0, 0};
             }
 
+            //System.out.println(rosser);
+            System.out.println(GramBlock.blocks);
+            //[TYPE.values().length]
+            for (TYPE type : TYPE.values()) {
+				System.out.println(type + ": " + type.count);
+			}
             for (String key : rosser.keySet()) {
+                GramBlock block = rosser.get(key);
+                block.type.ordinal();
+            	
 //                GramBlock reversedKey = rosser.get(reverse(key));
 //                System.out.println("***** " + key + " ***** " + rosser.get(key).occurrence
 //                        + ", reversed " + ((reversedKey==null)?0:reversedKey.occurrence) );
                 int len = key.length();
                 if(len>11){continue;}
                 int idx = len -2;
-                GramBlock block = rosser.get(key);
                 if(block.type == TYPE.II){
                     calculateRatio(key, block, ratio);
                 }
