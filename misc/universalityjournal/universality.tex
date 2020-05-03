@@ -352,12 +352,32 @@ show the variation.
 \end{figure*}
 
 
-\subsection{\label{related}Related work}
+\subsection{\label{related}Related work and future directions}
+A possible fruitful avenue of future investigation may be to relate the distributions to 
+the results of Random Matrix Theory (RMT).  Keating and  Snaith~\cite{Keating 2000a} introduced the 
+characteristic polynomial of a unitary matrix as a RMT model for the Riemann zeta function. 
+Let $U(N)$ be the group of  all $N \times N$ unitary matrices.
+If $A \in U(N)$, the characteristic polynomial $P(\theta)$ is defined as
+\begin{equation}
+P(\theta) = det(I_N-A\exp {(i\theta)}),
+\label{eq:uNeigen}
+\end{equation}
+where $det$ is the determinant, and $I_N$ is the unit matrix.
+Hanga and Hughes~\cite{Hanga 2020} define Gram points for  $U(N)$ and 
+for $SU(N)$, the group of 
+all $N \times N$ special unitary matrices. They show that the $SU(N)$ group gives
+a better approximation to the distribution of zeros in Gram intervals, for large but
+finite $N$. It will be useful to push these results further, and maybe define 
+generalized Gram points for these groups.
 
-We briefly mention other studies of the value distribution of the Riemann zeta function and 
-the closely related Hardy's function~\cite{Hardy 1918}.  Ivi\'c's monograph~\cite{Ivic 2013} has a comprehensive survey of  the field.
-Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is approximately normally distributed with a standard deviation of order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
-similar result~\cite{Selberg 1989, Selberg 1991} for $\log (|Z(t)|)$. Laurincikas~\cite{Laurincikas}  used probabilistic number theory to prove various results about the distribution of the Riemann zeta function.
+Ivi\'c's monograph~\cite{Ivic 2013} 
+has a comprehensive survey of  the  closely related Hardy's function~\cite{Hardy 1918}.
+Selberg in unpublished work showed that at large $t$ $\log (\zeta(\frac{1}{2} + it))$ is 
+approximately normally distributed with a standard deviation of 
+order $\sqrt{log~log~t}$ (see Ref.~\cite{Hejhal}). He showed a 
+similar result~\cite{Selberg 1989, Selberg 1991} for $\log (|Z(t)|)$. 
+Laurincikas~\cite{Laurincikas}  used probabilistic number theory to prove various results 
+about the distribution of the Riemann zeta function.
 
 Regarding the value distribution at specific points along the Gram interval, 
 Titchmarsh~\cite{Titchmarsh 1934} and Kalpokas and Steuding~\cite{kalpokas 2009} present 
@@ -614,9 +634,10 @@ four-point correlations, Nonlinearity, 8:1115–1131, 1995.
 correlations, Nonlinearity, 9:911–935, 1996.
 \bibitem{Katz 1999} Nicholas M. Katz, Peter Sarnak, Random Matrices, Frobenius Eigenvalues and Monodromy, AMS,
 Providence, Rhode Island, 1999.
-\bibitem{Keating 2000a} J.P. Keating and N.C. Snaith, Random matrix theory and $\zeta(1/2 + it)$, Commun. Math. Phys.,
-214:57–89, 2000.
-\bibitem{Keating 2000b} J.P. Keating and N.C. Snaith, Random matrix theory and L-functions at s = 1/2, Commun.
+\bibitem{Keating 2000a} J.P. Keating and N.C. Snaith, Random matrix theory and $\zeta(1/2 + it)$, 
+Commun. Math. Phys., 214:57–89, 2000.
+\bibitem{Keating 2000b} J.P. Keating and N.C. Snaith, Random matrix theory and L-functions at s = 1/2, 
+Commun.
 Math. Phys, 214:91–110, 2000.
 \bibitem{Conrey 2000} J.B. Conrey and D.W. Farmer, Mean values of L-functions and symmetry, Int. Math. Res.
 Notices, 17:883–908, 2000, arXiv:math.nt/9912107.
@@ -653,13 +674,17 @@ Proc. R. Soc. , A 413 , {\bf 183-198}, (1987).
 
 
 
+\bibitem{Hanga 2020} Catalin Hanga and Christopher Hughes,
+"PROBABILISTIC MODELS FOR GRAM’S LAW", \url {https://arxiv.org/pdf/1911.03190.pdf}
+
+
+\bibitem {Ivic 2013} Aleksandar Ivi\'c, ``The Theory of Hardy's Z-Function,''
+Cambridge University Press,  (2013)
+
 \bibitem{Hardy 1918} G. H. Hardy and J. E. Littlewood,
 ``Contributions to the theory of the Riemann
 zeta-function and the distribution of primes",
 {\it Acta Math.} {\bf41}(1918), 119-196
-
-\bibitem {Ivic 2013} Aleksandar Ivi\'c, ``The Theory of Hardy's Z-Function,''
-Cambridge University Press,  (2013)
 
 \bibitem{Hejhal} D. A. Hejhal,
 ``On a result of Selberg concerning zeros of linear combinations
