@@ -61,7 +61,7 @@
 \rhead[]{}
 
 % \title[short text for running head]{full title}
-\title{\bf{Universality of Riemann Zeta Function value distribution on critical axis}}
+\title{\bf{Relations for Riemann Zeta Function value distribution on critical axis}}
 
 \maketitle
 
@@ -75,19 +75,22 @@
 
 %    Abstract is required.
 \begin{abstract}
-The behaviour of the Riemann zeta function, through its connections with
+The behavior of the Riemann zeta function, through its connections with
 the spectra of random matrix theories and the spectra of classically 
 chaotic quantum systems, is of enduring interest to 
 statistical physics and condensed matter physics. Motivated by this unexpected and 
 deep connection, we investigated
 the value distribution of the Riemann zeta function on the critical axis.
-We present a remarkable and striking universality property for the value distribution. 
-The observed coefficients 
-in the universality relation imply
+We present a remarkable and striking  property for the value distribution,
+i.e., the distributions for different Generalized Gram points can be expressed in terms
+of three functions which are independent of the angle characterizing 
+the Generalized Gram point.  The observed coefficients 
+in the  relation imply
 symmetry and anti-symmetry relations for the value distribution.
 We provide empirical verification of the relations for a range of heights along the critical
 axis covering $16$ orders of magnitude. We discuss how random matrix models may shed further
-light on this fundamental relation.
+light on this fundamental relation. Another promising area to explore is the behavior
+of $a$-points along Julia lines of the $\zeta$ function.
 
 \end{abstract}
 {\textbf {Keywords}:} Riemann zeta, Value Distribution, Universality, Symmetry, Hardy's function
@@ -101,7 +104,7 @@ light on this fundamental relation.
 
 \section{Introduction}
 Theoretical physicists studying statistical physics and condensed matter physics have a 
-deep and enduring interest in the behaviour of the 
+deep and enduring interest in the behavior of the 
 Riemann zeta function on the critical axis~\cite{Shanker 2006}. This is because of
 its close and unusual connection  to the theory of the spectra of random matrix theories 
 (RMT)~\cite{Wigner 1967, Gaudin 1960, Gaudin 1961, Dyson 1962, Bogomolny 1995, Bogomolny 1996, Katz 1999, Keating 2000a, Keating 2000b, Conrey 2000, 
@@ -123,9 +126,9 @@ showed  that the distribution for even Gram points was the negative  of the
 distribution for odd Gram points. 
 Further work~\cite{Shanker 2018b}) extended the study to Generalized Gram points. 
 The new results in this work are as follows. 
-Our new universality relation (Eq.~\ref{eq:universality}) expresses the value distributions 
+Our new  relation (Eq.~\ref{eq:universality}) expresses the value distributions 
 at different Generalized Gram points, in terms of three universal functions.
-By universal we mean that the universal functions are independent of the angle $\phi$
+By universal we mean that the  functions are independent of the angle $\phi$
 characterizing the  Generalized Gram point.
 We show that the  value
 distribution of the Hardy $Z$ function at discrete points is anti-symmetrical 
@@ -135,9 +138,10 @@ around the Gram points(Eq.~\ref{eq:rhosym}).
 
 Section~\ref{sec2} establishes the required notation for the 
 Riemann Zeta Function. 
-Section~\ref{sec3} presents the conjectured universality and symmetry relations
-and provides evidence for the universality relations. We discuss the application
-of random matrix theory to understand these fundamental properties.
+Section~\ref{sec3} presents the conjectured relations
+and provides evidence for the newly observed relations. We discuss the application
+of random matrix theory to understand these fundamental properties, and possible
+explanation in terms of the behavior at Julia lines.
 In Section~\ref{sec4} we discuss the evidence for the symmetry relations
 by studying the quantiles of the distributions.
 Section~\ref{conclusions} presents the conclusions. 
@@ -190,12 +194,32 @@ where
 \theta(t) = arg (\pi^{it/2} \Gamma(\frac{1}{4} + \frac{it}{2})). 
 \label{eq:theta}
 \end{equation}
-The argument in Eq.~\ref{eq:theta} is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
+The argument in Eq.~\ref{eq:theta} is defined by continuous variation of $t$ starting 
+with the value $0$ at $t = 0$.
 $Z(t)$ is real valued for real $t$,
-and we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the imaginary part of the zeros 
+and we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the imaginary part 
+of the zeros 
 of $\zeta(s)$ which lie on the critical line.  
 
-Gram points~\cite{Gram 1903} play an important role in the the theory because many of the zeros are separated by them.  When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
+We present here the functional equation for the $\zeta(s)$: 
+\begin{equation}
+\zeta(s) = \Delta(s)\zeta(1-s) . 
+\label{eq:functional}
+\end{equation}
+Because of the remarkable results from Steuding and Suriajaya~\cite{Steuding 2020} 
+and Kalpokas~\cite{kalpokas 2009}, this seems to be a promising avenue to explore further.
+For an arbitrary complex number $a \ne 0$ Steuding and Suriajaya consider the distribution 
+of values of the Riemann zeta-function $\zeta$ at the $a$-points of the 
+function
+which appears in the functional equation Eq.~\ref{eq:functional}. These $a$-points 
+$\delta_a$ are 
+clustered around the critical line $1/2 + i R$. This line is a Julia line for the 
+essential singularity of $\zeta$ at infinity. 
+They observe a remarkable average behavior for the sequence of values $\zeta(\delta_a)$.
+
+Gram points~\cite{Gram 1903} play an important role in the the theory because 
+many of the zeros are separated by them.  When $t \ge 7$, 
+the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
 For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
 $\theta (g_n) = n\pi$. A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
  In analogy with Gram points, we can associate an angle $\phi$ with a point $t$ on the critical axis as follows:
@@ -203,7 +227,8 @@ $\theta (g_n) = n\pi$. A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
 For $t \ge 7$, $t$ is said to be a generalized Gram point with value $\phi$  if
 $\theta (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
 \end{definition}
-
+Korolev~\cite{Korolev 2016a, Korolev 2016b} gives a review of some properties of 
+Gram points.
 
 
 \section{\label{sec3}Universality and symmetry relations}
@@ -293,7 +318,7 @@ z&actual&predict&actual&predict &actual&predict &actual&predict &actual&predict\
 
 
 
-The universality relation is
+The new  relation for the value distributions is
 \begin{equation}
 p_{\phi}(z) = A(z)\cos(\phi) + B(z)\cos(2\phi) +C(z),
 \label{eq:universality}
@@ -381,6 +406,11 @@ all $N \times N$ special unitary matrices. They show that the $SU(N)$ group give
 a better approximation to the distribution of zeros in Gram intervals, for large but
 finite $N$. It will be useful to push these results further, and maybe define 
 generalized Gram points for these groups.
+
+Another very promising avenue to explore for a possible explanation is the work of
+Steuding and Suriajaya~\cite{Steuding 2020} and Kalpokas~\cite{kalpokas 2009} 
+on the mean value results 
+for $a$-points.
 
 Ivi\'c's monograph~\cite{Ivic 2013} 
 has a comprehensive survey of  the  closely related Hardy's function~\cite{Hardy 1918}.
@@ -519,7 +549,6 @@ $f$&0.1&0.2&0.25&0.3&0.4&0.5&0.6&0.7&0.75&0.8&0.9\\
 \hline
 intercept&-3.346&-1.569&-1.134&-0.817&-0.360&0.002&0.362&0.821&1.139&1.575&3.342\\
 slope&1.307&0.817&0.678&0.577&0.457&0.420&0.457&0.578&0.681&0.819&1.302\\
-R^2&0.999&0.999&0.997&0.995&0.996&1.000&0.996&0.995&0.997&0.999&0.999\\
 \hline
 \end{array}\)
 \caption{Linear fit of quantile $q_f$ to $2\cos(\phi)$ at $T=10^{12}$.}
@@ -591,7 +620,6 @@ $f$&0.1&0.2&0.25&0.3&0.4&0.5&0.6&0.7&0.75&0.8&0.9\\
 \hline
 intercept&-3.963&-1.680&-1.161&-0.807&-0.339&0.002&0.342&0.809&1.162&1.678&3.933\\
 slope&1.318&0.757&0.606&0.493&0.351&0.308&0.352&0.492&0.604&0.751&1.302\\
-R^2&0.999&0.999&0.998&0.994&0.993&1.000&0.992&0.994&0.998&1.000&0.999\\
 \hline
 \end{array}\)
 \caption{Linear fit of quantile $q_f$ to $2\cos(\phi)$ at $T=10^{28}$.}
@@ -606,14 +634,15 @@ for $\phi=\pi/6$ and $f=0.25$ is $-0.135$, while it is $0.134$ for $\phi=5\pi/6$
 
 \section{\label{conclusions}Conclusions}
 
-The most exciting new result is the discovery of a universality relation for the 
-value distribution of the Hardy Z function at discrete points. Eq.~\ref{eq:universality}
-states the universality relations. Table~\ref{tab:coefficients} gives the fitted values 
+The most exciting new result is the discovery of a hitherto unknown relation for the 
+value distribution of the Riemann zeta function at discrete points. Eq.~\ref{eq:universality}
+states the relations in terms of three functions independent of the angle $\phi$
+characterizing the Generalized Gram points. Table~\ref{tab:coefficients} gives the fitted values 
 of the universal functions.
-Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions from the universality 
+Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions from the new 
 relation to the actual probability densities, for some values of the argument $z$. The figures, and 
 Table~\ref{tab:pred} show the excellent agreement of the actual probability densities with the
-universality relations prediction.
+ prediction.
 The evidence for the anti-symmetry and symmetry properties 
 in terms of quantiles is illuminating. 
 It is noteworthy that the quantile distributions change very little 
@@ -621,6 +650,16 @@ when the height $T$ spans $16$ orders of magnitude.
 Another intriguing observation is the linear dependence of the quantiles 
 on $\cos(\phi)$. The linear dependence and the symmetry properties imply that 
 the quartile range $q_{1-f}-q_f$ is independent of $\phi$.
+
+\section{\label{Declarations}Declarations}
+\subsection{\label{Funding}Funding}
+Not applicable
+\subsection{\label{Conflicts}Conflicts of interest/Competing interests}
+Not applicable
+\subsection{\label{data}Availability of data and material}
+Data can be generated using code provided below.
+\subsection{\label{code}Code availability}
+\url{https://github.com/oshanker/oshanker}
 
 
 \bibliographystyle{amsplain}
@@ -684,9 +723,28 @@ Proc. R. Soc. , A 413 , {\bf 183-198}, (1987).
 ``Symmetry properties of distribution of Riemann Zeta Function values on critical axis''
 {\it Advanced Modeling and Optimization}, {\bf 20}, 435-445, (2018). 
 
+\bibitem{Steuding 2020} J. Steuding and A. I. Suriajaya,
+``Value-distribution of the Riemann zeta-function Along Its Julia Lines", 
+{\it  Comput. Methods Funct. Theory} (2020), 
+\url{https://doi.org/10.1007/s40315-020-00316-x}
+
+\bibitem{kalpokas 2009} J. Kalpokas and J. Steuding,
+``On the value-distribution of the Riemann zeta-function on the critical line", 
+{\it Moscow Journal of Combinatorics and
+Number Theory} {\bf1}(2011), 26-42
+
 \bibitem{Gram 1903} J. P. Gram, 
 ``Sur les Zeros de la Fonction  $\zeta ( s )$  de Riemann",
 {\it Acta Math.} {\bf27}(1903), 289-304
+
+\bibitem{Korolev 2016a} M. A. Korolev, 
+``Gram’s Law In The Theory Of The Riemann Zeta-Function. Part 1",
+{\it Proceedings Of The Steklov Institute Of Mathematics} {\bf292}(2016)S1-S146 
+
+\bibitem{Korolev 2016b} M. A. Korolev, 
+``Gram’s Law In The Theory Of The Riemann Zeta-Function. Part 2",
+{\it Proceedings Of The Steklov Institute Of Mathematics} {\bf294}(2016)S1-S78 
+
 
 
 
@@ -722,11 +780,6 @@ Kluwer, Dordrecht, 1996
 \bibitem{Titchmarsh 1934} E. C. Titchmarsh,
 ``On van der Corput's method and the zeta-function of Riemann (IV)",
 {\it Quart. J. Math. Oxford Ser.} {\bf5}(1934), 98-105
-
-\bibitem{kalpokas 2009} J. Kalpokas and J. Steuding,
-``On the value-distribution of the Riemann zeta-function on the critical line", 
-{\it Moscow Journal of Combinatorics and
-Number Theory} {\bf1}(2011), 26-42
 
 \bibitem {Lester 2013} Stephen J. Lester, ``The Distribution of Values of the
 Riemann Zeta-Function,''
