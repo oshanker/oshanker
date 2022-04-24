@@ -373,7 +373,12 @@ public class Interpolate {
         gSeries.setgAtBeta(consolidated);
         File gFile = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
         storeG(gSeries.begin, gSeries.spacing, gSeries.gAtBeta, gFile);
-        
+        /*
+        # python -i plot_distribution.py 
+        # load dataset
+        # input generated in math.GSeriesTest.testWriteZetaPhiE12()
+        # or in math.MoreGSeriesTest.testInterpolate()
+        */
         zetaMidMean = new double[]{0, 0};
         zetaGramMean = new double[]{0, 0};
         count = 0;
