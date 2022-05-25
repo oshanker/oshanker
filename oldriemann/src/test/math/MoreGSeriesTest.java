@@ -226,6 +226,9 @@ public class MoreGSeriesTest {
         final File gFile = new File("out/gSeries" + Interpolate.prefix + "/gSeriesConsolidated.dat");
         final GSeries gSeries = Interpolate.readGSeries(gFile);
         final int initialPadding = 40;
+        /*
+           initialPadding = 40 covers inaccuracy at edges
+        */
         
 //        double[] zero = {100415.50500735927, 100415.61036506912, 
 //                100797.8878505715, 100798.08697164342,  };
