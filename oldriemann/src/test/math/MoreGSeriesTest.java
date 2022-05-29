@@ -301,6 +301,8 @@ public class MoreGSeriesTest {
         }
 		final File baseDir = new File("out/gzetaE28/");
 		
+        // https://github.com/oshanker/oshanker/blob/master/python/riemann/plot_distribution.py
+        // oldriemann/out/gzetaE28/calcHist_fine12.csv (runFor = 1)
 	    //hist
     	final String[] histOutFile = {"calcHist", "calcHist_fine"};
 		final File outputHistFile = new File(baseDir,
