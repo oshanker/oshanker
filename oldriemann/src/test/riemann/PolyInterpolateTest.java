@@ -2,11 +2,9 @@ package riemann;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import math.ZeroPoly;
-import riemann.Interpolate.Poly4;
 import riemann.PolyInterpolate.BasePolySecondDer;
 import riemann.PolyInterpolate.Poly5;
 

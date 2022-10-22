@@ -1,7 +1,5 @@
 package riemann;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,7 +8,6 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import riemann.Interpolate.Poly4;
 import riemann.Rosser.ZeroInfo;
 
 public class CopyZeroInformationTest {

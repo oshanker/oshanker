@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import riemann.Interpolate.Poly4;
-import riemann.PolyInterpolate.BasePolySecondDer;
 import riemann.PolyInterpolate.Poly5;
 
 public class TwoPointFitTest {

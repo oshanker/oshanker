@@ -11,7 +11,7 @@ target
 gramratio.pdf
 oldriemann/bin
 oldriemann/out/
-oldriemann/out/.idea
+oldriemann/.idea/**
 misc/gramwriteup/RiemannZeta.pdf
 misc/symmetry/zetasymmetry.pdf
 misc/valuedistribution/*/*pdf

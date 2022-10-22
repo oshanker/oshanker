@@ -23,8 +23,8 @@ import org.junit.Test;
 import riemann.Gram;
 import riemann.Interpolate;
 import riemann.Rosser;
-import riemann.Interpolate.Poly3;
-import riemann.Interpolate.Poly4;
+import riemann.Poly3;
+import riemann.Poly4;
 import riemann.PolyInterpolate;
 import riemann.Rosser.ZeroInfo;
 

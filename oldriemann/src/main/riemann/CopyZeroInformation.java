@@ -1,16 +1,11 @@
 package riemann;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import riemann.Interpolate.Poly4;
 import riemann.Rosser.ZeroInfo;
 
 public class CopyZeroInformation {

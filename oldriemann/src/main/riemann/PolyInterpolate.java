@@ -4,7 +4,7 @@ import riemann.Rosser.ZeroInfo;
 
 public class PolyInterpolate {
     
-    public static class BasePolySecondDer extends Interpolate.Poly3{
+    public static class BasePolySecondDer extends Poly3 {
         double C;
         final double cdenom;
         final double sum2;

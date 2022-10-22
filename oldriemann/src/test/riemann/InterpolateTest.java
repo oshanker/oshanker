@@ -15,8 +15,6 @@ import org.junit.Test;
 
 import math.GSeries;
 import riemann.Interpolate.GramOrMid;
-import riemann.Interpolate.Poly3;
-import riemann.Interpolate.Poly4;
 
 public class InterpolateTest {
     static NumberFormat nf = NumberFormat.getInstance();
