@@ -11,6 +11,7 @@ target
 gramratio.pdf
 oldriemann/bin
 oldriemann/out/
+oldriemann/out/.idea
 misc/gramwriteup/RiemannZeta.pdf
 misc/symmetry/zetasymmetry.pdf
 misc/valuedistribution/*/*pdf
@@ -41,7 +42,6 @@ python/data/pollution.csv
 *.blg
 *-blx.aux
 *-blx.bib
-*.brf
 *.run.xml
 
 ## Build tool auxiliary files:
