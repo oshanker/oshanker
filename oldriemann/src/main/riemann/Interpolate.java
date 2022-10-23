@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -80,9 +81,15 @@ public class Interpolate {
                     };
 
             String derFile = zerosFile + ".der";
-            zeroIn[1] = new BufferedReader(new FileReader(derFile));
+            File fileDer = new File(derFile);
+            if (fileDer.exists()) {
+                zeroIn[1] = new BufferedReader(new FileReader(derFile));
+            }
             String maxFile = zerosFile + ".max";
-            zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+            File fileMax = new File(derFile);
+            if (fileMax.exists()) {
+                zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+            }
             lastZeroSeen1 = new double[zeroIn.length + 1];
             offset = new BigDecimal(Rosser.getParam("bdoffset"));
             correction = 0;
