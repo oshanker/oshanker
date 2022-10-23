@@ -24,6 +24,7 @@ public class CopyZeroInformation {
             
             for (int i = 0; i < input.length; i++) {
                 input[i] = zeroIn[i].readLine();
+                System.out.println(i + " " + input[i]);
             }
             if(input[0] == null || input[0].trim().length()==0){
                 System.out.println("done");
@@ -67,8 +68,20 @@ public class CopyZeroInformation {
             } 
             nextValues[0] = zero;
             for (int i = 1; i < input.length; i++) {
-                input[i] = input[i].trim();
-                nextValues[i] = Double.parseDouble(input[i]);
+                try {
+
+                    input[i] = input[i].trim();
+                    nextValues[i] = Double.parseDouble(input[i]);
+                } catch (Exception e){
+                    System.out.println("<" + input[i] + ">");
+                    char[] ch = input[i].toCharArray();
+                    for(int j = 0; j < ch.length; j++){
+                        System.out.printf("char at %d index is: %c\n" , j, ch[j]);
+                    }
+                    input[i] = input[i].substring(1);
+                    nextValues[i] = Double.parseDouble(input[i]);
+
+                }
             }
         }
         return zero;

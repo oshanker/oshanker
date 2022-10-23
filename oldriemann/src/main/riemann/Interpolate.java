@@ -81,15 +81,9 @@ public class Interpolate {
                     };
 
             String derFile = zerosFile + ".der";
-            File fileDer = new File(derFile);
-            if (fileDer.exists()) {
-                zeroIn[1] = new BufferedReader(new FileReader(derFile));
-            }
+            zeroIn[1] = new BufferedReader(new FileReader(derFile));
             String maxFile = zerosFile + ".max";
-            File fileMax = new File(derFile);
-            if (fileMax.exists()) {
-                zeroIn[2] = new BufferedReader(new FileReader(maxFile));
-            }
+            zeroIn[2] = new BufferedReader(new FileReader(maxFile));
             lastZeroSeen1 = new double[zeroIn.length + 1];
             offset = new BigDecimal(Rosser.getParam("bdoffset"));
             correction = 0;
