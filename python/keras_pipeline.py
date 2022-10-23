@@ -43,7 +43,7 @@ estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, epochs=50, bat
 # We can then call .predict()  (same function name, different API),
 # http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline.predict
 pipeline = Pipeline(estimators)
-kfold = KFold(n_splits=10, random_state=seed)
+kfold = KFold(n_splits=10, random_state=seed, shuffle=True)
 results = cross_val_score(pipeline, X, Y, cv=kfold)
 print("Standardized: %.2f (%.2f) MSE" % (results.mean(), results.std()))
 
