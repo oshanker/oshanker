@@ -3,9 +3,7 @@ package riemann;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -148,7 +146,7 @@ public class Riemann {
 			idx = heck.longValue();
 			System.out.println("val " + tvals[i] + " theta/pi " + heck + ", lower gram idx " + idx);
 		}
-		GramInfo[] x = Gram.RZGram(idx, 4, Gram.mc);
+		GramInfo[] x = GramInfo.RZGram(idx, 4, Gram.mc);
 		for (GramInfo gramInfo : x) {
 			System.out.println("val-offset " + gramInfo.grampt.subtract(offset) + " idx " + gramInfo.idx);
 		}
@@ -337,74 +335,4 @@ public class Riemann {
 		}
 	}
 
-	public static class GramInfo implements Comparable<GramInfo>{
-		public final BigDecimal grampt;
-		double zeta;
-		double[] cos = new double[10];
-		double[] sin = new double[9];
-		double der;
-		public final BigDecimal idx;
-		RZpoint point;
-
-		public GramInfo(BigDecimal grampt, long idx) {
-			this.grampt = grampt;
-			this.idx = BigDecimal.valueOf(idx);
-		}
-
-		public GramInfo(BigDecimal grampt, BigDecimal idx) {
-			this.grampt = grampt;
-			this.idx = idx;
-		}
-
-		RZpoint setRZpoint(BigDecimal bdOffset) {
-			if (point == null) {
-				point = new RZpoint(this, bdOffset);
-			}
-			return point;
-		}
-
-		static TreeSet<RZpoint> toRZPoint(Iterable<GramInfo> riemann,
-				BigDecimal bdOffset) {
-			TreeSet<RZpoint> gram = new TreeSet<RZpoint>();
-			for (GramInfo gramInfo : riemann) {
-				gram.add(gramInfo.setRZpoint(bdOffset));
-			}
-			return gram;
-		}
-
-		static GramInfo fromStringArray(String[] parsed, BigDecimal bdOffset) {
-			BigDecimal grampt = BigDecimal.valueOf(
-					Double.parseDouble(parsed[0])).add(bdOffset, Gram.mc);
-			GramInfo gramInfo = new GramInfo(grampt, Long.parseLong(parsed[22]));
-			gramInfo.zeta = Double.parseDouble(parsed[1]);
-			gramInfo.der = Double.parseDouble(parsed[21]);
-			int offset = 2;
-			for (int j = 0; j < gramInfo.cos.length; j++) {
-				gramInfo.cos[j] = Double.parseDouble(parsed[j + offset]);
-			}
-			offset += gramInfo.cos.length;
-			for (int j = 0; j < gramInfo.sin.length; j++) {
-				gramInfo.sin[j] = Double.parseDouble(parsed[j + offset]);
-			}
-			return gramInfo;
-		}
-
-		public String toString(BigDecimal offset) {
-			String ret = nf.format(offset==null?grampt:grampt.subtract(offset)) + " \t" + zeta
-					+ " \t" + Arrays.toString(cos) + " \t"
-					+ Arrays.toString(sin) + " \t" + der + " \t" + idx;
-			ret = ret.replaceAll("[\\[\\],]", "");
-			return ret;
-		}
-
-		@Override
-		public String toString() {
-			return "GramInfo [grampt=" + grampt + ", idx=" + idx + "]";
-		}
-
-		public int compareTo(GramInfo arg0) {
-			GramInfo other = (GramInfo) arg0;
-			return idx.compareTo(other.idx);
-		}
-	}
 }

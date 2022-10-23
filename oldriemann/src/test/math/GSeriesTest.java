@@ -33,10 +33,9 @@ import javafx.util.Pair;
 
 
 import riemann.Gram;
-import riemann.Interpolate;
 import riemann.NormalizedSpline;
 import riemann.Riemann;
-import riemann.Riemann.GramInfo;
+import riemann.GramInfo;
 import riemann.Rosser;
 
 /**
@@ -898,7 +897,7 @@ public class GSeriesTest {
 				basetheta = theta;
 				predictedSqrtArg1 = basesqrtArg1 ;
 				//0.24359904690398668
-				GramInfo[] gram = Gram.RZGram(3945951431271L, 2, Gram.mc);
+				GramInfo[] gram = GramInfo.RZGram(3945951431271L, 2, Gram.mc);
 				System.out.println("gram " + Arrays.toString(gram));
 			} else {
 				theta = (basetheta + lnsqrtArg1*tincr

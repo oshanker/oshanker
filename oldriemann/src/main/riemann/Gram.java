@@ -3,7 +3,6 @@ package riemann;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import riemann.Riemann.GramInfo;
 
 /*
 Author: O. Shanker.
@@ -253,50 +252,6 @@ public class Gram {
 		double theta = t.multiply(Gram.log(sqrtArg1, mc), mc).subtract(t2, mc)
 				.subtract(Gram.pi8, mc).remainder(Gram.pi_2).doubleValue();
 		return theta;
-	}
-	
-	public static GramInfo[] RZGram(long n1, int count, MathContext mc) {
-		return RZGram(BigDecimal.valueOf(n1), count, mc);
-	}
-	
-	/**
-	 * find  sequential gram points beginning with the one just preceding the first parameter.
-	 * @param idx1
-	 * @param count
-	 * @param mc
-	 * @return
-	 */
-	public static GramInfo[] RZGram(BigDecimal idx1, int count, MathContext mc) {
-		BigDecimal idx = idx1.divideToIntegralValue(BigDecimal.ONE);
-	    GramInfo[] grampts = new GramInfo[count];
-	    BigDecimal target = pi.multiply(idx, mc);
-		BigDecimal t2 = target.divide(bdTWO, mc);
-		BigDecimal arg1 = sqrt(t2.divide(pi, mc), mc, 1.0E-15);
-		initLogVals(arg1.intValue());
-		BigDecimal ti = bdTWO.multiply(target.add(pi8,mc).divide(
-				log(arg1,mc).subtract(BigDecimal.ONE, mc),mc),mc);
-		for (int i = 0; i<count; i++) {
-			for(int j = 1; j<15; j++) {
-				t2 = ti.divide(bdTWO, mc);
-				arg1 = sqrt(t2.divide(pi, mc), mc, 1.0E-15);
-				BigDecimal logsqrtArg = log(arg1,mc);
-				BigDecimal term = BigDecimal.ONE.divide(ti.multiply(BigDecimal.valueOf(48),mc), mc);
-				BigDecimal thetai = ti.multiply(logsqrtArg,mc).subtract(t2,mc).
-						subtract(pi8 ,mc).add(term,mc);
-				BigDecimal del = target.subtract(thetai,mc);
-			    if(Math.abs(del.doubleValue()) < 1.0E-15){break;}
-				ti = ti.add(del.divide(logsqrtArg, mc),mc);
-		    }
-			grampts[i] = new GramInfo(ti, idx);
-			if(i>0) {
-			   ti= ti.add(grampts[i].grampt.subtract(grampts[i-1].grampt,mc),mc);
-			} else {
-				ti = ti.add(new BigDecimal(2*Math.PI/Math.log(ti.doubleValue()/(2*Math.PI))));
-			}
-			idx = idx.add(BigDecimal.ONE);
-			target = pi.multiply(idx, mc);
-       }
-	   return grampts;
 	}
 
 	public static double gram(BigDecimal offset, double zero){
