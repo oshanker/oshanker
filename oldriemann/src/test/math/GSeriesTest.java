@@ -498,7 +498,7 @@ public class GSeriesTest {
 	        double t0 = gramE12[sampleIndex][0];
 	        final boolean calculateCross = gramSum.length > 1;
 	        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-	        GSeries gAtBeta = getGSeries(t0, offset);
+	        GSeries gAtBeta = getSavedGSeries(t0, offset);
 	        //double[] oddsum = new double[k], evensum = new double[k];
 	        final double firstGram = Gram.gram(offset, t0 + 0.001 );
 	        final int N = 29999;
@@ -570,13 +570,14 @@ public class GSeriesTest {
      * @throws Exception
      */
 	@Test //@Ignore
-	public void testGetGSeries() throws Exception{
+	public void testGetSavedGSeries() throws Exception{
 		double t = 247.149;
 		int idx = findFile(t);
-		
-        double t0 = gramE12[idx][0];
-        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-        GSeries gAtBeta = getGSeries(t0, offset);
+
+		double t0 = gramE12[idx][0];
+		final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+		GSeries gAtBeta = getSavedGSeries(t0, offset);
+		//25 rows zero expectedDer
 		String zerosFile = "data/gzetaE12/zerosE12.csv";
 		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
 		String in = zeroIn.readLine();
@@ -587,14 +588,14 @@ public class GSeriesTest {
 			String[] line = in.split(",\\s+");
 			double zero = Double.parseDouble(line[0]);
 			double expectedDer = Double.parseDouble(line[1]);
-			double zeta = gAtBeta.evaluateZeta(zero, 40 );
+			double zeta = gAtBeta.evaluateZeta(zero, 40);
 			assertEquals(0.0, zeta, 0.000001);
-			double der = gAtBeta.evaluateDer(zero, 40 );
+			double der = gAtBeta.evaluateDer(zero, 40);
 			assertEquals(expectedDer, der, 0.00006);
 			in = zeroIn.readLine();
-		}		
+		}
 		zeroIn.close();
-        System.out.println("done");
+		System.out.println("done");
 	}
 
 	public int findFile(double t) {
@@ -736,7 +737,7 @@ public class GSeriesTest {
         out.close();
     }
 
-    private GSeries getGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
+    private GSeries getSavedGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
         final int k0 = 1, k1=398942;
         final int index = (int) Math.floor(t0);
         File file = new File("data/gSeriesE12/" + Integer.toString(index) +".dat");
@@ -809,7 +810,7 @@ public class GSeriesTest {
     private int testCorrelationE12(int sampleIndex, PrintWriter out, double[][] prod) throws Exception{
         double t0 = gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-        GSeries gAtBeta = getGSeries(t0, offset);
+        GSeries gAtBeta = getSavedGSeries(t0, offset);
         int k = prod.length/2;
         double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];

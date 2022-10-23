@@ -17,3 +17,7 @@ test
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
+
+Deep learning to study the Riemann zeta function, Characteristic 
+Polynomials of random matrices and the freezing
+transition
