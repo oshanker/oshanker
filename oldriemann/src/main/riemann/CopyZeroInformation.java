@@ -76,10 +76,9 @@ public class CopyZeroInformation {
                     System.out.println("<" + input[i] + ">");
                     char[] ch = input[i].toCharArray();
                     for(int j = 0; j < ch.length; j++){
-                        System.out.printf("char at %d index is: %c\n" , j, ch[j]);
+                        System.out.printf("char at %d index is: %d\n" , j, (int)ch[j]);
                     }
-                    input[i] = input[i].substring(1);
-                    nextValues[i] = Double.parseDouble(input[i]);
+                    throw e;
 
                 }
             }
