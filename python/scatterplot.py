@@ -7,7 +7,7 @@ Created on Mon Oct 24 21:56:47 2022
 """
 import sys
 from pandas import read_csv
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 def main():
     print("-------")
