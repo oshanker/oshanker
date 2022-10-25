@@ -32,11 +32,7 @@ import org.junit.Test;
 import javafx.util.Pair;
 
 
-import riemann.Gram;
-import riemann.NormalizedSpline;
-import riemann.Riemann;
-import riemann.GramInfo;
-import riemann.Rosser;
+import riemann.*;
 
 /**
  * @author oshanker
@@ -584,14 +580,34 @@ public class GSeriesTest {
 		for (int i = 0; i < 1; i++) {
 			in = zeroIn.readLine();
 		}
+		int i = 0;
+		double z0 = 0, d0 = -1.0, extremum = -1.0;
 		while (in != null) {
 			String[] line = in.split(",\\s+");
-			double zero = Double.parseDouble(line[0]);
+			double zeroPosition = Double.parseDouble(line[0]);
 			double expectedDer = Double.parseDouble(line[1]);
-			double zeta = gAtBeta.evaluateZeta(zero, 40);
+			double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
 			assertEquals(0.0, zeta, 0.000001);
-			double der = gAtBeta.evaluateDer(zero, 40);
+			double der = gAtBeta.evaluateDer(zeroPosition, 40);
 			assertEquals(expectedDer, der, 0.00006);
+			System.out.println("** i " + ++i);
+			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
+			System.out.println("expectedDer  " + expectedDer + " : eval from GSeries: " + der);
+			if (i>1) {
+				Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
+						extremum);
+				double positionMax = poly.getPositionMax();
+				double evalMax = poly.eval(positionMax);
+				System.out.println(
+						"positionMax " + positionMax
+						+ ", eval " + evalMax
+						+ " read " + extremum
+				);
+				assertEquals(extremum, evalMax, 0.000001);
+			}
+			z0 = zeroPosition;
+			d0 = expectedDer;
+			extremum = Double.parseDouble(line[2]);
 			in = zeroIn.readLine();
 		}
 		zeroIn.close();
