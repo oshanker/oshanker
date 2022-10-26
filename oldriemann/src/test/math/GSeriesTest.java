@@ -597,18 +597,24 @@ public class GSeriesTest {
 			assertEquals(expectedDer, der, 0.00006);
 			System.out.println("** i " + ++i);
 			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
-			System.out.println("expectedDer  " + expectedDer + " : eval from GSeries: " + der);
+			System.out.println(
+					"expectedDer  "
+							+ expectedDer
+							+ " : eval from GSeries: " + der
+							+ " diff " + Math.abs(expectedDer-der)
+			);
 			if (i>1) {
 				Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
 						extremum);
 				double positionMax = poly.getPositionMax();
-				double evalMax = poly.eval(positionMax);
+				double evalMax = gAtBeta.evaluateZeta(positionMax, 40);
 				System.out.println(
 						"positionMax " + positionMax
 						+ ", eval " + evalMax
 						+ " read " + extremum
+						+ " diff " + Math.abs(extremum-evalMax)
 				);
-				assertEquals(extremum, evalMax, 0.000001);
+				assertEquals(extremum, evalMax, 0.013);
 			}
 			z0 = zeroPosition;
 			d0 = expectedDer;
