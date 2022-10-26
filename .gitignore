@@ -19,6 +19,7 @@ misc/valuedistribution/*/*pdf
 octave-workspace
 octave/out
 python/data/pollution.csv
+python/data/pollution_out.csv
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
