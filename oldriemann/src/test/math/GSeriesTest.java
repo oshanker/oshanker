@@ -656,8 +656,11 @@ public class GSeriesTest {
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		double t0 = 244.021159171564;
 		System.out.println(nf.format(t0) + ", " + Gram.gramIndex(offset, t0));
-		double zeroFromZerosFile = 244.920599505825;
-		double expectedDerFromZerosFile = 23.85164367971759;
+		 double zeroFromZerosFile = 243.8749480149;
+		 double expectedDerFromZerosFile = -20.007604626096071598;
+		 double oldZeroFromZerosFile = 243.8749480149;
+		 double oldExpectedDerFromZerosFile = -20.007604626096071598;
+		 double oldZetaMax = -1.232146174810101691;
 		int currentIndex = 40;
 		final int initialPadding = currentIndex;
 		// calculate GSeries beginning at t0
@@ -669,35 +672,37 @@ public class GSeriesTest {
 		assertEquals(1.92649807303971, fAndZGram.getValue(), 0.0000015);
 		
 		double correction = gAtBeta.correctionAtT(zeroFromZerosFile);
-        String zetaFile = "data/zetaE12.csv";
-        BufferedReader zetaIn = 
+      String zetaFile = "data/zetaE12.csv";
+      BufferedReader zetaIn =
                 new BufferedReader(new FileReader(zetaFile));
-        String Zinput = zetaIn.readLine();
-        for (int i = 0; i < 2; i++) {
+      String Zinput = zetaIn.readLine();
+      for (int i = 0; i < 2; i++) {
         	Zinput = zetaIn.readLine();
 		}
 		String zerosFile = "data/gzetaE12/zerosE12.csv";
 		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
 		String inFromZerosFile = zeroIn.readLine();
+		// this line should be empty.
 		for (int i = 0; i < 1; i++) {
 			inFromZerosFile = zeroIn.readLine();
+			//first saved zero
 		}
 
 		int gramIndex = Integer.MAX_VALUE;
 		while (inFromZerosFile != null) {
-			String[] line = inFromZerosFile.split(",\\s+");
-			zeroFromZerosFile = Double.parseDouble(line[0]);
-			expectedDerFromZerosFile = Double.parseDouble(line[1]);
+			String[] splitZerosLine = inFromZerosFile.split(",\\s+");
+			zeroFromZerosFile = Double.parseDouble(splitZerosLine[0]);
+			expectedDerFromZerosFile = Double.parseDouble(splitZerosLine[1]);
 			while(zeroFromZerosFile>t0) {
-	            String[] parsed = Zinput.split(",");
-	            double zetaSaved =  Double.parseDouble(parsed[1]);  
-	            gramIndex = Integer.parseInt(parsed[0]);
+				String[] parsed = Zinput.split(",");
+				double zetaSaved = Double.parseDouble(parsed[1]);
+				gramIndex = Integer.parseInt(parsed[0]);
 				assertEquals(zetaSaved, fAndZGram.getValue(), 0.000001);
-	        	Zinput = zetaIn.readLine();
+				Zinput = zetaIn.readLine();
 
-	        	System.out.println("**Gram " + gramIndex + " " + t0 + " " +  fAndZGram.getValue());
-	        	System.out.println("*F at Gram " +   Arrays.toString(fAndZGram.getKey()));
-				t0 += 2*gAtBeta.spacing;
+				System.out.println("**Gram " + gramIndex + " " + t0 + " " + fAndZGram.getValue());
+				System.out.println("*F at Gram " + Arrays.toString(fAndZGram.getKey()));
+				t0 += 2 * gAtBeta.spacing;
 				currentIndex += 2;
 				gAtGram = gAtBeta.gAtBeta[currentIndex];
 				fAndZGram = gAtBeta.fAndZ(gAtGram, t0);
@@ -712,6 +717,7 @@ public class GSeriesTest {
 			Pair<double[], Double> fAndZero = gAtBeta.fAndZ(gFromBLFI0, zeroFromZerosFile);
 			double zeta = fAndZero.getValue();
 			double[] f = fAndZero.getKey();
+			//
 			System.out.println("zeroFromZerosFile " + zeroFromZerosFile + " zeta " + nf.format(zeta ) + " cf 0.0");
         	System.out.println("*F at zeroFromZerosFile" +   Arrays.toString(fAndZero.getKey()));
 			assertEquals(0.0, zeta, 0.000001);
@@ -724,6 +730,7 @@ public class GSeriesTest {
 					;
 			assertEquals(expectedDerFromZerosFile, zPrime, 0.00003);
 			assertEquals(expectedDerFromZerosFile, der, 0.00003);
+			// read zero from line
 			inFromZerosFile = zeroIn.readLine();
 //			if (gramIndex>1) {
 //				break;
