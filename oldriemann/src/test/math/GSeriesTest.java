@@ -587,8 +587,8 @@ public class GSeriesTest {
 		GSeries gAtBeta = getSavedGSeries(t0, offset);
 		{
 			double zeroPosition = 243.8749480149;
-			double upper = 244.021;
-			double incr = (upper-zeroPosition)/3;
+			double upper = 244.0199875;
+			double incr = (upper-zeroPosition)/2;
 			while (zeroPosition<=upper){
 				double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
 				double der = gAtBeta.evaluateDer(zeroPosition, 40);
