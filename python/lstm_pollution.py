@@ -11,6 +11,8 @@ from sklearn.metrics import mean_squared_error
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras.utils.vis_utils import plot_model
+
 import pandas as pd
 import numpy as np
  
@@ -88,6 +90,9 @@ def main():
     model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2]),activation='relu'))
     model.add(Dense(32,activation='relu'))
     model.add(Dense(1))
+    print(model.summary())
+    plot_model(model, to_file='out/model_plot.png', show_shapes=True, show_layer_names=True)
+
     model.compile(loss='mae', optimizer='adam')
     # fit network
     epochs = 20
@@ -100,6 +105,8 @@ def main():
     	pyplot.show()
     plot_history()
     val = input("Enter your value: ")
+    if (val == "q"):
+        return;
  
     # make a prediction
     plotsize = 10000
