@@ -585,6 +585,22 @@ public class GSeriesTest {
 		double t0 = gramE12[idx][0];
 		final BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		GSeries gAtBeta = getSavedGSeries(t0, offset);
+		{
+			double zeroPosition = 243.8749480149;
+			double upper = 244.021;
+			double incr = (upper-zeroPosition)/3;
+			while (zeroPosition<=upper){
+				double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
+				double der = gAtBeta.evaluateDer(zeroPosition, 40);
+				System.out.println("zeroPosition " + zeroPosition
+						+ " : zeta from GSeries: " + zeta
+						+ " : der from GSeries: " + der
+				);
+				zeroPosition += incr;
+
+			}
+
+		}
 		//25 rows zero expectedDer
 		String zerosFile = "data/gzetaE12/zerosE12.csv";
 		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
@@ -593,11 +609,11 @@ public class GSeriesTest {
 			in = zeroIn.readLine();
 		}
 		int i = 0;
-		double z0 = 0, d0 = -1.0, extremum = -1.0;
+		double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
 		while (in != null) {
-			String[] line = in.split(",\\s+");
-			double zeroPosition = Double.parseDouble(line[0]);
-			double expectedDer = Double.parseDouble(line[1]);
+			String[] dataFromFile = in.split(",\\s+");
+			double zeroPosition = Double.parseDouble(dataFromFile[0]);
+			double expectedDer = Double.parseDouble(dataFromFile[1]);
 			double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
 			assertEquals(0.0, zeta, 0.000001);
 			double der = gAtBeta.evaluateDer(zeroPosition, 40);
@@ -612,20 +628,20 @@ public class GSeriesTest {
 			);
 			if (i>1) {
 				Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
-						extremum);
+						extremumFromFile);
 				double positionMax = poly.getPositionMax();
 				double evalMax = gAtBeta.evaluateZeta(positionMax, 40);
 				System.out.println(
 						"positionMax " + positionMax
 						+ ", eval " + evalMax
-						+ " read " + extremum
-						+ " diff " + Math.abs(extremum-evalMax)
+						+ " read " + extremumFromFile
+						+ " diff(Max) " + (extremumFromFile-evalMax)
 				);
-				assertEquals(extremum, evalMax, 0.013);
+				assertEquals(extremumFromFile, evalMax, 0.013);
 			}
 			z0 = zeroPosition;
 			d0 = expectedDer;
-			extremum = Double.parseDouble(line[2]);
+			extremumFromFile = Double.parseDouble(dataFromFile[2]);
 			in = zeroIn.readLine();
 		}
 		zeroIn.close();
