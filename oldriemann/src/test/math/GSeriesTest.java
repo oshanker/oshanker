@@ -452,7 +452,14 @@ public class GSeriesTest {
     	}
 	}
 
-	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException, FileNotFoundException {
+	/**
+	 * 398942 terms of GSeries
+	 * @param t0
+	 * @param initialPadding
+	 * @return
+	 * @throws IOException
+	 */
+	private GSeries calculateGSeriesE12( double t0, int initialPadding) throws IOException {
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin =  t0;
@@ -642,22 +649,26 @@ public class GSeriesTest {
 	}
 
     @Test //@Ignore 
-    public void test1E12Zeros() throws Exception{
+    public void test1E12Zeros() throws Exception {
+		/*
+		compare calculated with saved
+		 */
 		BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		double t0 = 244.021159171564;
 		System.out.println(nf.format(t0) + ", " + Gram.gramIndex(offset, t0));
-		double zero = 244.920599505825;
-		double expectedDer = 23.85164367971759;
+		double zeroFromZerosFile = 244.920599505825;
+		double expectedDerFromZerosFile = 23.85164367971759;
 		int currentIndex = 40;
 		final int initialPadding = currentIndex;
+		// calculate GSeries beginning at t0
 		GSeries gAtBeta = calculateGSeriesE12(t0, initialPadding);
 		
 		double[] gAtGram = gAtBeta.gAtBeta[currentIndex];
 		Pair<double[], Double> fAndZGram = gAtBeta.fAndZ(gAtGram, t0);
-		System.out.println(t0 + ", " + fAndZGram.getValue() + ", " + gAtBeta.spacing);
+		System.out.println("At " + t0 + ", " + fAndZGram.getValue() + ", " + gAtBeta.spacing);
 		assertEquals(1.92649807303971, fAndZGram.getValue(), 0.0000015);
 		
-		double correction = gAtBeta.correctionAtT(zero);
+		double correction = gAtBeta.correctionAtT(zeroFromZerosFile);
         String zetaFile = "data/zetaE12.csv";
         BufferedReader zetaIn = 
                 new BufferedReader(new FileReader(zetaFile));
@@ -667,53 +678,53 @@ public class GSeriesTest {
 		}
 		String zerosFile = "data/gzetaE12/zerosE12.csv";
 		BufferedReader zeroIn = new BufferedReader(new FileReader(zerosFile));
-		String in = zeroIn.readLine();
+		String inFromZerosFile = zeroIn.readLine();
 		for (int i = 0; i < 1; i++) {
-			in = zeroIn.readLine();
+			inFromZerosFile = zeroIn.readLine();
 		}
 
 		int gramIndex = Integer.MAX_VALUE;
-		while (in != null) {
-			String[] line = in.split(",\\s+");
-			zero = Double.parseDouble(line[0]);
-			expectedDer = Double.parseDouble(line[1]);
-			while(zero>t0) {
+		while (inFromZerosFile != null) {
+			String[] line = inFromZerosFile.split(",\\s+");
+			zeroFromZerosFile = Double.parseDouble(line[0]);
+			expectedDerFromZerosFile = Double.parseDouble(line[1]);
+			while(zeroFromZerosFile>t0) {
 	            String[] parsed = Zinput.split(",");
 	            double zetaSaved =  Double.parseDouble(parsed[1]);  
 	            gramIndex = Integer.parseInt(parsed[0]);
 				assertEquals(zetaSaved, fAndZGram.getValue(), 0.000001);
 	        	Zinput = zetaIn.readLine();
 
-	        	System.out.println("*Gram " + gramIndex + " " + t0 + " " +  fAndZGram.getValue());
-	        	System.out.println("*F " +   Arrays.toString(fAndZGram.getKey()));
+	        	System.out.println("**Gram " + gramIndex + " " + t0 + " " +  fAndZGram.getValue());
+	        	System.out.println("*F at Gram " +   Arrays.toString(fAndZGram.getKey()));
 				t0 += 2*gAtBeta.spacing;
 				currentIndex += 2;
 				gAtGram = gAtBeta.gAtBeta[currentIndex];
 				fAndZGram = gAtBeta.fAndZ(gAtGram, t0);
 			}
 
-			double[] gFromBLFI0 = gAtBeta.diagnosticBLFISumWithOffset(zero, 4, 
+			double[] gFromBLFI0 = gAtBeta.diagnosticBLFISumWithOffset(zeroFromZerosFile, 4,
 					initialPadding, 1.6E-9, false);
-			double theta = gAtBeta.theta(zero);
+			double theta = gAtBeta.theta(zeroFromZerosFile);
 			double cos = Math.cos(theta);
 			double sin = Math.sin(theta);
 			
-			Pair<double[], Double> fAndZero = gAtBeta.fAndZ(gFromBLFI0, zero);
+			Pair<double[], Double> fAndZero = gAtBeta.fAndZ(gFromBLFI0, zeroFromZerosFile);
 			double zeta = fAndZero.getValue();
 			double[] f = fAndZero.getKey();
-        	System.out.println("*F zero" +   Arrays.toString(fAndZero.getKey()));
-			System.out.println("zero " + zero + " zeta " + nf.format(zeta ) + " cf 0.0");
+			System.out.println("zeroFromZerosFile " + zeroFromZerosFile + " zeta " + nf.format(zeta ) + " cf 0.0");
+        	System.out.println("*F at zeroFromZerosFile" +   Arrays.toString(fAndZero.getKey()));
 			assertEquals(0.0, zeta, 0.000001);
 			
-			Pair<double[], Double> fZprime = gAtBeta.der(zero, initialPadding);
+			Pair<double[], Double> fZprime = gAtBeta.der(zeroFromZerosFile, initialPadding);
 			double der = fZprime.getValue();
 			double[] fprime = fZprime.getKey();
 			double zPrime = 2*(cos*fprime[0] + sin*fprime[1])
 					+ 2*gAtBeta.lnsqrtArg1*(-sin*f[0] + cos*f[1])
 					;
-			assertEquals(expectedDer, zPrime, 0.00003);
-			assertEquals(expectedDer, der, 0.00003);
-			in = zeroIn.readLine();
+			assertEquals(expectedDerFromZerosFile, zPrime, 0.00003);
+			assertEquals(expectedDerFromZerosFile, der, 0.00003);
+			inFromZerosFile = zeroIn.readLine();
 //			if (gramIndex>1) {
 //				break;
 //			}
