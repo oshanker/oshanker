@@ -91,7 +91,7 @@ def main():
     model.add(Dense(32,activation='relu'))
     model.add(Dense(1))
     print(model.summary())
-    plot_model(model, to_file='out/model_plot.png', show_shapes=True, show_layer_names=True)
+    plot_model(model, to_file='out/model_lstm.png', show_shapes=True, show_layer_names=True)
 
     model.compile(loss='mae', optimizer='adam')
     # fit network
