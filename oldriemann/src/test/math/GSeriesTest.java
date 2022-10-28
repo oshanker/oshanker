@@ -673,10 +673,10 @@ public class GSeriesTest {
 		double t0 = 244.021159171564;
 		System.out.println(nf.format(t0) + ", " + Gram.gramIndex(offset, t0));
 		 double zeroFromZerosFile = 243.8749480149;
-		 double expectedDerFromZerosFile = -20.007604626096071598;
+		 double expectedDerFromZerosFile = 17.619276585379914;
 		 double oldZeroFromZerosFile = 243.8749480149;
-		 double oldExpectedDerFromZerosFile = -20.007604626096071598;
-		 double oldZetaMax = -1.232146174810101691;
+		 double oldExpectedDerFromZerosFile = 17.619276585379914;
+		 double extremumFromFile = 1.9266754104451154;
 		int currentIndex = 40;
 		final int initialPadding = currentIndex;
 		// calculate GSeries beginning at t0
@@ -709,6 +709,24 @@ public class GSeriesTest {
 			String[] splitZerosLine = inFromZerosFile.split(",\\s+");
 			zeroFromZerosFile = Double.parseDouble(splitZerosLine[0]);
 			expectedDerFromZerosFile = Double.parseDouble(splitZerosLine[1]);
+			{
+				Poly4 poly = new Poly4(oldZeroFromZerosFile, zeroFromZerosFile,
+						oldExpectedDerFromZerosFile, expectedDerFromZerosFile,
+						extremumFromFile);
+				double positionMax = poly.getPositionMax();
+				double evalMax = gAtBeta.evaluateZeta(positionMax, 40);
+				System.out.println(
+						"positionMax " + positionMax
+								+ ", eval " + evalMax
+								+ " read " + extremumFromFile
+								+ " diff(Max) " + (extremumFromFile-evalMax)
+				);
+				assertEquals(extremumFromFile, evalMax, 0.013);
+			}
+			oldZeroFromZerosFile = zeroFromZerosFile;
+			oldExpectedDerFromZerosFile = expectedDerFromZerosFile;
+			extremumFromFile = Double.parseDouble(splitZerosLine[2]);
+
 			while(zeroFromZerosFile>t0) {
 				String[] parsed = Zinput.split(",");
 				double zetaSaved = Double.parseDouble(parsed[1]);

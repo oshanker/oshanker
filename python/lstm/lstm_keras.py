@@ -11,7 +11,8 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 import keras
- 
+
+# https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adam 
 # https://machinelearningmastery.com/multivariate-time-series-forecasting-lstms-keras/
 # convert series to supervised learning
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
