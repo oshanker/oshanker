@@ -16,26 +16,20 @@ public class CopyZeroInformationTest {
         	   parent.mkdir();
         }
         BufferedReader zetaIn = null;
-        double baseGram = 244.021159171564 - 2*2*0.12179952345199391;
+        final double gramIncrement = 2 * 0.12179952345199391;
+        double baseGram = 244.021159171564 - 2*gramIncrement;
         double currentGram = Double.MAX_VALUE;
+        double zetaSaved = Double.MAX_VALUE;
+        int gramIndex = Integer.MAX_VALUE;
         if(Interpolate.prefix.equals("E12")) {
             String zetaFile = "data/zetaE12.csv";
             zetaIn = new BufferedReader(new FileReader(zetaFile));
-            String Zinput = zetaIn.readLine();
+            zetaIn.readLine();
+            currentGram = -1;
             /*
              **Gram 2 244.021159171564 1.9264980730399888
             244.021159171564-2*2*0.12179952345199391
              */
-            for (int i = 0; i < 2; i++) {
-                Zinput = zetaIn.readLine();
-                System.out.println("*" + Zinput);
-                String[] parsed = Zinput.split(",");
-                double zetaSaved = Double.parseDouble(parsed[1]);
-                int gramIndex = Integer.parseInt(parsed[0]);
-                //baseGram
-                currentGram = baseGram + gramIndex * 2 * 0.12179952345199391;
-                System.out.println( currentGram  + ", " + zetaSaved);
-            }
         }
 
         File file = new File(parent, "values.csv");
@@ -51,13 +45,41 @@ public class CopyZeroInformationTest {
             final double d0 = zeroInput.lastZero[1];
             final double d1 = zeroInput.nextValues[1];
             final double maxFromInput = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
+
+            out.println("-1, " + z0 + ", 0");
+            while (currentGram < z0) {
+               String Zinput = zetaIn.readLine();
+                System.out.println("*" + Zinput);
+                String[] parsed = Zinput.split(",");
+                zetaSaved = Double.parseDouble(parsed[1]);
+                gramIndex = Integer.parseInt(parsed[0]);
+                currentGram = baseGram + gramIndex * gramIncrement;
+                System.out.println( currentGram  + ", " + zetaSaved);
+            }
+
             Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
             System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
                   ", \n"  + "positionMax " + poly.positionMax 
                   + ", " + poly.eval(poly.positionMax) 
                   );
-            out.println(z0 + ", 0");
-            out.println(poly.positionMax + ", " + maxFromInput);
+            double positionMax = poly.positionMax;
+            while (currentGram < z1) {
+                if (positionMax < currentGram) {
+                    out.println("-100, " + positionMax + ", " + maxFromInput);
+                    positionMax = Double.MAX_VALUE;
+                }
+                out.println( gramIndex + ", " + currentGram  + ", " + zetaSaved);
+                String Zinput = zetaIn.readLine();
+                System.out.println("*" + Zinput);
+                String[] parsed = Zinput.split(",");
+                zetaSaved = Double.parseDouble(parsed[1]);
+                gramIndex = Integer.parseInt(parsed[0]);
+                currentGram = baseGram + gramIndex * gramIncrement;
+            }
+
+            if(positionMax < z1) {
+                out.println("-100, " + positionMax + ", " + maxFromInput);
+            }
         }
         out.close();
     }
