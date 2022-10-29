@@ -36,6 +36,7 @@ public class CopyZeroInformationTest {
         	   parent.mkdir();
         }
         BufferedReader zetaIn = null;
+        double[] nextValues = null;
         final double gramIncrement = Interpolate.gramIncr;
         double baseGram = Interpolate.baseLimit - 2*gramIncrement;
         double currentGram = Double.MAX_VALUE;
@@ -46,6 +47,7 @@ public class CopyZeroInformationTest {
             zetaIn = new BufferedReader(new FileReader(zetaFile));
             zetaIn.readLine();
             currentGram = -1;
+            nextValues = CopyZeroInformation.skipUntil( Interpolate.zeroIn, 245.916550650089922425);
             /*
              **Gram 2 244.021159171564 1.9264980730399888
             244.021159171564-2*2*0.12179952345199391
@@ -56,9 +58,6 @@ public class CopyZeroInformationTest {
         PrintStream out = new PrintStream(file);
         ZeroInfo zeroInput = null;
         int N = 10;
-        double[] nextValues =
-        null
-        ;
 
         for (int i = 0; i < N ; i++) {
             zeroInput = CopyZeroInformation.readSingleZero( Interpolate.zeroIn, nextValues);
@@ -72,12 +71,10 @@ public class CopyZeroInformationTest {
             out.println("-1, " + z0 + ", 0");
             while (currentGram < z0) {
                String Zinput = zetaIn.readLine();
-                System.out.println("*" + Zinput);
                 String[] parsed = Zinput.split(",");
                 zetaSaved = Double.parseDouble(parsed[1]);
                 gramIndex = Integer.parseInt(parsed[0]);
                 currentGram = baseGram + gramIndex * gramIncrement;
-                System.out.println( currentGram  + ", " + zetaSaved);
             }
 
             Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
