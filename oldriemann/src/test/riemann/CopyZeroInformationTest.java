@@ -10,7 +10,27 @@ import riemann.Rosser.ZeroInfo;
 public class CopyZeroInformationTest {
 
     @Test
-    public void testReadSingleZero() throws FileNotFoundException, IOException {
+    public void testSkipUntil() throws FileNotFoundException, IOException {
+        double[] lower = {
+              244.920599505825861697, 245.916550650089922425, 246.093805026664464969,
+        };
+        for (int i = 0; i < lower.length; i++) {
+            double[] nextValues = CopyZeroInformation.skipUntil( Interpolate.zeroIn, lower[i]);
+            System.out.println(Arrays.toString(nextValues));
+        }
+    }
+
+    @Test
+    public void testSkipUntilBad() throws FileNotFoundException, IOException {
+        double[] lower = {245.916550650089922425, 244.920599505825861697, };
+        for (int i = 0; i < lower.length; i++) {
+            double[] nextValues = CopyZeroInformation.skipUntil( Interpolate.zeroIn, lower[i]);
+            System.out.println(Arrays.toString(nextValues));
+        }
+    }
+
+    @Test
+    public void testReadSingleZero() throws IOException {
         File parent = new File("out/gzeta" + Interpolate.prefix );
         if(!parent.exists()) {
         	   parent.mkdir();
@@ -37,9 +57,6 @@ public class CopyZeroInformationTest {
         ZeroInfo zeroInput = null;
         int N = 10;
         double[] nextValues =
-// needs more work
-//              { 244.920599505825861697,  23.851643679717589919,  1.039672856562399827}
-
         null
         ;
 

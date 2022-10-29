@@ -9,10 +9,28 @@ import java.util.Arrays;
 import riemann.Rosser.ZeroInfo;
 
 public class CopyZeroInformation {
-    
-    public static ZeroInfo readSingleZero(   
+    public static double[] skipUntil(
+          BufferedReader[] zeroIn,  double lower)
+          throws IOException {
+        String[] input = new String[zeroIn.length];
+        double[] lastValue = new double[zeroIn.length];
+        double zero = Double.MAX_VALUE;
+        System.out.println("lower " + lower);
+
+        while (true) {
+            for (int i = 0; i < input.length; i++) {
+                input[i] = zeroIn[i].readLine();
+            }
+            zero = populateNextValues(lastValue, input);
+            if(zero >= lower){break;}
+        }
+
+        return lastValue;
+    }
+
+    public static ZeroInfo readSingleZero(
             BufferedReader[] zeroIn,  double[] nextValues)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         String[] input = new String[zeroIn.length];
         double[] lastValue  = new double[zeroIn.length];
         lastValue[0] = Double.NEGATIVE_INFINITY;
@@ -57,6 +75,12 @@ public class CopyZeroInformation {
     }
 
 
+    /**
+     *
+     * @param nextValues mutable, gets populated
+     * @param input non-mutable
+     * @return zero which has been read
+     */
     private static double populateNextValues(double[] nextValues, String[] input) {
         double zero;
         input[0] = input[0].trim();
@@ -71,7 +95,6 @@ public class CopyZeroInformation {
             nextValues[0] = zero;
             for (int i = 1; i < input.length; i++) {
                 try {
-
                     input[i] = input[i].trim();
                     nextValues[i] = Double.parseDouble(input[i]);
                 } catch (Exception e){
