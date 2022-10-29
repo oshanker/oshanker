@@ -21,11 +21,13 @@ public class CopyZeroInformation {
         //populate lastValue
         if(nextValues == null){
             nextValues = new double[zeroIn.length];
-            
+
+            System.out.println("=====");
             for (int i = 0; i < input.length; i++) {
                 input[i] = zeroIn[i].readLine();
                 System.out.println(i + " " + input[i]);
             }
+            System.out.println("=====");
             if(input[0] == null || input[0].trim().length()==0){
                 System.out.println("done");
                 return null;

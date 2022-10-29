@@ -71,6 +71,7 @@ print('train', train_X.shape, train_y.shape, 'test', test_X.shape, test_y.shape)
 # design network
 model = Sequential(name='lstm_keras')
 model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+
 model.add(Dense(1))
 
 print(model.summary())

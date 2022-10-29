@@ -1,9 +1,6 @@
 package riemann;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -16,8 +13,31 @@ public class CopyZeroInformationTest {
     public void testReadSingleZero() throws FileNotFoundException, IOException {
         File parent = new File("out/gzeta" + Interpolate.prefix );
         if(!parent.exists()) {
-        	parent.mkdir();
+        	   parent.mkdir();
         }
+        BufferedReader zetaIn = null;
+        double baseGram = 244.021159171564 - 2*2*0.12179952345199391;
+        double currentGram = Double.MAX_VALUE;
+        if(Interpolate.prefix.equals("E12")) {
+            String zetaFile = "data/zetaE12.csv";
+            zetaIn = new BufferedReader(new FileReader(zetaFile));
+            String Zinput = zetaIn.readLine();
+            /*
+             **Gram 2 244.021159171564 1.9264980730399888
+            244.021159171564-2*2*0.12179952345199391
+             */
+            for (int i = 0; i < 2; i++) {
+                Zinput = zetaIn.readLine();
+                System.out.println("*" + Zinput);
+                String[] parsed = Zinput.split(",");
+                double zetaSaved = Double.parseDouble(parsed[1]);
+                int gramIndex = Integer.parseInt(parsed[0]);
+                //baseGram
+                currentGram = baseGram + gramIndex * 2 * 0.12179952345199391;
+                System.out.println( currentGram  + ", " + zetaSaved);
+            }
+        }
+
         File file = new File(parent, "values.csv");
         PrintStream out = new PrintStream(file);
         ZeroInfo zeroInput = null;
