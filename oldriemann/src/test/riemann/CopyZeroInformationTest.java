@@ -16,8 +16,8 @@ public class CopyZeroInformationTest {
         	   parent.mkdir();
         }
         BufferedReader zetaIn = null;
-        final double gramIncrement = 2 * 0.12179952345199391;
-        double baseGram = 244.021159171564 - 2*gramIncrement;
+        final double gramIncrement = Interpolate.gramIncr;
+        double baseGram = Interpolate.baseLimit - 2*gramIncrement;
         double currentGram = Double.MAX_VALUE;
         double zetaSaved = Double.MAX_VALUE;
         int gramIndex = Integer.MAX_VALUE;
@@ -36,7 +36,13 @@ public class CopyZeroInformationTest {
         PrintStream out = new PrintStream(file);
         ZeroInfo zeroInput = null;
         int N = 10;
-        double[] nextValues = null;
+        double[] nextValues =
+// needs more work
+//              { 244.920599505825861697,  23.851643679717589919,  1.039672856562399827}
+
+        null
+        ;
+
         for (int i = 0; i < N ; i++) {
             zeroInput = CopyZeroInformation.readSingleZero( Interpolate.zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
