@@ -22,7 +22,7 @@ public class createLocalData {
       zeroIn[2].readLine();
       nextValues = CopyZeroInformation.skipUntil(zeroIn, 244.367502584863394599);
       System.out.println(Arrays.toString(nextValues));
-      for (int j = 0; j < 2000; j++) {
+      for (int j = 0; j < 3000; j++) {
          for (int i = 0; i < input.length; i++) {
             input[i] = zeroIn[i].readLine();
          }
