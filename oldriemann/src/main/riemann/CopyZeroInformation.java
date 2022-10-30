@@ -81,7 +81,7 @@ public class CopyZeroInformation {
      * @param input non-mutable
      * @return zero which has been read
      */
-    private static double populateNextValues(double[] nextValues, String[] input) {
+    static double populateNextValues(double[] nextValues, String[] input) {
         double zero;
         input[0] = input[0].trim();
         String[] parsed = input[0].split("\\s+");
