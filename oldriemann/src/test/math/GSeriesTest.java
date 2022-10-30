@@ -575,7 +575,7 @@ public class GSeriesTest {
 
 	@Test //@Ignore
 	public void testGetSavedGSeries1() throws Exception{
-		double firstZero = 1213.2328355504312;
+		double firstZero = 1456.4745650448124;
 		int idx = findFile(firstZero);
 
 		double t0 = gramE12[idx][0];
@@ -593,7 +593,7 @@ public class GSeriesTest {
 			double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
 			assertEquals(0.0, zeta, 0.000001);
 			double der = gAtBeta.evaluateDer(zeroPosition, 40);
-			assertEquals(expectedDer, der, 0.00006);
+			assertEquals("der",expectedDer, der, 0.001);
 			System.out.println("** i " + ++i);
 			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
 			System.out.println(
@@ -613,7 +613,7 @@ public class GSeriesTest {
 								+ " read " + extremumFromFile
 								+ " diff(Max) " + (extremumFromFile-evalMax)
 				);
-				assertEquals(extremumFromFile, evalMax, 0.13);
+				assertEquals("max", extremumFromFile, evalMax, 0.13);
 			}
 			System.out.println(
 					"nextValues " + Arrays.toString(nextValues)
