@@ -575,7 +575,7 @@ public class GSeriesTest {
 
 	@Test //@Ignore
 	public void testGetSavedGSeries1() throws Exception{
-		double firstZero = 231657.6362071674;
+		double firstZero = 243837.44036866794;
 		int idx = findFile(firstZero);
 
 		double t0 = gramE12[idx][0];
