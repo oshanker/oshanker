@@ -20,9 +20,9 @@ public class createLocalData {
       String maxFile = zerosFile + ".max";
       zeroIn[2] = new BufferedReader(new FileReader(maxFile));
       zeroIn[2].readLine();
-      nextValues = CopyZeroInformation.skipUntil(zeroIn, 246.093805026664464969);
+      nextValues = CopyZeroInformation.skipUntil(zeroIn, 244.367502584863394599);
       System.out.println(Arrays.toString(nextValues));
-      for (int j = 0; j < 125; j++) {
+      for (int j = 0; j < 2000; j++) {
          for (int i = 0; i < input.length; i++) {
             input[i] = zeroIn[i].readLine();
          }
@@ -44,23 +44,24 @@ public class createLocalData {
       PrintStream writeToMax = new PrintStream(
             new FileOutputStream(baseZerosFile + ".max", true));
 
-      for (int kk = 0; kk < 100; kk++) {
+      for (int kk = 0; kk < 1000; kk++) {
          nextValues = CopyZeroInformation.skipUntil(zeroIn3, nextValues[0]);
+
 //         writeToDer.println(nextValues[1]);
 //         writeToMax.println(nextValues[2]);
+
       }
+
       writeToDer.close();
       writeToMax.close();
       System.out.println(Arrays.toString(nextValues));
       /*
-      j 25
 20:46 $ wc -l zerosE12.csv
  1000003 zerosE12.csv
-21:00 $ wc -l zerosE12.csv.der
-     135 zerosE12.csv.der
-21:03 $ wc -l zerosE12.csv.max
-     135 zerosE12.csv.max
-
+21:12 $ wc -l zerosE12.csv.der
+    3003 zerosE12.csv.der
+21:17 $ wc -l zerosE12.csv.max
+    3003 zerosE12.csv.max
        */
 
    }
