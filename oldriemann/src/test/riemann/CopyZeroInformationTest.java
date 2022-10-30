@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import riemann.Rosser.ZeroInfo;
 
+import static riemann.Interpolate.zeroIn;
+
 public class CopyZeroInformationTest {
 
     @Test
@@ -15,7 +17,7 @@ public class CopyZeroInformationTest {
               244.920599505825861697, 245.916550650089922425, 246.093805026664464969,
         };
         for (int i = 0; i < lower.length; i++) {
-            double[] nextValues = CopyZeroInformation.skipUntil( Interpolate.zeroIn, lower[i]);
+            double[] nextValues = CopyZeroInformation.skipUntil( zeroIn, lower[i]);
             System.out.println(Arrays.toString(nextValues));
         }
     }
@@ -24,7 +26,7 @@ public class CopyZeroInformationTest {
     public void testSkipUntilBad() throws FileNotFoundException, IOException {
         double[] lower = {245.916550650089922425, 244.920599505825861697, };
         for (int i = 0; i < lower.length; i++) {
-            double[] nextValues = CopyZeroInformation.skipUntil( Interpolate.zeroIn, lower[i]);
+            double[] nextValues = CopyZeroInformation.skipUntil( zeroIn, lower[i]);
             System.out.println(Arrays.toString(nextValues));
         }
     }
@@ -43,12 +45,18 @@ public class CopyZeroInformationTest {
         double zetaSaved = Double.MAX_VALUE;
         int gramIndex = Integer.MAX_VALUE;
         if(Interpolate.prefix.equals("E12")) {
+            for (int j = 0; j < 100000 - 25; j++) {
+                for (int i = 0; i < zeroIn.length; i++) {
+                    zeroIn[i].readLine();
+                }
+            }
+
             String zetaFile = "data/zetaE12.csv";
             zetaIn = new BufferedReader(new FileReader(zetaFile));
             zetaIn.readLine();
             currentGram = -1;
             nextValues = CopyZeroInformation.skipUntil(
-                  Interpolate.zeroIn, 1213.2328355504312);
+                  zeroIn, 24598.529900377285);
             /*
              **Gram 2 244.021159171564 1.9264980730399888
             244.021159171564-2*2*0.12179952345199391
@@ -61,7 +69,7 @@ public class CopyZeroInformationTest {
         int N = 20;
 
         for (int i = 0; i < N ; i++) {
-            zeroInput = CopyZeroInformation.readSingleZero( Interpolate.zeroIn, nextValues);
+            zeroInput = CopyZeroInformation.readSingleZero( zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
             final double z0 = zeroInput.lastZero[0];
             final double z1 = zeroInput.nextValues[0];
