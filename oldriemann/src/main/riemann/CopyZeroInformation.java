@@ -15,7 +15,6 @@ public class CopyZeroInformation {
         String[] input = new String[zeroIn.length];
         double[] lastValue = new double[zeroIn.length];
         double zero = Double.MAX_VALUE;
-        System.out.println("lower " + lower);
 
         while (true) {
             for (int i = 0; i < input.length; i++) {

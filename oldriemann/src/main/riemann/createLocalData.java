@@ -1,7 +1,6 @@
 package riemann;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.Arrays;
 
 public class createLocalData {
@@ -23,7 +22,7 @@ public class createLocalData {
       zeroIn[2].readLine();
       nextValues = CopyZeroInformation.skipUntil(zeroIn, 246.093805026664464969);
       System.out.println(Arrays.toString(nextValues));
-      for (int j = 0; j < 17; j++) {
+      for (int j = 0; j < 125; j++) {
          for (int i = 0; i < input.length; i++) {
             input[i] = zeroIn[i].readLine();
          }
@@ -38,8 +37,31 @@ public class createLocalData {
       zeroIn3[2] = zeroIn[2];
       zeroIn[3].close();
       zeroIn[4].close();
-      nextValues = CopyZeroInformation.skipUntil(zeroIn3, 250.25529918952256);
+      String baseZerosFile = Rosser.getParam("zerosFile");
+
+      PrintStream writeToDer = new PrintStream(
+            new FileOutputStream(baseZerosFile + ".der", true));
+      PrintStream writeToMax = new PrintStream(
+            new FileOutputStream(baseZerosFile + ".max", true));
+
+      for (int kk = 0; kk < 100; kk++) {
+         nextValues = CopyZeroInformation.skipUntil(zeroIn3, nextValues[0]);
+//         writeToDer.println(nextValues[1]);
+//         writeToMax.println(nextValues[2]);
+      }
+      writeToDer.close();
+      writeToMax.close();
       System.out.println(Arrays.toString(nextValues));
+      /*
+      j 25
+20:46 $ wc -l zerosE12.csv
+ 1000003 zerosE12.csv
+21:00 $ wc -l zerosE12.csv.der
+     135 zerosE12.csv.der
+21:03 $ wc -l zerosE12.csv.max
+     135 zerosE12.csv.max
+
+       */
 
    }
 }
