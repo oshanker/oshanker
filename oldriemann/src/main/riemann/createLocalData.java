@@ -22,7 +22,7 @@ public class createLocalData {
       zeroIn[2].readLine();
       nextValues = CopyZeroInformation.skipUntil(zeroIn, 244.367502584863394599);
       System.out.println(Arrays.toString(nextValues));
-      for (int j = 0; j < 3000; j++) {
+      for (int j = 0; j < 4000; j++) {
          for (int i = 0; i < input.length; i++) {
             input[i] = zeroIn[i].readLine();
          }
@@ -35,8 +35,8 @@ public class createLocalData {
       zeroIn3[0] = zeroIn[0];
       zeroIn3[1] = zeroIn[1];
       zeroIn3[2] = zeroIn[2];
-      zeroIn[3].close();
-      zeroIn[4].close();
+      closeFile(zeroIn[3]);
+      closeFile(zeroIn[4]);
       String baseZerosFile = Rosser.getParam("zerosFile");
 
       PrintStream writeToDer = new PrintStream(
@@ -68,5 +68,12 @@ public class createLocalData {
     3003 zerosE12.csv.max
        */
 
+   }
+
+   private static void closeFile(BufferedReader zeroIn) throws IOException {
+      if(zeroIn.readLine() != null) {
+         throw new IllegalStateException("file not in sync");
+      }
+      zeroIn.close();
    }
 }

@@ -48,7 +48,7 @@ public class CopyZeroInformationTest {
             zetaIn.readLine();
             currentGram = -1;
             nextValues = CopyZeroInformation.skipUntil(
-                  Interpolate.zeroIn, 725);
+                  Interpolate.zeroIn, 1213.2328355504312);
             /*
              **Gram 2 244.021159171564 1.9264980730399888
             244.021159171564-2*2*0.12179952345199391

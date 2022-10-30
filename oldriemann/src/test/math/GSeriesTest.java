@@ -575,7 +575,7 @@ public class GSeriesTest {
 
 	@Test //@Ignore
 	public void testGetSavedGSeries1() throws Exception{
-		double firstZero = 969;
+		double firstZero = 1213.2328355504312;
 		int idx = findFile(firstZero);
 
 		double t0 = gramE12[idx][0];
@@ -623,10 +623,10 @@ public class GSeriesTest {
 
 			z0 = zeroPosition;
 			d0 = expectedDer;
-			//extremumFromFile = Double.parseDouble(dataFromFile[2]);
 			extremumFromFile = d0>0?nextValues[2]:-nextValues[2];
-			nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, nextValues[0]);
-
+			if(i<25) {
+				nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, nextValues[0]);
+			}
 		}
 		System.out.println("done");
 	}
