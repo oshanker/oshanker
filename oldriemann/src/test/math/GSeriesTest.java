@@ -600,7 +600,7 @@ public class GSeriesTest {
 					"expectedDer  "
 							+ expectedDer
 							+ " : eval from GSeries: " + der
-							+ " diff " + Math.abs(expectedDer-der)
+							+ " diff(der) " + Math.abs(expectedDer-der)
 			);
 			if (i>1) {
 				Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,

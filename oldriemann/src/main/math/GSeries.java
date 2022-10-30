@@ -144,14 +144,17 @@ public class GSeries {
     }
 
     public  double evaluateDer(double zero, final int initialPadding) {
-        double delta = 0.001*spacing;
-        double zetaplus = evaluateZeta(zero+delta, initialPadding );
-        double zetaminus = evaluateZeta(zero-delta, initialPadding);
-        double der = (zetaplus-zetaminus)/(2*delta);
-        return der;
+		 double delta = 0.001*spacing;
+		 return evalDer(zero, initialPadding, delta);
     }
-    
-    public  double evaluateZeta(double zero, final int initialPadding) {
+
+	public double evalDer(double zero, int initialPadding, double delta) {
+		double zetaplus = evaluateZeta(zero + delta, initialPadding);
+		double zetaminus = evaluateZeta(zero - delta, initialPadding);
+		return (zetaplus-zetaminus)/(2* delta);
+	}
+
+	public  double evaluateZeta(double zero, final int initialPadding) {
         double[] gFromBLFI = diagnosticBLFISumWithOffset( zero, 4, 
                 initialPadding, 1.6E-9, false);
         double zeta = riemannZeta(gFromBLFI, zero);
