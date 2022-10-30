@@ -22,7 +22,7 @@ public class createLocalData {
       zeroIn[2].readLine();
       nextValues = CopyZeroInformation.skipUntil(zeroIn, 244.367502584863394599);
       System.out.println(Arrays.toString(nextValues));
-      for (int j = 0; j < 2000; j++) {
+      for (int j = 0; j < 3000; j++) {
          for (int i = 0; i < input.length; i++) {
             input[i] = zeroIn[i].readLine();
          }
@@ -44,9 +44,13 @@ public class createLocalData {
       PrintStream writeToMax = new PrintStream(
             new FileOutputStream(baseZerosFile + ".max", true));
 
-      for (int kk = 0; kk < 1000; kk++) {
+      int additional = 1000;
+      for (int kk = 0; kk < additional; kk++) {
          nextValues = CopyZeroInformation.skipUntil(zeroIn3, nextValues[0]);
 
+         if(additional-kk == 25){
+            System.out.println(Arrays.toString(nextValues));
+         }
 //         writeToDer.println(nextValues[1]);
 //         writeToMax.println(nextValues[2]);
 

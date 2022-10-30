@@ -572,8 +572,66 @@ public class GSeriesTest {
 //	        System.out.println(firstGram + incr*N);
 	        return gramSum;
 	}
-    
-    /**
+
+	@Test //@Ignore
+	public void testGetSavedGSeries1() throws Exception{
+		double firstZero = 969;
+		int idx = findFile(firstZero);
+
+		double t0 = gramE12[idx][0];
+		final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+		GSeries gAtBeta = getSavedGSeries(t0, offset);
+
+		//25 rows zero expectedDer
+
+		double[] nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, firstZero);
+		int i = 0;
+		double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
+		for (int jj = 0; jj < 25; jj++) {
+			double zeroPosition = nextValues[0];
+			double expectedDer =  nextValues[1];
+			double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
+			assertEquals(0.0, zeta, 0.000001);
+			double der = gAtBeta.evaluateDer(zeroPosition, 40);
+			assertEquals(expectedDer, der, 0.00006);
+			System.out.println("** i " + ++i);
+			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
+			System.out.println(
+					"expectedDer  "
+							+ expectedDer
+							+ " : eval from GSeries: " + der
+							+ " diff " + Math.abs(expectedDer-der)
+			);
+			if (i>1) {
+				Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
+						extremumFromFile);
+				double positionMax = poly.getPositionMax();
+				double evalMax = gAtBeta.evaluateZeta(positionMax, 40);
+				System.out.println(
+						"positionMax " + positionMax
+								+ ", eval " + evalMax
+								+ " read " + extremumFromFile
+								+ " diff(Max) " + (extremumFromFile-evalMax)
+				);
+				assertEquals(extremumFromFile, evalMax, 0.13);
+			}
+			System.out.println(
+					"nextValues " + Arrays.toString(nextValues)
+							+ " extremumFromFile " + extremumFromFile
+							+ "; "
+			);
+
+			z0 = zeroPosition;
+			d0 = expectedDer;
+			//extremumFromFile = Double.parseDouble(dataFromFile[2]);
+			extremumFromFile = d0>0?nextValues[2]:-nextValues[2];
+			nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, nextValues[0]);
+
+		}
+		System.out.println("done");
+	}
+
+	/**
      * Test calculate Z using F, G from saved file
      * @throws Exception
      */
