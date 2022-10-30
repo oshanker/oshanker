@@ -47,7 +47,8 @@ public class CopyZeroInformationTest {
             zetaIn = new BufferedReader(new FileReader(zetaFile));
             zetaIn.readLine();
             currentGram = -1;
-            nextValues = CopyZeroInformation.skipUntil( Interpolate.zeroIn, 245.916550650089922425);
+            nextValues = CopyZeroInformation.skipUntil(
+                  Interpolate.zeroIn, 725);
             /*
              **Gram 2 244.021159171564 1.9264980730399888
             244.021159171564-2*2*0.12179952345199391
@@ -57,7 +58,7 @@ public class CopyZeroInformationTest {
         File file = new File(parent, "values.csv");
         PrintStream out = new PrintStream(file);
         ZeroInfo zeroInput = null;
-        int N = 10;
+        int N = 20;
 
         for (int i = 0; i < N ; i++) {
             zeroInput = CopyZeroInformation.readSingleZero( Interpolate.zeroIn, nextValues);
