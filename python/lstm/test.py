@@ -33,7 +33,7 @@ def main():
     dataset = pandas.read_csv('../../../jena_climate_2009_2016.csv', header=0)
     dataset.drop(dataset.columns[0], axis=1, inplace=True)
     
-    print(dataset.head)
+    print(dataset.head())
     values = dataset.values
 
 
