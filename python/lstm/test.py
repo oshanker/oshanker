@@ -39,8 +39,23 @@ def main():
     dataset.drop(dataset.columns[0], axis=1, inplace=True)
     
     print(dataset.head())
-    values = dataset.values
-
+    raw_data = dataset.values
+    print('raw_data.shape', raw_data.shape)
+    print('raw_data[0]', raw_data[0])
+    
+    temperature = np.array(raw_data[:,1], copy=True)
+    temperature[0] = float("nan")
+    print('raw_data[0]', raw_data[0])
+    print('temperature[0]', temperature[0])
+    
+    print('temperature shape', temperature.shape)
+    
+    num_train_samples = int(0.5 * len(raw_data))
+    num_val_samples = int(0.25 * len(raw_data))
+    num_test_samples = len(raw_data) - num_train_samples - num_val_samples
+    print("num_train_samples:", num_train_samples)
+    print("num_val_samples:", num_val_samples)
+    print("num_test_samples:", num_test_samples)
 
 
 if __name__   == '__main__':
