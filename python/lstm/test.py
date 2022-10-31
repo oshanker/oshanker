@@ -17,18 +17,23 @@ import pandas
 def main():
     print("-------")
     print(sys.argv)
-    time_sequence = np.arange(10)                                
-    y_sequence = np.arange(3,18,3)                                
+    time_sequence = np.arange(10)  
+    
+    raw_data = np.zeros((7, 2 ))  
+    for i in time_sequence[:-3]:
+        raw_data[i,:] = [i, i*i]
+    print(raw_data)
+    y_sequence = np.arange(3,21,3)                                
     dummy_dataset = keras.utils.timeseries_dataset_from_array(
-        data=time_sequence[:-3],                                 
+        data=raw_data,                                 
         targets=y_sequence,                               
         sequence_length=3,                                      
-        batch_size=3,                                           
+        batch_size=2,                                           
     )
  
     for inputs, targets in dummy_dataset:
         for i in range(inputs.shape[0]):
-            print([int(x) for x in inputs[i]], int(targets[i]))
+            print(inputs[i], int(targets[i]))
     
     dataset = pandas.read_csv('../../../jena_climate_2009_2016.csv', header=0)
     dataset.drop(dataset.columns[0], axis=1, inplace=True)
