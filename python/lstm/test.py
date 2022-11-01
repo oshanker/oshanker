@@ -82,9 +82,10 @@ def main():
     std = raw_data[:num_train_samples].std(axis=0)
     raw_data /= std
     
-    sampling_rate = 6 
+    sampling_rate = 1 
     sequence_length = 120 
-    delay = sampling_rate * (sequence_length + 24 - 1)
+    #delay = sampling_rate * (sequence_length + 24 - 1)
+    delay = (sequence_length + 6*24 - 1)
     batch_size = 256 
       
     train_dataset = keras.utils.timeseries_dataset_from_array(
@@ -97,6 +98,18 @@ def main():
         start_index=0,
         end_index=num_train_samples)
       
+    print(
+        """
+        To preserve order,  sampling_rate has to be 1! 
+        model is quickly overfitting, despite only having very 
+          few units: the training and validation losses start 
+          to diverge considerably after a few epochs. 
+          You’re already familiar with a classic technique 
+          for fighting this phenomenon: dropout, which randomly zeros out 
+          input units of a layer in order to break happenstance correlations 
+          in the training data 
+        """
+          )
     print('type(train_dataset)', type(train_dataset))
     
     val_dataset = keras.utils.timeseries_dataset_from_array(
