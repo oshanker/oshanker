@@ -9,6 +9,7 @@ import sys
 import numpy as np 
 from tensorflow import keras
 from tensorflow.keras import layers
+from test001 import getZetadata
 
 import pandas
 import matplotlib.pyplot as plt
@@ -67,7 +68,11 @@ def main():
         print('temperature[0]', temperature[0])
         return raw_data, temperature
     
-    raw_data, temperature = getdata()
+    #sequence_length = 120 
+    sequence_length = 25 
+    
+    #raw_data, temperature = getdata()
+    raw_data, temperature = getZetadata(500001, sequence_length)
     print('temperature shape', temperature.shape)
     
     num_train_samples = int(0.5 * len(raw_data))
@@ -83,9 +88,12 @@ def main():
     raw_data /= std
     
     sampling_rate = 1 
-    sequence_length = 120 
+    
+    
     #delay = sampling_rate * (sequence_length + 24 - 1)
-    delay = (sequence_length + 6*24 - 1)
+    #delay = (sequence_length + 6*24 - 1)
+    
+    delay = sampling_rate * (sequence_length + 1 - 1)
     batch_size = 256 
       
     train_dataset = keras.utils.timeseries_dataset_from_array(
@@ -145,8 +153,8 @@ def main():
             samples_seen += samples.shape[0]
         return total_abs_err / samples_seen
       
-    print(f"evaluate_naive_method Validation MAE: {evaluate_naive_method(val_dataset):.2f}") 
-    print(f"evaluate_naive_method Test MAE: {evaluate_naive_method(test_dataset):.2f}")
+    #print(f"evaluate_naive_method Validation MAE: {evaluate_naive_method(val_dataset):.2f}") 
+    #print(f"evaluate_naive_method Test MAE: {evaluate_naive_method(test_dataset):.2f}")
 
     inputs = keras.Input(shape=(sequence_length, raw_data.shape[-1]))
     optimizer=['adam',"rmsprop"]
@@ -156,7 +164,7 @@ def main():
     file_name = "../out/jena_" + id + ".keras"
     def train_keras():
         x = layers.LSTM(16)(inputs)
-        outputs = layers.Dense(1, name="output layer")(x)
+        outputs = layers.Dense(1, name="output_layer")(x)
         model = keras.Model(inputs, outputs, name=id)
           
         callbacks = [
@@ -164,7 +172,8 @@ def main():
                                             save_best_only=True)
         ]
         
-        epochs=3
+        epochs=1
+        #epochs=3
         
         model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
         

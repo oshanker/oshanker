@@ -12,43 +12,67 @@ from tensorflow.keras import layers
 
 import pandas
 import matplotlib.pyplot as plt
+def getZetadata(upper, sequence_length ):
+    print("check alignment")
+    dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
+    print(dataset.head())
+    
+    #drop extra column
+    dataset.drop(dataset.columns[0], axis=1, inplace=True)
+    
+    raw_data = dataset.values[1:upper]
+    #raw_data = dataset.values
+    print('raw_data.shape', raw_data.shape)
+    print('raw_data[0]', raw_data[0])
+    print(raw_data[:5])
+    
+    # dataset1 = pandas.read_csv('../../oldriemann/data/zerosE12.csv.max', header=None)
+
+    dataset1 = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
+    #drop extra column
+    dataset1.drop(dataset1.columns[1], axis=1, inplace=True)
+    
+    #temperature = dataset1.values[1:upper]
+    #temperature = dataset1.values
+    
+    temperature = np.zeros((raw_data.shape[0] ))  
+    for i in np.arange(raw_data.shape[0]) :
+        if i >= sequence_length - 1:
+            temperature[i] = np.max(
+                np.abs(raw_data[i+1-sequence_length:i+1]) )
+    
+    print('temperature[sequence_length - 1]', temperature[sequence_length - 1])
+    print(temperature[sequence_length - 1:sequence_length + 5])
+    
+    plt.plot(range(1,15), raw_data[:14])
+    plt.grid(True)
+    plt.xlabel('offset gram index')
+    plt.ylabel('zeta')
+
+    plt.title('zeta at gram points')
+    return raw_data, temperature
+
 
 def main():
     print("-------")
     print(sys.argv)
 
-    def getdata():
-        print("check alignment")
-        dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
-        print(dataset.head())
-        
-        #drop extra column
-        dataset.drop(dataset.columns[0], axis=1, inplace=True)
-        
-        #raw_data = dataset.values[1:]
-        raw_data = dataset.values
-        print('raw_data.shape', raw_data.shape)
-        print('raw_data[0]', raw_data[0])
-        print(raw_data[:5])
-        
-       # dataset1 = pandas.read_csv('../../oldriemann/data/zerosE12.csv.max', header=None)
-    
-        dataset1 = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
-        #drop extra column
-        dataset1.drop(dataset1.columns[1], axis=1, inplace=True)
-        
-        #temperature = dataset1.values[1:]
-        temperature = dataset1.values
-        print('temperature[0]', temperature[0])
-        print(temperature[:5])
-        plt.plot(range(1,15), raw_data[:14])
-        plt.grid(True)
-        plt.xlabel('offset gram index')
-        plt.ylabel('zeta')
+    def example2():
+        limit = 15
+        sequence_length = 3
+        time_sequence = np.arange(limit)  
+        raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
+        y_sequence = np.zeros((raw_data.shape[0] ), dtype=int)  
+        sign = 1
+        for i in np.arange(raw_data.shape[0]) :
+            raw_data[i] =  i * sign
+            sign = -sign
+            if i >= sequence_length - 1:
+                y_sequence[i] = np.max(
+                    np.abs(raw_data[i+1-sequence_length:i+1]) )
+        print(raw_data)
+        print(y_sequence)
 
-        plt.title('zeta at gram points')
-        return raw_data, temperature
-    
     def example1():
         limit = 15
         time_sequence = np.arange(limit)  
@@ -103,9 +127,10 @@ def main():
            
 
     #example1()
+    #example2()
     
-    raw_data, temperature = getdata()
-    print('temperature shape', temperature.shape)
+    raw_data, temperature = getZetadata(500001, 3)
+    # print('temperature shape', temperature.shape)
     
     
 if __name__   == '__main__':
