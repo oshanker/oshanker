@@ -32,37 +32,42 @@ def plot(history, prefix):
 def main():
     print("-------")
     print(sys.argv)
-    time_sequence = np.arange(10)  
     
-    raw_data = np.zeros((7, 2 ))  
-    for i in time_sequence[:-3]:
-        raw_data[i,:] = [i, i*i]
-    print(raw_data)
-    y_sequence = np.arange(3,21,3)                                
-    dummy_dataset = keras.utils.timeseries_dataset_from_array(
-        data=raw_data,                                 
-        targets=y_sequence,                               
-        sequence_length=3,                                      
-        batch_size=2,                                           
-    )
- 
-    for inputs, targets in dummy_dataset:
-        for i in range(inputs.shape[0]):
-            print(inputs[i], int(targets[i]))
+    def example1():
+        time_sequence = np.arange(10)  
+        
+        raw_data = np.zeros((7, 2 ))  
+        for i in time_sequence[:-3]:
+            raw_data[i,:] = [i, i*i]
+        print(raw_data)
+        y_sequence = np.arange(3,21,3)                                
+        dummy_dataset = keras.utils.timeseries_dataset_from_array(
+            data=raw_data,                                 
+            targets=y_sequence,                               
+            sequence_length=3,                                      
+            batch_size=2,                                           
+        )
+     
+        for inputs, targets in dummy_dataset:
+            for i in range(inputs.shape[0]):
+                print(inputs[i], int(targets[i]))
     
-    dataset = pandas.read_csv('../../../jena_climate_2009_2016.csv', header=0)
-    dataset.drop(dataset.columns[0], axis=1, inplace=True)
+    def getdata():
+        dataset = pandas.read_csv('../../../jena_climate_2009_2016.csv', header=0)
+        dataset.drop(dataset.columns[0], axis=1, inplace=True)
+        
+        print(dataset.head())
+        raw_data = dataset.values
+        print('raw_data.shape', raw_data.shape)
+        print('raw_data[0]', raw_data[0])
     
-    print(dataset.head())
-    raw_data = dataset.values
-    print('raw_data.shape', raw_data.shape)
-    print('raw_data[0]', raw_data[0])
+        temperature = np.array(raw_data[:,1], copy=True)
+        temperature[0] = float("nan")
+        print('raw_data[0]', raw_data[0])
+        print('temperature[0]', temperature[0])
+        return raw_data, temperature
     
-    temperature = np.array(raw_data[:,1], copy=True)
-    temperature[0] = float("nan")
-    print('raw_data[0]', raw_data[0])
-    print('temperature[0]', temperature[0])
-    
+    raw_data, temperature = getdata()
     print('temperature shape', temperature.shape)
     
     num_train_samples = int(0.5 * len(raw_data))
@@ -135,18 +140,21 @@ def main():
     
     #######################################
     
+    file_name = "../out/jena_lstm.keras"
     def train_keras():
         x = layers.LSTM(16)(inputs)
         outputs = layers.Dense(1)(x)
         model = keras.Model(inputs, outputs, name="LSTM")
           
         callbacks = [
-            keras.callbacks.ModelCheckpoint("../out/jena_lstm.keras",
+            keras.callbacks.ModelCheckpoint(file_name,
                                             save_best_only=True)
         ]
         
         epochs=10
-        model.compile(optimizer=optimizer[0], loss="mse", metrics=["mae"])
+        
+        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
+        
         history = model.fit(train_dataset,
                             epochs=epochs,
                             validation_data=val_dataset,
@@ -154,7 +162,7 @@ def main():
         plot(history, "LSTM")
     
     train_keras()
-    model = keras.models.load_model("../out/jena_lstm.keras") 
+    model = keras.models.load_model(file_name) 
     print(f"LSTM Test MAE: {model.evaluate(test_dataset)[1]:.2f}")
     print(model.summary())
     

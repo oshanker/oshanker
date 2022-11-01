@@ -45,18 +45,24 @@ public class CopyZeroInformationTest {
         double zetaSaved = Double.MAX_VALUE;
         int gramIndex = Integer.MAX_VALUE;
         if(Interpolate.prefix.equals("E12")) {
+            /*
             for (int j = 0; j < 100000 - 25; j++) {
                 for (int i = 0; i < zeroIn.length; i++) {
                     zeroIn[i].readLine();
                 }
             }
 
+             */
+
             String zetaFile = "data/zetaE12.csv";
             zetaIn = new BufferedReader(new FileReader(zetaFile));
             zetaIn.readLine();
             currentGram = -1;
+            /*
             nextValues = CopyZeroInformation.skipUntil(
                   zeroIn, 24598.529900377285);
+
+             */
             /*
              **Gram 2 244.021159171564 1.9264980730399888
             244.021159171564-2*2*0.12179952345199391
