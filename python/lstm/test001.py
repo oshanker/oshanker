@@ -41,32 +41,40 @@ def main():
     def example1():
         limit = 15
         time_sequence = np.arange(limit)  
-        
-        raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
-        for i in time_sequence:
-            raw_data[i] =  int(i*i)
-        print(raw_data)
-        
         sequence_length = 3
         sampling_rate = 1
         delay = sampling_rate * (sequence_length + 1 - 1)
         batch_size = 3 
+        
+        raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
+        y_sequence = np.zeros((time_sequence.shape[0] ), dtype=int)  
+        for i in time_sequence:
+            raw_data[i] =  i
+            if i >= sequence_length - 1:
+                y_sequence[i] = np.max(raw_data[i+1-sequence_length:i+1])
+        print(raw_data)
+        
 
-        y_sequence = np.arange(0,3*limit+3,3)                                
         print(y_sequence)
         dummy_dataset = keras.utils.timeseries_dataset_from_array(
-            data=raw_data[:-delay],                                 
-            targets=y_sequence[delay:],                               
+            data=raw_data,                                 
+            targets=y_sequence[delay-1:],                               
             sequence_length=sequence_length,                                      
             batch_size=batch_size,                                           
             sampling_rate=sampling_rate,
-        )
+            shuffle=True,
+       )
      
+        print('===========')
+        print('dummy_dataset, batch_size', batch_size)
+        count = 0
         for inputs, targets in dummy_dataset:
             for i in range(inputs.shape[0]):
-                print(inputs[i], int(targets[i]))
+                count = count + 1
+                print([int(x) for x in inputs[i]], int(targets[i]))
+            print('count', count)
         print('===========')
-        print('sampling_rate != messes up the order')
+        print('sampling_rate != 1 messes up the order')
         print('===========')
        
         for iterval in np.arange(1):
@@ -74,9 +82,11 @@ def main():
             print('iterval', iterval)
             for samples, targets in dummy_dataset:
                 print("samples shape:", samples.shape)
-                print("samples ", samples)
                 print("targets shape:", targets.shape)
-                print("targets ", targets)
+                for i in np.arange( samples.shape[0]):
+                    print("samples ", [int(x) for x in samples[i]],
+                          end =" ")
+                    print("targets ", int(targets[i]))
                 
             print('===========')
            
