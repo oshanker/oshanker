@@ -21,10 +21,12 @@ def main():
         print("check alignment")
         dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
         print(dataset.head())
-
+        
+        #drop extra column
         dataset.drop(dataset.columns[0], axis=1, inplace=True)
         
-        raw_data = dataset.values[1:]
+        #raw_data = dataset.values[1:]
+        raw_data = dataset.values
         print('raw_data.shape', raw_data.shape)
         print('raw_data[0]', raw_data[0])
         print(raw_data[:5])
@@ -32,10 +34,19 @@ def main():
        # dataset1 = pandas.read_csv('../../oldriemann/data/zerosE12.csv.max', header=None)
     
         dataset1 = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
+        #drop extra column
         dataset1.drop(dataset1.columns[1], axis=1, inplace=True)
-        temperature = dataset1.values[1:]
+        
+        #temperature = dataset1.values[1:]
+        temperature = dataset1.values
         print('temperature[0]', temperature[0])
         print(temperature[:5])
+        plt.plot(range(1,15), raw_data[:14])
+        plt.grid(True)
+        plt.xlabel('offset gram index')
+        plt.ylabel('zeta')
+
+        plt.title('zeta at gram points')
         return raw_data, temperature
     
     def example1():
@@ -91,10 +102,10 @@ def main():
             print('===========')
            
 
-    example1()
+    #example1()
     
-    # raw_data, temperature = getdata()
-    # print('temperature shape', temperature.shape)
+    raw_data, temperature = getdata()
+    print('temperature shape', temperature.shape)
     
     
 if __name__   == '__main__':

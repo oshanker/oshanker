@@ -13,7 +13,7 @@ from tensorflow.keras import layers
 import pandas
 import matplotlib.pyplot as plt
 
-def plot(history, prefix):
+def myplot(history, prefix):
     
     loss = history.history["mae"]
     val_loss = history.history["val_mae"]
@@ -21,7 +21,7 @@ def plot(history, prefix):
     plt.figure()
     plt.plot(epochs, loss[1:], "bo", label=prefix+" Training MAE")
     plt.plot(epochs, val_loss[1:], "b", label=prefix+" Validation MAE")
-    plt.title("Training and validation MAE")
+    plt.title(prefix+" Training and validation MAE")
     plt.legend()
     plt.show()
     
@@ -152,19 +152,19 @@ def main():
     optimizer=['adam',"rmsprop"]
     
     #######################################
-    
-    file_name = "../out/jena_lstm.keras"
+    id = "LSTM"
+    file_name = "../out/jena_" + id + ".keras"
     def train_keras():
         x = layers.LSTM(16)(inputs)
-        outputs = layers.Dense(1)(x)
-        model = keras.Model(inputs, outputs, name="LSTM")
+        outputs = layers.Dense(1, name="output layer")(x)
+        model = keras.Model(inputs, outputs, name=id)
           
         callbacks = [
             keras.callbacks.ModelCheckpoint(file_name,
                                             save_best_only=True)
         ]
         
-        epochs=10
+        epochs=3
         
         model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
         
@@ -172,16 +172,16 @@ def main():
                             epochs=epochs,
                             validation_data=val_dataset,
                             callbacks=callbacks)
-        plot(history, "LSTM")
+        myplot(history, id)
     
     train_keras()
-    model = keras.models.load_model(file_name) 
-    print(f"LSTM Test MAE: {model.evaluate(test_dataset)[1]:.2f}")
-    print(model.summary())
     
     #######################################
     
-    
+    model = keras.models.load_model(file_name) 
+    print(f"Test MAE: {model.evaluate(test_dataset)[1]:.2f}")
+    print(model.summary())
+   
     
 if __name__   == '__main__':
      main()
