@@ -21,6 +21,7 @@ octave/out
 python/data/pollution.csv
 python/data/pollution_out.csv
 python/out/
+__pycache__
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

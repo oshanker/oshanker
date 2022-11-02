@@ -83,9 +83,14 @@ def main():
     print("num_test_samples:", num_test_samples)
 
     mean = raw_data[:num_train_samples].mean(axis=0)
-    raw_data -= mean
+    #raw_data -= mean
+    print('raw_data mean', mean)
     std = raw_data[:num_train_samples].std(axis=0)
-    raw_data /= std
+    #raw_data /= std
+    print('raw_data std', std)
+    
+    print('temperature mean', temperature[:num_train_samples].mean(axis=0))
+    print('temperature std', temperature[:num_train_samples].std(axis=0))
     
     sampling_rate = 1 
     
@@ -161,7 +166,7 @@ def main():
     
     #######################################
     id = "LSTM"
-    file_name = "../out/jena_" + id + ".keras"
+    file_name = "../out/jena_xxx.keras"
     def train_keras():
         x = layers.LSTM(16)(inputs)
         outputs = layers.Dense(1, name="output_layer")(x)
@@ -172,7 +177,31 @@ def main():
                                             save_best_only=True)
         ]
         
-        epochs=1
+        epochs=3
+        #epochs=3
+        
+        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
+        
+        history = model.fit(train_dataset,
+                            epochs=epochs,
+                            validation_data=val_dataset,
+                            callbacks=callbacks)
+        myplot(history, id)
+        
+    def train_dropout():
+        x = layers.LSTM(32, recurrent_dropout=0.25)(inputs)
+        x = layers.Dropout(0.5)(x)                             
+
+        outputs = layers.Dense(1, name="output_layer")(x)
+        
+        model = keras.Model(inputs, outputs, name=id)
+          
+        callbacks = [
+            keras.callbacks.ModelCheckpoint(file_name,
+                                            save_best_only=True)
+        ]
+        
+        epochs=8
         #epochs=3
         
         model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
@@ -183,7 +212,101 @@ def main():
                             callbacks=callbacks)
         myplot(history, id)
     
-    train_keras()
+    def train_bidirectional():
+        x = layers.Bidirectional(layers.LSTM(16))(inputs)
+
+        outputs = layers.Dense(1, name="output_layer")(x)
+        
+        model = keras.Model(inputs, outputs, name=id)
+          
+        callbacks = [
+            keras.callbacks.ModelCheckpoint(file_name,
+                                            save_best_only=True)
+        ]
+        
+        epochs=20
+        #epochs=3
+        
+        print(
+            """
+977/977 [==============================] - 23s 23ms/step - loss: 9.8978 - mae: 1.4766 - val_loss: 9.8637 - val_mae: 1.5293
+Epoch 20/20
+977/977 [==============================] - 23s 24ms/step - loss: 9.6790 - mae: 1.4464 - val_loss: 9.7542 - val_mae: 1.3489
+489/489 [==============================] - 7s 12ms/step - loss: 9.3265 - mae: 1.3530
+Test MAE: 1.35    
+      
+https://blog.paperspace.com/intro-to-optimization-momentum-rmsprop-adam/     
+
+this post takes a look at another problem that plagues training of neural networks, 
+pathological curvature.
+
+While local minima and saddle points can stall our training, 
+pathological curvature can slow down training to an extent that 
+the machine learning practitioner might think that search 
+has converged to a sub-optimal minma. 
+ pathological curvature 
+
+Adam or Adaptive Moment Optimization algorithms combines the heuristics of 
+both Momentum and RMSProp. however, ...
+
+https://www.tensorflow.org/api_docs/python/tf/keras/optimizers 
+class Adadelta: Optimizer that implements the Adadelta algorithm.
+
+class Adagrad: Optimizer that implements the Adagrad algorithm.
+
+class Adam: Optimizer that implements the Adam algorithm.
+
+class Adamax: Optimizer that implements the Adamax algorithm.
+
+class Ftrl: Optimizer that implements the FTRL algorithm.
+
+class Nadam: Optimizer that implements the NAdam algorithm.
+
+class Optimizer: Base class for Keras optimizers.
+
+class RMSprop: Optimizer that implements the RMSprop algorithm.
+
+class SGD: Gradient descent (with momentum) optimizer.
+
+"""
+            )
+        
+        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
+        
+        history = model.fit(train_dataset,
+                            epochs=epochs,
+                            validation_data=val_dataset,
+                            callbacks=callbacks)
+        myplot(history, id)
+    
+    
+    def train_expt():
+        x = layers.Bidirectional(layers.LSTM(16))(inputs)
+
+        outputs = layers.Dense(1, name="output_layer")(x)
+        
+        model = keras.Model(inputs, outputs, name=id)
+          
+        callbacks = [
+            keras.callbacks.ModelCheckpoint(file_name,
+                                            save_best_only=True)
+        ]
+        
+        epochs=8
+        #epochs=3
+        
+        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
+        
+        history = model.fit(train_dataset,
+                            epochs=epochs,
+                            validation_data=val_dataset,
+                            callbacks=callbacks)
+        myplot(history, id)
+    
+   
+    #train_keras()
+    #train_dropout()
+    train_bidirectional()
     
     #######################################
     
