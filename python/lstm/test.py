@@ -7,18 +7,20 @@ Created on Sun Oct 30 20:31:03 2022
 """
 import sys
 import numpy as np 
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from test001 import getZetadata
+import os.path as path
 
 import pandas
 import matplotlib.pyplot as plt
 
-def myplot(history, prefix):
+def myplot(history, prefix, minidx = 2):
     
     loss = history.history["mae"]
     val_loss = history.history["val_mae"]
-    epochs = range(2, len(loss) + 1)
+    epochs = range(int(minidx), len(loss) + 1)
     plt.figure()
     plt.plot(epochs, loss[1:], "bo", label=prefix+" Training MAE")
     plt.plot(epochs, val_loss[1:], "b", label=prefix+" Validation MAE")
@@ -26,6 +28,43 @@ def myplot(history, prefix):
     plt.legend()
     plt.show()
     
+
+def example1():
+    time_sequence = np.arange(10)  
+    
+    raw_data = np.zeros((7, 2 ))  
+    for i in time_sequence[:-3]:
+        raw_data[i,:] = [i, i*i]
+    print(raw_data)
+    y_sequence = np.arange(3,21,3)                                
+    dummy_dataset = keras.utils.timeseries_dataset_from_array(
+        data=raw_data,                                 
+        targets=y_sequence,                               
+        sequence_length=3,                                      
+        batch_size=2,                                           
+    )
+ 
+    for inputs, targets in dummy_dataset:
+        for i in range(inputs.shape[0]):
+            print(inputs[i], int(targets[i]))
+
+def getdata():
+    dataset = pandas.read_csv('../../../jena_climate_2009_2016.csv', header=0)
+    dataset.drop(dataset.columns[0], axis=1, inplace=True)
+    
+    print(dataset.head())
+    raw_data = dataset.values
+    print('raw_data.shape', raw_data.shape)
+    print('raw_data[0]', raw_data[0])
+
+    temperature = np.array(raw_data[:,1], copy=True)
+    temperature[0] = float("nan")
+    print('raw_data[0]', raw_data[0])
+    print('temperature[0]', temperature[0])
+    return raw_data, temperature
+
+
+
 # https://www.manning.com/books/deep-learning-with-python-second-edition
 # https://github.com/fchollet/deep-learning-with-python-notebooks
 # https://s3.amazonaws.com/keras-datasets/jena_climate_2009_2016.csv.zip
@@ -34,39 +73,8 @@ def main():
     print("-------")
     print(sys.argv)
     
-    def example1():
-        time_sequence = np.arange(10)  
-        
-        raw_data = np.zeros((7, 2 ))  
-        for i in time_sequence[:-3]:
-            raw_data[i,:] = [i, i*i]
-        print(raw_data)
-        y_sequence = np.arange(3,21,3)                                
-        dummy_dataset = keras.utils.timeseries_dataset_from_array(
-            data=raw_data,                                 
-            targets=y_sequence,                               
-            sequence_length=3,                                      
-            batch_size=2,                                           
-        )
-     
-        for inputs, targets in dummy_dataset:
-            for i in range(inputs.shape[0]):
-                print(inputs[i], int(targets[i]))
+    reload = False
     
-    def getdata():
-        dataset = pandas.read_csv('../../../jena_climate_2009_2016.csv', header=0)
-        dataset.drop(dataset.columns[0], axis=1, inplace=True)
-        
-        print(dataset.head())
-        raw_data = dataset.values
-        print('raw_data.shape', raw_data.shape)
-        print('raw_data[0]', raw_data[0])
-    
-        temperature = np.array(raw_data[:,1], copy=True)
-        temperature[0] = float("nan")
-        print('raw_data[0]', raw_data[0])
-        print('temperature[0]', temperature[0])
-        return raw_data, temperature
     
     #sequence_length = 120 
     sequence_length = 25 
@@ -168,9 +176,14 @@ def main():
     id = "LSTM"
     file_name = "../out/jena_xxx.keras"
     def train_keras():
-        x = layers.LSTM(16)(inputs)
-        outputs = layers.Dense(1, name="output_layer")(x)
-        model = keras.Model(inputs, outputs, name=id)
+        if reload:
+            model = keras.models.load_model(file_name) 
+        else:
+            x = layers.LSTM(16)(inputs)
+            outputs = layers.Dense(1, name="output_layer")(x)
+            model = keras.Model(inputs, outputs, name=id)
+            model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
+        
           
         callbacks = [
             keras.callbacks.ModelCheckpoint(file_name,
@@ -179,8 +192,6 @@ def main():
         
         epochs=3
         #epochs=3
-        
-        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
         
         history = model.fit(train_dataset,
                             epochs=epochs,
@@ -213,11 +224,19 @@ def main():
         myplot(history, id)
     
     def train_bidirectional():
-        x = layers.Bidirectional(layers.LSTM(16))(inputs)
+        if reload and path.exists(file_name):
+            model = keras.models.load_model(file_name) 
+        else:
+            # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
+            x = layers.Bidirectional(layers.LSTM(16))(inputs)
+    
+            outputs = layers.Dense(1, name="output_layer")(x)
+            
+            model = keras.Model(inputs, outputs, name=id)
+            model.compile(
+                optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.0015, momentum=0.85), 
+                loss="mse", metrics=["mae"])
 
-        outputs = layers.Dense(1, name="output_layer")(x)
-        
-        model = keras.Model(inputs, outputs, name=id)
           
         callbacks = [
             keras.callbacks.ModelCheckpoint(file_name,
@@ -227,51 +246,7 @@ def main():
         epochs=20
         #epochs=3
         
-        print(
-            """
-977/977 [==============================] - 23s 23ms/step - loss: 9.8978 - mae: 1.4766 - val_loss: 9.8637 - val_mae: 1.5293
-Epoch 20/20
-977/977 [==============================] - 23s 24ms/step - loss: 9.6790 - mae: 1.4464 - val_loss: 9.7542 - val_mae: 1.3489
-489/489 [==============================] - 7s 12ms/step - loss: 9.3265 - mae: 1.3530
-Test MAE: 1.35    
-      
-https://blog.paperspace.com/intro-to-optimization-momentum-rmsprop-adam/     
-
-this post takes a look at another problem that plagues training of neural networks, 
-pathological curvature.
-
-While local minima and saddle points can stall our training, 
-pathological curvature can slow down training to an extent that 
-the machine learning practitioner might think that search 
-has converged to a sub-optimal minma. 
- pathological curvature 
-
-Adam or Adaptive Moment Optimization algorithms combines the heuristics of 
-both Momentum and RMSProp. however, ...
-
-https://www.tensorflow.org/api_docs/python/tf/keras/optimizers 
-class Adadelta: Optimizer that implements the Adadelta algorithm.
-
-class Adagrad: Optimizer that implements the Adagrad algorithm.
-
-class Adam: Optimizer that implements the Adam algorithm.
-
-class Adamax: Optimizer that implements the Adamax algorithm.
-
-class Ftrl: Optimizer that implements the FTRL algorithm.
-
-class Nadam: Optimizer that implements the NAdam algorithm.
-
-class Optimizer: Base class for Keras optimizers.
-
-class RMSprop: Optimizer that implements the RMSprop algorithm.
-
-class SGD: Gradient descent (with momentum) optimizer.
-
-"""
-            )
         
-        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
         
         history = model.fit(train_dataset,
                             epochs=epochs,
