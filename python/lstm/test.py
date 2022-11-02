@@ -229,14 +229,12 @@ def main():
         else:
             # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
             x = layers.Bidirectional(layers.LSTM(16))(inputs)
-    
             outputs = layers.Dense(1, name="output_layer")(x)
-            
             model = keras.Model(inputs, outputs, name=id)
             model.compile(
-                optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.0015, momentum=0.85), 
+                optimizer=tf.keras.optimizers.RMSprop(
+                    learning_rate=0.0015, momentum=0.85), 
                 loss="mse", metrics=["mae"])
-
           
         callbacks = [
             keras.callbacks.ModelCheckpoint(file_name,
@@ -245,8 +243,6 @@ def main():
         
         epochs=20
         #epochs=3
-        
-        
         
         history = model.fit(train_dataset,
                             epochs=epochs,

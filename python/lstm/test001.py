@@ -12,6 +12,15 @@ from tensorflow.keras import layers
 
 import pandas
 import matplotlib.pyplot as plt
+def plotzeta(raw_data):
+    plt.plot(range(1,15), raw_data[:14])
+    plt.grid(True)
+    plt.xlabel('offset gram index')
+    plt.ylabel('zeta')
+
+    plt.title('zeta at gram points')
+    
+    
 def getZetadata(upper, sequence_length ):
     print("check alignment")
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
@@ -44,12 +53,6 @@ def getZetadata(upper, sequence_length ):
     print('temperature[sequence_length - 1]', temperature[sequence_length - 1])
     print(temperature[sequence_length - 1:sequence_length + 5])
     
-    plt.plot(range(1,15), raw_data[:14])
-    plt.grid(True)
-    plt.xlabel('offset gram index')
-    plt.ylabel('zeta')
-
-    plt.title('zeta at gram points')
     return raw_data, temperature
 
 
