@@ -112,6 +112,9 @@ public class CopyZeroInformationTest {
                 }
                 out.println( gramIndex + ", " + currentGram  + ", " + zetaSaved);
                 gramCount++;
+                if(gramCount == 25){
+                    System.out.println("====== " + gramCount);
+                }
                 String Zinput = zetaIn.readLine();
                 String[] parsed = Zinput.split(",");
                 zetaSaved = Double.parseDouble(parsed[1]);
