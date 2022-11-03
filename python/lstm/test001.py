@@ -82,82 +82,73 @@ def evaluate_naive_method(dataset, do_print = False):
         samples_seen += samples.shape[0]
     return total_abs_err / samples_seen
 
+def example2():
+    limit = 15
+    sequence_length = 3
+    time_sequence = np.arange(limit)  
+    raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
+    y_sequence = np.zeros((raw_data.shape[0] ), dtype=int)  
+    sign = 1
+    for i in np.arange(raw_data.shape[0]) :
+        raw_data[i] =  i * sign
+        sign = -sign
+        if i >= sequence_length - 1:
+            y_sequence[i] = np.max(
+                np.abs(raw_data[i+1-sequence_length:i+1]) )
+    print(raw_data)
+    print(y_sequence)
 
-def main():
-    print("-------")
-    print(sys.argv)
+def example1():
+    limit = 15
+    time_sequence = np.arange(limit)  
+    sequence_length = 3
+    sampling_rate = 1
+    delay = sampling_rate * (sequence_length + 1 - 1)
+    batch_size = 3 
+    
+    raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
+    y_sequence = np.zeros((time_sequence.shape[0] ), dtype=int)  
+    for i in time_sequence:
+        raw_data[i] =  i
+        if i >= sequence_length - 1:
+            y_sequence[i] = np.max(raw_data[i+1-sequence_length:i+1])
+    print(raw_data)
+    
 
-    def example2():
-        limit = 15
-        sequence_length = 3
-        time_sequence = np.arange(limit)  
-        raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
-        y_sequence = np.zeros((raw_data.shape[0] ), dtype=int)  
-        sign = 1
-        for i in np.arange(raw_data.shape[0]) :
-            raw_data[i] =  i * sign
-            sign = -sign
-            if i >= sequence_length - 1:
-                y_sequence[i] = np.max(
-                    np.abs(raw_data[i+1-sequence_length:i+1]) )
-        print(raw_data)
-        print(y_sequence)
-
-    def example1():
-        limit = 15
-        time_sequence = np.arange(limit)  
-        sequence_length = 3
-        sampling_rate = 1
-        delay = sampling_rate * (sequence_length + 1 - 1)
-        batch_size = 3 
-        
-        raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
-        y_sequence = np.zeros((time_sequence.shape[0] ), dtype=int)  
-        for i in time_sequence:
-            raw_data[i] =  i
-            if i >= sequence_length - 1:
-                y_sequence[i] = np.max(raw_data[i+1-sequence_length:i+1])
-        print(raw_data)
-        
-
-        print(y_sequence)
-        dummy_dataset = keras.utils.timeseries_dataset_from_array(
-            data=raw_data,                                 
-            targets=y_sequence[delay-1:],                               
-            sequence_length=sequence_length,                                      
-            batch_size=batch_size,                                           
-            sampling_rate=sampling_rate,
-            shuffle=True,
-       )
-     
+    print(y_sequence)
+    dummy_dataset = keras.utils.timeseries_dataset_from_array(
+        data=raw_data,                                 
+        targets=y_sequence[delay-1:],                               
+        sequence_length=sequence_length,                                      
+        batch_size=batch_size,                                           
+        sampling_rate=sampling_rate,
+        shuffle=True,
+   )
+ 
+    print('===========')
+    print('dummy_dataset, batch_size', batch_size)
+    count = 0
+    for inputs, targets in dummy_dataset:
+        for i in range(inputs.shape[0]):
+            count = count + 1
+            print([int(x) for x in inputs[i]], int(targets[i]))
+        print('count', count)
+    print('===========')
+   
+    for iterval in np.arange(1):
         print('===========')
-        print('dummy_dataset, batch_size', batch_size)
-        count = 0
-        for inputs, targets in dummy_dataset:
-            for i in range(inputs.shape[0]):
-                count = count + 1
-                print([int(x) for x in inputs[i]], int(targets[i]))
-            print('count', count)
-        print('===========')
-        print('sampling_rate != 1 messes up the order')
+        print('iterval', iterval)
+        for samples, targets in dummy_dataset:
+            print("samples shape:", samples.shape)
+            print("targets shape:", targets.shape)
+            for i in np.arange( samples.shape[0]):
+                print("samples ", [int(x) for x in samples[i]],
+                      end =" ")
+                print("targets ", int(targets[i]))
+            
         print('===========')
        
-        for iterval in np.arange(1):
-            print('===========')
-            print('iterval', iterval)
-            for samples, targets in dummy_dataset:
-                print("samples shape:", samples.shape)
-                print("targets shape:", targets.shape)
-                for i in np.arange( samples.shape[0]):
-                    print("samples ", [int(x) for x in samples[i]],
-                          end =" ")
-                    print("targets ", int(targets[i]))
-                
-            print('===========')
-           
-
-    #example1()
-    #example2()
+def test_timeseries_dataset():
     sequence_length = 3
     raw_data, temperature = getZetadata(500001, sequence_length)
     
@@ -182,7 +173,39 @@ def main():
             print([float(x) for x in inputs[i]], float(targets[i]))
         print('count', count)
     print('===========')
-    
+
+def test_fit():
+    batch_size = 256
+    raw_data, temperature = getZetadata(500001, 25)
+    file_name = "../out/jena_xxx.keras"
+    num_train_samples = int(0.5 * len(raw_data))
+    num_val_samples = int(0.25 * len(raw_data))
+    num_test_samples = len(raw_data) - num_train_samples - num_val_samples
+    x_dataset = timeseries_dataset(raw_data, temperature, 
+                               25, 25, 
+                               batch_size,  0, num_train_samples
+                               )
+    model = keras.models.load_model(file_name) 
+    print('train_dataset, batch_size', batch_size)
+    count = 0
+    for inputs, targets in x_dataset:
+        y = model(inputs)
+        for i in range(3):
+            count = count + 1
+            print([float(x) for x in inputs[i]])
+            print( float(targets[i]),'y', float(y[i]))
+        print('count', count)
+        break
+
+def main():
+    print("-------")
+    print(sys.argv)
+
+
+    #example1()
+    #example2()
+    test_fit()
+
     
 if __name__   == '__main__':
      main()
