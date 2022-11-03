@@ -174,10 +174,9 @@ def test_timeseries_dataset():
         print('count', count)
     print('===========')
 
-def test_fit():
+def used_by_test_fit():
     batch_size = 256
     raw_data, temperature = getZetadata(500001, 25)
-    file_name = "../out/jena_xxx.keras"
     num_train_samples = int(0.5 * len(raw_data))
     num_val_samples = int(0.25 * len(raw_data))
     num_test_samples = len(raw_data) - num_train_samples - num_val_samples
@@ -185,17 +184,48 @@ def test_fit():
                                25, 25, 
                                batch_size,  0, num_train_samples
                                )
+    return x_dataset
+
+
+def test_fit(x_dataset):
+    file_name = "../out/jena_xxx.keras"
     model = keras.models.load_model(file_name) 
-    print('train_dataset, batch_size', batch_size)
-    count = 0
+    print('test_fit')
     for inputs, targets in x_dataset:
         y = model(inputs)
         for i in range(3):
-            count = count + 1
-            print([float(x) for x in inputs[i]])
+            #print([float(x) for x in inputs[i]])
             print( float(targets[i]),'y', float(y[i]))
-        print('count', count)
         break
+
+def plot_fit(x_dataset):
+    file_name = "../out/jena_xxx.keras"
+    model = keras.models.load_model(file_name) 
+    print('test_fit')
+    length = 20
+
+    actual = np.zeros((length, 2) )  
+    
+    for inputs, targets in x_dataset:
+        y = model(inputs)
+        for i in range(length):
+            actual[i, 0] = targets[i]
+            actual[i, 1] = y[i]
+        break
+    
+    actual = np.sort(actual, axis = 0)
+    
+    plt.figure()
+    plt.plot(actual[:,0], actual[:,1], "bo", label=" pred")
+    plt.plot(actual[:,0], actual[:,0], "b", label=" linear")
+    plt.grid(True)
+    plt.xlabel('actual')
+    plt.ylabel('pred')
+
+    plt.title('actual vs pred')
+    plt.legend()
+    plt.show()
+    
 
 def main():
     print("-------")
@@ -204,7 +234,8 @@ def main():
 
     #example1()
     #example2()
-    test_fit()
+    x_dataset = used_by_test_fit()
+    plot_fit(x_dataset)
 
     
 if __name__   == '__main__':
