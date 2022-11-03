@@ -11,10 +11,47 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from test001 import getZetadata
+from test001 import timeseries_dataset
+from test001 import evaluate_naive_method
+
 import os.path as path
 
 import pandas
 import matplotlib.pyplot as plt
+
+    
+reload = False
+sequence_length = 25 
+id = "LSTM"
+file_name = "../out/jena_xxx.keras"
+
+
+def train_keras(
+        inputs, opt, train_dataset, val_dataset):
+    if reload and path.exists(file_name):
+        model = keras.models.load_model(file_name) 
+    else:
+        x = layers.LSTM(16)(inputs)
+        outputs = layers.Dense(1, name="output_layer")(x)
+        model = keras.Model(inputs, outputs, name=id)
+        model.compile(optimizer=opt, loss="mse", metrics=["mae"])
+    
+      
+    callbacks = [
+        keras.callbacks.ModelCheckpoint(file_name,
+                                        save_best_only=True)
+    ]
+    
+    epochs=3
+    #epochs=3
+    
+    history = model.fit(train_dataset,
+                        epochs=epochs,
+                        validation_data=val_dataset,
+                        callbacks=callbacks)
+    myplot(history, id)
+    
+
 
 def myplot(history, prefix, minidx = 2):
     
@@ -65,6 +102,7 @@ def getdata():
 
 
 
+
 # https://www.manning.com/books/deep-learning-with-python-second-edition
 # https://github.com/fchollet/deep-learning-with-python-notebooks
 # https://s3.amazonaws.com/keras-datasets/jena_climate_2009_2016.csv.zip
@@ -72,12 +110,6 @@ def getdata():
 def main():
     print("-------")
     print(sys.argv)
-    
-    reload = False
-    
-    
-    #sequence_length = 120 
-    sequence_length = 25 
     
     #raw_data, temperature = getdata()
     raw_data, temperature = getZetadata(500001, sequence_length)
@@ -109,33 +141,24 @@ def main():
     delay = sampling_rate * (sequence_length + 1 - 1)
     batch_size = 256 
       
-    train_dataset = keras.utils.timeseries_dataset_from_array(
-        raw_data[:-delay],
-        targets=temperature[delay:],
-        sampling_rate=sampling_rate,
-        sequence_length=sequence_length,
-        shuffle=True,
-        batch_size=batch_size,
-        start_index=0,
-        end_index=num_train_samples)
-      
-    print(
-        """
-        To preserve order,  sampling_rate has to be 1! 
-        model is quickly overfitting, despite only having very 
-          few units: the training and validation losses start 
-          to diverge considerably after a few epochs. 
-          You’re already familiar with a classic technique 
-          for fighting this phenomenon: dropout, which randomly zeros out 
-          input units of a layer in order to break happenstance correlations 
-          in the training data 
-        """
-          )
+    # train_dataset = keras.utils.timeseries_dataset_from_array(
+    #     raw_data[:-delay],
+    #     targets=temperature[delay-1:],
+    #     sampling_rate=sampling_rate,
+    #     sequence_length=sequence_length,
+    #     shuffle=True,
+    #     batch_size=batch_size,
+    #     start_index=0,
+    #     end_index=num_train_samples)
+    
+    train_dataset = timeseries_dataset(raw_data, temperature, 
+                           delay, sequence_length, 
+                           batch_size, 0, num_train_samples)
     print('type(train_dataset)', type(train_dataset))
     
     val_dataset = keras.utils.timeseries_dataset_from_array(
         raw_data[:-delay],
-        targets=temperature[delay:],
+        targets=temperature[delay-1:],
         sampling_rate=sampling_rate,
         sequence_length=sequence_length,
         shuffle=True,
@@ -145,7 +168,7 @@ def main():
       
     test_dataset = keras.utils.timeseries_dataset_from_array(
         raw_data[:-delay],
-        targets=temperature[delay:],
+        targets=temperature[delay-1:],
         sampling_rate=sampling_rate,
         sequence_length=sequence_length,
         shuffle=True,
@@ -157,49 +180,16 @@ def main():
         print("targets shape:", targets.shape)
         break
 
-    def evaluate_naive_method(dataset):
-        total_abs_err = 0. 
-        samples_seen = 0 
-        for samples, targets in dataset:
-            preds = samples[:, -1, 1] * std[1] + mean[1]         
-            total_abs_err += np.sum(np.abs(preds - targets))
-            samples_seen += samples.shape[0]
-        return total_abs_err / samples_seen
       
-    #print(f"evaluate_naive_method Validation MAE: {evaluate_naive_method(val_dataset):.2f}") 
-    #print(f"evaluate_naive_method Test MAE: {evaluate_naive_method(test_dataset):.2f}")
+    print('===========')
+    # print(f"evaluate_naive_method Validation MAE: {evaluate_naive_method(val_dataset):.2f}") 
+    # print(f"evaluate_naive_method Test MAE: {evaluate_naive_method(test_dataset):.2f}")
 
     inputs = keras.Input(shape=(sequence_length, raw_data.shape[-1]))
     optimizer=['adam',"rmsprop"]
     
     #######################################
-    id = "LSTM"
-    file_name = "../out/jena_xxx.keras"
-    def train_keras():
-        if reload:
-            model = keras.models.load_model(file_name) 
-        else:
-            x = layers.LSTM(16)(inputs)
-            outputs = layers.Dense(1, name="output_layer")(x)
-            model = keras.Model(inputs, outputs, name=id)
-            model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
-        
-          
-        callbacks = [
-            keras.callbacks.ModelCheckpoint(file_name,
-                                            save_best_only=True)
-        ]
-        
-        epochs=3
-        #epochs=3
-        
-        history = model.fit(train_dataset,
-                            epochs=epochs,
-                            validation_data=val_dataset,
-                            callbacks=callbacks)
-        myplot(history, id)
-        
-    def train_dropout():
+    def train_dropout(epochs=8):
         x = layers.LSTM(32, recurrent_dropout=0.25)(inputs)
         x = layers.Dropout(0.5)(x)                             
 
@@ -212,9 +202,6 @@ def main():
                                             save_best_only=True)
         ]
         
-        epochs=8
-        #epochs=3
-        
         model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
         
         history = model.fit(train_dataset,
@@ -223,7 +210,7 @@ def main():
                             callbacks=callbacks)
         myplot(history, id)
     
-    def train_bidirectional():
+    def train_bidirectional(epochs=20):
         if reload and path.exists(file_name):
             model = keras.models.load_model(file_name) 
         else:
@@ -241,8 +228,6 @@ def main():
                                             save_best_only=True)
         ]
         
-        epochs=20
-        #epochs=3
         
         history = model.fit(train_dataset,
                             epochs=epochs,
@@ -263,13 +248,10 @@ def main():
                                             save_best_only=True)
         ]
         
-        epochs=8
-        #epochs=3
-        
         model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
         
         history = model.fit(train_dataset,
-                            epochs=epochs,
+                            epochs=20,
                             validation_data=val_dataset,
                             callbacks=callbacks)
         myplot(history, id)
@@ -277,7 +259,7 @@ def main():
    
     #train_keras()
     #train_dropout()
-    train_bidirectional()
+    #train_bidirectional(20)
     
     #######################################
     

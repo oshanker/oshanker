@@ -12,6 +12,7 @@ from tensorflow.keras import layers
 
 import pandas
 import matplotlib.pyplot as plt
+
 def plotzeta(raw_data):
     plt.plot(range(1,15), raw_data[:14])
     plt.grid(True)
@@ -19,10 +20,21 @@ def plotzeta(raw_data):
     plt.ylabel('zeta')
 
     plt.title('zeta at gram points')
-    
+
+def timeseries_dataset(raw_data, temperature, delay, sequence_length, 
+                       batch_size, start_index, end_index):
+    train_dataset = keras.utils.timeseries_dataset_from_array(
+        raw_data[:-delay],
+        targets=temperature[delay-1:],
+        sampling_rate=1,
+        sequence_length=sequence_length,
+        shuffle=True,
+        batch_size=batch_size,
+        start_index=start_index,
+        end_index=end_index)
+    return train_dataset 
     
 def getZetadata(upper, sequence_length ):
-    print("check alignment")
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
     print(dataset.head())
     
@@ -54,6 +66,22 @@ def getZetadata(upper, sequence_length ):
     print(temperature[sequence_length - 1:sequence_length + 5])
     
     return raw_data, temperature
+
+def evaluate_naive_method(dataset, do_print = False):
+    total_abs_err = 0. 
+    samples_seen = 0 
+    for samples, targets in dataset:
+        total = 0
+        for i in np.arange( samples.shape[0]):
+            pred  = np.max( np.abs(samples[i]) )
+            if do_print:
+                print("pred ", pred,  end =" ")
+                print("targets ", float(targets[i]))
+            total  += np.abs( pred -  float(targets[i]))
+
+        total_abs_err += total
+        samples_seen += samples.shape[0]
+    return total_abs_err / samples_seen
 
 
 def main():
@@ -131,8 +159,31 @@ def main():
 
     #example1()
     #example2()
+    sequence_length = 3
+    raw_data, temperature = getZetadata(500001, sequence_length)
     
-    raw_data, temperature = getZetadata(500001, 3)
+    delay = sequence_length 
+       
+    batch_size = 3 
+
+    train_dataset = timeseries_dataset(raw_data, temperature, 
+                               delay, sequence_length, 
+                               batch_size, 0, 15)
+
+    print('===========')
+    mae = evaluate_naive_method(train_dataset)
+    print('mae', mae)
+    
+    print('===========')
+    print('train_dataset, batch_size', batch_size)
+    count = 0
+    for inputs, targets in train_dataset:
+        for i in range(inputs.shape[0]):
+            count = count + 1
+            print([float(x) for x in inputs[i]], float(targets[i]))
+        print('count', count)
+    print('===========')
+
     # print('temperature shape', temperature.shape)
     
     
