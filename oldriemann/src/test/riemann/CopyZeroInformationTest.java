@@ -72,8 +72,9 @@ public class CopyZeroInformationTest {
         File file = new File(parent, "values.csv");
         PrintStream out = new PrintStream(file);
         ZeroInfo zeroInput = null;
-        int N = 20;
+        int N = 30;
 
+        int gramCount = 0;
         for (int i = 0; i < N ; i++) {
             zeroInput = CopyZeroInformation.readSingleZero( zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
@@ -90,6 +91,12 @@ public class CopyZeroInformationTest {
                 zetaSaved = Double.parseDouble(parsed[1]);
                 gramIndex = Integer.parseInt(parsed[0]);
                 currentGram = baseGram + gramIndex * gramIncrement;
+                if(currentGram < z0) {
+                    System.out.println("skipping " + currentGram + ", " + zetaSaved);
+                } else {
+                    System.out.println("****" + Zinput);
+
+                }
             }
 
             Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
@@ -104,12 +111,17 @@ public class CopyZeroInformationTest {
                     positionMax = Double.MAX_VALUE;
                 }
                 out.println( gramIndex + ", " + currentGram  + ", " + zetaSaved);
+                gramCount++;
                 String Zinput = zetaIn.readLine();
-                System.out.println("*" + Zinput);
                 String[] parsed = Zinput.split(",");
                 zetaSaved = Double.parseDouble(parsed[1]);
                 gramIndex = Integer.parseInt(parsed[0]);
                 currentGram = baseGram + gramIndex * gramIncrement;
+                if(currentGram < z1){
+                    System.out.println("*-*" + Zinput);
+                } else {
+                    System.out.println("****" + Zinput);
+                }
             }
 
             if(positionMax < z1) {
@@ -117,6 +129,7 @@ public class CopyZeroInformationTest {
             }
         }
         out.close();
+        System.out.println("*** gramCount " + gramCount);
     }
 
 }
