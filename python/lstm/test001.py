@@ -194,15 +194,18 @@ def test_fit(x_dataset):
     for inputs, targets in x_dataset:
         y = model(inputs)
         for i in range(3):
-            #print([float(x) for x in inputs[i]])
             print( float(targets[i]),'y', float(y[i]))
         break
 
-def plot_fit(x_dataset):
+def plot_fit(x_dataset, length = 200, title='zeta_max:  prediction vs actual'):
     file_name = "../out/jena_xxx.keras"
     model = keras.models.load_model(file_name) 
-    print('test_fit')
-    length = 20
+    print('plot_fit')
+    
+    print(model.summary())
+    keras.utils.plot_model(
+        model, to_file='../out/zeta_model.png', 
+        show_shapes=True, show_layer_names=True)
 
     actual = np.zeros((length, 2) )  
     
@@ -216,13 +219,13 @@ def plot_fit(x_dataset):
     actual = np.sort(actual, axis = 0)
     
     plt.figure()
-    plt.plot(actual[:,0], actual[:,1], "bo", label=" pred")
-    plt.plot(actual[:,0], actual[:,0], "b", label=" linear")
+    plt.plot(actual[:,0], actual[:,1], "bo", label="prediction")
+    plt.plot(actual[:,0], actual[:,0], "b", label="actual")
     plt.grid(True)
     plt.xlabel('actual')
-    plt.ylabel('pred')
+    plt.ylabel('prediction')
 
-    plt.title('actual vs pred')
+    plt.title(title)
     plt.legend()
     plt.show()
     

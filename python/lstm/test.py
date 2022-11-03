@@ -221,13 +221,40 @@ def main():
             model = keras.models.load_model(file_name) 
         else:
             # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
-            # x = layers.Bidirectional(layers.LSTM(16))(inputs)
-            # outputs = layers.Dense(1, name="output_layer")(x)
-            # model = keras.Model(inputs, outputs, name=id)
             input_shape=(batch_size, sequence_length, raw_data.shape[-1])
             model = tf.keras.Sequential()
             model.add(layers.Bidirectional(
                 layers.LSTM(16, input_shape=input_shape ) ))
+            model.add(layers.Dense(1, name="output_layer"))
+            model.compile(
+                optimizer=tf.keras.optimizers.RMSprop(
+                    learning_rate=0.001, momentum=0.895), 
+                loss="mse", metrics=["mae"])
+          
+        callbacks = [
+            keras.callbacks.ModelCheckpoint(file_name,
+                                            save_best_only=True)
+        ]
+        
+        
+        history = model.fit(train_dataset,
+                            epochs=epochs,
+                            validation_data=val_dataset,
+                            callbacks=callbacks)
+        myplot(history, id, 10)
+    
+    
+    def train_stacked(epochs=20):
+        if reload and path.exists(file_name):
+            model = keras.models.load_model(file_name) 
+        else:
+            # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
+            input_shape=(batch_size, sequence_length, raw_data.shape[-1])
+            model = tf.keras.Sequential()
+            model.add(layers.Bidirectional(
+                layers.LSTM(16, return_sequences=True, input_shape=input_shape ) ))
+            model.add(layers.Bidirectional(
+                layers.LSTM(16 ) ))
             model.add(layers.Dense(1, name="output_layer"))
             model.compile(
                 optimizer=tf.keras.optimizers.RMSprop(
@@ -270,7 +297,8 @@ def main():
    
     #train_keras()
     #train_dropout()
-    train_bidirectional(30)
+    #train_bidirectional(30)
+    train_stacked(30)
     #train_expt(30)
     
     #######################################
@@ -282,3 +310,16 @@ def main():
     
 if __name__   == '__main__':
      main()
+
+     """
+stacked
+                    learning_rate=0.001, momentum=0.895), 
+
+Epoch 30/30
+977/977 [==============================] - 37s 38ms/step - loss: 0.2170 - mae: 0.2680 - val_loss: 0.1779 - val_mae: 0.2513
+489/489 [==============================] - 9s 16ms/step - loss: 0.1744 - mae: 0.2511
+Test MAE: 0.25    
+     """
+     
+ 
+     
