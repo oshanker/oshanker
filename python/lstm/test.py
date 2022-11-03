@@ -158,15 +158,19 @@ def main():
                            batch_size, 0, num_train_samples)
     print('type(train_dataset)', type(train_dataset))
     
-    val_dataset = keras.utils.timeseries_dataset_from_array(
-        raw_data[:-delay],
-        targets=temperature[delay-1:],
-        sampling_rate=sampling_rate,
-        sequence_length=sequence_length,
-        shuffle=True,
-        batch_size=batch_size,
-        start_index=num_train_samples,
-        end_index=num_train_samples + num_val_samples)
+    # val_dataset = keras.utils.timeseries_dataset_from_array(
+    #     raw_data[:-delay],
+    #     targets=temperature[delay-1:],
+    #     sampling_rate=sampling_rate,
+    #     sequence_length=sequence_length,
+    #     shuffle=True,
+    #     batch_size=batch_size,
+    #     start_index=num_train_samples,
+    #     end_index=num_train_samples + num_val_samples)
+    val_dataset = timeseries_dataset(raw_data, temperature, 
+                           delay, sequence_length, 
+                           batch_size, 
+                           num_train_samples, num_train_samples + num_val_samples)
       
     test_dataset = keras.utils.timeseries_dataset_from_array(
         raw_data[:-delay],
@@ -217,9 +221,14 @@ def main():
             model = keras.models.load_model(file_name) 
         else:
             # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
-            x = layers.Bidirectional(layers.LSTM(16))(inputs)
-            outputs = layers.Dense(1, name="output_layer")(x)
-            model = keras.Model(inputs, outputs, name=id)
+            # x = layers.Bidirectional(layers.LSTM(16))(inputs)
+            # outputs = layers.Dense(1, name="output_layer")(x)
+            # model = keras.Model(inputs, outputs, name=id)
+            input_shape=(batch_size, sequence_length, raw_data.shape[-1])
+            model = tf.keras.Sequential()
+            model.add(layers.Bidirectional(
+                layers.LSTM(16, input_shape=input_shape ) ))
+            model.add(layers.Dense(1, name="output_layer"))
             model.compile(
                 optimizer=tf.keras.optimizers.RMSprop(
                     learning_rate=0.001, momentum=0.895), 
@@ -238,30 +247,31 @@ def main():
         myplot(history, id, 10)
     
     
-    def train_expt():
-        x = layers.Bidirectional(layers.LSTM(16))(inputs)
-
-        outputs = layers.Dense(1, name="output_layer")(x)
-        
-        model = keras.Model(inputs, outputs, name=id)
+    def train_expt(epochs=20):
+        if reload and path.exists(file_name):
+            model = keras.models.load_model(file_name) 
+        else:
+            # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
+            input_shape=(batch_size, sequence_length, raw_data.shape[-1])
+            model = tf.keras.Sequential()
+            model.add(layers.Bidirectional(
+                layers.LSTM(16, input_shape=input_shape ) ))
+            model.add(layers.Dense(1, name="output_layer"))
+            
+            model.build(input_shape=input_shape)
+            model.compile(
+                optimizer=tf.keras.optimizers.RMSprop(
+                    learning_rate=0.001, momentum=0.895), 
+                loss="mse", metrics=["mae"])
+           
+        print(model.summary())
           
-        callbacks = [
-            keras.callbacks.ModelCheckpoint(file_name,
-                                            save_best_only=True)
-        ]
-        
-        model.compile(optimizer=optimizer[1], loss="mse", metrics=["mae"])
-        
-        history = model.fit(train_dataset,
-                            epochs=20,
-                            validation_data=val_dataset,
-                            callbacks=callbacks)
-        myplot(history, id)
     
    
     #train_keras()
     #train_dropout()
     train_bidirectional(30)
+    #train_expt(30)
     
     #######################################
     
