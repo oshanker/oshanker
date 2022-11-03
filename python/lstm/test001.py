@@ -8,7 +8,6 @@ Created on Mon Oct 31 17:37:27 2022
 import sys
 import numpy as np 
 from tensorflow import keras
-from tensorflow.keras import layers
 
 import pandas
 import matplotlib.pyplot as plt
@@ -183,9 +182,44 @@ def main():
             print([float(x) for x in inputs[i]], float(targets[i]))
         print('count', count)
     print('===========')
-
-    # print('temperature shape', temperature.shape)
     
     
 if __name__   == '__main__':
      main()
+     
+     """
+                    learning_rate=0.001, momentum=0.9), 
+
+Epoch 20/20
+977/977 [==============================] - 28s 29ms/step - loss: 0.9157 - mae: 0.5804 - val_loss: 0.6761 - val_mae: 0.4750
+489/489 [==============================] - 8s 15ms/step - loss: 0.6510 - mae: 0.4762
+Test MAE: 0.48
+
+                    learning_rate=0.001, momentum=0.905), 
+
+Epoch 20/20
+977/977 [==============================] - 21s 21ms/step - loss: 1.0820 - mae: 0.6391 - val_loss: 0.8594 - val_mae: 0.6069
+489/489 [==============================] - 6s 11ms/step - loss: 0.8213 - mae: 0.6074
+Test MAE: 0.61
+
+smooth
+                    learning_rate=0.001, momentum=0.895), 
+Epoch 20/20
+977/977 [==============================] - 21s 22ms/step - loss: 0.9322 - mae: 0.5925 - val_loss: 0.5451 - val_mae: 0.4496
+489/489 [==============================] - 7s 13ms/step - loss: 0.5637 - mae: 0.4519
+Test MAE: 0.45
+
+                    learning_rate=0.001, momentum=0.8975), 
+Epoch 20/20
+977/977 [==============================] - 21s 22ms/step - loss: 0.8620 - mae: 0.5647 - val_loss: 0.8698 - val_mae: 0.4838
+489/489 [==============================] - 6s 11ms/step - loss: 0.8443 - mae: 0.5605
+Test MAE: 0.56
+
+    
+     """     
+     
+     
+     
+     
+     
+     

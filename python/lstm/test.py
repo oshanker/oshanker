@@ -59,6 +59,7 @@ def myplot(history, prefix, minidx = 2):
     val_loss = history.history["val_mae"]
     epochs = range(int(minidx), len(loss) + 1)
     plt.figure()
+    plt.grid(True)
     plt.plot(epochs, loss[1:], "bo", label=prefix+" Training MAE")
     plt.plot(epochs, val_loss[1:], "b", label=prefix+" Validation MAE")
     plt.title(prefix+" Training and validation MAE")
@@ -220,7 +221,7 @@ def main():
             model = keras.Model(inputs, outputs, name=id)
             model.compile(
                 optimizer=tf.keras.optimizers.RMSprop(
-                    learning_rate=0.0015, momentum=0.85), 
+                    learning_rate=0.001, momentum=0.895), 
                 loss="mse", metrics=["mae"])
           
         callbacks = [
@@ -233,7 +234,7 @@ def main():
                             epochs=epochs,
                             validation_data=val_dataset,
                             callbacks=callbacks)
-        myplot(history, id)
+        myplot(history, id, 10)
     
     
     def train_expt():
@@ -259,7 +260,7 @@ def main():
    
     #train_keras()
     #train_dropout()
-    #train_bidirectional(20)
+    train_bidirectional(30)
     
     #######################################
     
