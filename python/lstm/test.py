@@ -57,11 +57,12 @@ def myplot(history, prefix, minidx = 2):
     
     loss = history.history["mae"]
     val_loss = history.history["val_mae"]
-    epochs = range(int(minidx), len(loss) + 1)
+    epochs = range((minidx+1), len(loss) + 1)
     plt.figure()
     plt.grid(True)
-    plt.plot(epochs, loss[1:], "bo", label=prefix+" Training MAE")
-    plt.plot(epochs, val_loss[1:], "b", label=prefix+" Validation MAE")
+    plt.plot(epochs, loss[minidx:], "bo", label=prefix+" Training MAE")
+    plt.plot(epochs, val_loss[minidx:], "b", label=prefix+" Validation MAE")
+    plt.xticks(epochs)
     plt.title(prefix+" Training and validation MAE")
     plt.legend()
     plt.show()
