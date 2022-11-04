@@ -182,6 +182,7 @@ def test_timeseries_dataset(upper=500001):
 def used_by_test_fit(upper=500001):
     batch_size = 256
     raw_data, temperature = getZetadata(upper, sequence_length)
+    #np.savetxt('../out/intervalMax.csv', temperature, fmt='%.9f')
     num_train_samples = int(0.5 * len(raw_data))
     num_val_samples = int(0.25 * len(raw_data))
     num_test_samples = len(raw_data) - num_train_samples - num_val_samples
@@ -190,6 +191,24 @@ def used_by_test_fit(upper=500001):
                                batch_size,  0, num_train_samples
                                )
     return x_dataset
+
+def inspect(x_dataset):
+    print('inspect')
+    print("""
+28, 3.0656908458576666
+29, 0.35101379314644965
+30, 7.588330018153356
+31, -0.0536171241630923
+
+          """)
+    print('===========')
+    print(list(x_dataset.as_numpy_iterator()))
+    print('===========')
+    for inputs, targets in x_dataset:
+        for i in range(3):
+            print([float(x) for x in inputs[i]])
+            print( float(targets[i]))
+        break
 
 
 def test_fit(x_dataset):
@@ -239,12 +258,13 @@ def main():
     print("-------")
     print(sys.argv)
 
-    test_timeseries_dataset(40)
+    #test_timeseries_dataset(40)
     #example1()
     #example2()
     
-    #x_dataset = used_by_test_fit()
+    x_dataset = used_by_test_fit(62)
     #plot_fit(x_dataset)
+    inspect(x_dataset)
 
     
 if __name__   == '__main__':
