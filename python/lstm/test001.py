@@ -54,25 +54,37 @@ def getMaxdata(upper, sequence_length ):
 def getMaxdataCalc(upper, sequence_length ):
     dataset1 = pandas.read_csv('../../oldriemann/out/gzetaE12/maxInGramInterval.csv', header=0)
     #drop extra column
+    print('===============')
+    print('dataset1.loc[[26], nothing to drop')
+    print( dataset1.loc[[26]])
     dataset1.drop(dataset1.columns[0], axis=1, inplace=True)
     zeta_data = dataset1.values
     
     temperature = np.zeros((upper ))  
+    # sequence_length 27 first index 26 range 1 to 26
     for i in np.arange(upper) :
-        if i >= sequence_length - 1:
-            temperature[i] = np.max(
-                np.abs(zeta_data[i+1-sequence_length:i+1]) )
+        if i >= sequence_length :
+            sliced = zeta_data[i+1-sequence_length:i] 
+            temperature[i-1] = np.max( sliced )
+            if(i == sequence_length ):
+                print("check: idx in temperature", i-1, " sample ", "0:26")
+                print("check: len", len(sliced), " first idx in calc", 
+                      i+1-sequence_length)
+                print("check: ", " last idx in calc (inclusive)", i-1)
     
     print(sequence_length, 'temperature[sequence_length - 1]', temperature[sequence_length - 1])
     print(temperature[sequence_length - 1:sequence_length + 8])
     #np.savetxt('../out/intervalMaxCalc.csv', temperature, fmt='%.9f')
+    print('===============')
     return temperature
     
 def getZetadata(upper, sequence_length ):
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
+    print('===============')
     print(dataset.head())
     print(dataset.loc[[1]])
-    print(dataset.loc[[26]])
+    print('dataset.loc[[27]], will drop 1 row')
+    print(dataset.loc[[27]])
     print(dataset.loc[[33]])
     
     #drop extra column
@@ -83,7 +95,9 @@ def getZetadata(upper, sequence_length ):
     print('raw_data[0]', raw_data[0])
     print(raw_data[:5])
     
-    temperature = getMaxdata(upper, sequence_length ) 
+    #temperature = getMaxdata(upper, sequence_length ) 
+    temperature = getMaxdataCalc(upper, sequence_length ) 
+    print('===============')
 
     return raw_data, temperature
 
@@ -278,9 +292,11 @@ def main():
     #example1()
     #example2()
     
-    #x_dataset = used_by_test_fit(62)
+    x_dataset = used_by_test_fit(62)
     #plot_fit(x_dataset)
     #inspect(x_dataset)
+    
+    
     getMaxdataCalc(62, sequence_length)
 
     
