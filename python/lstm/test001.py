@@ -34,6 +34,23 @@ def timeseries_dataset(raw_data, temperature, delay, sequence_length,
         start_index=start_index,
         end_index=end_index)
     return train_dataset 
+
+def getMaxdata(upper, sequence_length ):
+    dataset1 = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
+    #drop extra column
+    dataset1.drop(dataset1.columns[0], axis=1, inplace=True)
+    zeta_data = dataset1.values[1:upper]
+    
+    temperature = np.zeros((upper ))  
+    for i in np.arange(upper) :
+        if i >= sequence_length - 1:
+            temperature[i] = np.max(
+                np.abs(zeta_data[i+1-sequence_length:i+1]) )
+    
+    print(sequence_length, 'temperature[sequence_length - 1]', temperature[sequence_length - 1])
+    print(temperature[sequence_length - 1:sequence_length + 8])
+    return temperature
+    
     
 def getZetadata(upper, sequence_length ):
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
@@ -46,29 +63,12 @@ def getZetadata(upper, sequence_length ):
     dataset.drop(dataset.columns[0], axis=1, inplace=True)
     
     raw_data = dataset.values[1:upper]
-    #raw_data = dataset.values
     print('raw_data.shape', raw_data.shape)
     print('raw_data[0]', raw_data[0])
     print(raw_data[:5])
     
-    # dataset1 = pandas.read_csv('../../oldriemann/data/zerosE12.csv.max', header=None)
+    temperature = getMaxdata(upper, sequence_length ) 
 
-    dataset1 = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
-    #drop extra column
-    dataset1.drop(dataset1.columns[1], axis=1, inplace=True)
-    
-    #temperature = dataset1.values[1:upper]
-    #temperature = dataset1.values
-    
-    temperature = np.zeros((raw_data.shape[0] ))  
-    for i in np.arange(raw_data.shape[0]) :
-        if i >= sequence_length - 1:
-            temperature[i] = np.max(
-                np.abs(raw_data[i+1-sequence_length:i+1]) )
-    
-    print('temperature[sequence_length - 1]', temperature[sequence_length - 1])
-    print(temperature[sequence_length - 1:sequence_length + 8])
-    
     return raw_data, temperature
 
 def evaluate_naive_method(dataset, do_print = False):
@@ -153,9 +153,9 @@ def example1():
             
         print('===========')
        
-def test_timeseries_dataset():
+def test_timeseries_dataset(upper=500001):
     sequence_length = 3
-    raw_data, temperature = getZetadata(500001, sequence_length)
+    raw_data, temperature = getZetadata(upper, sequence_length)
     
     delay = sequence_length 
        
@@ -179,9 +179,9 @@ def test_timeseries_dataset():
         print('count', count)
     print('===========')
 
-def used_by_test_fit():
+def used_by_test_fit(upper=500001):
     batch_size = 256
-    raw_data, temperature = getZetadata(500001, sequence_length)
+    raw_data, temperature = getZetadata(upper, sequence_length)
     num_train_samples = int(0.5 * len(raw_data))
     num_val_samples = int(0.25 * len(raw_data))
     num_test_samples = len(raw_data) - num_train_samples - num_val_samples
@@ -239,11 +239,12 @@ def main():
     print("-------")
     print(sys.argv)
 
-
+    test_timeseries_dataset(40)
     #example1()
     #example2()
-    x_dataset = used_by_test_fit()
-    plot_fit(x_dataset)
+    
+    #x_dataset = used_by_test_fit()
+    #plot_fit(x_dataset)
 
     
 if __name__   == '__main__':

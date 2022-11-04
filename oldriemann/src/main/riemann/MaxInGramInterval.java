@@ -25,8 +25,18 @@ public class MaxInGramInterval {
          currentGram = -1;
       }
 
+      /**
+       Start with gramIndex 2, take a block: entry 2- entry 27
+       This covers 26 intervals
+       beginning of interval at gram index 1 ( entry 2)
+       count 1
+       end of interval gram index 27 (entry 27)
+       covers 27 gram idices since there are two end points
+       count 26
+       */
       File file = new File(parent, "maxInGramInterval.csv");
       PrintStream out = new PrintStream(file);
+      out.println("n-3945951431270L,  max_zeta ");
       Rosser.ZeroInfo zeroInput = null;
 
       int gramCount = 0;
