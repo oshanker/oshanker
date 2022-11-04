@@ -250,7 +250,7 @@ def main():
         else:
             # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
             input_shape=(batch_size, sequence_length, raw_data.shape[-1])
-            model = tf.keras.Sequential()
+            model = tf.keras.Sequential(name="stacked bidirectional")
             model.add(layers.Bidirectional(
                 layers.LSTM(16, return_sequences=True, input_shape=input_shape ) ))
             model.add(layers.Bidirectional(
