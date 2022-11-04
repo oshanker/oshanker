@@ -104,6 +104,6 @@ public class MaxInGramInterval {
    }
 
    public static void main(String[] args) throws Exception {
-      getGramMax(40);
+      getGramMax(500002);
    }
 }
