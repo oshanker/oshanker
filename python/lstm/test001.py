@@ -62,7 +62,7 @@ def getZetadata(upper, sequence_length ):
                 np.abs(raw_data[i+1-sequence_length:i+1]) )
     
     print('temperature[sequence_length - 1]', temperature[sequence_length - 1])
-    print(temperature[sequence_length - 1:sequence_length + 5])
+    print(temperature[sequence_length - 1:sequence_length + 8])
     
     return raw_data, temperature
 

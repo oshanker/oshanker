@@ -112,8 +112,13 @@ public class CopyZeroInformationTest {
                 }
                 out.println( gramIndex + ", " + currentGram  + ", " + zetaSaved);
                 gramCount++;
-                if(gramCount == 25){
-                    System.out.println("====== " + gramCount);
+                if(gramIndex == 27){
+                    /*
+ temperature[sequence_length - 1] 3.760351304679188
+[ 3.7603513   8.39209808  8.39209808  8.39209808  8.39209808  8.39209808
+  8.39209808  8.39209808 30.59700016]
+                       */
+                    System.out.println("====== " + gramIndex);
                 }
                 String Zinput = zetaIn.readLine();
                 String[] parsed = Zinput.split(",");
