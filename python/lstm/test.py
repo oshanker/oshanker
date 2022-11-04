@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt
 
     
 reload = False
-sequence_length = 25 
+# 25.793144155646947
+sequence_length = 27 
 id = "LSTM"
 file_name = "../out/jena_xxx.keras"
 
@@ -158,15 +159,6 @@ def main():
                            batch_size, 0, num_train_samples)
     print('type(train_dataset)', type(train_dataset))
     
-    # val_dataset = keras.utils.timeseries_dataset_from_array(
-    #     raw_data[:-delay],
-    #     targets=temperature[delay-1:],
-    #     sampling_rate=sampling_rate,
-    #     sequence_length=sequence_length,
-    #     shuffle=True,
-    #     batch_size=batch_size,
-    #     start_index=num_train_samples,
-    #     end_index=num_train_samples + num_val_samples)
     val_dataset = timeseries_dataset(raw_data, temperature, 
                            delay, sequence_length, 
                            batch_size, 
@@ -250,7 +242,7 @@ def main():
         else:
             # https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b#:~:text=The%20difference%20between%20RMSprop%20and,is%20usually%20set%20to%200.9.
             input_shape=(batch_size, sequence_length, raw_data.shape[-1])
-            model = tf.keras.Sequential(name="stacked bidirectional")
+            model = tf.keras.Sequential(name="stacked_bidirectional")
             model.add(layers.Bidirectional(
                 layers.LSTM(16, return_sequences=True, input_shape=input_shape ) ))
             model.add(layers.Bidirectional(

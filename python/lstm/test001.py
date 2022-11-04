@@ -12,6 +12,8 @@ from tensorflow import keras
 import pandas
 import matplotlib.pyplot as plt
 
+sequence_length = 27 
+
 def plotzeta(raw_data):
     plt.plot(range(1,15), raw_data[:14])
     plt.grid(True)
@@ -36,6 +38,7 @@ def timeseries_dataset(raw_data, temperature, delay, sequence_length,
 def getZetadata(upper, sequence_length ):
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
     print(dataset.head())
+    print(dataset.loc[[1]])
     
     #drop extra column
     dataset.drop(dataset.columns[0], axis=1, inplace=True)
@@ -176,12 +179,12 @@ def test_timeseries_dataset():
 
 def used_by_test_fit():
     batch_size = 256
-    raw_data, temperature = getZetadata(500001, 25)
+    raw_data, temperature = getZetadata(500001, sequence_length)
     num_train_samples = int(0.5 * len(raw_data))
     num_val_samples = int(0.25 * len(raw_data))
     num_test_samples = len(raw_data) - num_train_samples - num_val_samples
     x_dataset = timeseries_dataset(raw_data, temperature, 
-                               25, 25, 
+                               sequence_length, sequence_length, 
                                batch_size,  0, num_train_samples
                                )
     return x_dataset
