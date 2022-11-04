@@ -39,6 +39,8 @@ def getZetadata(upper, sequence_length ):
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
     print(dataset.head())
     print(dataset.loc[[1]])
+    print(dataset.loc[[26]])
+    print(dataset.loc[[33]])
     
     #drop extra column
     dataset.drop(dataset.columns[0], axis=1, inplace=True)

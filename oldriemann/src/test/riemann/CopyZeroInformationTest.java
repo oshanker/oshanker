@@ -75,6 +75,7 @@ public class CopyZeroInformationTest {
         int N = 30;
 
         int gramCount = 0;
+        double maxInInterval = Double.MIN_VALUE;
         for (int i = 0; i < N ; i++) {
             zeroInput = CopyZeroInformation.readSingleZero( zeroIn, nextValues);
             nextValues = zeroInput.nextValues;
@@ -86,7 +87,8 @@ public class CopyZeroInformationTest {
 
             out.println("-1, " + z0 + ", 0");
             while (currentGram < z0) {
-               String Zinput = zetaIn.readLine();
+                // get next Gram
+                String Zinput = zetaIn.readLine();
                 String[] parsed = Zinput.split(",");
                 zetaSaved = Double.parseDouble(parsed[1]);
                 gramIndex = Integer.parseInt(parsed[0]);
@@ -95,7 +97,10 @@ public class CopyZeroInformationTest {
                     System.out.println("skipping " + currentGram + ", " + zetaSaved);
                 } else {
                     System.out.println("****" + Zinput);
-
+                    maxInInterval = Math.abs(zetaSaved);
+                }
+                if(i>0){
+                    throw new IllegalStateException("shouldnt be here");
                 }
             }
 
@@ -107,11 +112,23 @@ public class CopyZeroInformationTest {
             double positionMax = poly.positionMax;
             while (currentGram < z1) {
                 if (positionMax < currentGram) {
+                        if(maxInInterval<Math.abs(maxFromInput)){
+                            maxInInterval=Math.abs(maxFromInput);
+                        }
                     out.println("-100, " + positionMax + ", " + maxFromInput);
                     positionMax = Double.MAX_VALUE;
                 }
+                out.println("=== Gram ===");
                 out.println( gramIndex + ", " + currentGram  + ", " + zetaSaved);
+                //write maxInInterval = zetaSaved;
+                if(maxInInterval<Math.abs(zetaSaved)){
+                    maxInInterval=Math.abs(zetaSaved);
+                }
+                out.println("max " + ", " + maxInInterval);
+
+                maxInInterval = Math.abs(zetaSaved);
                 gramCount++;
+                // end the gram interval
                 if(gramIndex == 28){
                     /*
 temperature[sequence_length - 1] 8.392098075780066
@@ -120,20 +137,27 @@ temperature[sequence_length - 1] 8.392098075780066
                         */
                     System.out.println("====== " + gramIndex);
                 }
+                // get next Gram
                 String Zinput = zetaIn.readLine();
                 String[] parsed = Zinput.split(",");
                 zetaSaved = Double.parseDouble(parsed[1]);
                 gramIndex = Integer.parseInt(parsed[0]);
+                // incr currentGram
                 currentGram = baseGram + gramIndex * gramIncrement;
                 if(currentGram < z1){
                     System.out.println("*-*" + Zinput);
                 } else {
-                    System.out.println("****" + Zinput);
+                    System.out.println("*nn*" + Zinput);
                 }
             }
 
             if(positionMax < z1) {
                 out.println("-100, " + positionMax + ", " + maxFromInput);
+                    if(maxInInterval<Math.abs(maxFromInput)){
+                        maxInInterval=Math.abs(maxFromInput);
+                    }
+                //if (positionMax >= currentGram) {
+                //}
             }
         }
         out.close();
