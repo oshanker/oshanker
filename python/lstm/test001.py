@@ -50,7 +50,23 @@ def getMaxdata(upper, sequence_length ):
     print(sequence_length, 'temperature[sequence_length - 1]', temperature[sequence_length - 1])
     print(temperature[sequence_length - 1:sequence_length + 8])
     return temperature
+
+def getMaxdataCalc(upper, sequence_length ):
+    dataset1 = pandas.read_csv('../../oldriemann/out/gzetaE12/maxInGramInterval.csv', header=0)
+    #drop extra column
+    dataset1.drop(dataset1.columns[0], axis=1, inplace=True)
+    zeta_data = dataset1.values
     
+    temperature = np.zeros((upper ))  
+    for i in np.arange(upper) :
+        if i >= sequence_length - 1:
+            temperature[i] = np.max(
+                np.abs(zeta_data[i+1-sequence_length:i+1]) )
+    
+    print(sequence_length, 'temperature[sequence_length - 1]', temperature[sequence_length - 1])
+    print(temperature[sequence_length - 1:sequence_length + 8])
+    #np.savetxt('../out/intervalMaxCalc.csv', temperature, fmt='%.9f')
+    return temperature
     
 def getZetadata(upper, sequence_length ):
     dataset = pandas.read_csv('../../oldriemann/data/zetaE12.csv', header=0)
@@ -262,9 +278,10 @@ def main():
     #example1()
     #example2()
     
-    x_dataset = used_by_test_fit(62)
+    #x_dataset = used_by_test_fit(62)
     #plot_fit(x_dataset)
-    inspect(x_dataset)
+    #inspect(x_dataset)
+    getMaxdataCalc(62, sequence_length)
 
     
 if __name__   == '__main__':
