@@ -101,6 +101,17 @@ def getZetadata(upper, sequence_length ):
 
     return raw_data, temperature
 
+def plot_hist(data):
+    n, bins, patches = plt.hist(x=data, bins='auto', 
+                                 histtype = 'step' )
+    plt.grid(axis='y')
+    plt.xlabel(r'$\zeta_{max}$')
+    plt.ylabel('Frequency')
+    plt.title('zeta_{max} distribution')
+    plt.text(80, 7000, r'$\zeta_{max}$ evaluated')
+    plt.text(80, 6500, 'over 26 gram intervals')
+    maxfreq = n.max()
+
 def evaluate_naive_method(dataset, do_print = False):
     total_abs_err = 0. 
     samples_seen = 0 
@@ -287,13 +298,18 @@ def plot_fit(x_dataset, length = 200, title='zeta_max:  prediction vs actual'):
 def main():
     print("-------")
     print(sys.argv)
+    
+    temperature = getMaxdataCalc(500000, sequence_length ) 
+    plot_hist(temperature)
+    print('===============')
+
 
     #test_timeseries_dataset(40)
     #example1()
     #example2()
     
-    x_dataset = used_by_test_fit()
-    plot_fit(x_dataset)
+    # x_dataset = used_by_test_fit()
+    # plot_fit(x_dataset)
     #inspect(x_dataset)
     
     
