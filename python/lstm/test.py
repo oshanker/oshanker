@@ -290,7 +290,7 @@ def main():
     #train_keras()
     #train_dropout()
     #train_bidirectional(30)
-    train_stacked(30)
+    train_stacked(15)
     #train_expt(30)
     
     #######################################

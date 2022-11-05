@@ -292,12 +292,12 @@ def main():
     #example1()
     #example2()
     
-    x_dataset = used_by_test_fit(62)
-    #plot_fit(x_dataset)
+    x_dataset = used_by_test_fit()
+    plot_fit(x_dataset)
     #inspect(x_dataset)
     
     
-    getMaxdataCalc(62, sequence_length)
+    #getMaxdataCalc(62, sequence_length)
 
     
 if __name__   == '__main__':
