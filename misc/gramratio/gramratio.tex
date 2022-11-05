@@ -603,9 +603,28 @@ In this section we digress a bit and speculate on possible lessons of the presen
 Why do we think that machine learning is a good tool to apply to the study of the zeros? It is because Machine Learning is an excellent tool to extract patterns when one has a huge amount of data and one does not have a complete understanding of the patterns underlying the phenomenon being studied. And indeed, with tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another encouraging indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order.
 
 \subsection{\label{secfeature}Neural Networks: feature selection}
-How can we apply Machine Learning techniques to the problem? This is an open question, and one can think of different possible applications. Here we review a case study which used neural networks. A great deal of effort has gone into finding the zeros of the Riemann zeta function. At large heights finding the zeros is a non-trivial task, requiring much computer time (and some knowledge of special techniques to find the roots). It would be useful to have some guide to the location of the roots. In particular, close pairs of zeros are interesting. They correspond to cases for which the
+How can we apply Machine Learning techniques to the problem? This is an open question, 
+and one can think of different possible applications. Here we review a case study which 
+used neural networks. A great deal of effort has gone into 
+finding the zeros of the Riemann zeta function. 
+At large heights finding the zeros is a non-trivial task, requiring much computer time 
+(and some knowledge of special techniques to find the roots). It would be useful to have 
+some guide to the location of the roots. In particular, close pairs of zeros are interesting. 
+They correspond to cases for which the
 Riemann Hypothesis is nearly false. Calculating the Riemann zeta function in zones where
-two zeros are very close is a stringent test of the Riemann Hypothesis. Probably the biggest open task is to identify a feature set which is good at predicting zero differences, while not requiring excessive computing time. Ref~\cite{osneural} found that the behavior of the zeta function at Gram points is a good starting point to extract features for use in prediction. Our current study, indicating that Gram points have interesting properties which distinguish them from random points on the critical line, supports the conclusion. The results of the present study suggest that it may be useful to extend the neural network application by separating the odd and even Gram points, and building separate models for them. Given the symmetry properties of the zeta values, we will probably find that the two models will be closely related to each other.  Furthermore, one can use symmetry properties of the zeta values at Gram points to impose restrictions on the models to be fitted.  
+two zeros are very close is a stringent test of the Riemann Hypothesis. Probably 
+the biggest open task is to identify a feature set which is good at 
+predicting zero differences, while not requiring excessive computing time. 
+Ref~\cite{osneural} found that the behavior of the zeta function at Gram points 
+is a good starting point to extract features for use in prediction. 
+Our current study, indicating that Gram points have interesting properties 
+which distinguish them from random points on the critical line, supports the conclusion. 
+The results of the present study suggest that it may be useful to extend 
+the neural network application by separating the odd and even Gram points, 
+and building separate models for them. Given the symmetry properties of the zeta values, 
+we will probably find that the two models will be closely related to each other.  
+Furthermore, one can use symmetry properties of the zeta values at Gram points 
+to impose restrictions on the models to be fitted.  
 
 \subsection{\label{secMLrare}Machine Learning: detection of rare events}
 

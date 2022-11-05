@@ -89,15 +89,7 @@ the Riemann zeta function.
 
 \section{Introduction}
 
-Inspired by striking new results found for the value distribution of the Riemann zeta function,
-we searched for similar results for the Circular Unitary Ensemble (CUE)
-at discrete points. We did the study because of the well-known correspondence between the
-zeros of the Riemann zeta function and the eigenvalues of Random Matrix Theory (RMT).
-In particular we present a symmetry property and an anti-symmetry property for the value
-distribution of the characteristic polynomial of the CUE. We show that the value distribution 
-can be expressed in terms of three  functions 
-which do not depend on the angle characterizing the Generalized Gram point. These results
-are new, and have not been reported for the CUE system earlier.
+Karatsuba problem.  Many applications of machine learning in mathematics.
 
 RMT has found applications~\cite{KeatingSnaith 2000,Odlyzko 1992} 
 in many areas of physics, mathematics,  probability, statistics, and engineering. 
@@ -118,7 +110,7 @@ a good model for the moments and other properties of the $|\zeta(1/2 + it)|$.
 We were motivated to do the current study because of almost identical 
 properties observed
 for the Riemann zeta function and Dirichlet $L$ functions. 
-Ref.~\cite{Shanker 2018a,Shanker 2018b} studied empirically 
+Ref.~\cite{Shanker 2018a,Shanker 2018b} studied 
 the distribution of $Z(t)$ values 
 at Gram points and showed  that  the  value
 distribution of the Hardy $Z$ function at discrete points is anti-symmetrical for 
@@ -128,9 +120,6 @@ Ref.~\cite{Shanker 2020} showed that the value distribution of the Riemann zeta 
 can be expressed in terms of three  functions 
  which do not depend on the angle characterizing the Generalized Gram point. 
 
-
-
-
 \section{\label{sec2}Materials and Methods}
 
 \subsection{\label{seckaratsuba}Karatsuba Problem}
@@ -138,60 +127,15 @@ can be expressed in terms of three  functions
 
 \subsection{\label{secwhy}Why Machine Learning?}
 
-In this section we  establish the required notation for the 
-Riemann Zeta Function. This will help us to define the
-corresponding quantities for the CUE characteristic polynomial.
-For $\mathrm{Re} (s) > 1$ the Riemann Zeta function is defined as
-\begin{equation}
-\zeta ( s ) \, = \, \sum^{\infty}_{n = 1} \; n^{-s} \, = \, \prod_{p \in primes} \;
-\left( 1 - p^{-s} \right)^{-1}.
-\label{eqRie}
-\end{equation}
- $\zeta ( s )$ can be continued to
-the complex plane. Riemann's hypothesis, that the non-trivial zeros of $\zeta ( s )$ lie on the 
-critical axis $1/2+it$, is probably the most famous unsolved problem in mathematics.
-The mean spacing $\delta$ of the zeros  at large height $T$ is $\delta = 2\pi(\ln (T/2\pi))^{-1}$. 
-One defines Hardy's function
-\begin{equation}
-Z(t)=exp(i\theta_{Riemann}(t))\zeta(1/2 +it) 
-\label{eq:hardy}
-\end{equation}
-where 
-\begin{equation}
-\theta_{Riemann}(t) = arg (\pi^{it/2} \Gamma(\frac{1}{4} + \frac{it}{2})). 
-\label{eq:theta}
-\end{equation}
-We use the subscript in $\theta_{Riemann}$ to differentiate this $\theta$ from the 
-one which occurs in the study of the CUE matrices.
-The argument in Eq.~\ref{eq:theta} is defined by continuous variation of $t$ 
-starting with the value $0$ at $t = 0$.
-$Z(t)$ is real valued for real $t$,
-and we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the 
-imaginary part of the zeros 
-of $\zeta(s)$ which lie on the critical line.  
+At large heights evaluating the Riemann zeta function  is a non-trivial task, requiring much computer time 
+(and some knowledge of special techniques to find the roots).  It would be useful to apply
+machine learning
+as a guide to identify the T values where we can expect to see the behaviour of interest.
+Ref~\cite{osneural} found that the behavior of the zeta function at Gram points 
+is a good starting point to extract features for use in prediction. 
+Ref.~\cite{Shanker 2018a} further showed that Gram points have interesting properties 
+which distinguish them from random points on the critical line, supports the conclusion. 
 
-Gram points play an important role in the the theory because many of the 
-zeros are separated by them.  
-When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
-For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
-$\theta_{Riemann} (g_n) = n\pi$. A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
- In analogy with Gram points, we can associate an angle $\phi$ with a point $t$ on the 
- critical axis as follows:
-\begin{definition}\label{phi}
-For $t \ge 7$, $t$ is said to be a generalized Gram point with value $\phi$  if
-$\theta_{Riemann} (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
-\end{definition}
-We define the probability distribution function for $Z(t)$ at generalized Gram  points
- $p_{\phi}(y)$:
-\begin{definition}\label{pphi}
-\begin{equation}
-\int\limits_{a}^{b} p_{\phi}(z)dz
-\label{eq:pdfphi}
-\end{equation}
-is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ 
-for a large number of 
-generalized Gram points in the sample space. 
-\end{definition}
 
 It is known (Ref.~\cite{Shanker 2018b}) that the average value of the 
 $Z$ distribution is $2cos(\phi)$ where $\phi$
@@ -258,18 +202,12 @@ CUE samples for the study we extend the programs and results of Ref.~\cite{Franc
 
 \section{\label{sec3}Results}
 
-\subsection{\label{sec3.1} Symmetry relations for CUE}
+\subsection{\label{sec3.1} Choosing the Model}
 
-The question of the values of the characteristic polynomial of a CUE matrix 
-at a discrete sequence of points is quite interesting. 
-Today we have limited information 
-about the value distribution of the characteristic polynomial at discrete sequences of points. 
-Possibly, these analogues could differ significantly from the continuous case. 
-In this section we present our numerical studies. The results provide very good evidence 
-for two new symmetry properties. Since the Riemann zeta studies were done at a
-height $T = 10^{28}$, we use the well-known correspondence $N \thicksim \ln(T/2\pi)$ where $N$ 
-is the size of the unitary matrix we should consider. Thus, we chose $N = 63$ for our
-study. We studied $10000$ sample $U$ to generate the distributions.
+Since the Riemann zeta studies were done at a
+height $T = 10^{12}$, we use the well-known correspondence $N \thicksim \ln(T/2\pi)$ where $N$ 
+is the size of the unitary matrix we should consider. Thus, we chose $N = 26$ for our
+study.  We studied $10000$ sample $U$ to generate the distributions.
 
 The characteristic polynomial can be written as
 \begin{align}
@@ -357,11 +295,7 @@ Row 2: mean~$Z$}
 \label{z00}
 \end{figure*}
 
-
-
-\subsection{\label{relation}Relations for distributions at different $\phi$}
-
-
+\subsection{\label{relation}Training,  Model predictions}
 
 For the Riemann zeta probability distributions, we found~\cite{Shanker 2020}
 that the probability distributions at different $\phi$ can all be expressed in
@@ -450,6 +384,9 @@ Compact Groups", {\it Notices of the AMS} {\bf 54}, 592-604, (2007)
  report,
 \url{http://etheses.whiterose.ac.uk/27858/}, 
 (2020). 
+
+\bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
+{\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012). 
 
 \bibitem{Shanker 2018a} O. Shanker, 
 ``Good to Bad Gram Point Ratio For Riemann Zeta Function",

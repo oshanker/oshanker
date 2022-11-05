@@ -128,22 +128,6 @@ def evaluate_naive_method(dataset, do_print = False):
         samples_seen += samples.shape[0]
     return total_abs_err / samples_seen
 
-def example2():
-    limit = 15
-    sequence_length = 3
-    time_sequence = np.arange(limit)  
-    raw_data = np.zeros((time_sequence.shape[0] ), dtype=int)  
-    y_sequence = np.zeros((raw_data.shape[0] ), dtype=int)  
-    sign = 1
-    for i in np.arange(raw_data.shape[0]) :
-        raw_data[i] =  i * sign
-        sign = -sign
-        if i >= sequence_length - 1:
-            y_sequence[i] = np.max(
-                np.abs(raw_data[i+1-sequence_length:i+1]) )
-    print(raw_data)
-    print(y_sequence)
-
 def example1():
     limit = 15
     time_sequence = np.arange(limit)  
@@ -159,8 +143,7 @@ def example1():
         if i >= sequence_length - 1:
             y_sequence[i] = np.max(raw_data[i+1-sequence_length:i+1])
     print(raw_data)
-    
-
+ 
     print(y_sequence)
     dummy_dataset = keras.utils.timeseries_dataset_from_array(
         data=raw_data,                                 
@@ -262,7 +245,7 @@ def test_fit(x_dataset):
             print( float(targets[i]),'y', float(y[i]))
         break
 
-def plot_fit(x_dataset, length = 200, title='zeta_max:  prediction vs actual'):
+def plot_fit(x_dataset, length = 200, title=r'$\zeta_{max}$ : prediction vs actual'):
     file_name = "../out/jena_xxx.keras"
     model = keras.models.load_model(file_name) 
     print('plot_fit')
@@ -289,6 +272,8 @@ def plot_fit(x_dataset, length = 200, title='zeta_max:  prediction vs actual'):
     plt.grid(True)
     plt.xlabel('actual')
     plt.ylabel('prediction')
+    plt.text(40, 22, r'$\zeta_{max}$ evaluated')
+    plt.text(40, 12, 'over 26 gram intervals')
 
     plt.title(title)
     plt.legend()
@@ -299,8 +284,8 @@ def main():
     print("-------")
     print(sys.argv)
     
-    temperature = getMaxdataCalc(500000, sequence_length ) 
-    plot_hist(temperature)
+    # temperature = getMaxdataCalc(500000, sequence_length ) 
+    # plot_hist(temperature)
     print('===============')
 
 
@@ -308,8 +293,8 @@ def main():
     #example1()
     #example2()
     
-    # x_dataset = used_by_test_fit()
-    # plot_fit(x_dataset)
+    x_dataset = used_by_test_fit()
+    plot_fit(x_dataset)
     #inspect(x_dataset)
     
     
