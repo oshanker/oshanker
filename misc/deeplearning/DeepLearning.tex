@@ -71,8 +71,12 @@
 
 %    Abstract is required.
 \begin{abstract}
-Karatsuba, machine learning for 
-the Riemann zeta function.
+The study of large values of the Riemann zeta function on the critical axis is a topic of mathematical
+interest.  One such mathematical topic is the Karatsuba problem. It will be useful to have empirical results on the distribution of large values of the zeta function, to give insights 
+into the theoretical studies.  Since evaluating the Riemann zeta function at large heights  is a non-trivial task, requiring much computer time 
+(and some knowledge of special techniques to find the roots), we apply
+machine learning to the problem.
+
 \end{abstract}
 {\textbf {Keywords}:} Circular Unitary Ensemble, Riemann zeta, Value Distribution, Symmetry 
 {\textbf {Mathematics Subject Classification (MSC)}:} 11M06, 11-04.
@@ -83,26 +87,34 @@ the Riemann zeta function.
 
 \section{Introduction}
 
-Karatsuba problem.  Many applications of machine learning in mathematics including Ref.~\cite{osneural}.
+ There have been many applications of machine learning in mathematics, including 
+the application of Neural networks to the Riemann zeta function~\cite{osneural}.
+Here we study its use to provide insights into  the Karatsuba problem see Ref~\cite{K5, Kor1}.
 
-
-Ref.~\cite{Shanker 2018a,Shanker 2018b} studied 
-the distribution of $Z(t)$ values 
-at Gram points and showed  that  the  value
-
-Ref.~\cite{Shanker 2020} showed that the value distribution of the Riemann zeta function 
-can be expressed in terms of three  functions 
- which do not depend on the angle characterizing the Generalized Gram point. 
 
 \section{\label{sec2}Materials and Methods}
 
-\subsection{\label{seckaratsuba}Karatsuba Problem}
-Karatsuba~\cite{K5} studied 
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{1.png}
+\caption[]{ 
+  Distribution of $\zeta_{max}$. 
+  }
+\vspace{1mm}
+\label{z1}
+\end{figure*}
 
+\subsection{\label{seckaratsuba}Karatsuba Problem}
+
+Among the many studies of large values of the Riemann zeta function on the critical axis, Karatsuba~\cite{K5} studied 
 \begin{equation}
 F(T; H)  \, = \, max_{|t-T| \le H} \zeta ( 0.5+it ) 
 \label{eqRie}
 \end{equation}
+where $H$ is small compared to $T$. The ramifications of the Karatsuba problem are explained and
+reviewed in, e.g.,  Korolov~\cite{Kor1}.  Fig.~\ref{z1} gives the distribution of $F(T; H)$ for $T=10^{12}, H=26$.
+
+The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying.
 
 
 \subsection{\label{secwhy}Why Machine Learning?}
@@ -115,23 +127,9 @@ Ref~\cite{osneural} found that the behavior of the zeta function at Gram points
 is a good starting point to extract features for use in prediction. 
 Ref.~\cite{Shanker 2018a} further showed that Gram points have interesting properties 
 which distinguish them from random points on the critical line, supports the conclusion. 
+Related  results can be found in Ref.~\cite{os6, Shanker 2018b,Shanker 2020}.
 
-
-It is known (Ref.~\cite{Shanker 2018b}) that the average value of the 
-
-(Ref.~\cite{Shanker 2020}) that the probability distributions
-Ref.~\cite{Shanker 2020} showed 
-that the probability distributions 
-
-\begin{figure*}
-\centering
-\includegraphics[width=0.8\textwidth]{1.png}
-\caption[]{ 
-  Distribution of $\zeta_{max}$. 
-  }
-\vspace{1mm}
-\label{z1}
-\end{figure*}
+We use TensorFlow~\cite{FrancoisChollet 2021}.
 
 \begin{figure*}
 \centering
@@ -180,7 +178,7 @@ have $N$ distinct CUE generalized Gram points spaced uniformly
 around the unit circle.
 The definition for the probability distribution is analogous to the Riemann zeta definition.
 
-The CUE probability distributions satisfy (see Fig.~\ref{z1},~\ref{z2},~\ref{z3},~\ref{z4}) 
+ (see ~\ref{z2},~\ref{z3},~\ref{z4}) 
 
 \begin{table}
 \centering \(\begin{array}{cccccccccccc}
@@ -199,9 +197,7 @@ rate    &  &  \\
 
 \subsection{\label{relation}Training,  Model predictions}
 
-For the Riemann zeta probability distributions, we found~\cite{Shanker 2020}
-that the probability distributions at different $\phi$ can all be expressed in
-
+For the 
 
 \section{\label{conclusions}Conclusions}
 
@@ -231,21 +227,35 @@ in this manuscript.
 \bibliographystyle{amsplain}
 \begin{thebibliography}{10}
 
+\bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
+{\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012). 
+
 \bibitem{K5} A. A. Karatsuba, 
 ``Zero multiplicity and lower bound estimates of $|\zeta(s)|$",
 {\it Funct.  Approx. Comment. Math.} {\bf35}(2006), 195–207
 
-\bibitem{os6} O. Shanker, 
-``Generalised Zeta Functions and Self-Similarity of Zero Distributions",
-{\it J.  Phys. A} {\bf39}(2006), 13983-13997
+\bibitem{Kor1} Maxim A. Korolev, 
+``On large values of the Riemann zeta-function on short segments of the critical line",
+{\it Acta Arithmetica} {\bf166}(2014), 349–390
 
-\bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
-{\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012). 
+\bibitem{FK} Y. V. Fyodorov and J. P. Keating,
+``Freezing transition and extreme values random matrix theory, $\zeta(1/2 + it)$, and disordered landscapes",
+{\it Phil. Trans. R. Soc. A} {\bf372}(2014),  20120503
+
+\bibitem{oscue} O. Shanker, 
+``Random Matrix Theory explanation for Riemann Zeta Value Distribution Symmetry''
+ report,
+\url{https://tinyurl.com/ywhy4jsy}, 
+(2022). 
 
 \bibitem{Shanker 2018a} O. Shanker, 
 ``Good to Bad Gram Point Ratio For Riemann Zeta Function",
 {\it Experimental Mathematics} {\bf 30}, 76-85,
 \url{tinyurl.com/mwd5uwc5}(2021)
+
+\bibitem{os6} O. Shanker, 
+``Generalised Zeta Functions and Self-Similarity of Zero Distributions",
+{\it J.  Phys. A} {\bf39}(2006), 13983-13997
 
 \bibitem{Shanker 2018b} O. Shanker, 
 ``Symmetry properties of distribution of Riemann Zeta Function values on critical axis''
@@ -258,6 +268,9 @@ in this manuscript.
  report,
 \url{tinyurl.com/yvbd2je6}, 
 (2020). 
+
+\bibitem {FrancoisChollet 2021} Francois Chollet, ``Deep Learning with Python''
+Manning Publications,  (2021)
 
 
 
