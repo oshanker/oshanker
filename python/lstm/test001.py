@@ -210,6 +210,10 @@ def used_by_test_fit(upper=500001):
     num_train_samples = int(0.5 * len(raw_data))
     num_val_samples = int(0.25 * len(raw_data))
     num_test_samples = len(raw_data) - num_train_samples - num_val_samples
+
+    print('temperature mean', temperature.mean(axis=0))
+    print('temperature std', temperature.std(axis=0))
+    
     x_dataset = timeseries_dataset(raw_data, temperature, 
                                sequence_length, sequence_length, 
                                batch_size,  0, num_train_samples
@@ -284,8 +288,8 @@ def main():
     print("-------")
     print(sys.argv)
     
-    temperature = getMaxdataCalc(500000, sequence_length ) 
-    plot_hist(temperature)
+    # temperature = getMaxdataCalc(500000, sequence_length ) 
+    # plot_hist(temperature)
     print('===============')
 
 
@@ -293,8 +297,8 @@ def main():
     #example1()
     #example2()
     
-    # x_dataset = used_by_test_fit()
-    # plot_fit(x_dataset)
+    x_dataset = used_by_test_fit()
+    plot_fit(x_dataset)
     #inspect(x_dataset)
     
     

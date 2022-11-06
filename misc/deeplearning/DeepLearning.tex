@@ -78,7 +78,7 @@ into the theoretical studies.  Since evaluating the Riemann zeta function at lar
 machine learning to the problem.
 
 \end{abstract}
-{\textbf {Keywords}:} Circular Unitary Ensemble, Riemann zeta, Value Distribution, Symmetry 
+{\textbf {Keywords}:} Circular Unitary Ensemble, Riemann zeta, Value Distribution,  Large Values 
 {\textbf {Mathematics Subject Classification (MSC)}:} 11M06, 11-04.
 
 
@@ -115,7 +115,7 @@ F(T; H)  \, = \, max_{|t-T| \le H} \zeta ( 0.5+it )
 where $H$ is small compared to $T$. The ramifications of the Karatsuba problem are explained and
 reviewed in, e.g.,  Korolov~\cite{Kor1}.  
 
-The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying. Other works studying large values of the Riemann zeta function over short intervals are \cite{Feng, Tihanyi, FTH, Ivic}. Fig.~\ref{z1} gives the distribution of $F(T; H)$ for $T=10^{12}, H=26*gram~interval$.  The value of $H$ is motivated by the correspondence with the CUE. In what follows, we will denote by $\zeta_{max}$ the $F$ for this choice of $H$.
+The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying. Other works studying large values of the Riemann zeta function over short intervals are \cite{Feng, Tihanyi, FTH, Ivic}. Fig.~\ref{z1} gives the distribution of $max_{|t-T| \le H}| \zeta ( 0.5+it ) |$ for $T=10^{12}, H=26*gram~interval$.  The value of $H$ is motivated by the correspondence with the CUE. In what follows, we will denote by $\zeta_{max}$ the  $max_{|t-T| \le H}| \zeta ( 0.5+it ) |$ for this choice of $T$ and $H$.
 
 
 \subsection{\label{secwhy}Why Machine Learning?}
@@ -125,15 +125,15 @@ At large heights evaluating the Riemann zeta function  is a non-trivial task, re
 machine learning
 as a guide to identify the T values where we can expect to see the behaviour of interest.
 
-We use TensorFlow~\cite{FrancoisChollet 2021} as the framework to perform the machine learning 
-task. We have to   decide what algorithm we should use, and what features we will use for prediction.
+We use TensorFlow~\cite{FrancoisChollet 2021} as the python framework to perform the machine learning 
+task. We have to  decide what algorithm we should use, and what features we will use for prediction.
 Regarding the feature set, 
 Ref~\cite{osneural} found that the behavior of the zeta function at Gram points 
 is a good starting point to extract features for use in prediction. 
 Ref.~\cite{Shanker 2018a} further showed that Gram points have interesting properties 
 which distinguish them from random points on the critical line. 
 Related  results can be found in Ref.~\cite{os6, Shanker 2018b,Shanker 2020}. We therefore
-use as our feature set for prediction the values of the Riemann zeta function at the Gram points.
+use as our feature set for prediction the values of the rotated Riemann zeta function at the Gram points.
 We then use machine learning to predict where to find the largest values of $\zeta_{max}$.
 
 \subsection{\label{seccalc}Calculating the sample values}
@@ -145,7 +145,7 @@ study.  This leads to an interval of $2\pi$ in the height $t$,  containing $N$ z
 We studied $500000$ gram intervals  to generate the distributions.
 
 At large heights evaluating the Riemann zeta function  is a non-trivial task, requiring much computer time. 
-We numerically evaluate $\zeta(1/2 + it)$ over ranges of length $2\pi$, 
+We numerically evaluate $|\zeta(1/2 + it)|$ over ranges of length $2\pi$, 
  and find the maximum value $\zeta_{max}(2\pi; T )$ in each range. 
  We use the amortized complexity algorithm ~\cite{hiary}, 
  which is suitable for computing $\zeta(1/2 + it)$ at many points.
@@ -159,6 +159,30 @@ We numerically evaluate $\zeta(1/2 + it)$ over ranges of length $2\pi$,
 \vspace{1mm}
 \label{z2}
 \end{figure*}
+
+\begin{table}
+\centering \(\begin{array}{cccccccccccc}
+
+\hline
+\hline
+ Layer      &Output  &Param    \\
+ (type)    &  width& count \\
+\hline
+\hline
+layer 1            &32   &     2304     \\ 
+ (Bidirectional)      &  & \     \\                                                    
+\hline
+layer 2            &32          &    6272      \\
+ (Bidirectional)                 &  & \\                                                                                                    
+ \hline
+output layer   &    1          &      33        \\
+ (Dense)                 &  & \\                                                                                                    
+\hline
+\hline
+\end{array}\)
+\caption{LSTM Model trainable parameters }
+\label{tab:model}
+\end{table}
 
 \section{\label{sec3}Results}
 
@@ -182,6 +206,7 @@ We numerically evaluate $\zeta(1/2 + it)$ over ranges of length $2\pi$,
 \label{z4}
 \end{figure*}
 
+
 \subsection{\label{sec3.1} Choosing the Model}
 The data we are studying has similarities to a time series. The models of choice for
 such data are Recurrent Neural Networks (RNN), in particular,  
@@ -190,8 +215,9 @@ the behaviour of the series looks similar whether we are moving in the forward d
 or the backward direction. We can take advantage of this symmetry and use TensorFlow
 BiDirectional layers in building the model.  
 Bidirectional recurrent layers present the same information to a recurrent network in different ways, 
-increasing accuracy and mitigating forgetting issues.
-This leads to the model shown in Figure~\ref{z2}.
+increasing the accuracy.
+This leads to the model shown in Figure~\ref{z2} and Table~\ref{tab:model}, 
+with $8609$ trainable parameters.
 
 
 \begin{table}
@@ -224,12 +250,15 @@ training     &validation  &test \\
 \subsection{\label{relation}Training,  Model predictions}
 
 What is epoch, what are different data sets.
-
+We studied $500000$ gram intervals  to generate the distributions.
+We divide this into $250000$ gram intervals for the training dataset, 
+$125000$ gram intervals for the validation dataset, 
+and $125000$ gram intervals for the test dataset,.
 Table~\ref{tab:mean12} shows the parameters used to train the model. 
 Figure~\ref{z3} shows the training Mean Absolute Deviation (also called Mean Absolute Error, MAE) 
 and the validation Mean Absolute Deviation as a function of the epoch.
 Table~\ref{tab:mae} shows the Mean Absolute Deviations for the different data sets.  This has
-to be compared with the mean value of $\zeta_{max}$, which is $19.3$.  Figure~\ref{z4}
+to be compared with the mean value of $\zeta_{max}$, which is $19$.  Figure~\ref{z4}
 shows the model prediction versus the actual value for some points.
 
 \section{\label{conclusions}Conclusions}
@@ -261,7 +290,7 @@ in this manuscript.
 \begin{thebibliography}{10}
 
 \bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
-{\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012). 
+{\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012), \url{tinyurl.com/4scve3nj}.
 
 \bibitem{kim2022} Eunmi Kim, ``Deep learning-based approximation of Goldbach partition function''
 {\it  Discrete Mathematics, Algorithms and Applications}, {\bf 14}, 2150152, (2022). 
