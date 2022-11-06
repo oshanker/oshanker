@@ -115,7 +115,12 @@ F(T; H)  \, = \, max_{|t-T| \le H} \zeta ( 0.5+it )
 where $H$ is small compared to $T$. The ramifications of the Karatsuba problem are explained and
 reviewed in, e.g.,  Korolov~\cite{Kor1}.  
 
-The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying. Other works studying large values of the Riemann zeta function over short intervals are \cite{Feng, Tihanyi, FTH, Ivic}. Fig.~\ref{z1} gives the distribution of $max_{|t-T| \le H}| \zeta ( 0.5+it ) |$ for $T=10^{12}, H=26*gram~interval$.  The value of $H$ is motivated by the correspondence with the CUE. In what follows, we will denote by $\zeta_{max}$ the  $max_{|t-T| \le H}| \zeta ( 0.5+it ) |$ for this choice of $T$ and $H$.
+The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying. 
+Ref~\cite{Ivic} study the use of the integrals of the Riemann zeta function over short lengths to study
+the multiplicites of the Riemann zeta zeros.
+Ref~\cite{Tihanyi} apply new numerical techniques to predict the locations where the Riemann zeta
+function takes large values. This involves the solution to large sets of Diophantine equations.
+Other works studying large values of the Riemann zeta function over short intervals are \cite{Feng, FTH}. Fig.~\ref{z1} gives the distribution of $max_{|t-T| \le H}| \zeta ( 0.5+it ) |$ for $T=10^{12}, H=26*gram~interval$.  The value of $H$ is motivated by the correspondence with the CUE. In what follows, we will denote by $\zeta_{max}$ the  $max_{|t-T| \le H}| \zeta ( 0.5+it ) |$ for this choice of $T$ and $H$.
 
 
 \subsection{\label{secwhy}Why Machine Learning?}
@@ -249,7 +254,18 @@ training     &validation  &test \\
 
 \subsection{\label{relation}Training,  Model predictions}
 
-What is epoch, what are different data sets.
+In model training, we divide the data into training, validation and test datasets.
+We train iteratively on the training data.
+Each run of the training over the available training data is called one epoch.
+We use the validation dataset to ensure
+that the model is not overtraining, i.e., fitting the training dataset without generalising the model
+to perform well on new datasets.  
+This could happen if we keep running
+the training set beyond a point. At that point, the training data may keep
+improving while the validation data begins to perform worse.   This is when we stop the training.
+We finally run the model on the test dataset, to ensure we have learnt a generalised model, and not
+just fitted the test dataset.
+
 We studied $500000$ gram intervals  to generate the distributions.
 We divide this into $250000$ gram intervals for the training dataset, 
 $125000$ gram intervals for the validation dataset, 
@@ -262,8 +278,11 @@ to be compared with the mean value of $\zeta_{max}$, which is $19$.  Figure~\ref
 shows the model prediction versus the actual value for some points.
 
 \section{\label{conclusions}Conclusions}
-
-Investigate other choices for feature set. Investigate other quantities to predict, e.g., positions of 
+We applied
+machine learning to the problem of predicting the behaviour of the maximum value
+of the Riemann zeta function at large heights over short intervals.
+Further work should investigate other choices for feature set. 
+We should also investigate other quantities to predict, e.g., positions of 
 zeros, zero differences.
 
 \section*{Acknowledgments and Funding Statement}
@@ -314,20 +333,20 @@ in this manuscript.
 \url{https://tinyurl.com/ywhy4jsy}, 
 (2022). 
 
-\bibitem{Feng} S. J. Feng, ``On Karatsuba conjecture and the Lindelof hypothesis'' 
-{\it  Acta Arith.} {\bf 114}, 295–300,  (2004)
+\bibitem{Ivic} Aleksandar Ivić, 
+``On the multiplicities of zeros of $\zeta(s)$ and its values over short intervals''
+{\it  Journal of Number Theory }, {\bf 185}, 65-79 , (2018). 
 
 \bibitem{Tihanyi} Norbert Tihanyi, Attila Kovacs,  and Jozsef Kovacs, 
 ``Computing Extremely Large Values of the Riemann Zeta Function''
 {\it  Journal of Grid Computing }, {\bf 15}, 527–534 , (2017). 
 
+\bibitem{Feng} S. J. Feng, ``On Karatsuba conjecture and the Lindelof hypothesis'' 
+{\it  Acta Arith.} {\bf 114}, 295–300,  (2004)
+
 \bibitem{FTH}Yan V. Fyodorov, Ghaith A. Hiary, and Jonathan P. Keating, 
 ``Freezing Transition, Characteristic Polynomials of Random Matrices, and the Riemann Zeta-Function''
 {\it  Phys. Rev. Lett. }, {\bf 108}, 170601 , (2012). 
-
-\bibitem{Ivic} Aleksandar Ivić, 
-``On the multiplicities of zeros of $\zeta(s)$ and its values over short intervals''
-{\it  Journal of Number Theory }, {\bf 185}, 65-79 , (2018). 
 
 \bibitem {FrancoisChollet 2021} Francois Chollet, ``Deep Learning with Python''
 Manning Publications,  (2021)
