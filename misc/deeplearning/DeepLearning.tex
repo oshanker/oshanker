@@ -83,7 +83,7 @@ the Riemann zeta function.
 
 \section{Introduction}
 
-Karatsuba problem.  Many applications of machine learning in mathematics.
+Karatsuba problem.  Many applications of machine learning in mathematics including Ref.~\cite{osneural}.
 
 
 Ref.~\cite{Shanker 2018a,Shanker 2018b} studied 
@@ -97,6 +97,12 @@ can be expressed in terms of three  functions
 \section{\label{sec2}Materials and Methods}
 
 \subsection{\label{seckaratsuba}Karatsuba Problem}
+Karatsuba~\cite{K5} studied 
+
+\begin{equation}
+F(T; H)  \, = \, max_{|t-T| \le H} \zeta ( 0.5+it ) 
+\label{eqRie}
+\end{equation}
 
 
 \subsection{\label{secwhy}Why Machine Learning?}
@@ -121,7 +127,7 @@ that the probability distributions
 \centering
 \includegraphics[width=0.8\textwidth]{1.png}
 \caption[]{ 
-  Probability density  for $\phi = 0$. 
+  Distribution of $\zeta_{max}$. 
   }
 \vspace{1mm}
 \label{z1}
@@ -131,7 +137,7 @@ that the probability distributions
 \centering
 \includegraphics[width=0.8\textwidth]{2.png}
 \caption[]{ 
-  Probability density  for $\phi = \pi/2$. 
+  LSTM model. 
   }
 \vspace{1mm}
 \label{z2}
@@ -141,8 +147,7 @@ that the probability distributions
 \centering
 \includegraphics[width=0.8\textwidth]{3.png}
 \caption[]{ 
-  Probability density  for $\phi = \pi$. Compare with
- Fig.~\ref{z1} to observe the mirror symmetry.
+  Training and Validation Mean Absolute Deviations.
   }
 \vspace{1mm}
 \label{z3}
@@ -152,7 +157,7 @@ that the probability distributions
 \centering
 \includegraphics[width=0.8\textwidth]{4.png}
 \caption[]{ 
-  Probability density  for $\phi = 3\pi/2$. 
+  Comparision of model prediction with actual $\zeta_{max}$. 
   }
 \vspace{1mm}
 \label{z4}
@@ -181,45 +186,21 @@ The CUE probability distributions satisfy (see Fig.~\ref{z1},~\ref{z2},~\ref{z3}
 \centering \(\begin{array}{cccccccccccc}
 
 \hline
-0     &\pi/2  &\pi  &3\pi/2  \\
-2.03  &0.00  &-2.02 & -0.03  \\
+learning     &momentum  &epochs  \\
+rate    &  &  \\
+\hline
+0.001 &0.895  & 15  \\
 \hline
 \end{array}\)
-\caption{Mean  $Z(t)$. Row 1: $\phi$, 
-Row 2: mean~$Z$}
+\caption{LSTM Model parameters (optimizer=tf.keras.optimizers.RMSprop)}
 \label{tab:mean12}
 \end{table}
 
-
-\begin{figure*}
-\centering
-\includegraphics[width=0.8\textwidth]{z1.jpg}
-\caption[]{ 
- Test of universality. Comparison of probability density prediction from
- universality with actual values, for $z=1.0$. The y axis is the probability density.
- The x axis is the angle characterizing the Generalized Gram point.
-  }
-\vspace{1mm}
-\label{z05}
-\end{figure*}
-
-\begin{figure*}
-\centering
-\includegraphics[width=0.8\textwidth]{z_1.jpg}
-\caption[]{ 
- Test of universality. Comparison of probability density prediction from
- universality with actual values, for $z=-1.0$. 
-  }
-\vspace{1mm}
-\label{z00}
-\end{figure*}
 
 \subsection{\label{relation}Training,  Model predictions}
 
 For the Riemann zeta probability distributions, we found~\cite{Shanker 2020}
 that the probability distributions at different $\phi$ can all be expressed in
-Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions 
-from the universality 
 
 
 \section{\label{conclusions}Conclusions}
@@ -249,6 +230,10 @@ in this manuscript.
 
 \bibliographystyle{amsplain}
 \begin{thebibliography}{10}
+
+\bibitem{K5} A. A. Karatsuba, 
+``Zero multiplicity and lower bound estimates of $|\zeta(s)|$",
+{\it Funct.  Approx. Comment. Math.} {\bf35}(2006), 195–207
 
 \bibitem{os6} O. Shanker, 
 ``Generalised Zeta Functions and Self-Similarity of Zero Distributions",

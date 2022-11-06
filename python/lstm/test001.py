@@ -107,7 +107,7 @@ def plot_hist(data):
     plt.grid(axis='y')
     plt.xlabel(r'$\zeta_{max}$')
     plt.ylabel('Frequency')
-    plt.title('zeta_{max} distribution')
+    plt.title(r'$\zeta_{max}$ distribution')
     plt.text(80, 7000, r'$\zeta_{max}$ evaluated')
     plt.text(80, 6500, 'over 26 gram intervals')
     maxfreq = n.max()
@@ -284,8 +284,8 @@ def main():
     print("-------")
     print(sys.argv)
     
-    # temperature = getMaxdataCalc(500000, sequence_length ) 
-    # plot_hist(temperature)
+    temperature = getMaxdataCalc(500000, sequence_length ) 
+    plot_hist(temperature)
     print('===============')
 
 
@@ -293,8 +293,8 @@ def main():
     #example1()
     #example2()
     
-    x_dataset = used_by_test_fit()
-    plot_fit(x_dataset)
+    # x_dataset = used_by_test_fit()
+    # plot_fit(x_dataset)
     #inspect(x_dataset)
     
     
