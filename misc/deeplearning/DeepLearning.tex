@@ -89,7 +89,8 @@ machine learning to the problem.
 
  There have been many applications of machine learning in mathematics, including 
 the application of Neural networks to the Riemann zeta function~\cite{osneural}.
-Here we study its use to provide insights into  the Karatsuba problem see Ref~\cite{K5, Kor1}.
+Deep Learning has been applied to study the Goldbach partition function~\cite{kim2022}.
+Here we study its use to provide insights into  the Karatsuba problem~\cite{K5, Kor1}.
 
 
 \section{\label{sec2}Materials and Methods}
@@ -112,9 +113,9 @@ F(T; H)  \, = \, max_{|t-T| \le H} \zeta ( 0.5+it )
 \label{eqRie}
 \end{equation}
 where $H$ is small compared to $T$. The ramifications of the Karatsuba problem are explained and
-reviewed in, e.g.,  Korolov~\cite{Kor1}.  Fig.~\ref{z1} gives the distribution of $F(T; H)$ for $T=10^{12}, H=26$.
+reviewed in, e.g.,  Korolov~\cite{Kor1}.  
 
-The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying.
+The freezing transition scenario occurs in the statistical mechanics of 1/f-noise random energy models. Ref~\cite{FK} argue that it  also governs the value distribution of the maximum of the modulus of the characteristic polynomials  of large N × N (circular unitary ensemble, CUE) random unitary  matrices for large N.  Given the relation of CUE matrices to the Riemann zeta function~\cite{oscue}, the arguments have implications to the topic we are studying. Other works studying large values of the Riemann zeta function over short intervals are \cite{Feng, Tihanyi, FTH, Ivic}. Fig.~\ref{z1} gives the distribution of $F(T; H)$ for $T=10^{12}, H=26*gram~interval$.  The value of $H$ is motivated by the correspondence with the CUE. In what follows, we will denote by $\zeta_{max}$ the $F$ for this choice of $H$.
 
 
 \subsection{\label{secwhy}Why Machine Learning?}
@@ -123,13 +124,31 @@ At large heights evaluating the Riemann zeta function  is a non-trivial task, re
 (and some knowledge of special techniques to find the roots).  It would be useful to apply
 machine learning
 as a guide to identify the T values where we can expect to see the behaviour of interest.
+
+We use TensorFlow~\cite{FrancoisChollet 2021} as the framework to perform the machine learning 
+task. We have to   decide what algorithm we should use, and what features we will use for prediction.
+Regarding the feature set, 
 Ref~\cite{osneural} found that the behavior of the zeta function at Gram points 
 is a good starting point to extract features for use in prediction. 
 Ref.~\cite{Shanker 2018a} further showed that Gram points have interesting properties 
-which distinguish them from random points on the critical line, supports the conclusion. 
-Related  results can be found in Ref.~\cite{os6, Shanker 2018b,Shanker 2020}.
+which distinguish them from random points on the critical line. 
+Related  results can be found in Ref.~\cite{os6, Shanker 2018b,Shanker 2020}. We therefore
+use as our feature set for prediction the values of the Riemann zeta function at the Gram points.
+We then use machine learning to predict where to find the largest values of $\zeta_{max}$.
 
-We use TensorFlow~\cite{FrancoisChollet 2021}.
+\subsection{\label{seccalc}Calculating the sample values}
+
+We study the Riemann zeta studies  at a
+height $T = 10^{12}$. We use the well-known correspondence $N \thicksim \ln(T/2\pi)$ where $N$ 
+is the size of the unitary matrix we should consider for the CUE. Thus, we chose $N = 26$ for our
+study.  This leads to an interval of $2\pi$ in the height $t$,  containing $N$ zeros.
+We studied $500000$ gram intervals  to generate the distributions.
+
+At large heights evaluating the Riemann zeta function  is a non-trivial task, requiring much computer time. 
+We numerically evaluate $\zeta(1/2 + it)$ over ranges of length $2\pi$, 
+ and find the maximum value $\zeta_{max}(2\pi; T )$ in each range. 
+ We use the amortized complexity algorithm ~\cite{hiary}, 
+ which is suitable for computing $\zeta(1/2 + it)$ at many points.
 
 \begin{figure*}
 \centering
@@ -140,6 +159,8 @@ We use TensorFlow~\cite{FrancoisChollet 2021}.
 \vspace{1mm}
 \label{z2}
 \end{figure*}
+
+\section{\label{sec3}Results}
 
 \begin{figure*}
 \centering
@@ -161,24 +182,17 @@ We use TensorFlow~\cite{FrancoisChollet 2021}.
 \label{z4}
 \end{figure*}
 
-\subsection{\label{seccalc}Calculating the sample values}
-
-At large heights evaluating the Riemann zeta function  is a non-trivial task, requiring much computer time 
-
-\section{\label{sec3}Results}
-
 \subsection{\label{sec3.1} Choosing the Model}
+The data we are studying has similarities to a time series. The models of choice for
+such data are Recurrent Neural Networks (RNN), in particular,  
+Long Short-term Memory (LSTM)~\cite{lstm}. Further, as shown in Ref~\cite{Shanker 2018a},
+the behaviour of the series looks similar whether we are moving in the forward direction 
+or the backward direction. We can take advantage of this symmetry and use TensorFlow
+BiDirectional layers in building the model.  
+Bidirectional recurrent layers present the same information to a recurrent network in different ways, 
+increasing accuracy and mitigating forgetting issues.
+This leads to the model shown in Figure~\ref{z2}.
 
-Since the Riemann zeta studies were done at a
-height $T = 10^{12}$, we use the well-known correspondence $N \thicksim \ln(T/2\pi)$ where $N$ 
-is the size of the unitary matrix we should consider. Thus, we chose $N = 26$ for our
-study.  We studied $500000$ gram intervals $U$ to generate the distributions.
-
-have $N$ distinct CUE generalized Gram points spaced uniformly
-around the unit circle.
-The definition for the probability distribution is analogous to the Riemann zeta definition.
-
- (see ~\ref{z2},~\ref{z3},~\ref{z4}) 
 
 \begin{table}
 \centering \(\begin{array}{cccccccccccc}
@@ -194,10 +208,29 @@ rate    &  &  \\
 \label{tab:mean12}
 \end{table}
 
+\begin{table}
+\centering \(\begin{array}{cccccccccccc}
+
+\hline
+training     &validation  &test \\
+\hline
+0.47 &0.4  & 0.43  \\
+\hline
+\end{array}\)
+\caption{Mean Absolute Deviations}
+\label{tab:mae}
+\end{table}
 
 \subsection{\label{relation}Training,  Model predictions}
 
-For the 
+What is epoch, what are different data sets.
+
+Table~\ref{tab:mean12} shows the parameters used to train the model. 
+Figure~\ref{z3} shows the training Mean Absolute Deviation (also called Mean Absolute Error, MAE) 
+and the validation Mean Absolute Deviation as a function of the epoch.
+Table~\ref{tab:mae} shows the Mean Absolute Deviations for the different data sets.  This has
+to be compared with the mean value of $\zeta_{max}$, which is $19.3$.  Figure~\ref{z4}
+shows the model prediction versus the actual value for some points.
 
 \section{\label{conclusions}Conclusions}
 
@@ -230,6 +263,9 @@ in this manuscript.
 \bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
 {\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012). 
 
+\bibitem{kim2022} Eunmi Kim, ``Deep learning-based approximation of Goldbach partition function''
+{\it  Discrete Mathematics, Algorithms and Applications}, {\bf 14}, 2150152, (2022). 
+
 \bibitem{K5} A. A. Karatsuba, 
 ``Zero multiplicity and lower bound estimates of $|\zeta(s)|$",
 {\it Funct.  Approx. Comment. Math.} {\bf35}(2006), 195–207
@@ -247,6 +283,24 @@ in this manuscript.
  report,
 \url{https://tinyurl.com/ywhy4jsy}, 
 (2022). 
+
+\bibitem{Feng} S. J. Feng, ``On Karatsuba conjecture and the Lindelof hypothesis'' 
+{\it  Acta Arith.} {\bf 114}, 295–300,  (2004)
+
+\bibitem{Tihanyi} Norbert Tihanyi, Attila Kovacs,  and Jozsef Kovacs, 
+``Computing Extremely Large Values of the Riemann Zeta Function''
+{\it  Journal of Grid Computing }, {\bf 15}, 527–534 , (2017). 
+
+\bibitem{FTH}Yan V. Fyodorov, Ghaith A. Hiary, and Jonathan P. Keating, 
+``Freezing Transition, Characteristic Polynomials of Random Matrices, and the Riemann Zeta-Function''
+{\it  Phys. Rev. Lett. }, {\bf 108}, 170601 , (2012). 
+
+\bibitem{Ivic} Aleksandar Ivić, 
+``On the multiplicities of zeros of $\zeta(s)$ and its values over short intervals''
+{\it  Journal of Number Theory }, {\bf 185}, 65-79 , (2018). 
+
+\bibitem {FrancoisChollet 2021} Francois Chollet, ``Deep Learning with Python''
+Manning Publications,  (2021)
 
 \bibitem{Shanker 2018a} O. Shanker, 
 ``Good to Bad Gram Point Ratio For Riemann Zeta Function",
@@ -269,9 +323,13 @@ in this manuscript.
 \url{tinyurl.com/yvbd2je6}, 
 (2020). 
 
-\bibitem {FrancoisChollet 2021} Francois Chollet, ``Deep Learning with Python''
-Manning Publications,  (2021)
+\bibitem{hiary} G.A. Hiary, 
+``An amortized-complexity method to compute the Riemann zeta functions''
+{\it  Math. Comp. }, {\bf 80},  1785-1796 , (2011). 
 
+\bibitem{lstm} Sepp Hochreiter,  Jürgen Schmidhuber 
+``Long Short-term Memory''
+{\it  Neural Computation }, {\bf 9},  1735-1780 , (1997). 
 
 
 
