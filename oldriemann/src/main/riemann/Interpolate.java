@@ -103,6 +103,22 @@ public class Interpolate {
         }
     }
 
+    /**
+     * Read input files
+     * evaluate GSeries
+     * storeG
+     * readGSeries
+     *
+     *** zetaMidMeanOdd 8.607783360789237E-4
+     *** zetaGramMeanOdd 0.4994341221059096
+     *** zetaMidMeanEven -4.659858723300587E-4
+     *** zetaGramMeanEven -0.498952124549138
+     *
+     *** zetaGram_MeanOdd 1.416134785586682
+     *** zetaGram_MeanEven -1.415715980062969
+     *
+     * @throws Exception
+     */
     private static void readItems(   )
             throws Exception {
         double begin= baseLimit + (noffset-correction)* (gramIncr);
@@ -120,8 +136,9 @@ public class Interpolate {
                 + ", gram index " + gramIndex1 + ", " + line[1]);
         
         int N = Rosser.getParamInt("N");
-        //        N = 12;
-        N = 1000102;
+        if(N>1000102) {
+            N = 1000102;
+        }
         int count = 0;
         zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
         System.out.println(Arrays.toString(zeroInput.lastZero)  +
@@ -167,14 +184,12 @@ public class Interpolate {
         System.out.println("*** zetaMidMeanEven " + zetaMidMean[0]/N);
         System.out.println("*** zetaGramMeanEven " + zetaGramMean[0]/N);
         
-//        double predictedSqrtArg1 = gSeries.basesqrtArg1 + gSeries.dsqrtArg1*N*gramIncr;
-//        zetaCorrection1 = GSeries.correction( predictedSqrtArg1);
-//        System.out.println( "final zetaCorrection: " + zetaCorrection1);
         //imFGramPoints( );
         //reFMidGramPoints();
+        //spline fit
         consolidatedF();
         double[][] consolidated = new double[2*imFmid.length][2];
-		for (int i = 0; i < imFmid.length; i++) {
+		  for (int i = 0; i < imFmid.length; i++) {
             consolidated[2*i][0] = fAtBeta[i][0];
             consolidated[2*i][1] = fAtBeta[i][1];
             consolidated[2*i+1][0] = imFmid[i][0];
@@ -228,7 +243,7 @@ public class Interpolate {
 
     public static double getZetaEstimate(int nprime, int idx, double upperLimit, 
             double[] zetaMean, double[][] fStorageReIm, GramOrMid gramOrMidEnum) throws Exception {
-    	double zetaEstMid = updateZeroInput(upperLimit, gramOrMidEnum);
+    	  double zetaEstMid = updateZeroInput(upperLimit, gramOrMidEnum);
         if(Math.abs(zeroInput.lastZero[2])>absMax){
             absMax = Math.abs(zeroInput.lastZero[2]);
             if(absMax>130){
@@ -247,16 +262,16 @@ public class Interpolate {
         zetaMean[nmod2] += zeta;
         int gramOrMidIndex;
         switch (gramOrMidEnum) {
-		case GRAM:
-			gramOrMidIndex = 0;
-			break;
+          case GRAM:
+             gramOrMidIndex = 0;
+             break;
 
-		default:
-			gramOrMidIndex = 1;
-			break;
-		}
+          default:
+             gramOrMidIndex = 1;
+             break;
+		 }
         
-		//i == 0, Gram
+		 //i == 0, Gram
         switch(nmod2){
         case 0:
             fStorageReIm[idx][gramOrMidIndex] = (-zeta);
@@ -290,6 +305,10 @@ public class Interpolate {
         } else {
             zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,  
                     zeroInput.nextValues);
+            if(zeroInput == null){
+                System.out.println(" reached end? "
+                  + Arrays.toString(lastZeroSeen1));
+            }
             if(lastZeroSeen1[0] != zeroInput.lastZero[0]){
                 breaks++;
             } 
@@ -331,7 +350,7 @@ public class Interpolate {
         }
         double zetaEstMid;
         switch (polyOption) {
-		case USE_MIXED:
+		   case USE_MIXED:
 	        switch (gramOrMid) {
 			case GRAM:
     			zetaEstMid = poly5.eval(upperLimit);
@@ -427,7 +446,7 @@ public class Interpolate {
 //        readAndValidate();
     }
 
-    public static GSeries readGSeries() throws FileNotFoundException, IOException {
+    public static GSeries readGSeries() throws IOException {
 
         File file = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
         return readGSeries(file);
