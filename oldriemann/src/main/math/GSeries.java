@@ -19,30 +19,33 @@ import riemann.Riemann;
  *
  */
 public class GSeries {
-	final int k0;
+	 final int k0;
     public final int k1;
-	/**
+	 /**
 	 * rotation from F to G:
 	 * G(t) = exp(−i*alpha*t)F(t)
 	 */
-	final double alpha;
+	 final double alpha;
 	
-	/**
+	 /**
 	 * Store g at n*beta (k is k0 to k1)
 	 */
-	public double[][] gAtBeta;
+	 public double[][] gAtBeta;
     private final double beta;
-	public final double spacing;
-	private final double gamma;
-	private double argalphaBase;
-	public final double begin;
-	public final double  dsqrtArg1;
-	double tbase;
-	public double basesqrtArg1;
-	double lnsqrtArg1;
-	double basetheta;
-	
-    public int midIdx;
+	 public final double spacing;
+	 private final double gamma;
+		private double argalphaBase;
+		public final double begin;
+		public final double  dsqrtArg1;
+		double tbase;
+		public double basesqrtArg1;
+		double lnsqrtArg1;
+		double basetheta;
+
+	/**
+	 * central index into gAtBeta for t0
+	 */
+	public int midIdx;
 	
     /**
      * create GSeries with pre-calculated gAtBeta
@@ -137,7 +140,10 @@ public class GSeries {
     public void setgAtBeta(double[][] gAtBeta) {
         this.gAtBeta = gAtBeta;
     }
-    
+
+	 /**
+	 Increment gAtBeta at given index by input value
+	  */
     public void incrementGValueAtIndex(int index, double[] value) {
         this.gAtBeta[index][0] += value[0];
         this.gAtBeta[index][1] += value[1];
@@ -336,7 +342,15 @@ public class GSeries {
 		}
 		return sum;
 	}
-	
+
+	/**
+	 * Find the multiplication factor at index i,
+	 * for arg value t0
+	 * @param i
+	 * @param t0
+	 * @param M power
+	 * @return
+	 */
 	double factorAtIndex(int i, double t0, int M ){
         double t = begin + (i )*spacing;
         double harg = gamma*(t0-t)/M ;
@@ -357,6 +371,7 @@ public class GSeries {
 			int terms, double tolerance, boolean print) {
 		double[] sum = new double[]{0,0};
 		double[] oldSum = new double[]{0,0};
+		// central index into gAtBeta for t0
 		midIdx = (int) ((t0-begin)/spacing);
 		SUM:
 		for (int term = 0; term < terms; term++) {

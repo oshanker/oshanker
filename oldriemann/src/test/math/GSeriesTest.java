@@ -1089,31 +1089,34 @@ public class GSeriesTest {
 
 	/**
 	 * Test method for small values of t (which don't need BigDecimal).
+	 * Change G Value At Index
 	 */
 	@Test
 	public void testGSeriesSmallTIncrementGSeries() {
 		int k0 = 10, k1=100;
 		int N = 30;
 		long init= System.currentTimeMillis();
-		GSeries x = new GSeries(k0, k1, 5, 5+N-1);
+		GSeries gSeries = new GSeries(k0, k1, 5, 5+N-1);
 		long end = System.currentTimeMillis();
 		System.out.println("calc for " + N + ": " + (end - init) + "ms");
 		int minIndex = 5;
-		double t0 = (minIndex+N/2+0.5)*x.spacing;
-		double[] gFromBLFI = x.blfiSumWithOffsetSmallT( t0, 2);
-        int midIdx = x.midIdx;
-        System.out.println("midIdx " + midIdx);
-		double[] directEval = x.gSeriesForSmallT(t0);
-		assertTrue(Math.abs(gFromBLFI[0] - directEval[0]) + Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
-		System.out.println(" t0 " +  t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] 
-		        + ": " + Arrays.toString(directEval));
-		x.incrementGValueAtIndex(midIdx, new double[]{100, 1000});
-        gFromBLFI = x.blfiSumWithOffsetSmallT( t0, 2);
-        double factorAtIndex = x.factorAtIndex(midIdx, t0, 2);
-        System.out.println(" t0 " +  t0 + " sum " + gFromBLFI[0] + ", " + gFromBLFI[1] + ", " 
-                + factorAtIndex);
-        assertTrue(Math.abs(gFromBLFI[0] - directEval[0]-100*factorAtIndex) 
-                + Math.abs(gFromBLFI[1] - directEval[1]-1000*factorAtIndex) < 0.005);
+		double t0 = (minIndex+N/2+0.5)*gSeries.spacing;
+		double[] gFromBLFI = gSeries.blfiSumWithOffsetSmallT( t0, 2);
+		int midIdx = gSeries.midIdx;
+		System.out.println("midIdx " + midIdx);
+		double[] directEval = gSeries.gSeriesForSmallT(t0);
+		assertTrue(Math.abs(gFromBLFI[0] - directEval[0])
+				+ Math.abs(gFromBLFI[1] - directEval[1]) < 0.005);
+		System.out.println(" t0 " +  t0 + " gFromBLFI 0 " + gFromBLFI[0] + ", 1 " + gFromBLFI[1]
+		        + ": directEval" + Arrays.toString(directEval));
+		gSeries.incrementGValueAtIndex(midIdx, new double[]{100, 1000});
+	   gFromBLFI = gSeries.blfiSumWithOffsetSmallT( t0, 2);
+	   double factorAtIndex = gSeries.factorAtIndex(midIdx, t0, 2);
+	   System.out.println(" t0 " +  t0 + " gFromBLFI 0 " + gFromBLFI[0] + ", 1 " + gFromBLFI[1]
+				+ ", factorAtIndex "
+				 + factorAtIndex);
+	   assertTrue(Math.abs(gFromBLFI[0] - directEval[0]-100*factorAtIndex)
+				 + Math.abs(gFromBLFI[1] - directEval[1]-1000*factorAtIndex) < 0.005);
 	}
 
 }
