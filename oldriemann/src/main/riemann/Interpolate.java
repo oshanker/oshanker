@@ -446,6 +446,11 @@ public class Interpolate {
 //        readAndValidate();
     }
 
+    /**
+     * interpolated
+     * @return
+     * @throws IOException
+     */
     public static GSeries readGSeries() throws IOException {
 
         File file = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");

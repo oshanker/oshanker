@@ -399,7 +399,7 @@ public class MoreGSeriesTest {
     }
 
 
-	private Poly3 updateZero(double[][] zetaGramMean, double zetaCorrection1, PrintStream out, BufferedReader[] zeroIn,
+	 private Poly3 updateZero(double[][] zetaGramMean, double zetaCorrection1, PrintStream out, BufferedReader[] zeroIn,
 			Poly3 poly, int n, double upperLimit) throws FileNotFoundException, IOException {
 		if(upperLimit<=Interpolate.zeroInput.nextValues[0]){
 			Interpolate.zeroInput = new ZeroInfo(0, Interpolate.zeroInput);
@@ -424,13 +424,12 @@ public class MoreGSeriesTest {
 		double zeta5 = poly.eval(upperLimit)- zetaCorrection1;
 		zetaGramMean[nmod2][1] += zeta5;
 		return poly;
-	}
+	 }
     
-    @Test @Ignore 
+    @Test @Ignore
     public void testEstimateE12() throws Exception{
     	double[] zetaGramMean = new double[]{0, 0};
         int count = 0;
-        int N = 1000082;
         String zetaFile = "data/zetaE12.csv";
         BufferedReader zetaIn = 
                 new BufferedReader(new FileReader(zetaFile));
@@ -438,7 +437,7 @@ public class MoreGSeriesTest {
         double base = Interpolate.baseLimit;
         for (int i = 0; i < 41; i++) {
             zetaIn.readLine();
-		}
+		  }
 
         GSeries gSeries1 = Interpolate.readGSeries();
 //        long sampleSize = N-2*Interpolate.initialPadding;
