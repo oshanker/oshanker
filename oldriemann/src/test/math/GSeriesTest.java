@@ -1091,7 +1091,7 @@ public class GSeriesTest {
 	 * Test method for small values of t (which don't need BigDecimal).
 	 */
 	@Test
-	public void testGSeries() {
+	public void testGSeriesSmallTIncrementGSeries() {
 		int k0 = 10, k1=100;
 		int N = 30;
 		long init= System.currentTimeMillis();

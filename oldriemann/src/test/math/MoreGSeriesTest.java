@@ -132,7 +132,7 @@ public class MoreGSeriesTest {
     }
 
     @Test @Ignore 
-    public void testFix() throws Exception{
+    public void testFixIncrementGValueAtIndex() throws Exception{
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);
         final int initialPadding = 40;
