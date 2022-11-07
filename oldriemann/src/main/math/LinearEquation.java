@@ -4,24 +4,17 @@ import java.util.Scanner;
  
 public class LinearEquation 
 {
-    public static void main(String args[])
-    {
-        //char []var = {'x', 'y', 'z', 'w'};
-        System.out.println("Enter the number of variables in the equations: ");
-        int n = 5;
-        System.out.println("ax + by + cz + ... = d");
-        double [][] coefficients = new double[n][n];
-        double [][] values = new double[n][1];
-        //input
-        for(int row = 0; row < n; row++)
-        {
-            for(int col = 0; col <= row; col ++)
-            {
-                coefficients[row][col ] = 1;
-            }
-            values[row][0] = row + 1.5;
-        }
-        values[n-1][0] += 0.5;
+    int n = 5;
+    double [][] coefficients = new double[n][n];
+    double [][] values = new double[n][1];
+
+    public static void main(String args[]) {
+        LinearEquation linearEquation = new LinearEquation();
+        linearEquation.runInvert();
+    }
+
+    public void runInvert() {
+        initEquations();
         //Matrix representation
         for(int i=0; i<n; i++)
         {
@@ -34,13 +27,13 @@ public class LinearEquation
         }
 
         //inverse of matrix mat[][]
-        double inverted_mat[][] = invert(coefficients);
+        double inverted_mat[][] = invert(coefficients, values);
         System.out.println("The inverse is: ");
-        for (int i=0; i<n; ++i) 
+        for (int i=0; i< inverted_mat.length; ++i)
         {
-            for (int j=0; j<n; ++j)
+            for (int j=0; j < inverted_mat[i].length; ++j)
             {
-                System.out.print(inverted_mat[i][j]+"  ");
+                System.out.print(inverted_mat[i][j] + "  ");
             }
             System.out.println();
         }
@@ -63,48 +56,62 @@ public class LinearEquation
         }
 
     }
- 
-    public static double[][] invert(double a[][]) 
+
+    private void initEquations() {
+        for(int row = 0; row < n; row++)
+        {
+            for(int col = 0; col <= row; col ++)
+            {
+                coefficients[row][col ] = 1;
+            }
+            values[row][0] = row + 1.5;
+        }
+        coefficients[n-1][n-1 ] += 20;
+        values[n-1][0] += 41;
+    }
+
+    public static double[][] invert(double coefficients[][], double [][] values)
     {
-        int n = a.length;
-        double x[][] = new double[n][n];
-        double b[][] = new double[n][n];
+        int n = coefficients.length;
+        double transformFromIdentity[][] = new double[n][n+values[0].length];
         int index[] = new int[n];
         for (int i=0; i < n; ++i) {
-            b[i][i] = 1;
+            transformFromIdentity[i][i] = 1;
         }
  
         // Transform the matrix into an upper triangle
-        gaussian(a, index);
+        gaussian(coefficients, index);
  
         // Update the matrix b[i][j] with the ratios stored
-        for (int i=0; i<n-1; ++i)
-            for (int j=i+1; j<n; ++j) {
-                for (int k = 0; k < n; ++k) {
-                    b[index[j]][k]
-                          -= a[index[j]][i] * b[index[i]][k];
+        for (int i=0; i<n-1; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                for (int column = 0; column < n; ++column) {
+                    transformFromIdentity[index[j]][column]
+                          -= coefficients[index[j]][i] * transformFromIdentity[index[i]][column];
                 }
-            }
- 
-        // Perform backward substitutions
-        for (int i=0; i<n; ++i) 
-        {
-            x[n-1][i] = b[index[n-1]][i]/a[index[n-1]][n-1];
-            for (int j=n-2; j>=0; --j) 
-            {
-                x[j][i] = b[index[j]][i];
-                for (int k=j+1; k<n; ++k) 
-                {
-                    x[j][i] -= a[index[j]][k]*x[k][i];
-                }
-                x[j][i] /= a[index[j]][j];
             }
         }
-        return x;
+
+        double inverse[][] = new double[n][n+values[0].length];
+        // Perform backward substitutions
+        for (int column  = 0; column < n; ++column)
+        {
+            inverse[n-1][column] = transformFromIdentity[index[n-1]][column]/coefficients[index[n-1]][n-1];
+            for (int row = n-2; row>=0; --row)
+            {
+                inverse[row][column] = transformFromIdentity[index[row]][column];
+                for (int k=row+1; k<n; ++k)
+                {
+                    inverse[row][column] -= coefficients[index[row]][k]*inverse[k][column];
+                }
+                inverse[row][column] /= coefficients[index[row]][row];
+            }
+        }
+        return inverse;
     }
  
 
-    public static void gaussian(double a[][], int index[]) 
+    public static void gaussian(double coefficients[][], int index[])
     {
         int n = index.length;
         double c[] = new double[n];
@@ -120,7 +127,7 @@ public class LinearEquation
             double max = 0;
             for (int j=0; j<n; ++j) 
             {
-                double c0 = Math.abs(a[i][j]);
+                double c0 = Math.abs(coefficients[i][j]);
                 if (c0 > max) max = c0;
             }
             c[i] = max;
@@ -133,7 +140,7 @@ public class LinearEquation
             double pivot_maxrow = 0;
             for (int i = j; i < n; ++i)
             {
-                double pi0 = Math.abs(a[index[i]][j]);
+                double pi0 = Math.abs(coefficients[index[i]][j]);
                 pi0 /= c[index[i]];
                 if (pi0 > pivot_maxrow)
                 {
@@ -148,14 +155,14 @@ public class LinearEquation
             index[k] = itmp;
             for (int i=j+1; i<n; ++i) 	
             {
-                double pj = a[index[i]][j]/a[index[j]][j];
+                double pj = coefficients[index[i]][j]/coefficients[index[j]][j];
  
                 // Record pivoting ratios below the diagonal
-                a[index[i]][j] = pj;
+                coefficients[index[i]][j] = pj;
  
                 // Modify other elements accordingly
                 for (int l=j+1; l<n; ++l) {
-                    a[index[i]][l] -= pj * a[index[j]][l];
+                    coefficients[index[i]][l] -= pj * coefficients[index[j]][l];
                 }
             }
         }
