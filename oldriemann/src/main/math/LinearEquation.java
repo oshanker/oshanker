@@ -66,6 +66,10 @@ public class LinearEquation
             }
             values[row][0] = row + 1.5;
         }
+        coefficients[0][n-2 ] += 80;
+        values[0][0] += 80;
+        coefficients[1][n-2 ] += 70;
+        values[1][0] += 70;
         coefficients[n-1][n-1 ] += 20;
         values[n-1][0] += 41;
     }
@@ -78,33 +82,40 @@ public class LinearEquation
         for (int i=0; i < n; ++i) {
             transformFromIdentity[i][i] = 1;
         }
- 
+        for (int Column=n; Column < transformFromIdentity[0].length; ++Column) {
+            for (int row=0; row < n; ++row) {
+                transformFromIdentity[row][Column] = values[row][Column-n];
+            }
+        }
+
         // Transform the matrix into an upper triangle
         gaussian(coefficients, index);
  
         // Update the matrix b[i][j] with the ratios stored
         for (int i=0; i<n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {
-                for (int column = 0; column < n; ++column) {
-                    transformFromIdentity[index[j]][column]
-                          -= coefficients[index[j]][i] * transformFromIdentity[index[i]][column];
+                for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN) {
+                    int indexj = index[j];
+                    transformFromIdentity[indexj][COLumN]
+                          -= coefficients[indexj][i] * transformFromIdentity[index[i]][COLumN];
                 }
             }
         }
 
         double inverse[][] = new double[n][n+values[0].length];
         // Perform backward substitutions
-        for (int column  = 0; column < n; ++column)
+        for (int COLumN  = 0; COLumN < transformFromIdentity[0].length; ++COLumN)
         {
-            inverse[n-1][column] = transformFromIdentity[index[n-1]][column]/coefficients[index[n-1]][n-1];
+            inverse[n-1][COLumN] =
+                  transformFromIdentity[index[n-1]][COLumN]/coefficients[index[n-1]][n-1];
             for (int row = n-2; row>=0; --row)
             {
-                inverse[row][column] = transformFromIdentity[index[row]][column];
+                inverse[row][COLumN] = transformFromIdentity[index[row]][COLumN];
                 for (int k=row+1; k<n; ++k)
                 {
-                    inverse[row][column] -= coefficients[index[row]][k]*inverse[k][column];
+                    inverse[row][COLumN] -= coefficients[index[row]][k]*inverse[k][COLumN];
                 }
-                inverse[row][column] /= coefficients[index[row]][row];
+                inverse[row][COLumN] /= coefficients[index[row]][row];
             }
         }
         return inverse;
