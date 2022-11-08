@@ -575,12 +575,26 @@ public class GSeriesTest {
 
 	@Test //@Ignore
 	public void testGetSavedGSeries1() throws Exception{
-		double firstZero = 243837.44036866794;
+//		double firstZero = 243837.44036866794;
+		double firstZero = 243827.44036866794;
 		int idx = findFile(firstZero);
 
-		double t0 = gramE12[idx][0];
-		final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-		GSeries gAtBeta = getSavedGSeries(t0, offset);
+		GSeries gAtBeta;
+		double upperforzero = 0.000001;
+		double deltader = 0.001;
+		double deltamax = 0.01;
+		boolean testSaved = true;
+
+		if(testSaved) {
+			double t0 = gramE12[idx][0];
+			final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+		   gAtBeta = getSavedGSeries(t0, offset);
+		} else {
+			gAtBeta = Interpolate.readGSeries();
+			upperforzero = 1.5;
+			deltader = 10.0;
+			deltamax = 1.0;
+		}
 
 		//25 rows zero expectedDer
 
@@ -591,9 +605,9 @@ public class GSeriesTest {
 			double zeroPosition = nextValues[0];
 			double expectedDer =  nextValues[1];
 			double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
-			assertEquals(0.0, zeta, 0.000001);
+			assertEquals("zero", 0.0, zeta, upperforzero);
 			double der = gAtBeta.evaluateDer(zeroPosition, 40);
-			assertEquals("der",expectedDer, der, 0.001);
+			assertEquals("der",expectedDer, der, deltader);
 			System.out.println("** i " + ++i);
 			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
 			System.out.println(
@@ -633,7 +647,7 @@ public class GSeriesTest {
 						);
 					}
 				}
-				assertEquals("max", extremumFromFile, evalMax, 0.01);
+				assertEquals("max", extremumFromFile, evalMax, deltamax);
 			}
 			System.out.println(
 					"nextValues " + Arrays.toString(nextValues)
