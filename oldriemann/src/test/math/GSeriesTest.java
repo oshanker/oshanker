@@ -671,7 +671,7 @@ public class GSeriesTest {
 			z0 = zeroPosition;
 			d0 = expectedDer;
 			extremumFromFile = d0>0?nextValues[2]:-nextValues[2];
-			if(i<25) {
+			if(i<sampleSize) {
 				nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, nextValues[0]);
 			}
 		}
