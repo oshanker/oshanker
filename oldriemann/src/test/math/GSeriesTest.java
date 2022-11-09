@@ -578,17 +578,20 @@ public class GSeriesTest {
 //		double firstZero = 243837.44036866794;
 		double firstZero = 243827.44036866794;
 		int idx = findFile(firstZero);
+		double maxDerDev = Double.MIN_VALUE;
 
 		GSeries gAtBeta;
 		double upperforzero = 0.000001;
-		double deltader = 0.001;
-		double deltamax = 0.01;
+		double deltader = 0.0001;
+		double deltamax = 0.005;
+		int sampleSize = 25;
 		boolean testSaved = true;
 
 		if(testSaved) {
 			double t0 = gramE12[idx][0];
 			final BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		   gAtBeta = getSavedGSeries(t0, offset);
+			sampleSize = 25;
 		} else {
 			gAtBeta = Interpolate.readGSeries();
 			upperforzero = 1.5;
@@ -601,27 +604,37 @@ public class GSeriesTest {
 		double[] nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, firstZero);
 		int i = 0;
 		double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
-		for (int jj = 0; jj < 25; jj++) {
+		// cant go below 40
+		final int initialPadding = 40;
+		for (int jj = 0; jj < sampleSize; jj++) {
 			double zeroPosition = nextValues[0];
 			double expectedDer =  nextValues[1];
-			double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
+			double zeta = gAtBeta.evaluateZeta(zeroPosition, initialPadding);
 			assertEquals("zero", 0.0, zeta, upperforzero);
-			double der = gAtBeta.evaluateDer(zeroPosition, 40);
+			double der = gAtBeta.evaluateDer(zeroPosition, initialPadding);
 			assertEquals("der",expectedDer, der, deltader);
-			System.out.println("** i " + ++i);
+			System.out.println("** i " + ++i + " ===========================");
 			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
+			double absDer = Math.abs(expectedDer - der);
 			System.out.println(
 					"expectedDer  "
 							+ expectedDer
 							+ " : eval from GSeries: " + der
-							+ " diff(der) " + Math.abs(expectedDer-der)
+							+ " diff(der) " + absDer
 			);
+			if(absDer > maxDerDev){
+				maxDerDev = absDer;
+			}
 			if (i>1) {
 				Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
 						extremumFromFile);
 				double positionMax = poly.getPositionMax();
-				double evalMax = gAtBeta.evaluateZeta(positionMax, 40);
-				double maxder = gAtBeta.evaluateDer(positionMax, 40);
+				if(!Double.isFinite(positionMax)){
+					System.out.println(positionMax + " i " + i);
+					throw new IllegalArgumentException("positionMax NaN");
+				}
+				double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+				double maxder = gAtBeta.evaluateDer(positionMax, initialPadding);
 				System.out.println(
 						"positionMax " + positionMax
 								+ ", eval " + evalMax
@@ -634,14 +647,14 @@ public class GSeriesTest {
 				for (int j = 0; j < 2; j++) {
 					if(Math.abs(maxder) > 0.001 &&  Math.abs(extremumFromFile-evalMax) > 0.001) {
 						positionMax += (extremumFromFile-evalMax)/maxder;
-						evalMax = gAtBeta.evaluateZeta(positionMax, 40);
+						evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
 						System.out.println(
 								"positionMax " + positionMax
 										+ ", eval " + evalMax
 										+ " read " + extremumFromFile
 										+ " diff(Max) " + (extremumFromFile-evalMax)
 						);
-						maxder = gAtBeta.evaluateDer(positionMax, 40);
+						maxder = gAtBeta.evaluateDer(positionMax, initialPadding);
 						System.out.println(
 								"positionMax der " + maxder
 						);
@@ -663,6 +676,9 @@ public class GSeriesTest {
 			}
 		}
 		System.out.println("done");
+		System.out.println(
+				"maxDerDev  " + maxDerDev
+		);
 	}
 
 	/**
