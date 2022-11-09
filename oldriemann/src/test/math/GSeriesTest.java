@@ -606,14 +606,14 @@ public class GSeriesTest {
 		double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
 		// cant go below 40
 		final int initialPadding = 40;
-		for (int jj = 0; jj < sampleSize; jj++) {
+		for (i = 0; i <= sampleSize; i++) {
 			double zeroPosition = nextValues[0];
 			double expectedDer =  nextValues[1];
 			double zeta = gAtBeta.evaluateZeta(zeroPosition, initialPadding);
 			assertEquals("zero", 0.0, zeta, upperforzero);
 			double der = gAtBeta.evaluateDer(zeroPosition, initialPadding);
 			assertEquals("der",expectedDer, der, deltader);
-			System.out.println("** i " + ++i + " ===========================");
+			System.out.println("** i " + i + " ===========================");
 			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
 			double absDer = Math.abs(expectedDer - der);
 			System.out.println(
