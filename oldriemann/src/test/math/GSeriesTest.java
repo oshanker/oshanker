@@ -604,7 +604,7 @@ public class GSeriesTest {
 		double deltader = 0.000025;
 		double deltamax = 5.0E-7;
 		int sampleSize = 25;
-		boolean testSaved = true;
+		boolean testSaved = false;
 
 		if(testSaved) {
 			double t0 = gramE12[idx][0];
@@ -613,7 +613,7 @@ public class GSeriesTest {
 			sampleSize = 25;
 		} else {
 			gAtBeta = Interpolate.readGSeries();
-			upperforzero = 1.5;
+			upperforzero = 0.5;
 			deltader = 10.0;
 			deltamax = 1.0;
 		}
