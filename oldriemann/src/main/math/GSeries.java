@@ -160,6 +160,14 @@ public class GSeries {
 		return (zetaplus-zetaminus)/(2* delta);
 	}
 
+	public double[] doubleDer(double zero, int initialPadding, double mid, double delta) {
+		double zetaplus = evaluateZeta(zero + delta, initialPadding);
+		double zetaminus = evaluateZeta(zero - delta, initialPadding);
+		double doubleder = (zetaplus + zetaminus - 2 * mid) / (delta * delta);
+		double der =  (zetaplus-zetaminus)/(2* delta);
+		return new double[]{der, doubleder};
+	}
+
 	public  double evaluateZeta(double zero, final int initialPadding) {
         double[] gFromBLFI = diagnosticBLFISumWithOffset( zero, 4, 
                 initialPadding, 1.6E-9, false);
@@ -243,13 +251,6 @@ public class GSeries {
 	 * necessary.
 	 * Offset is placeholder, it will be extended to BigDouble for large height
 	 * calculations.
-	 * @param k0
-	 * @param k1
-	 * @param offset
-	 * @param begin
-	 * @param spacing
-	 * @param R
-	 * @return
 	 */
 	private final  double[][] calculateGSeries( int R, BigDecimal tBase){
 		double[][] gAtBeta = fSeries(k0, k1, spacing, R, tBase);

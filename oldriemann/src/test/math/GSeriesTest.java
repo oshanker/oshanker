@@ -586,6 +586,8 @@ public class GSeriesTest {
 		double f_1 = x*x*x;
 		double doubleDer = (f1 + f_1 -  2*f0)/(delta*delta);
 		assertEquals(6, doubleDer, 1.0E-9);
+		double der = (f1 - f_1 )/(2*delta);
+		assertEquals(3, der, 1.0E-6);
 
 	}
 
