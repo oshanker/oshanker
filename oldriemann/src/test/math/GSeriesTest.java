@@ -597,11 +597,12 @@ public class GSeriesTest {
 		double firstZero = 243827.44036866794;
 		int idx = findFile(firstZero);
 		double maxDerDev = Double.MIN_VALUE;
+		double maxMaxDev = Double.MIN_VALUE;
 
 		GSeries gAtBeta;
 		double upperforzero = 0.000001;
 		double deltader = 0.000025;
-		double deltamax = 0.005;
+		double deltamax = 5.0E-7;
 		int sampleSize = 25;
 		boolean testSaved = true;
 
@@ -653,31 +654,38 @@ public class GSeriesTest {
 					throw new IllegalArgumentException("positionMax NaN");
 				}
 				double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
-				double maxder = gAtBeta.evaluateDer(positionMax, initialPadding);
+				double[] maxder = gAtBeta.doubleDer(positionMax, initialPadding,
+						evalMax, 0.0005*gAtBeta.spacing);
+				double maxDev = extremumFromFile - evalMax;
 				System.out.println(
 						"positionMax " + positionMax
 								+ ", eval " + evalMax
 								+ " read " + extremumFromFile
-								+ " diff(Max) " + (extremumFromFile-evalMax)
+								+ " diff(Max) " + maxDev
 				);
 				System.out.println(
-						"positionMax der " + maxder
+						"positionMax der " + Arrays.toString(maxder)
 				);
 				for (int j = 0; j < 2; j++) {
-					if(Math.abs(maxder) > 0.001 &&  Math.abs(extremumFromFile-evalMax) > 0.001) {
-						positionMax += (extremumFromFile-evalMax)/maxder;
+					if(Math.abs(maxder[0]) > 0.0001 &&  Math.abs(maxDev) > 0.00000001) {
+						positionMax -= maxder[0] /maxder[1];
 						evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+						maxDev = extremumFromFile - evalMax;
 						System.out.println(
 								"positionMax " + positionMax
 										+ ", eval " + evalMax
 										+ " read " + extremumFromFile
-										+ " diff(Max) " + (extremumFromFile-evalMax)
+										+ " diff(Max) " + maxDev
 						);
-						maxder = gAtBeta.evaluateDer(positionMax, initialPadding);
+						maxder = gAtBeta.doubleDer(positionMax, initialPadding,
+								evalMax, 0.0005*gAtBeta.spacing);
 						System.out.println(
-								"positionMax der " + maxder
+								"positionMax der " + Arrays.toString(maxder)
 						);
 					}
+				}
+				if(Math.abs(maxDev) > maxMaxDev){
+					maxMaxDev = Math.abs(maxDev);
 				}
 				assertEquals("max", extremumFromFile, evalMax, deltamax);
 			}
@@ -697,6 +705,9 @@ public class GSeriesTest {
 		System.out.println("done");
 		System.out.println(
 				"maxDerDev  " + maxDerDev
+		);
+		System.out.println(
+				"maxMaxDev  " + maxMaxDev
 		);
 	}
 
