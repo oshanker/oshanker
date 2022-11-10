@@ -573,6 +573,22 @@ public class GSeriesTest {
 	        return gramSum;
 	}
 
+
+	@Test //@Ignore
+	public void testDoubleDer() throws Exception {
+		double xmid = 1;
+		double delta = 0.001;
+		double x = xmid;
+		double f0 = x*x*x;
+		x = xmid + delta;
+		double f1 = x*x*x;
+		x = xmid - delta;
+		double f_1 = x*x*x;
+		double doubleDer = (f1 + f_1 -  2*f0)/(delta*delta);
+		assertEquals(6, doubleDer, 1.0E-9);
+
+	}
+
 	@Test //@Ignore
 	public void testGetSavedGSeries1() throws Exception{
 //		double firstZero = 243837.44036866794;
@@ -582,7 +598,7 @@ public class GSeriesTest {
 
 		GSeries gAtBeta;
 		double upperforzero = 0.000001;
-		double deltader = 0.0001;
+		double deltader = 0.000025;
 		double deltamax = 0.005;
 		int sampleSize = 25;
 		boolean testSaved = true;
@@ -611,11 +627,12 @@ public class GSeriesTest {
 			double expectedDer =  nextValues[1];
 			double zeta = gAtBeta.evaluateZeta(zeroPosition, initialPadding);
 			assertEquals("zero", 0.0, zeta, upperforzero);
-			double der = gAtBeta.evaluateDer(zeroPosition, initialPadding);
+			double der = gAtBeta.evalDer(
+					zeroPosition, initialPadding, 0.00025*gAtBeta.spacing);
 			assertEquals("der",expectedDer, der, deltader);
+			double absDer = Math.abs(expectedDer - der);
 			System.out.println("** i " + i + " ===========================");
 			System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
-			double absDer = Math.abs(expectedDer - der);
 			System.out.println(
 					"expectedDer  "
 							+ expectedDer
