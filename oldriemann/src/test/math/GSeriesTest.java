@@ -596,6 +596,7 @@ public class GSeriesTest {
 //		double firstZero = 243837.44036866794;
 		double firstZero = 243827.44036866794;
 		int idx = findFile(firstZero);
+		double maxZeroDev = Double.MIN_VALUE;
 		double maxDerDev = Double.MIN_VALUE;
 		double maxMaxDev = Double.MIN_VALUE;
 
@@ -642,6 +643,9 @@ public class GSeriesTest {
 							+ " : eval from GSeries: " + der
 							+ " diff(der) " + absDer
 			);
+			if(Math.abs(zeta) > maxDerDev){
+				maxZeroDev = Math.abs(zeta);
+			}
 			if(absDer > maxDerDev){
 				maxDerDev = absDer;
 			}
@@ -684,6 +688,7 @@ public class GSeriesTest {
 						);
 					}
 				}
+				System.out.println( " ===========================");
 				if(Math.abs(maxDev) > maxMaxDev){
 					maxMaxDev = Math.abs(maxDev);
 				}
@@ -703,6 +708,9 @@ public class GSeriesTest {
 			}
 		}
 		System.out.println("done");
+		System.out.println(
+				"maxZeroDev  " + maxZeroDev
+		);
 		System.out.println(
 				"maxDerDev  " + maxDerDev
 		);
