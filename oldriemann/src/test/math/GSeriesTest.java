@@ -594,7 +594,7 @@ public class GSeriesTest {
 	@Test //@Ignore
 	public void testGetSavedGSeries1() throws Exception{
 //		double firstZero = 243837.44036866794;
-		double firstZero = 243827.44036866794;
+		double firstZero = 243831.456494008;
 		int idx = findFile(firstZero);
 		double maxZeroDev = Double.MIN_VALUE;
 		double maxDerDev = Double.MIN_VALUE;
