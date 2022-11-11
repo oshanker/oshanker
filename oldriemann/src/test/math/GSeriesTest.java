@@ -749,6 +749,7 @@ public class GSeriesTest {
 		for (int i = 0; i < 1; i++) {
 			in = zeroIn.readLine();
 		}
+
 		int i = 0;
 		double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
 		while (in != null) {
