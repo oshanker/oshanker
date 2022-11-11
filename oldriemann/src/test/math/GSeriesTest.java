@@ -719,7 +719,10 @@ public class GSeriesTest {
 	public void testGetSavedGSeries() throws Exception{
 		double t = 247.149;
 		int idx = findFile(t);
+		final int initialPadding = 40;
 
+		double maxDerDev = Double.MIN_VALUE;
+		double maxMaxDev = Double.MIN_VALUE;
 		double t0 = gramE12[idx][0];
 		final BigDecimal offset = BigDecimal.valueOf(1.0E12);
 		GSeries gAtBeta = getSavedGSeries(t0, offset);
@@ -769,13 +772,38 @@ public class GSeriesTest {
 						extremumFromFile);
 				double positionMax = poly.getPositionMax();
 				double evalMax = gAtBeta.evaluateZeta(positionMax, 40);
+				double maxDev = extremumFromFile - evalMax;
+				double[] maxder = gAtBeta.doubleDer(positionMax, initialPadding,
+						evalMax, 0.0005*gAtBeta.spacing);
 				System.out.println(
 						"positionMax " + positionMax
 						+ ", eval " + evalMax
 						+ " read " + extremumFromFile
-						+ " diff(Max) " + (extremumFromFile-evalMax)
+						+ " diff(Max) " + maxDev
 				);
-				assertEquals(extremumFromFile, evalMax, 0.013);
+				for (int j = 0; j < 2; j++) {
+					if(Math.abs(maxder[0]) > 0.0001 &&  Math.abs(maxDev) > 0.00000001) {
+						positionMax -= maxder[0] /maxder[1];
+						evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+						maxDev = extremumFromFile - evalMax;
+						System.out.println(
+								"positionMax " + positionMax
+										+ ", eval " + evalMax
+										+ " read " + extremumFromFile
+										+ " diff(Max) " + maxDev
+						);
+						maxder = gAtBeta.doubleDer(positionMax, initialPadding,
+								evalMax, 0.0005*gAtBeta.spacing);
+						System.out.println(
+								"positionMax der " + Arrays.toString(maxder)
+						);
+					}
+				}
+
+				if(Math.abs(maxDev) > maxMaxDev){
+					maxMaxDev = Math.abs(maxDev);
+				}
+				assertEquals(extremumFromFile, evalMax, 5.0E-7);
 			}
 			z0 = zeroPosition;
 			d0 = expectedDer;
@@ -784,6 +812,9 @@ public class GSeriesTest {
 		}
 		zeroIn.close();
 		System.out.println("done");
+		System.out.println(
+				"maxMaxDev  " + maxMaxDev
+		);
 	}
 
 	public int findFile(double t) {
