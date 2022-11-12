@@ -6,9 +6,10 @@ public class LinearEquation
 {
     double [][] coefficients;
     double [][] values;
+    int index[];
 
     public static void main(String args[]) {
-        LinearEquation linearEquation = new LinearEquation(5);
+        LinearEquation linearEquation = new LinearEquation(7);
         linearEquation.runInvert();
     }
 
@@ -70,6 +71,11 @@ public class LinearEquation
         this.values = values;
     }
 
+    public LinearEquation(double[][] coefficients) {
+        this.coefficients = coefficients;
+        gaussian(coefficients);
+    }
+
     public LinearEquation(int n) {
         coefficients = new double[n][n];
         values = new double[n][1];
@@ -79,33 +85,45 @@ public class LinearEquation
             {
                 coefficients[row][col ] = 1;
             }
-            values[row][0] = row + 101.5;
+            values[row][0] = row + 100001.5;
         }
-        coefficients[0][n-2 ] += 80;
-        values[0][0] += 80 - 100;
-        coefficients[1][n-2 ] += 70;
-        values[1][0] += 70;
+        coefficients[0][n-2 ] += 800000;
+        values[0][0] += 800000 - 100000;
+
+        coefficients[1][n-2] += 700000;
+        values[1][0] += 700000;
+
+        coefficients[n-1][n-2] += 700000;
+        values[n-1][0] += 700000;
+
         coefficients[n-1][n-1 ] += 20;
         values[n-1][0] += 41;
     }
 
     public double[][] invert()
     {
-        int n = coefficients.length;
 
         // Transform the matrix into an upper triangle
-        int index[] = new int[n];
-        gaussian(coefficients, index);
+        gaussian(coefficients);
 
         //printMatrix(coefficients);
 
         //System.out.println(Arrays.toString(index));
 
         //double[][] transformFromIdentity = populateTransformFromIdentity(values, n);
-        double[][] transformFromIdentity = populateValueHolder(values, n);
+        //double[][] transformFromIdentity = populateValueHolder(values, n);
 
+        double[][] transformFromIdentity = values;
+
+
+        double[][] inverse = solveDoubleArray( transformFromIdentity);
+        return inverse;
+    }
+
+    private double[][] solveDoubleArray(double[][] transformFromIdentity) {
+        int n = coefficients.length;
         // Update the matrix b[i][j] with the ratios stored
-        for (int i=0; i<n-1; ++i) {
+        for (int i=0; i < n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {
                 for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN) {
                     int indexj = index[j];
@@ -115,11 +133,6 @@ public class LinearEquation
             }
         }
 
-        double[][] inverse = solveDoubleArray(n, index, transformFromIdentity);
-        return inverse;
-    }
-
-    private double[][] solveDoubleArray(int n, int[] index, double[][] transformFromIdentity) {
         double inverse[][] = new double[n][transformFromIdentity[0].length];
         // Perform backward substitutions
         for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN)
@@ -163,9 +176,10 @@ public class LinearEquation
         return transformFromIdentity;
     }
 
-    public static void gaussian(double coefficients[][], int index[])
+    public  void gaussian(double coefficients[][])
     {
-        int n = index.length;
+        int n = coefficients.length;
+        index = new int[n];
         double c[] = new double[n];
  
         // Initialize the index
