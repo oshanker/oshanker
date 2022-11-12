@@ -2,10 +2,14 @@ package math;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
 
 import riemann.Interpolate;
+
+import static riemann.StaticMethods.*;
 
 public class FixGSeries {
     static NumberFormat nf = NumberFormat.getInstance();
@@ -16,6 +20,55 @@ public class FixGSeries {
     }
 
     public static void main(String[] args) throws Exception {
+        //oldMain();
+        double[] nextValues = new double[]{
+              243831.456494008, -22.69554476177354, 1.538114456203189};
+        double t = nextValues[0];
+        int idx = findFile(t);
+        final int initialPadding = 40;
+
+        double maxDerDev = Double.MIN_VALUE;
+        double maxMaxDev = Double.MIN_VALUE;
+        double t0 = gramE12[idx][0];
+        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        GSeries gAtBeta = getSavedGSeries(t0, offset);
+        double[] initial = evaluateAtT(t, initialPadding, gAtBeta);
+        int midIdx = gAtBeta.midIdx;
+
+        System.out.println("initial " + Arrays.toString(initial));
+        System.out.println("midIdx " + midIdx);
+        //double[][] coefficients = new double[2][2];
+        double[] zetaCoeff = changeToZeta(gAtBeta, initialPadding, t, initial[0], midIdx);
+        System.out.println("zetaCoeff " + Arrays.toString(zetaCoeff));
+        double[] derCoeff = changeToDer(gAtBeta, initialPadding, t, initial[1], midIdx);
+        System.out.println("derCoeff " + Arrays.toString(derCoeff));
+        double[][] coefficients = new double[][]{zetaCoeff,derCoeff};
+        double[][] incr = new double[][]{{1},{0.5}};
+        LinearEquation linearEquation = new LinearEquation(coefficients, incr);
+        double[][] solutionOdd = linearEquation.invert();
+        double[] solution = new double[]{solutionOdd[0][0],solutionOdd[1][0]};
+        System.out.println(Arrays.toString(solution));
+//        System.out.println("test " + changeZeta0(gAtBeta,
+//              initialPadding, t, midIdx, 1.0));
+//        System.out.println("test 1 " + changeZeta1(gAtBeta,
+//              initialPadding, t, midIdx, 1.0));
+//        System.out.println("test 2 " + (changeDer0(gAtBeta,
+//              initialPadding, t, midIdx, 1.0) ));
+
+        gAtBeta.incrementGValueAtIndex(midIdx, solution);
+        double[] after = evaluateAtT(t, initialPadding, gAtBeta);
+        System.out.println("after " + Arrays.toString(after));
+    }
+
+    static double[] evaluateAtT(double t, int initialPadding, GSeries gAtBeta) {
+        double zeta = gAtBeta.evaluateZeta(t, initialPadding);
+        double der = gAtBeta.evalDer(
+              t, initialPadding, 0.00025* gAtBeta.spacing);
+        double[] initial = {zeta, der};
+        return initial;
+    }
+
+    private static void oldMain() throws IOException {
         File file = new File("out/gSeries" + Interpolate.prefix + "/zeros.dat");
         DataInputStream in = Interpolate.dataInputStream( file);
         double[] tmin = new double[4];
@@ -28,9 +81,9 @@ public class FixGSeries {
         nf1.setGroupingUsed(false);
 
         int N = 1000022;
-        for (int midIdx1 = 39; midIdx1 < 39+N ; midIdx1++) 
+        for (int midIdx1 = 39; midIdx1 < 39+N ; midIdx1++)
         {
-            for (int i1 = 0; i1 < tmin.length; i1++) 
+            for (int i1 = 0; i1 < tmin.length; i1++)
             {
                 tmin[i1] = in.readDouble();
             }
@@ -44,19 +97,19 @@ public class FixGSeries {
             double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, tmin);
             gSeries.incrementGValueAtIndex(midIdx1, g0incr);
             double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
-            
+
             double deviationMin = min - expected;
             if(Math.abs(deviationMin)>100.0 || midIdx1%100000 == 0){
-                System.out.println(); 
+                System.out.println();
                 System.out.println(Arrays.toString(tmin));
                 System.out.println("valAtZero " + valAtZero + ", midIdx " + midIdx1
                         + ", derAtZero " + derAtZero);
                 System.out.println("eval zero final " + Interpolate.evaluateZeta(tmin[0], initialPadding , gSeries) + ", "
                         + Interpolate.evaluateDer(tmin[0], initialPadding , gSeries)
                         + " cf " + expectedDer);
-                System.out.println(nf.format(d) + ", " + nf.format(oldmin) + ", " 
+                System.out.println(nf.format(d) + ", " + nf.format(oldmin) + ", "
                 + nf.format(expected) + ", "
-                        + nf1.format((oldmin - expected) * 100.0 / expected) 
+                        + nf1.format((oldmin - expected) * 100.0 / expected)
                         + ", " + nf1.format((oldmin - expected)));
                 System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expected) + ", "
                         + nf1.format(deviationMin * 100.0 / expected) + ", " + nf1.format(deviationMin));
@@ -64,36 +117,64 @@ public class FixGSeries {
         }
     }
 
+    /**
+     * change in val at t by changing gseries coeff at midIdx
+     */
     public static double[] changeToZeta(GSeries gSeries, final int initialPadding, 
-            double t, double valAtZero, int midIdx) {
+            double t, double initialValue, int midIdx) {
         double[] a0 = {0,0};
         double increment = 10;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-        double a0ValAtZero = Interpolate.evaluateZeta(t, initialPadding, gSeries);
-        a0[0] = (a0ValAtZero-valAtZero)/increment;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        double a00 = changeZeta0(gSeries, initialPadding, t, midIdx, increment);
+        a0[0] = (a00-initialValue)/ increment;
+
+        double a01 = changeZeta1(gSeries, initialPadding, t, midIdx, increment);
+
+        a0[1] = (a01-initialValue)/ increment;
         
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
-        a0ValAtZero = Interpolate.evaluateZeta(t, initialPadding, gSeries);
-        a0[1] = (a0ValAtZero-valAtZero)/increment;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
         return a0;
+    }
+
+    private static double changeZeta1(GSeries gSeries, int initialPadding, double t, int midIdx, double increment) {
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+        double a0ValAtZero1 = gSeries.evaluateZeta(t, initialPadding);
+        double a01 = (a0ValAtZero1);
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        return a01;
+    }
+
+    private static double changeZeta0(GSeries gSeries, int initialPadding, double t,
+                                      int midIdx, double increment) {
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        double a0ValAtZero = gSeries.evaluateZeta(t, initialPadding);
+        double a00 = (a0ValAtZero) ;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        return a00;
     }
 
     public static double[] changeToDer(GSeries gSeries, final int initialPadding, 
             double zero, double derAtZero, int midIdx) {
         double[] a0 = {0,0};
-        double increment = 10;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-        double a0ValAtZero = Interpolate.evaluateDer(zero, initialPadding, gSeries);
+        double increment = 1;
+
+        double a0ValAtZero = changeDer0(gSeries, initialPadding, zero, midIdx, increment);
         a0[0] = (a0ValAtZero-derAtZero)/increment;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
-        
+
         gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
-        a0ValAtZero = Interpolate.evaluateDer(zero, initialPadding, gSeries);
-        a0[1] = (a0ValAtZero-derAtZero)/increment;
+        a0ValAtZero = gSeries.evalDer(
+              zero, initialPadding, 0.00025* gSeries.spacing);;
         gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+
+        a0[1] = (a0ValAtZero-derAtZero)/increment;
         return a0;
+    }
+
+    private static double changeDer0(GSeries gSeries, int initialPadding, double zero,
+                                     int midIdx, double increment) {
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        double a0ValAtZero = gSeries.evalDer(
+              zero, initialPadding, 0.00025* gSeries.spacing);
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        return a0ValAtZero;
     }
 
     public static double[] evalGSeriesIncrement(GSeries gSeries, int midIdx, 

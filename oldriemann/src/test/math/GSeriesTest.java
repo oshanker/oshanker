@@ -5,18 +5,14 @@ package math;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -47,43 +43,6 @@ public class GSeriesTest {
         nf.setMaximumFractionDigits(8);
         nf.setGroupingUsed(false);
     }
-    final static double[][] gramE12 = new double[][] { 
-        {243.77756012466054, 7551.727850863262},
-        {7551.748966209077, 14859.592051701966},
-        {14859.72037022293, 22167.406308059784},
-        {22167.691772166218, 29475.511171552676},
-        {29475.663172038934, 36783.50533179244},
-        {36783.63456984109, 44091.59099492764},
-        {44091.60596557267, 51399.45918516771},
-        {51399.577359233685, 58707.39943153004},
-        {58707.548750824135, 66015.36710472572},
-        {66015.52014034402, 73323.37514290065},
-        {73323.49152779333, 80631.16991578533},
-        {80631.46291317207, 87938.90285891743},
-        {87939.43429648025, 95247.28904843173},
-        {95247.40567771786, 102555.26217338518},
-        {102555.3770568849, 109863.22425382912},
-        {109863.34843398137, 117171.2193838182},
-        {117171.31980900728, 124479.11858461898},
-        {124479.29118196263, 131787.26254932594},
-        {131787.26255284742, 139094.915172985},
-        {139095.23392166162, 146403.03320424244},
-        {146403.20528840527, 153710.8534040047},
-        {153711.17665307835, 161019.06253969827},
-        {161019.14801568087, 168326.92904703945},
-        {168327.1193762128, 175635.03465266858},
-        {175635.09073467416, 182942.91104938296},
-        {182943.06209106496, 190250.94773079225},
-        {190251.0334453852, 197558.89402020318},
-        {197559.00479763487, 204866.80626038337},
-        {204866.97614781398, 212174.8229924622},
-        {212174.94749592253, 219482.70295244805},
-        {219482.9188419605, 226790.86141050386},
-        {226790.89018592788, 234098.80158802238},
-        {234098.86152782472, 241406.80651327036},
-        {241406.83286765098, 248714.5783046993},
-        {248714.8042054067, 256022.741415282},
-    };
 
 	/**
 	 * @throws java.lang.Exception
@@ -162,8 +121,8 @@ public class GSeriesTest {
 	 */
 	@Test  @Ignore 
 	public void testStoreGE12() throws Exception{
-        for (int i = 0; i < gramE12.length; i++) {
-            storeGE12(gramE12[i][1], gramE12[i][0]);
+        for (int i = 0; i < StaticMethods.gramE12.length; i++) {
+            storeGE12(StaticMethods.gramE12[i][1], StaticMethods.gramE12[i][0]);
         }
 	}
     
@@ -181,7 +140,7 @@ public class GSeriesTest {
         final int k = 8;
         final double[][] prod = new double[2*k][2*k];
         int size = 0;
-        for (int i = 0; i < gramE12.length; i++) {
+        for (int i = 0; i < StaticMethods.gramE12.length; i++) {
             size += testCorrelationE12(i, out, prod );
         }
         for (int i = 0; i < 2*k; i++) {
@@ -353,7 +312,7 @@ public class GSeriesTest {
         //if we want cross-product
         //final double[][] gramSum = new double[2][2*k];
         
-		for (int i = 0; i < gramE12.length; i++) {
+		for (int i = 0; i < StaticMethods.gramE12.length; i++) {
 	        double[][] cross = new double[gramSum.length][2*k];
 			writeZetaPhi(i, outputZ, cross, hist);
 	        for (int j = 0; j < 2*k; j++) {
@@ -370,9 +329,9 @@ public class GSeriesTest {
 	    	outputZ.close();
 	    }
 
-	    final double crossNorm = 2*(1.577)*gramE12.length;
+	    final double crossNorm = 2*(1.577)* StaticMethods.gramE12.length;
         for (int j = 0; j < 2*k; j++) {
-        	gramSum[0][j] /= gramE12.length;
+        	gramSum[0][j] /= StaticMethods.gramE12.length;
             assertEquals(2.00*Math.cos(j*Math.PI/k), gramSum[0][j], 0.001);
             for (int i = 1; i < gramSum.length; i++) {
         	   gramSum[i][j] /= crossNorm;
@@ -503,10 +462,10 @@ public class GSeriesTest {
     
     private double[][] writeZetaPhi(int sampleIndex, PrintWriter outputZ, double[][] gramSum, 
     		Histogram[] hist) throws Exception{
-	        double t0 = gramE12[sampleIndex][0];
+	        double t0 = StaticMethods.gramE12[sampleIndex][0];
 	        final boolean calculateCross = gramSum.length > 1;
 	        final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-	        GSeries gAtBeta = getSavedGSeries(t0, offset);
+	        GSeries gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
 	        //double[] oddsum = new double[k], evensum = new double[k];
 	        final double firstGram = Gram.gram(offset, t0 + 0.001 );
 	        final int N = 29999;
@@ -595,7 +554,7 @@ public class GSeriesTest {
 	public void testGetSavedGSeries1() throws Exception{
 //		double firstZero = 243837.44036866794;
 		double firstZero = 243831.456494008;
-		int idx = findFile(firstZero);
+		int idx = StaticMethods.findFile(firstZero);
 		double maxZeroDev = Double.MIN_VALUE;
 		double maxDerDev = Double.MIN_VALUE;
 		double maxMaxDev = Double.MIN_VALUE;
@@ -608,9 +567,9 @@ public class GSeriesTest {
 		boolean testSaved = false;
 
 		if(testSaved) {
-			double t0 = gramE12[idx][0];
+			double t0 = StaticMethods.gramE12[idx][0];
 			final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-		   gAtBeta = getSavedGSeries(t0, offset);
+		   gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
 			sampleSize = 25;
 		} else {
 			gAtBeta = Interpolate.readGSeries();
@@ -726,14 +685,14 @@ public class GSeriesTest {
 	@Test //@Ignore
 	public void testGetSavedGSeries() throws Exception{
 		double t = 247.149;
-		int idx = findFile(t);
+		int idx = StaticMethods.findFile(t);
 		final int initialPadding = 40;
 
 		double maxDerDev = Double.MIN_VALUE;
 		double maxMaxDev = Double.MIN_VALUE;
-		double t0 = gramE12[idx][0];
+		double t0 = StaticMethods.gramE12[idx][0];
 		final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-		GSeries gAtBeta = getSavedGSeries(t0, offset);
+		GSeries gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
 		{
 			double zeroPosition = 243.8749480149;
 			double upper = 244.0199875;
@@ -826,23 +785,7 @@ public class GSeriesTest {
 		);
 	}
 
-	public int findFile(double t) {
-		int idx = 0;
-		if(t<gramE12[0][0]) {
-			throw new IllegalArgumentException("out of range: " + t);
-		}
-		if(t>gramE12[gramE12.length-1][1]) {
-			throw new IllegalArgumentException("out of range: " + t);
-		}
-		if(t>gramE12[gramE12.length-1][0]) {
-			idx = gramE12.length-1;
-		} else while(t>=gramE12[idx+1][0]) {
-			idx++;
-		}
-		return idx;
-	}
-
-    @Test //@Ignore 
+	@Test //@Ignore
     public void test1E12Zeros() throws Exception {
 		/*
 		compare calculated with saved
@@ -994,30 +937,7 @@ public class GSeriesTest {
         out.close();
     }
 
-    private GSeries getSavedGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
-        final int k0 = 1, k1=398942;
-        final int index = (int) Math.floor(t0);
-        File file = new File("data/gSeriesE12/" + Integer.toString(index) +".dat");
-        InputStream is = new FileInputStream(file);
-        // create buffered input stream.
-        BufferedInputStream bis = new BufferedInputStream(is);
-        // create data input stream to read data in form of primitives.
-        DataInputStream in = new DataInputStream(bis);
-        final int initialPadding = 40;
-        int R = 30000+2*initialPadding;
-        double begin = in.readDouble();
-        double gincr = in.readDouble();
-        double[][] gBeta = new double[R][2];
-        for (int i = 0; i < gBeta.length; i++) {
-            gBeta[i][0] = in.readDouble();
-            gBeta[i][1] = in.readDouble();
-        }
-        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  gincr, gBeta);
-        in.close();
-        return gAtBeta;
-    }
-
-    private void storeGE12(double zero, double t0) throws IOException, FileNotFoundException {
+	private void storeGE12(double zero, double t0) throws IOException, FileNotFoundException {
         int index = (int) Math.floor(t0);
         BigDecimal offset = BigDecimal.valueOf(1.0E12);
         double begin = Gram.gram(offset, t0 );
@@ -1065,9 +985,9 @@ public class GSeriesTest {
     }
 	
     private int testCorrelationE12(int sampleIndex, PrintWriter out, double[][] prod) throws Exception{
-        double t0 = gramE12[sampleIndex][0];
+        double t0 = StaticMethods.gramE12[sampleIndex][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-        GSeries gAtBeta = getSavedGSeries(t0, offset);
+        GSeries gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
         int k = prod.length/2;
         double[] oddsum = new double[k], evensum = new double[k];
         final double[] zeta = new double[2*k];
