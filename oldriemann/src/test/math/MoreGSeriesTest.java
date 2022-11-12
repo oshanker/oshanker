@@ -136,7 +136,7 @@ public class MoreGSeriesTest {
         GSeries gSeries = Interpolate.readGSeries();
         System.out.println("gSeries.begin " + gSeries.begin);
         final int initialPadding = 40;
-        double[][] tmin = {
+        double[][] tminInfo = {
             {480.82757562193734, -12.479455830100015, 0.13155469450002938, 480.8478824361364},
             {710.5642631336118, 1511.1436494073869, 167.70620377103543, 710.6839237435237,},
             {3811.050548669376, 570.9429277899857, 386.1396790368941, 3811.2260977681094,},
@@ -148,27 +148,31 @@ public class MoreGSeriesTest {
         nf1.setMaximumFractionDigits(2);
         nf1.setGroupingUsed(false);
 
-        for (int i = 0; i < tmin.length; i++) 
+        for (int i = 0; i < tminInfo.length; i++)
         {
            System.out.println(); 
-           double d = tmin[i][3];
-            double expectedDer = tmin[i][1];
-            double expected = expectedDer<0?-tmin[i][2]:tmin[i][2];
+           double d = tminInfo[i][3];
+            double expectedDer = tminInfo[i][1];
+            double expectedExtremum = expectedDer<0?-tminInfo[i][2]:tminInfo[i][2];
             double min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
-            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expected) + ", "
-                    + nf1.format((min - expected) * 100.0 / expected) + ", " + nf1.format((min - expected)));
+            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expectedExtremum) + ", "
+                    + nf1.format((min - expectedExtremum) * 100.0 / expectedExtremum) + ", " + nf1.format((min - expectedExtremum)));
 
             int midIdx1 = -1;
-            double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, tmin[i]);
+            double[] g0incr = FixGSeries.evalGSeriesIncrement(gSeries, midIdx1, initialPadding, tminInfo[i]);
             midIdx1 = gSeries.midIdx;
             gSeries.incrementGValueAtIndex(midIdx1, g0incr);
-            System.out.println("eval zero final " + Interpolate.evaluateZeta(tmin[i][0], initialPadding , gSeries) + ", "
-                    + Interpolate.evaluateDer(tmin[i][0], initialPadding , gSeries)
+            System.out.println("eval zero final " +
+                  Interpolate.evaluateZeta(tminInfo[i][0],
+                  initialPadding , gSeries) + ", evalDer "
+                    + Interpolate.evaluateDer(tminInfo[i][0], initialPadding , gSeries)
                     + " cf " + expectedDer);
 
             min = Interpolate.evaluateZeta(d, initialPadding, gSeries);
-            System.out.println(nf.format(d) + ", " + nf.format(min) + ", " + nf.format(expected) + ", "
-                    + nf1.format((min - expected) * 100.0 / expected) + ", " + nf1.format((min - expected)));
+            System.out.println(nf.format(d) + ", " + nf.format(min)
+                  + ", expectedExtremum " + nf.format(expectedExtremum) + ", "
+                    + nf1.format((min - expectedExtremum) * 100.0 / expectedExtremum) + ", "
+                  + nf1.format((min - expectedExtremum)));
         }
     }
 
