@@ -1,4 +1,4 @@
-# oshanker
+# Riemann zeta, Machine Learning, Symmetry Properties
 
 We have applied Machine Learning to the Riemann zeta function.
 We used [neural networks](https://www.researchgate.net/publication/273945970_Neural_Network_prediction_of_Riemann_zeta_zeros) 
