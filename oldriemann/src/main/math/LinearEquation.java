@@ -120,7 +120,7 @@ public class LinearEquation
         return inverse;
     }
 
-    private double[][] solveDoubleArray(double[][] transformFromIdentity) {
+    public double[][] solveDoubleArray(double[][] transformFromIdentity) {
         int n = coefficients.length;
         // Update the matrix b[i][j] with the ratios stored
         for (int i=0; i < n-1; ++i) {

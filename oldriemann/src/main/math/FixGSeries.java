@@ -44,10 +44,10 @@ public class FixGSeries {
         System.out.println("derCoeff " + Arrays.toString(derCoeff));
         double[][] coefficients = new double[][]{zetaCoeff,derCoeff};
         double[][] incr = new double[][]{{1},{0.5}};
-        LinearEquation linearEquation = new LinearEquation(coefficients, incr);
-        double[][] solutionOdd = linearEquation.invert();
+        LinearEquation linearEquation = new LinearEquation(coefficients );
+        double[][] solutionOdd = linearEquation.solveDoubleArray(incr);
         double[] solution = new double[]{solutionOdd[0][0],solutionOdd[1][0]};
-        System.out.println(Arrays.toString(solution));
+        System.out.println("Required g increment " + Arrays.toString(solution));
 //        System.out.println("test " + changeZeta0(gAtBeta,
 //              initialPadding, t, midIdx, 1.0));
 //        System.out.println("test 1 " + changeZeta1(gAtBeta,
@@ -57,7 +57,12 @@ public class FixGSeries {
 
         gAtBeta.incrementGValueAtIndex(midIdx, solution);
         double[] after = evaluateAtT(t, initialPadding, gAtBeta);
+        double[] actualIncrement = new double[after.length];
+        for (int i = 0; i < actualIncrement.length; i++) {
+            actualIncrement[i] = after[i] - initial[i];
+        }
         System.out.println("after " + Arrays.toString(after));
+        System.out.println("actualIncrement " + Arrays.toString(actualIncrement));
     }
 
     static double[] evaluateAtT(double t, int initialPadding, GSeries gAtBeta) {
