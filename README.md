@@ -1,10 +1,9 @@
 # oshanker
-git clone https://github.com/oshanker/oshanker.git
 
-A respectable amount of Riemann zeta, Gram Points and Band Limited Functional Interpolation 
-code has built up in this repository. My goal was to have a separate repository for that code.
-That may happen some time in the future.
-For now, this is the home for that code, this is where it will live.
-
-zeros from https://people.math.osu.edu/hiary.1/amortized.html
+We have applied Machine Learning to the Riemann zeta function.
+We used [neural networks](https://www.researchgate.net/publication/273945970_Neural_Network_prediction_of_Riemann_zeta_zeros) 
+and [Deep learning](http://dx.doi.org/10.13140/RG.2.2.25733.83681) 
+(using LSTM).
+We present code and tex files related to Riemann zeta, Gram Points and 
+Band Limited Functional Interpolation. 
 
