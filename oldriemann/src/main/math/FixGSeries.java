@@ -23,30 +23,27 @@ public class FixGSeries {
         //oldMain();
         double[] nextValues = new double[]{
               243831.456494008, -22.69554476177354, 1.538114456203189};
-        double t = nextValues[0];
-        int idx = findFile(t);
+        double pointBeingInflunced = nextValues[0];
+        int fileIdx = findFile(pointBeingInflunced);
         final int initialPadding = 40;
 
         double maxDerDev = Double.MIN_VALUE;
         double maxMaxDev = Double.MIN_VALUE;
-        double t0 = gramE12[idx][0];
+        double t0 = gramE12[fileIdx][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getSavedGSeries(t0, offset);
-        double[] initial = evaluateAtT(t, initialPadding, gAtBeta);
-        int midIdx = gAtBeta.midIdx;
+        double[] initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        int midIdxCausingInfluence  = gAtBeta.midIdx;
 
         System.out.println("initial " + Arrays.toString(initial));
-        System.out.println("midIdx " + midIdx);
-        //double[][] coefficients = new double[2][2];
-        double[] zetaCoeff = changeToZeta(gAtBeta, initialPadding, t, initial[0], midIdx);
+        System.out.println("midIdx " + midIdxCausingInfluence);
+        double[] zetaCoeff = changeToZeta(gAtBeta, initialPadding, pointBeingInflunced, initial[0], midIdxCausingInfluence);
         System.out.println("zetaCoeff " + Arrays.toString(zetaCoeff));
-        double[] derCoeff = changeToDer(gAtBeta, initialPadding, t, initial[1], midIdx);
+        double[] derCoeff = changeToDer(gAtBeta, initialPadding, pointBeingInflunced, initial[1], midIdxCausingInfluence);
         System.out.println("derCoeff " + Arrays.toString(derCoeff));
         double[][] coefficients = new double[][]{zetaCoeff,derCoeff};
-        double[][] incr = new double[][]{{1},{0.5}};
         LinearEquation linearEquation = new LinearEquation(coefficients );
-        double[][] solutionOdd = linearEquation.solveDoubleArray(incr);
-        double[] solution = new double[]{solutionOdd[0][0],solutionOdd[1][0]};
+        double[] solution = linearEquation.solve(new double[]{1, 0.5});
         System.out.println("Required g increment " + Arrays.toString(solution));
 //        System.out.println("test " + changeZeta0(gAtBeta,
 //              initialPadding, t, midIdx, 1.0));
@@ -55,8 +52,8 @@ public class FixGSeries {
 //        System.out.println("test 2 " + (changeDer0(gAtBeta,
 //              initialPadding, t, midIdx, 1.0) ));
 
-        gAtBeta.incrementGValueAtIndex(midIdx, solution);
-        double[] after = evaluateAtT(t, initialPadding, gAtBeta);
+        gAtBeta.incrementGValueAtIndex(midIdxCausingInfluence, solution);
+        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
         double[] actualIncrement = new double[after.length];
         for (int i = 0; i < actualIncrement.length; i++) {
             actualIncrement[i] = after[i] - initial[i];

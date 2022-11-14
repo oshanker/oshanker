@@ -120,9 +120,33 @@ public class LinearEquation
         return inverse;
     }
 
+    public double[] solve(double[] transformFromIdentity) {
+        int n = coefficients.length;
+        for (int i=0; i < n-1; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                    int indexj = index[j];
+                    transformFromIdentity[indexj]
+                          -= coefficients[indexj][i] * transformFromIdentity[index[i]];
+            }
+        }
+
+        double inverse[] = new double[n];
+        inverse[n -1] =
+              transformFromIdentity[index[n -1]]/coefficients[index[n -1]][n -1];
+        for (int row = n -2; row>=0; --row)
+        {
+            inverse[row] = transformFromIdentity[index[row]];
+            for (int k = row+1; k< n; ++k)
+            {
+                inverse[row] -= coefficients[index[row]][k]*inverse[k];
+            }
+            inverse[row] /= coefficients[index[row]][row];
+        }
+        return inverse;
+    }
+
     public double[][] solveDoubleArray(double[][] transformFromIdentity) {
         int n = coefficients.length;
-        // Update the matrix b[i][j] with the ratios stored
         for (int i=0; i < n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {
                 for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN) {
@@ -134,7 +158,6 @@ public class LinearEquation
         }
 
         double inverse[][] = new double[n][transformFromIdentity[0].length];
-        // Perform backward substitutions
         for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN)
         {
             inverse[n -1][COLumN] =
