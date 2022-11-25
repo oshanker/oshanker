@@ -566,10 +566,11 @@ public class GSeriesTest {
 		int sampleSize = 25;
 		boolean testSaved = false;
 
+		System.out.println("** doing testSaved? " + testSaved + " ======");
 		if(testSaved) {
 			double t0 = StaticMethods.gramE12[idx][0];
 			final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-		   gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
+		    gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
 			sampleSize = 25;
 		} else {
 			gAtBeta = Interpolate.readGSeries();
