@@ -50,6 +50,7 @@ public class LinearEquationTest {
         double[] solution = linearEquation.solve(new double[]{1, 0.5});
         System.out.println("Required g increment " + Arrays.toString(solution));
 
+        System.out.println("multiply(coefficients, solution) " + Arrays.toString(LinearEquation.multiply(coefficients, solution)));
         double[][] requiredGIncrements = {
                 {0.13861482493261557, 0.8115131385775348},
                 {0, 0}

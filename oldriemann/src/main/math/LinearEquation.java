@@ -71,9 +71,16 @@ public class LinearEquation
         this.values = values;
     }
 
-    public LinearEquation(double[][] coefficients) {
-        this.coefficients = coefficients;
-        gaussian(coefficients);
+    public LinearEquation(double[][] coeff) {
+        this.coefficients = new double[coeff.length][coeff[0].length];
+        for(int row = 0; row < coefficients.length; row++)
+        {
+            for(int col = 0; col < coefficients[0].length; col ++)
+            {
+                this.coefficients[row][col ] = coeff[row][col ];
+            }
+        }
+        gaussian(this.coefficients);
     }
 
     public LinearEquation(int n) {
@@ -118,6 +125,17 @@ public class LinearEquation
 
         double[][] inverse = solveDoubleArray( transformFromIdentity);
         return inverse;
+    }
+
+    public static double[] multiply(double[][] matrix, double[] vector) {
+        double[] ret = new double[matrix.length];
+        for (int row = 0; row < matrix.length; row++) {
+            ret[row] = 0;
+            for (int col = 0; col < vector.length; col++) {
+                ret[row] += matrix[row][col]*vector[col];
+            }
+        }
+        return ret;
     }
 
     public double[] solve(double[] transformFromIdentity) {
