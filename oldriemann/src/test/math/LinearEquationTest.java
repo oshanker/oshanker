@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import static math.FixGSeries.changeToDer;
 import static math.FixGSeries.changeToZeta;
-import static math.FixGSeries.evaluateAtT;
+import static riemann.StaticMethods.evaluateAtT;
 import static org.junit.Assert.assertEquals;
 import static riemann.StaticMethods.findFile;
 import static riemann.StaticMethods.getSavedGSeries;
@@ -22,22 +22,23 @@ public class LinearEquationTest {
         double[] nextValues = {
                 243831.456494008, -22.69554476177354, 1.538114456203189};
         double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147} ;
-        double pointBeingInflunced = nextValues[0];
-        GSeries gAtBeta = getgSeries(pointBeingInflunced);
+        double[] pointBeingInflunced = {nextValues[0], nextValues1[0]};
+        GSeries gAtBeta = getgSeries(pointBeingInflunced[0]);
         double[] initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-        int midIdxCausingInfluence  = gAtBeta.midIdx;
+        System.out.println("initial " + Arrays.toString(initial));
+        int midIdxCausingInfluence  = 9994;
 
         double[] zetaCoeff = changeToZeta(
                 gAtBeta,
                 initialPadding,
-                pointBeingInflunced,
+                pointBeingInflunced[0],
                 initial[0],
                 midIdxCausingInfluence,
                 0.125
         );
         System.out.println("zetaCoeff " + Arrays.toString(zetaCoeff));
         double[] derCoeff = changeToDer(
-                gAtBeta, initialPadding, pointBeingInflunced, initial[1],
+                gAtBeta, initialPadding, pointBeingInflunced[0], initial[1],
                 midIdxCausingInfluence, 0.125
         );
         System.out.println("derCoeff " + Arrays.toString(derCoeff));
@@ -57,6 +58,7 @@ public class LinearEquationTest {
         };
         gAtBeta.incrementGValuesAtIndices(midIdxCausingInfluence, requiredGIncrements);
         double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        System.out.println("after " + Arrays.toString(after));
         double[] actualIncrement = new double[after.length];
         for (int i = 0; i < actualIncrement.length; i++) {
             actualIncrement[i] = after[i] - initial[i];

@@ -44,7 +44,17 @@ public class StaticMethods {
         {241406.83286765098, 248714.5783046993},
         {248714.8042054067, 256022.741415282},
     };
-
+    
+    public static double[] evaluateAtT(double[] t, int initialPadding, GSeries gAtBeta) {
+        double[] ret = new double[2*t.length];
+        for (int i = 0; i < t.length; i++) {
+            ret[2*i] = gAtBeta.evaluateZeta(t[i], initialPadding);
+            ret[2*i+1] = gAtBeta.evalDer(
+                t[i], initialPadding, 0.00025* gAtBeta.spacing);
+        }
+        return ret;
+    }
+    
     static void fixLimits(double[] oldest, double[] upper, double xmin, double dermin) {
        if(Math.signum(dermin) == Math.signum(oldest[1])){
            oldest[0]=xmin;
