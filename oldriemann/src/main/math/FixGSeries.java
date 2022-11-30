@@ -27,8 +27,6 @@ public class FixGSeries {
         int fileIdx = findFile(pointBeingInflunced);
         final int initialPadding = 40;
 
-        double maxDerDev = Double.MIN_VALUE;
-        double maxMaxDev = Double.MIN_VALUE;
         double t0 = gramE12[fileIdx][0];
         final BigDecimal offset = BigDecimal.valueOf(1.0E12);
         GSeries gAtBeta = getSavedGSeries(t0, offset);
@@ -47,12 +45,6 @@ public class FixGSeries {
         LinearEquation linearEquation = new LinearEquation(coefficients );
         double[] solution = linearEquation.solve(new double[]{1, 0.5});
         System.out.println("Required g increment " + Arrays.toString(solution));
-//        System.out.println("test " + changeZeta0(gAtBeta,
-//              initialPadding, t, midIdx, 1.0));
-//        System.out.println("test 1 " + changeZeta1(gAtBeta,
-//              initialPadding, t, midIdx, 1.0));
-//        System.out.println("test 2 " + (changeDer0(gAtBeta,
-//              initialPadding, t, midIdx, 1.0) ));
 
         gAtBeta.incrementGValueAtIndex(midIdxCausingInfluence, solution);
         double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
@@ -126,65 +118,52 @@ public class FixGSeries {
      */
     public static double[] changeToZeta(GSeries gSeries, final int initialPadding,
                                         double t, double initialValue, int midIdx, double increment) {
-        double[] a0 = {0,0};
-        double a00 = changeZeta0(gSeries, initialPadding, t, midIdx, increment);
+        double[] a0 = {0, 0};
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        
+        double a00 = gSeries.evaluateZeta(t, initialPadding);
         a0[0] = (a00-initialValue)/ increment;
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        
+        // change second index
 
-        double a01 = changeZeta1(gSeries, initialPadding, t, midIdx, increment);
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+        
+        double a01 = gSeries.evaluateZeta(t, initialPadding);
 
         a0[1] = (a01-initialValue)/ increment;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
         
         return a0;
     }
-
-    private static double changeZeta1(GSeries gSeries, int initialPadding, double t, int midIdx, double increment) {
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
-        double a0ValAtZero1 = gSeries.evaluateZeta(t, initialPadding);
-        double a01 = (a0ValAtZero1);
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
-        return a01;
-    }
-
-    private static double changeZeta0(GSeries gSeries, int initialPadding, double t,
-                                      int midIdx, double increment) {
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-        double a0ValAtZero = gSeries.evaluateZeta(t, initialPadding);
-        double a00 = (a0ValAtZero) ;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
-        return a00;
-    }
-
+    
     public static double[] changeToDer(GSeries gSeries, final int initialPadding,
                                        double zero, double derAtZero, int midIdx, double increment) {
         double[] a0 = {0, 0};
 
-        double a0ValAtZero = changeDer0(gSeries, initialPadding, zero, midIdx, increment);
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        double a0ValAtZero = gSeries.evalDer(
+            zero, initialPadding, 0.00025* gSeries.spacing);
         a0[0] = (a0ValAtZero-derAtZero)/ increment;
-
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+    
+        // change second index
+    
         gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
         a0ValAtZero = gSeries.evalDer(
               zero, initialPadding, 0.00025* gSeries.spacing);;
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
-
         a0[1] = (a0ValAtZero-derAtZero)/ increment;
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+    
         return a0;
     }
-
-    private static double changeDer0(GSeries gSeries, int initialPadding, double zero,
-                                     int midIdx, double increment) {
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-        double a0ValAtZero = gSeries.evalDer(
-              zero, initialPadding, 0.00025* gSeries.spacing);
-        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
-        return a0ValAtZero;
-    }
-
-    public static double[] evalGSeriesIncrement(GSeries gSeries, int midIdx, 
+    
+    public static double[] evalGSeriesIncrement(GSeries gSeries, int midIdx,
             final int initialPadding, double[] currentParams) {
         double zero = currentParams[0],  expectedDer = currentParams[1];
         double tmin = currentParams[3];
         double expectedMin = expectedDer<0?-currentParams[2]:currentParams[2];
-//        double xmin = FixGSeries.xmin(gSeries, initialPadding, tmin);
         double evalAtMin = Interpolate.evaluateZeta(tmin, initialPadding, gSeries);
 
         double valAtZero = Interpolate.evaluateZeta(zero, initialPadding, gSeries);
