@@ -55,6 +55,57 @@ public class StaticMethods {
         return ret;
     }
     
+    /**
+     * change in val at t by changing gseries coeff at midIdx
+     */
+    public static double[][] changeToZeta(GSeries gSeries, final int initialPadding,
+                                        double[] t, double[] initialValue, int midIdx, double increment) {
+        double[][] a0 = new double[t.length][2];
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        for (int i = 0; i < t.length; i++) {
+            a0[i][0] = (gSeries.evaluateZeta(t[i], initialPadding)-initialValue[2*i])/ increment;
+        }
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        
+        // change second index
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+    
+        for (int i = 0; i < t.length; i++) {
+           a0[i][1] = (gSeries.evaluateZeta(t[i], initialPadding) - initialValue[2*i]) / increment;
+        }
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        
+        return a0;
+    }
+    
+    public static double[][] changeToDer(GSeries gSeries, final int initialPadding,
+                                       double[] zero, double[] derAtZero, int midIdx, double increment) {
+        double[][] a0 = new double[zero.length][2];
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        for (int i = 0; i < zero.length; i++) {
+            double a0ValAtZero = gSeries.evalDer(
+                zero[i], initialPadding, 0.00025 * gSeries.spacing);
+            a0[i][0] = (a0ValAtZero - derAtZero[2 * i + 1]) / increment;
+        }
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        
+        // change second index
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+        for (int i = 0; i < zero.length; i++) {
+            double a0ValAtZero = gSeries.evalDer(
+                zero[i], initialPadding, 0.00025 * gSeries.spacing);
+            
+            a0[i][1] = (a0ValAtZero - derAtZero[2*i + 1]) / increment;
+        }
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        
+        return a0;
+    }
+    
     static void fixLimits(double[] oldest, double[] upper, double xmin, double dermin) {
        if(Math.signum(dermin) == Math.signum(oldest[1])){
            oldest[0]=xmin;

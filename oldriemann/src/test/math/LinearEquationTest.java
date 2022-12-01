@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static math.FixGSeries.changeToDer;
-import static math.FixGSeries.changeToZeta;
+import static riemann.StaticMethods.changeToDer;
+import static riemann.StaticMethods.changeToZeta;
 import static riemann.StaticMethods.evaluateAtT;
 import static org.junit.Assert.assertEquals;
 import static riemann.StaticMethods.findFile;
@@ -28,30 +28,34 @@ public class LinearEquationTest {
         System.out.println("initial " + Arrays.toString(initial));
         int midIdxCausingInfluence  = 9994;
 
-        double[] zetaCoeff = changeToZeta(
+        double[][] zetaCoeff = changeToZeta(
                 gAtBeta,
                 initialPadding,
-                pointBeingInflunced[0],
-                initial[0],
+                pointBeingInflunced,
+                initial,
                 midIdxCausingInfluence,
                 0.125
         );
-        System.out.println("zetaCoeff " + Arrays.toString(zetaCoeff));
-        double[] derCoeff = changeToDer(
-                gAtBeta, initialPadding, pointBeingInflunced[0], initial[1],
+        System.out.println("zetaCoeff " + Arrays.deepToString(zetaCoeff));
+        double[][] derCoeff = changeToDer(
+                gAtBeta, initialPadding, pointBeingInflunced, initial,
                 midIdxCausingInfluence, 0.125
         );
-        System.out.println("derCoeff " + Arrays.toString(derCoeff));
+        System.out.println("derCoeff " + Arrays.deepToString(derCoeff));
 
         // row = gseries indices
         // col = points being influenced
-        double[][] coefficients = new double[][]{zetaCoeff,derCoeff};
+        double[][] coefficients = new double[][]{zetaCoeff[0], derCoeff[0]};
         LinearEquation linearEquation = new LinearEquation(coefficients );
 
         double[] solution = linearEquation.solve(new double[]{1, 0.5});
         System.out.println("Required g increment " + Arrays.toString(solution));
 
-        System.out.println("multiply(coefficients, solution) " + Arrays.toString(LinearEquation.multiply(coefficients, solution)));
+        System.out.println("multiply(coefficients, solution) " +
+            Arrays.toString(LinearEquation.multiply(coefficients, solution)));
+        double[][] coefficients1 = new double[][]{zetaCoeff[1], derCoeff[1]};
+        System.out.println("multiply(coefficients1, solution) " +
+            Arrays.toString(LinearEquation.multiply(coefficients1, solution)));
         double[][] requiredGIncrements = {
                 {0.13861482493261557, 0.8115131385775348},
                 {0, 0}
