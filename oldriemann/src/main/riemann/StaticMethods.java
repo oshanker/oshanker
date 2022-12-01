@@ -55,6 +55,35 @@ public class StaticMethods {
         return ret;
     }
     
+    public static double[][] changeToZetaAndDer(GSeries gSeries, final int initialPadding,
+                                          double[] t, double[] initialValue, int midIdx, double increment) {
+        double[][] a0 = new double[2*t.length][2];
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+        for (int i = 0; i < t.length; i++) {
+            a0[2*i][0] = (gSeries.evaluateZeta(t[i], initialPadding)-initialValue[2*i])/ increment;
+            double a0ValAtZero = gSeries.evalDer(
+                t[i], initialPadding, 0.00025 * gSeries.spacing);
+            a0[2*i+1][0] = (a0ValAtZero - initialValue[2 * i + 1]) / increment;
+        }
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+        
+        // change second index
+        
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+        
+        for (int i = 0; i < t.length; i++) {
+            a0[2*i][1] = (gSeries.evaluateZeta(t[i], initialPadding) - initialValue[2*i]) / increment;
+            double a0ValAtZero = gSeries.evalDer(
+                t[i], initialPadding, 0.00025 * gSeries.spacing);
+    
+            a0[2*i + 1][1] = (a0ValAtZero - initialValue[2*i + 1]) / increment;
+        }
+        gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        
+        return a0;
+    }
+    
     /**
      * change in val at t by changing gseries coeff at midIdx
      */

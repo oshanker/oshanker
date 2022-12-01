@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import static riemann.StaticMethods.changeToDer;
 import static riemann.StaticMethods.changeToZeta;
+import static riemann.StaticMethods.changeToZetaAndDer;
 import static riemann.StaticMethods.evaluateAtT;
 import static org.junit.Assert.assertEquals;
 import static riemann.StaticMethods.findFile;
@@ -70,6 +71,18 @@ public class LinearEquationTest {
         System.out.println("actualIncrement " + Arrays.toString(actualIncrement));
         assertEquals(1.0, actualIncrement[0], 0.000001);
         assertEquals(0.5, actualIncrement[1], 0.000001);
+    
+        gAtBeta.decrementGValuesAtIndices(midIdxCausingInfluence, requiredGIncrements);
+    
+        double[][] zetaDerCoeff = changeToZetaAndDer(
+            gAtBeta,
+            initialPadding,
+            pointBeingInflunced,
+            initial,
+            midIdxCausingInfluence,
+            0.125
+        );
+        System.out.println("zetaCoeff " + Arrays.deepToString(zetaDerCoeff));
     }
 
     private GSeries getgSeries(double pointBeingInflunced) throws IOException {
