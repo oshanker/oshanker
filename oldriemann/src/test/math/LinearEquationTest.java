@@ -1,5 +1,6 @@
 package math;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -16,18 +17,24 @@ import static riemann.StaticMethods.getSavedGSeries;
 import static riemann.StaticMethods.gramE12;
 
 public class LinearEquationTest {
-    final int initialPadding = 40;
-
+    static final int initialPadding = 40;
+    static double[] nextValues = {
+        243831.456494008, -22.69554476177354, 1.538114456203189};
+    static double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147} ;
+    static double[] pointBeingInflunced = {nextValues[0], nextValues1[0]};
+    static GSeries gAtBeta = null;
+    static double[] initial = null;
+    int midIdxCausingInfluence  = 9994;
+    
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        System.out.println("initial " + Arrays.toString(initial));
+        gAtBeta = getgSeries(pointBeingInflunced[0]);
+    }
+    
     @Test
     public void testIncrementGValuesAtIndices() throws IOException {
-        double[] nextValues = {
-                243831.456494008, -22.69554476177354, 1.538114456203189};
-        double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147} ;
-        double[] pointBeingInflunced = {nextValues[0], nextValues1[0]};
-        GSeries gAtBeta = getgSeries(pointBeingInflunced[0]);
-        double[] initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-        System.out.println("initial " + Arrays.toString(initial));
-        int midIdxCausingInfluence  = 9994;
 
         double[][] zetaCoeff = changeToZeta(
                 gAtBeta,
@@ -87,7 +94,7 @@ public class LinearEquationTest {
         System.out.println("zetaderCoeff " + Arrays.deepToString(zetaDerCoeff));
     }
 
-    private GSeries getgSeries(double pointBeingInflunced) throws IOException {
+    private static GSeries getgSeries(double pointBeingInflunced) throws IOException {
         int fileIdx = findFile(pointBeingInflunced);
 
         double t0 = gramE12[fileIdx][0];
