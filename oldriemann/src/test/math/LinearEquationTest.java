@@ -21,7 +21,10 @@ public class LinearEquationTest {
     static double[] nextValues = {
         243831.456494008, -22.69554476177354, 1.538114456203189};
     static double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147} ;
-    static double[] pointBeingInflunced = {nextValues[0], nextValues1[0]};
+    static double[]  nextValues2 = {243831.92506103282, -46.745064213360436, 4.265426650034286} ;
+    
+    //static double[] pointBeingInflunced = {nextValues[0], nextValues1[0]};
+    static double[] pointBeingInflunced = {nextValues[0], nextValues1[0], nextValues2[0]};
     static GSeries gAtBeta = null;
     static double[] initial = null;
     int midIdxCausingInfluence  = 9994;
@@ -98,7 +101,7 @@ public class LinearEquationTest {
     
     @Test
     public void testChangeToZetaAndDer() {
-        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence+1};
+        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence+1, midIdxCausingInfluence+2};
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -112,9 +115,10 @@ public class LinearEquationTest {
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
     
         double[] solution = linearEquation.solve(
-            new double[]{1, 0.5, -0.16821753315955723, -2.0541382955436056});
+            new double[]{1, 0.5, -0.16821753315955723, -2.0541382955436056, -0.06545828959341304, -1.0119912921417438});
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
+
 //        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
 //        System.out.println("after " );
 //        System.out.println( Arrays.toString(after));
