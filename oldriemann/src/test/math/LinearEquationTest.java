@@ -28,13 +28,13 @@ public class LinearEquationTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception {
+        gAtBeta = getgSeries(pointBeingInflunced[0]);
         initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
         System.out.println("initial " + Arrays.toString(initial));
-        gAtBeta = getgSeries(pointBeingInflunced[0]);
     }
     
     @Test
-    public void testIncrementGValuesAtIndices() throws IOException {
+    public void testIncrementGValuesAtIndices() {
 
         double[][] zetaCoeff = changeToZeta(
                 gAtBeta,
@@ -82,7 +82,7 @@ public class LinearEquationTest {
         System.out.println("derCoeff " + Arrays.deepToString(derCoeff));
     
         //================================
-        int[] indices = {midIdxCausingInfluence};
+        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence+1};
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -91,9 +91,35 @@ public class LinearEquationTest {
             indices,
             0.125
         );
-        System.out.println("zetaderCoeff " + Arrays.deepToString(zetaDerCoeff));
+        System.out.println("zetaderCoeff " );
+        LinearEquation.printMatrix(zetaDerCoeff);
     }
-
+    
+    
+    @Test
+    public void testChangeToZetaAndDer() {
+        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence+1};
+        double[][] zetaDerCoeff = changeToZetaAndDer(
+            gAtBeta,
+            initialPadding,
+            pointBeingInflunced,
+            initial,
+            indices,
+            0.125
+        );
+        System.out.println("zetaderCoeff " );
+        LinearEquation.printMatrix(zetaDerCoeff);
+        LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
+    
+        double[] solution = linearEquation.solve(
+            new double[]{1, 0.5, -0.16821753315955723, -2.0541382955436056});
+        System.out.println("Required g increment " );
+        System.out.println( Arrays.toString(solution));
+//        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+//        System.out.println("after " );
+//        System.out.println( Arrays.toString(after));
+    }
+    
     private static GSeries getgSeries(double pointBeingInflunced) throws IOException {
         int fileIdx = findFile(pointBeingInflunced);
 

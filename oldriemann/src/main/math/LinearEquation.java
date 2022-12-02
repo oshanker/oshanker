@@ -35,7 +35,7 @@ public class LinearEquation
 
     }
 
-    void printMatrix(double[][] inverted_mat) {
+    public static void printMatrix(double[][] inverted_mat) {
         for (int i = 0; i < inverted_mat.length; ++i)
         {
             for (int j = 0; j < inverted_mat[i].length; ++j)
