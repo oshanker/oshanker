@@ -37,12 +37,10 @@ public class LinearEquationTest {
                 midIdxCausingInfluence,
                 0.125
         );
-        System.out.println("zetaCoeff " + Arrays.deepToString(zetaCoeff));
         double[][] derCoeff = changeToDer(
                 gAtBeta, initialPadding, pointBeingInflunced, initial,
                 midIdxCausingInfluence, 0.125
         );
-        System.out.println("derCoeff " + Arrays.deepToString(derCoeff));
 
         // row = gseries indices
         // col = points being influenced
@@ -73,16 +71,20 @@ public class LinearEquationTest {
         assertEquals(0.5, actualIncrement[1], 0.000001);
     
         gAtBeta.decrementGValuesAtIndices(midIdxCausingInfluence, requiredGIncrements);
+        System.out.println("zetaCoeff " + Arrays.deepToString(zetaCoeff));
+        System.out.println("derCoeff " + Arrays.deepToString(derCoeff));
     
+        //================================
+        int[] indices = {midIdxCausingInfluence};
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
             pointBeingInflunced,
             initial,
-            midIdxCausingInfluence,
+            indices,
             0.125
         );
-        System.out.println("zetaCoeff " + Arrays.deepToString(zetaDerCoeff));
+        System.out.println("zetaderCoeff " + Arrays.deepToString(zetaDerCoeff));
     }
 
     private GSeries getgSeries(double pointBeingInflunced) throws IOException {
