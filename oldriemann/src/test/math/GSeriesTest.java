@@ -628,18 +628,22 @@ public class GSeriesTest {
             assertEquals("der",expectedDer, der, deltader);
             double absDer = Math.abs(expectedDer - der);
             System.out.println("** i " + i + " ===========================");
-            System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
+            boolean maxUpdated = false;
+            System.out.println("zeroPosition " + zeroPosition +
+                " : eval from GSeries: " + zeta + " midIdx " + gAtBeta.midIdx);
             System.out.println(
                     "expectedDer  "
                             + expectedDer
                             + " : eval from GSeries: " + der
                             + " diff(der) " + absDer
             );
-            if(Math.abs(zeta) > maxDerDev){
+            if(Math.abs(zeta) > maxZeroDev){
                 maxZeroDev = Math.abs(zeta);
+                maxUpdated = true;
             }
             if(absDer > maxDerDev){
                 maxDerDev = absDer;
+                maxUpdated = true;
             }
             if (i>1) {
                 Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
@@ -680,11 +684,15 @@ public class GSeriesTest {
                         );
                     }
                 }
-                System.out.println( " ===========================");
                 if(Math.abs(maxDev) > maxMaxDev){
                     maxMaxDev = Math.abs(maxDev);
                 }
                 assertEquals("max", extremumFromFile, evalMax, deltamax);
+                if (maxUpdated) {
+                    System.out.println( " =========*******===========");
+                } else {
+                    System.out.println( " ===========================");
+                }
             }
             System.out.println(
                     "nextValues " + Arrays.toString(nextValues)
