@@ -162,6 +162,20 @@ public class GSeries {
             this.gAtBeta[i+startIndex][1] -= valuesToIncrement[i][1];
         }
     }
+    
+    public void incrementGValuesAtIndices(int startIndex, double[] valuesToIncrement) {
+        for (int i = 0; i < valuesToIncrement.length/2; i++) {
+            this.gAtBeta[i+startIndex][0] += valuesToIncrement[2*i];
+            this.gAtBeta[i+startIndex][1] += valuesToIncrement[2*i+1];
+        }
+    }
+    
+    public void decrementGValuesAtIndices(int startIndex, double[] valuesToIncrement) {
+        for (int i = 0; i < valuesToIncrement.length/2; i++) {
+            this.gAtBeta[i+startIndex][0] -= valuesToIncrement[2*i];
+            this.gAtBeta[i+startIndex][1] -= valuesToIncrement[2*i+1];
+        }
+    }
 
     public  double evaluateDer(double zero, final int initialPadding) {
         double delta = 0.001*spacing;

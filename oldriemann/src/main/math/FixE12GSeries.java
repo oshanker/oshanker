@@ -149,6 +149,16 @@ public class FixE12GSeries {
             });
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
+        gAtBeta.incrementGValuesAtIndices(indices[0], solution);
+        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        System.out.println("after " + Arrays.toString(after));
+        double[] actualIncrement = new double[after.length];
+        for (int i = 0; i < actualIncrement.length; i++) {
+            actualIncrement[i] = after[i] - initial[i];
+        }
+        System.out.println("actualIncrement " );
+        System.out.println( Arrays.toString(actualIncrement));
+
 
 //        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
 //        System.out.println("after " );
