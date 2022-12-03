@@ -29,6 +29,7 @@ public class FixE12GSeries {
                 {243832.1554065314, 81.36514195973275, 17.833911663155945},
                 {243832.65617699016, -38.76085656480121, 1.0548384326966262},
                 {243832.7750114288, 29.690772236512505, 4.33929464564258},
+                {243833.16396249548, -15.05094530616091, 0.5122852558563304},
             },
             //9999
             1999912
@@ -41,6 +42,7 @@ public class FixE12GSeries {
         pointBeingInflunced = new double[]{
             nextValues[0][0], nextValues[1][0],
             nextValues[2][0], nextValues[3][0],
+            nextValues[4][0],
         };
         init();
     }
@@ -122,7 +124,8 @@ public class FixE12GSeries {
     
     public void testChangeToZetaAndDer() {
         int[] indices = {
-            midIdxCausingInfluence-2, midIdxCausingInfluence-1, midIdxCausingInfluence, midIdxCausingInfluence+1,
+            midIdxCausingInfluence-2, midIdxCausingInfluence-1, midIdxCausingInfluence,
+            midIdxCausingInfluence+1, midIdxCausingInfluence+2,
         };
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
@@ -139,7 +142,9 @@ public class FixE12GSeries {
         double[] solution = linearEquation.solve(
             new double[]{
                 //0.029814082487805593, 0.1994990926788418, 0.08136282505069659, 2.125999647229591, 0.9999999999999996, 0.5000000000951985, 0.38281568257124876, -7.700267711652717,
-                -1.5533670572054348E-7, 3.455601111568285E-5, 0.002939713190428961, 0.17302076126421184, 1.0000000000000138, 0.5000000000195968, -0.6319767951186775, 5.067432651792831,
+                -1.5533670572054348E-7, 3.455601111568285E-5, 0.002939713190428961, 0.17302076126421184, 1.0000000000000138,
+                0.5000000000195968, -0.6319767951186775, 5.067432651792831,
+                -4.3272877404021415E-5, 0.0026806606801486055
 
             });
         System.out.println("Required g increment " );
