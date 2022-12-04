@@ -19,8 +19,8 @@ public class FixE12GSeries {
     double[][] nextValues;
     
     double[] pointBeingInflunced;
-    static GSeries gAtBeta = null;
-    static double[] initial = null;
+    GSeries gAtBeta = null;
+    double[] initial = null;
     int midIdxCausingInfluence;
     
     public FixE12GSeries() {
@@ -122,7 +122,7 @@ public class FixE12GSeries {
         LinearEquation.printMatrix(zetaDerCoeff);
     }
     
-    public void testChangeToZetaAndDer() {
+    public GSeries testChangeToZetaAndDer() {
         int[] indices = {
             midIdxCausingInfluence-2, midIdxCausingInfluence-1, midIdxCausingInfluence,
             midIdxCausingInfluence+1, midIdxCausingInfluence+2,
@@ -135,18 +135,26 @@ public class FixE12GSeries {
             indices,
             0.125
         );
-        System.out.println("zetaderCoeff " );
-        LinearEquation.printMatrix(zetaDerCoeff);
+        double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
+        for (int i = 0; i < pointBeingInflunced.length; i++) {
+            neededZetaIncrement[2*i] =  - initial[2*i];
+            neededZetaIncrement[2*i+1] =  nextValues[i][1] - initial[2*i+1];
+        }
+    
+        //System.out.println("zetaderCoeff " );
+        //LinearEquation.printMatrix(zetaDerCoeff);
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
     
         double[] solution = linearEquation.solve(
-            new double[]{
-                //0.029814082487805593, 0.1994990926788418, 0.08136282505069659, 2.125999647229591, 0.9999999999999996, 0.5000000000951985, 0.38281568257124876, -7.700267711652717,
-                -1.5533670572054348E-7, 3.455601111568285E-5, 0.002939713190428961, 0.17302076126421184, 1.0000000000000138,
-                0.5000000000195968, -0.6319767951186775, 5.067432651792831,
-                -4.3272877404021415E-5, 0.0026806606801486055
-
-            });
+            neededZetaIncrement
+//            new double[]{
+//                //0.029814082487805593, 0.1994990926788418, 0.08136282505069659, 2.125999647229591, 0.9999999999999996, 0.5000000000951985, 0.38281568257124876, -7.700267711652717,
+//                -1.5533670572054348E-7, 3.455601111568285E-5, 0.002939713190428961, 0.17302076126421184, 1.0000000000000138,
+//                0.5000000000195968, -0.6319767951186775, 5.067432651792831,
+//                -4.3272877404021415E-5, 0.0026806606801486055
+//
+//            }
+            );
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
         gAtBeta.incrementGValuesAtIndices(indices[0], solution);
@@ -158,11 +166,8 @@ public class FixE12GSeries {
         }
         System.out.println("actualIncrement " );
         System.out.println( Arrays.toString(actualIncrement));
-
-
-//        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-//        System.out.println("after " );
-//        System.out.println( Arrays.toString(after));
+        
+        return gAtBeta;
     }
     
     private static GSeries getgSeries(double pointBeingInflunced)  {

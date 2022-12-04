@@ -596,19 +596,28 @@ public class GSeriesTest {
         double deltader = 0.000025;
         double deltamax = 5.0E-7;
         int sampleSize = 25;
-        boolean testSaved = false;
+        String gbetaSource = "Interpolate";
 
-        System.out.println("** doing testSaved? " + testSaved + " ======");
-        if(testSaved) {
-            double t0 = StaticMethods.gramE12[idx][0];
-            final BigDecimal offset = BigDecimal.valueOf(1.0E12);
-            gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
-            sampleSize = 25;
-        } else {
-            gAtBeta = Interpolate.readGSeries();
-            upperforzero = 0.5;
-            deltader = 10.0;
-            deltamax = 1.0;
+        System.out.println("** gbetaSource " + gbetaSource + " ======");
+        switch (gbetaSource) {
+            case "Saved":
+                double t0 = StaticMethods.gramE12[idx][0];
+                final BigDecimal offset = BigDecimal.valueOf(1.0E12);
+                gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
+                break;
+            case "Interpolate":
+                gAtBeta = Interpolate.readGSeries();
+                upperforzero = 0.5;
+                deltader = 10.0;
+                deltamax = 1.0;
+                break;
+            default:
+                FixE12GSeries fixE12GSeries = new FixE12GSeries();
+                gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
+                upperforzero = 0.5;
+                deltader = 10.0;
+                deltamax = 1.0;
+                
         }
 
         //25 rows zero expectedDer
