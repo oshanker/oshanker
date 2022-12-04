@@ -700,6 +700,9 @@ public class GSeriesTest {
                 }
                 double[] oldZero = zeroInfo.getLast();
                 oldZero[3] = positionMax;
+                if (oldZero[1] < 0) {
+                    oldZero[2] = - oldZero[2];
+                }
                 if(Math.abs(maxDev) > maxMaxDev){
                     maxMaxDev = Math.abs(maxDev);
                 }
