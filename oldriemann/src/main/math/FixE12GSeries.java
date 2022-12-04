@@ -1,5 +1,6 @@
 package math;
 
+import javafx.util.Pair;
 import riemann.Interpolate;
 
 import java.io.IOException;
@@ -124,19 +125,17 @@ public class FixE12GSeries {
     }
     
     public GSeries testChangeToZetaAndDer() {
-        int[] indices = {
-            midIdxCausingInfluence-2, midIdxCausingInfluence-1, midIdxCausingInfluence,
-            midIdxCausingInfluence+1, midIdxCausingInfluence+2,
-        };
     
-        pointBeingInflunced = new double[]{
-            nextValues[0][0], nextValues[1][0],
-            nextValues[2][0], nextValues[3][0],
-            nextValues[4][0],
-        };
-    
-        double[] initial = evaluateNextValues(nextValues, initialPadding, gAtBeta);
+        Pair<double[], double[]> initValues = evaluateNextValues(nextValues, initialPadding, gAtBeta);
+        double[] initial = initValues.getKey();
+        pointBeingInflunced = initValues.getValue();
+        
         System.out.println("initial " + Arrays.toString(initial));
+        int[] indices = new int[pointBeingInflunced.length];
+        int idxOfCentral = indices.length/2 + 1;
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = midIdxCausingInfluence + 1 - idxOfCentral + i;
+        }
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -168,7 +167,7 @@ public class FixE12GSeries {
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
         gAtBeta.incrementGValuesAtIndices(indices[0], solution);
-        double[] after = evaluateNextValues(nextValues, initialPadding, gAtBeta);
+        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
         System.out.println("after " + Arrays.toString(after));
         double[] actualIncrement = new double[after.length];
         for (int i = 0; i < actualIncrement.length; i++) {
@@ -180,20 +179,27 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
-    public static double[] evaluateNextValues(
+    public static Pair<double[], double[]> evaluateNextValues(
         double[][] nextValues, int initialPadding, GSeries gAtBeta) {
+        Pair<double[], double[]> pair;
         LinkedList<Double> values = new LinkedList<>();
+        LinkedList<Double> pointBeingInflunced = new LinkedList<>();
         for (int i = 0; i < nextValues.length; i++) {
+            pointBeingInflunced.add(nextValues[i][0]);
             values.add(
                 gAtBeta.evaluateZeta(nextValues[i][0], initialPadding));
             values.add( gAtBeta.evalDer(
                 nextValues[i][0], initialPadding, 0.00025* gAtBeta.spacing));
         }
-        double[] ret = new double[values.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = values.pollFirst();
+        double[] eval = new double[values.size()];
+        for (int i = 0; i < eval.length; i++) {
+            eval[i] = values.pollFirst();
         }
-        return ret;
+        double[] points = new double[pointBeingInflunced.size()];
+        for (int i = 0; i < points.length; i++) {
+            points[i] = pointBeingInflunced.pollFirst();
+        }
+        return new Pair<>(eval, points);
     }
     
     private static GSeries getgSeries(double pointBeingInflunced)  {
