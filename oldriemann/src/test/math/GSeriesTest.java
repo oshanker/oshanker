@@ -23,6 +23,8 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.LinkedList;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -627,6 +629,9 @@ public class GSeriesTest {
         double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
         // cant go below 40
         final int initialPadding = 40;
+    
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
             double expectedDer =  nextValues[1];
@@ -654,7 +659,7 @@ public class GSeriesTest {
                 maxDerDev = absDer;
                 maxUpdated = true;
             }
-            if (i>1) {
+            if (i>0) {
                 Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
                         extremumFromFile);
                 double positionMax = poly.getPositionMax();
@@ -693,6 +698,8 @@ public class GSeriesTest {
                         );
                     }
                 }
+                double[] oldZero = zeroInfo.getLast();
+                oldZero[3] = positionMax;
                 if(Math.abs(maxDev) > maxMaxDev){
                     maxMaxDev = Math.abs(maxDev);
                 }
@@ -703,6 +710,9 @@ public class GSeriesTest {
                     System.out.println( " ===========================");
                 }
             }
+            double[] zeroEntry = new double[4];
+            System.arraycopy(nextValues, 0, zeroEntry, 0, nextValues.length);
+            zeroInfo.add(zeroEntry);
             System.out.println(
                     "nextValues " + Arrays.toString(nextValues)
                             + " extremumFromFile " + extremumFromFile
@@ -717,6 +727,11 @@ public class GSeriesTest {
             }
         }
         System.out.println("done");
+        for (double[] zeroEntry: zeroInfo) {
+            System.out.println(
+                Arrays.toString(zeroEntry)
+            );
+        }
         System.out.println(
                 "maxZeroDev  " + maxZeroDev
         );
