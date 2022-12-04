@@ -5,6 +5,7 @@ import riemann.Interpolate;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import static riemann.StaticMethods.changeToDer;
 import static riemann.StaticMethods.changeToZeta;
@@ -39,11 +40,6 @@ public class FixE12GSeries {
     public FixE12GSeries(double[][] nextValues, int midIdxCausingInfluence) {
         this.nextValues = nextValues;
         this.midIdxCausingInfluence = midIdxCausingInfluence;
-        pointBeingInflunced = new double[]{
-            nextValues[0][0], nextValues[1][0],
-            nextValues[2][0], nextValues[3][0],
-            nextValues[4][0],
-        };
         init();
     }
     
@@ -54,12 +50,17 @@ public class FixE12GSeries {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    
-        initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-        System.out.println("initial " + Arrays.toString(initial));
     }
     
     public void testIncrementGValuesAtIndices() {
+    
+        pointBeingInflunced = new double[]{
+            nextValues[0][0], nextValues[1][0],
+            nextValues[2][0], nextValues[3][0],
+            nextValues[4][0],
+        };
+        initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        System.out.println("initial " + Arrays.toString(initial));
 
         double[][] zetaCoeff = changeToZeta(
                 gAtBeta,
@@ -127,6 +128,15 @@ public class FixE12GSeries {
             midIdxCausingInfluence-2, midIdxCausingInfluence-1, midIdxCausingInfluence,
             midIdxCausingInfluence+1, midIdxCausingInfluence+2,
         };
+    
+        pointBeingInflunced = new double[]{
+            nextValues[0][0], nextValues[1][0],
+            nextValues[2][0], nextValues[3][0],
+            nextValues[4][0],
+        };
+    
+        double[] initial = evaluateNextValues(nextValues, initialPadding, gAtBeta);
+        System.out.println("initial " + Arrays.toString(initial));
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -158,7 +168,7 @@ public class FixE12GSeries {
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
         gAtBeta.incrementGValuesAtIndices(indices[0], solution);
-        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        double[] after = evaluateNextValues(nextValues, initialPadding, gAtBeta);
         System.out.println("after " + Arrays.toString(after));
         double[] actualIncrement = new double[after.length];
         for (int i = 0; i < actualIncrement.length; i++) {
@@ -168,6 +178,22 @@ public class FixE12GSeries {
         System.out.println( Arrays.toString(actualIncrement));
         
         return gAtBeta;
+    }
+    
+    public static double[] evaluateNextValues(
+        double[][] nextValues, int initialPadding, GSeries gAtBeta) {
+        LinkedList<Double> values = new LinkedList<>();
+        for (int i = 0; i < nextValues.length; i++) {
+            values.add(
+                gAtBeta.evaluateZeta(nextValues[i][0], initialPadding));
+            values.add( gAtBeta.evalDer(
+                nextValues[i][0], initialPadding, 0.00025* gAtBeta.spacing));
+        }
+        double[] ret = new double[values.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = values.pollFirst();
+        }
+        return ret;
     }
     
     private static GSeries getgSeries(double pointBeingInflunced)  {
