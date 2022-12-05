@@ -622,6 +622,8 @@ public class GSeriesTest {
                 
         }
 
+        int iMax = 0;
+        
         //25 rows zero expectedDer
 
         double[] nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, firstZero);
@@ -681,7 +683,7 @@ public class GSeriesTest {
                         "positionMax der " + Arrays.toString(maxder)
                 );
                 for (int j = 0; j < 2; j++) {
-                    if(Math.abs(maxder[0]) > 0.0001 &&  Math.abs(maxDev) > 0.00000001) {
+                    if(Math.abs(maxder[0]) > 0.0001 ) {
                         positionMax -= maxder[0] /maxder[1];
                         evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
                         maxDev = extremumFromFile - evalMax;
@@ -705,6 +707,7 @@ public class GSeriesTest {
                 }
                 if(Math.abs(maxDev) > maxMaxDev){
                     maxMaxDev = Math.abs(maxDev);
+                    iMax = i;
                 }
                 assertEquals("max", extremumFromFile, evalMax, deltamax);
                 if (maxUpdated) {
@@ -743,6 +746,7 @@ public class GSeriesTest {
         );
         System.out.println(
                 "maxMaxDev  " + maxMaxDev
+            + " iMax " + iMax
         );
     }
 
