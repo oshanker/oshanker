@@ -132,10 +132,12 @@ public class FixE12GSeries {
         
         System.out.println("initial " + Arrays.toString(initial));
         int[] indices = new int[pointBeingInflunced.length];
-        int idxOfCentral = indices.length/2 + 1;
+        int idxOfCentral = indices.length/2 ;
         for (int i = 0; i < indices.length; i++) {
-            indices[i] = midIdxCausingInfluence + 1 - idxOfCentral + i;
+            indices[i] = midIdxCausingInfluence  - idxOfCentral + i;
         }
+        System.out.println(Arrays.toString(indices));
+        
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -146,29 +148,37 @@ public class FixE12GSeries {
         );
         double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
         for (int i = 0; i < pointBeingInflunced.length; i++) {
-            neededZetaIncrement[2*i] =  - initial[2*i];
-            neededZetaIncrement[2*i+1] =  nextValues[i][1] - initial[2*i+1];
+            int indexIntoNext = i/2;
+            if(i%2 == 0) {
+                // even i, zero
+                if ( pointBeingInflunced[i] != nextValues[indexIntoNext][0] ) {
+                    throw new RuntimeException("zero");
+                };
+                neededZetaIncrement[2 * i] = -initial[2 * i];
+                neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
+            } else {
+                // odd i, max
+                if ( pointBeingInflunced[i] != nextValues[indexIntoNext][3] ) {
+                    System.out.println("pointBeingInflunced[i] != nextValues[indexIntoNext][2]  "
+                        + pointBeingInflunced[i] + " != " + nextValues[indexIntoNext][2] );
+                    throw new RuntimeException("max");
+                };
+                neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
+                neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
+            }
         }
     
-        //System.out.println("zetaderCoeff " );
-        //LinearEquation.printMatrix(zetaDerCoeff);
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
     
         double[] solution = linearEquation.solve(
             neededZetaIncrement
-//            new double[]{
-//                //0.029814082487805593, 0.1994990926788418, 0.08136282505069659, 2.125999647229591, 0.9999999999999996, 0.5000000000951985, 0.38281568257124876, -7.700267711652717,
-//                -1.5533670572054348E-7, 3.455601111568285E-5, 0.002939713190428961, 0.17302076126421184, 1.0000000000000138,
-//                0.5000000000195968, -0.6319767951186775, 5.067432651792831,
-//                -4.3272877404021415E-5, 0.0026806606801486055
-//
-//            }
             );
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
         gAtBeta.incrementGValuesAtIndices(indices[0], solution);
         double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-        System.out.println("after " + Arrays.toString(after));
+        System.out.println("after " );
+        System.out.println(Arrays.toString(after));
         double[] actualIncrement = new double[after.length];
         for (int i = 0; i < actualIncrement.length; i++) {
             actualIncrement[i] = after[i] - initial[i];
@@ -190,6 +200,14 @@ public class FixE12GSeries {
                 gAtBeta.evaluateZeta(nextValues[i][0], initialPadding));
             values.add( gAtBeta.evalDer(
                 nextValues[i][0], initialPadding, 0.00025* gAtBeta.spacing));
+            if (nextValues[i][3] <= 0) {
+                break;
+            }
+            pointBeingInflunced.add(nextValues[i][3]);
+            values.add(
+                gAtBeta.evaluateZeta(nextValues[i][3], initialPadding));
+            values.add( gAtBeta.evalDer(
+                nextValues[i][3], initialPadding, 0.00025* gAtBeta.spacing));
         }
         double[] eval = new double[values.size()];
         for (int i = 0; i < eval.length; i++) {
