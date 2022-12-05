@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import static riemann.StaticMethods.changeToDer;
 import static riemann.StaticMethods.changeToZeta;
@@ -36,6 +37,17 @@ public class FixE12GSeries {
             //9999
             1999912
         );
+    }
+    
+    public FixE12GSeries(
+        List<double[]> zeroInfo, int midIdxCausingInfluence, GSeries gAtBeta
+    ) {
+        this.nextValues = new double[zeroInfo.size()][];
+        this.midIdxCausingInfluence = midIdxCausingInfluence;
+        this.gAtBeta = gAtBeta;
+        for (int row = 0; row < nextValues.length; row++) {
+            nextValues[row] = zeroInfo.get(row);
+        }
     }
     
     public FixE12GSeries(double[][] nextValues, int midIdxCausingInfluence) {
