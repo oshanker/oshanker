@@ -4,8 +4,10 @@ import javafx.util.Pair;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
 import riemann.Poly4;
+import riemann.Rosser;
 import riemann.StaticMethods;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -248,7 +250,8 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
-    public static GSeries testGetSavedGSeries1(double firstZero, GSeries gAtBeta) throws IOException {
+    public static GSeries testGetSavedGSeries1(
+        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta) throws IOException {
         double maxZeroDev = Double.MIN_VALUE;
         double maxDerDev = Double.MIN_VALUE;
         double maxMaxDev = Double.MIN_VALUE;
@@ -258,7 +261,7 @@ public class FixE12GSeries {
         
         //25 rows zero expectedDer
         
-        double[] nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, firstZero);
+        double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, firstZero);
         int i = 0;
         double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
         // cant go below 40
@@ -369,7 +372,7 @@ public class FixE12GSeries {
                 + " iMax " + iMax
         );
         FixE12GSeries fixE12GSeries = new FixE12GSeries(
-            zeroInfo.subList(2, 7),
+            zeroInfo.subList(3, 7),
             1999912,
             gAtBeta
         );
@@ -403,14 +406,19 @@ public class FixE12GSeries {
         double firstZero = 243831.456494008;
         String gbetaSource = "Interpolate";
     
-        try {
-            GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
-            testGetSavedGSeries1(firstZero, gAtBeta);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        FixE12GSeries fixE12GSeries = new FixE12GSeries();
-//        fixE12GSeries.testChangeToZetaAndDer();
+//        try {
+//            GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
+//            gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
+//            String zerosFile = Rosser.getParam("zerosFile");
+//            System.out.println("====== ** ======");
+//            testGetSavedGSeries1(firstZero, Interpolate.zerosFile(zerosFile),
+//                gAtBeta);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        FixE12GSeries fixE12GSeries = new FixE12GSeries();
+        fixE12GSeries.testChangeToZetaAndDer();
         //fixE12GSeries.testIncrementGValuesAtIndices();
     }
 

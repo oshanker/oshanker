@@ -74,16 +74,7 @@ public class Interpolate {
             Rosser.readConfig("data/RosserConfig.txt");
             String zerosFile = Rosser.getParam("zerosFile");
             System.out.println("zerosFile " + zerosFile);
-            zeroIn = new BufferedReader[] { 
-                    new BufferedReader(new FileReader(zerosFile)), 
-                    null,
-                    null 
-                    };
-
-            String derFile = zerosFile + ".der";
-            zeroIn[1] = new BufferedReader(new FileReader(derFile));
-            String maxFile = zerosFile + ".max";
-            zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+            zeroIn = zerosFile(zerosFile);
             lastZeroSeen1 = new double[zeroIn.length + 1];
             offset = new BigDecimal(Rosser.getParam("bdoffset"));
             correction = 0;
@@ -102,7 +93,21 @@ public class Interpolate {
             throw new IllegalStateException(e);
         }
     }
-
+    
+    public static BufferedReader[] zerosFile(String zerosFile) throws FileNotFoundException {
+        BufferedReader[] zeroIn = new BufferedReader[] {
+                new BufferedReader(new FileReader(zerosFile)),
+                null,
+                null
+                };
+        
+        String derFile = zerosFile + ".der";
+        zeroIn[1] = new BufferedReader(new FileReader(derFile));
+        String maxFile = zerosFile + ".max";
+        zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+        return zeroIn;
+    }
+    
     /**
      * Read input files
      * evaluate GSeries
