@@ -598,7 +598,7 @@ public class GSeriesTest {
         double deltader = 0.000025;
         double deltamax = 5.0E-7;
         int sampleSize = 25;
-        String gbetaSource = "Interpolate";
+        String gbetaSource = "Interpolat";
 
         System.out.println("** gbetaSource " + gbetaSource + " ======");
         switch (gbetaSource) {
@@ -623,7 +623,9 @@ public class GSeriesTest {
         }
 
         int iMax = 0;
-        
+        int iZero = 0;
+        int iDer = 0;
+    
         //25 rows zero expectedDer
 
         double[] nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, firstZero);
@@ -655,10 +657,12 @@ public class GSeriesTest {
             );
             if(Math.abs(zeta) > maxZeroDev){
                 maxZeroDev = Math.abs(zeta);
+                iZero = i;
                 maxUpdated = true;
             }
             if(absDer > maxDerDev){
                 maxDerDev = absDer;
+                iDer = i;
                 maxUpdated = true;
             }
             if (i>0) {
@@ -698,6 +702,8 @@ public class GSeriesTest {
                         System.out.println(
                                 "positionMax der " + Arrays.toString(maxder)
                         );
+                    } else {
+                        break;
                     }
                 }
                 double[] oldZero = zeroInfo.getLast();
@@ -739,14 +745,16 @@ public class GSeriesTest {
             );
         }
         System.out.println(
-                "maxZeroDev  " + maxZeroDev
+            "maxZeroDev  " + maxZeroDev
+                + " iZero " + iZero
         );
         System.out.println(
-                "maxDerDev  " + maxDerDev
+            "maxDerDev  " + maxDerDev
+                + " iDer " + iDer
         );
         System.out.println(
-                "maxMaxDev  " + maxMaxDev
-            + " iMax " + iMax
+            "maxMaxDev  " + maxMaxDev
+                + " iMax " + iMax
         );
     }
 

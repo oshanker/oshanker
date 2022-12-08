@@ -24,6 +24,7 @@ import static riemann.StaticMethods.gramE12;
 
 public class FixE12GSeries {
     static final int initialPadding = 40;
+    private static LinkedList<double[]> zeroInfo;
     double[][] nextValues;
     
     double[] pointBeingInflunced;
@@ -196,12 +197,12 @@ public class FixE12GSeries {
         double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
         System.out.println("after " );
         System.out.println(Arrays.toString(after));
-        double[] actualIncrement = new double[after.length];
-        for (int i = 0; i < actualIncrement.length; i++) {
-            actualIncrement[i] = after[i] - initial[i];
+        double[] actualIncrementInValues = new double[after.length];
+        for (int i = 0; i < actualIncrementInValues.length; i++) {
+            actualIncrementInValues[i] = after[i] - initial[i];
         }
-        System.out.println("actualIncrement " );
-        System.out.println( Arrays.toString(actualIncrement));
+        System.out.println("actualIncrementInValues " );
+        System.out.println( Arrays.toString(actualIncrementInValues));
         
         return gAtBeta;
     }
@@ -258,6 +259,8 @@ public class FixE12GSeries {
         int sampleSize = 25;
     
         int iMax = 0;
+        int iZero = 0;
+        int iDer = 0;
         
         //25 rows zero expectedDer
         
@@ -266,8 +269,8 @@ public class FixE12GSeries {
         double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
         // cant go below 40
         final int initialPadding = 40;
-        
-        LinkedList<double[]> zeroInfo = new LinkedList<>();
+    
+        zeroInfo = new LinkedList<>();
         
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
@@ -288,10 +291,12 @@ public class FixE12GSeries {
             );
             if(Math.abs(zeta) > maxZeroDev){
                 maxZeroDev = Math.abs(zeta);
+                iZero = i;
                 maxUpdated = true;
             }
             if(absDer > maxDerDev){
                 maxDerDev = absDer;
+                iDer = i;
                 maxUpdated = true;
             }
             if (i>0) {
@@ -352,7 +357,7 @@ public class FixE12GSeries {
             d0 = expectedDer;
             extremumFromFile = d0>0?nextValues[2]:-nextValues[2];
             if(i<sampleSize) {
-                nextValues = CopyZeroInformation.skipUntil(Interpolate.zeroIn, nextValues[0]);
+                nextValues = CopyZeroInformation.skipUntil(zeroIn, nextValues[0]);
             }
         }
         System.out.println("done");
@@ -363,20 +368,18 @@ public class FixE12GSeries {
         }
         System.out.println(
             "maxZeroDev  " + maxZeroDev
+                + " iZero " + iZero
         );
         System.out.println(
             "maxDerDev  " + maxDerDev
+                + " iDer " + iDer
         );
         System.out.println(
             "maxMaxDev  " + maxMaxDev
                 + " iMax " + iMax
         );
-        FixE12GSeries fixE12GSeries = new FixE12GSeries(
-            zeroInfo.subList(3, 7),
-            1999912,
-            gAtBeta
-        );
-        return  fixE12GSeries.testChangeToZetaAndDer();
+        
+        return gAtBeta;
     }
     
     private static GSeries getGSeries(double firstZero,  String gbetaSource) throws IOException {
@@ -406,19 +409,29 @@ public class FixE12GSeries {
         double firstZero = 243831.456494008;
         String gbetaSource = "Interpolate";
     
-//        try {
-//            GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
-//            gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
-//            String zerosFile = Rosser.getParam("zerosFile");
-//            System.out.println("====== ** ======");
-//            testGetSavedGSeries1(firstZero, Interpolate.zerosFile(zerosFile),
-//                gAtBeta);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
+            gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
+            FixE12GSeries fixE12GSeries = new FixE12GSeries(
+                zeroInfo.subList(2, 6),
+                1999912,
+                gAtBeta
+            );
+            
+            gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
+            BufferedReader[] zeroIn = null;
+            String zerosFile = Rosser.getParam("zerosFile");
+            zeroIn = Interpolate.zerosFile(zerosFile);
+//            gAtBeta = testGetSavedGSeries1(firstZero, zeroIn, gAtBeta);
+    
+            
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        FixE12GSeries fixE12GSeries = new FixE12GSeries();
-        fixE12GSeries.testChangeToZetaAndDer();
+//        FixE12GSeries fixE12GSeries = new FixE12GSeries();
+//        fixE12GSeries.testChangeToZetaAndDer();
         //fixE12GSeries.testIncrementGValuesAtIndices();
     }
 
