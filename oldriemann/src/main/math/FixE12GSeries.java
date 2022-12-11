@@ -413,7 +413,7 @@ public class FixE12GSeries {
             GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
             gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
             FixE12GSeries fixE12GSeries = new FixE12GSeries(
-                zeroInfo.subList(2, 6),
+                zeroInfo.subList(2, 7),
                 1999912,
                 gAtBeta
             );
@@ -422,10 +422,7 @@ public class FixE12GSeries {
             BufferedReader[] zeroIn = null;
             String zerosFile = Rosser.getParam("zerosFile");
             zeroIn = Interpolate.zerosFile(zerosFile);
-//            gAtBeta = testGetSavedGSeries1(firstZero, zeroIn, gAtBeta);
-    
-            
-            
+            gAtBeta = testGetSavedGSeries1(firstZero, zeroIn, gAtBeta);
         } catch (IOException e) {
             e.printStackTrace();
         }
