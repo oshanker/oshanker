@@ -160,11 +160,10 @@ public class AnalyzeE12GSeries {
     }
     
     public static GSeries testGetSavedGSeries1(
-        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta) throws IOException {
-        double maxZeroDev = Double.MIN_VALUE;
-        double maxDerDev = Double.MIN_VALUE;
-        double maxMaxDev = Double.MIN_VALUE;
-        int sampleSize = 125;
+        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta, int sampleSize) throws IOException {
+        double maxZeroDev = 0.1;
+        double maxDerDev = 2;
+        double maxMaxDev = 0.5;
     
         int iMax = 0;
         int iZero = 0;
@@ -179,20 +178,20 @@ public class AnalyzeE12GSeries {
         final int initialPadding = 40;
     
         zeroInfo = new LinkedList<>();
-        
+        final double stopValue = 243839.5;
+    
+        int countEnd = 0;
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
             double expectedDer =  nextValues[1];
-            if (zeroPosition > 243839.51) {
+            if (zeroPosition > stopValue) {
                 nextValues = CopyZeroInformation.skipUntil(zeroIn, nextValues[0]);
                 if (nextValues == null) {
                     System.out.println("End reached " );
                     break;
                 }
-                if ( nextValues[0] > 243843.4915) {
-                    System.out.println("End reached " + nextValues[0]);
-                }
-                continue;
+                System.out.println(++countEnd + " End reached " + nextValues[0]);
+                break;
             }
             
             double zeta = gAtBeta.evaluateZeta(zeroPosition, initialPadding);
@@ -200,6 +199,7 @@ public class AnalyzeE12GSeries {
                 zeroPosition, initialPadding, 0.00025*gAtBeta.spacing);
             double absDer = Math.abs(expectedDer - der);
             boolean maxUpdated = false;
+            boolean maxMaxUpdated = false;
             if(Math.abs(zeta) > maxZeroDev){
                 maxZeroDev = Math.abs(zeta);
                 iZero = gAtBeta.midIdx;
@@ -220,12 +220,13 @@ public class AnalyzeE12GSeries {
                         + " : eval from GSeries: " + der
                         + " diff(der) " + absDer
                 );
+                maxUpdated = false;
             }
             if (i>0) {
                 Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
                     extremumFromFile);
                 double positionMax = poly.getPositionMax();
-                if (positionMax < 243840.87137482915) {
+                //if (positionMax < 243840.87137482915) {
                     if (!Double.isFinite(positionMax)) {
                         System.out.println(positionMax + " i " + i);
                         throw new IllegalArgumentException("positionMax NaN");
@@ -251,8 +252,9 @@ public class AnalyzeE12GSeries {
                     if (Math.abs(maxDev) > maxMaxDev) {
                         maxMaxDev = Math.abs(maxDev);
                         iMax = gAtBeta.midIdx;
+                        maxMaxUpdated = true;
                     }
-                    if (maxUpdated) {
+                    if (maxMaxUpdated) {
                         System.out.println("** i " + i + " ===========================");
                         System.out.println(
                             "positionMax " + positionMax
@@ -264,10 +266,11 @@ public class AnalyzeE12GSeries {
                             "positionMax der " + Arrays.toString(maxder)
                         );
                         System.out.println(" =========*******===========");
+                        maxMaxUpdated = false;
                     }
-                } else {
-                    System.out.println(" damn");
-                }
+//                } else {
+//                    System.out.println(" damn");
+//                }
             }
             double[] zeroEntry = new double[4];
             System.arraycopy(nextValues, 0, zeroEntry, 0, nextValues.length);
@@ -276,12 +279,8 @@ public class AnalyzeE12GSeries {
             z0 = zeroPosition;
             d0 = expectedDer;
             extremumFromFile = d0>0?nextValues[2]:-nextValues[2];
-            if(i<sampleSize) {
+            if(i< sampleSize) {
                 nextValues = CopyZeroInformation.skipUntil(zeroIn, nextValues[0]);
-                if (nextValues == null) {
-                    System.out.println("** End reached " );
-                    break;
-                }
             }
         }
         System.out.println("done");
@@ -325,12 +324,13 @@ public class AnalyzeE12GSeries {
     
     public static void main(String[] args) {
     
-        double firstZero = 243831.456494008;
         String gbetaSource = "Interpolate";
     
         try {
+            double firstZero = 243831.456494008 - 200*Interpolate.gramIncr;
             GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
-            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
+            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
+                400);
         } catch (IOException e) {
             e.printStackTrace();
         }
