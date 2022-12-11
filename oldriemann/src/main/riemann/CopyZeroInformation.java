@@ -19,6 +19,10 @@ public class CopyZeroInformation {
         while (true) {
             for (int i = 0; i < input.length; i++) {
                 input[i] = zeroIn[i].readLine();
+                if(input[i] == null){
+                    System.out.println("End reached");
+                    return null;
+                }
             }
             zero = populateNextValues(lastValue, input);
             if(zero >= lower){break;}
