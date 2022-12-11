@@ -161,9 +161,9 @@ public class AnalyzeE12GSeries {
     
     public static GSeries testGetSavedGSeries1(
         double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta, int sampleSize) throws IOException {
-        double maxZeroDev = 0.1;
-        double maxDerDev = 2;
-        double maxMaxDev = 0.5;
+        double maxZeroDev = 3.5;
+        double maxDerDev = 80.0;
+        double maxMaxDev = 20.0;
     
         int iMax = 0;
         int iZero = 0;
@@ -190,7 +190,7 @@ public class AnalyzeE12GSeries {
                     System.out.println("End reached " );
                     break;
                 }
-                System.out.println(++countEnd + " End reached " + nextValues[0]);
+                System.out.println(i + " End reached " + nextValues[0]);
                 break;
             }
             
@@ -327,10 +327,10 @@ public class AnalyzeE12GSeries {
         String gbetaSource = "Interpolate";
     
         try {
-            double firstZero = 243831.456494008 - 200*Interpolate.gramIncr;
+            double firstZero = 243831.456494008 - 50000*Interpolate.gramIncr;
             GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
-                400);
+                100000);
         } catch (IOException e) {
             e.printStackTrace();
         }

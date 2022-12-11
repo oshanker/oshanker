@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -156,6 +155,9 @@ public class Interpolate {
         gramDer = new double[N][2];
         double[] zetaMidMean = {0, 0};
         double[] zetaGramMean = {0, 0};
+        double[] cross = {0, 0};
+        double oldZeta = Double.NEGATIVE_INFINITY;
+        
         int idx = 0;
         while (count < N  ) {
         	//this n is actually n-1!!!
@@ -164,11 +166,12 @@ public class Interpolate {
             double upperLimit = baseLimit + (nprime-correction-1)* (gramIncr);
             // populate fAtBeta,  zetaGramMean
             double zeta =  getZetaEstimate(nprime, idx, upperLimit, zetaGramMean, fAtBeta,  GramOrMid.GRAM);
+            final int nmod2 = nprime%2;
+            if (oldZeta != Double.NEGATIVE_INFINITY) {
+                cross[nmod2] += oldZeta * zeta;
+            }
+            oldZeta = zeta;
 
-//            System.out.println();
-//            System.out.println(Arrays.toString(zeroInput.lastZero)  +
-//                    ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-//            System.out.println("gram 2*zeta " + 2*zeta + ", " +  upperLimit + " n upperLimit (" + (n+1) +")");
             
             upperLimit += gramIncr/2;
             zeta = getZetaEstimate(nprime, idx, upperLimit, zetaMidMean,imFmid, GramOrMid.MID);
@@ -188,6 +191,9 @@ public class Interpolate {
         System.out.println("*** zetaGramMeanOdd " + zetaGramMean[1]/N);
         System.out.println("*** zetaMidMeanEven " + zetaMidMean[0]/N);
         System.out.println("*** zetaGramMeanEven " + zetaGramMean[0]/N);
+        System.out.println("*** ***");
+        System.out.println("*** crossEven " + 8*cross[0]/N);
+        System.out.println("*** crossOdd " + 8*cross[1]/N);
         
         //imFGramPoints( );
         //reFMidGramPoints();
@@ -215,37 +221,53 @@ public class Interpolate {
         # input generated in math.GSeriesTest.testWriteZetaPhiE12()
         # or in math.MoreGSeriesTest.testInterpolate()
         */
-        zetaMidMean = new double[]{0, 0};
-        zetaGramMean = new double[]{0, 0};
-        count = 0;
         GSeries gSeries11 = readGSeries();
-        double base = baseLimit + gramIncr/4;
-        long sampleSize = N-2*initialPadding;
+        readSavedAndVerify(N, gSeries11);
+        readSavedAndVerifyCross(N, gSeries11);
+
+    }
+    
+    private static void readSavedAndVerifyCross(int N, GSeries gSeries11) {
+        int count;
+        double[] cross = new double[]{0, 0};
+        count = 0;
+        double base = baseLimit ;
+        long sampleSize = N - 2*initialPadding;
+        double oldZeta = Double.NEGATIVE_INFINITY;
         while (count < sampleSize  ) {
             int n = count + noffset+initialPadding;
-            double upperLimit = base + (n-correction-1)* (gramIncr);
-            double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);        
+            double upperLimit = base + (n-correction-1) * (gramIncr);
+            double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
+            final int nmod2 = n%2;
+            if (oldZeta != Double.NEGATIVE_INFINITY) {
+                cross[nmod2] += oldZeta * zeta;
+            }
+            oldZeta = zeta;
+            
+            count++;
+        }
+        System.out.println("*** cross Odd " + 2*cross[1]/sampleSize);
+        System.out.println("*** cross Even " + 2*cross[0]/sampleSize);
+    }
+    
+    private static void readSavedAndVerify(int N, GSeries gSeries11) {
+        int count;
+        double[] zetaGramMean = new double[]{0, 0};
+        count = 0;
+        double base = baseLimit + gramIncr/4;
+        long sampleSize = N - 2*initialPadding;
+        while (count < sampleSize  ) {
+            int n = count + noffset+initialPadding;
+            double upperLimit = base + (n-correction-1) * (gramIncr);
+            double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
             final int nmod2 = n%2;
             zetaGramMean[nmod2] += zeta;
             count++;
-        }   
+        }
         System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
         System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
-        
-//        for (int i = 0; i < 2; i++) {
-//            for (int j = 0; j < 2; j++) {
-//                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
-//                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
-//            }
-//        }
-//        for (int i = fAtBeta.length-2; i < fAtBeta.length; i++) {
-//            for (int j = 0; j < 2; j++) {
-//                System.out.println("fAtBeta[" +  i + "," + j + "] = " + fAtBeta[i][j]);
-//                System.out.println("imFmid[" +  i + "," + j + "] = " + imFmid[i][j]);
-//            }
-//        }
     }
-
+    
     public static double getZetaEstimate(int nprime, int idx, double upperLimit, 
             double[] zetaMean, double[][] fStorageReIm, GramOrMid gramOrMidEnum) throws Exception {
     	  double zetaEstMid = updateZeroInput(upperLimit, gramOrMidEnum);
