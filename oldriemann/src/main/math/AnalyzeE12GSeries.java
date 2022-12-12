@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
 import riemann.Poly4;
+import riemann.Rosser;
 import riemann.StaticMethods;
 
 import java.io.BufferedReader;
@@ -19,6 +20,9 @@ import static riemann.StaticMethods.evaluateAtT;
 public class AnalyzeE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo;
+    private static double maxZeroDev;
+    private static double maxDerDev;
+    private static double maxMaxDev;
     double[][] nextValues;
     
     double[] pointBeingInflunced;
@@ -159,11 +163,16 @@ public class AnalyzeE12GSeries {
         return new Pair<>(eval, points);
     }
     
+    static void resetLimits() {
+        maxZeroDev = 3.5;
+        maxDerDev = 80.0;
+        maxMaxDev = 20.0;
+        
+    }
+    
     public static GSeries testGetSavedGSeries1(
         double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta, int sampleSize) throws IOException {
-        double maxZeroDev = 3.5;
-        double maxDerDev = 80.0;
-        double maxMaxDev = 20.0;
+    
     
         int iMax = 0;
         int iZero = 0;
@@ -302,10 +311,10 @@ public class AnalyzeE12GSeries {
     
     private static GSeries getGSeries(double firstZero,  String gbetaSource) throws IOException {
         GSeries gAtBeta;
-        int idx = StaticMethods.findFile(firstZero);
         System.out.println("** gbetaSource " + gbetaSource + " ======");
         switch (gbetaSource) {
             case "Saved":
+                int idx = StaticMethods.findFile(firstZero);
                 double t0 = StaticMethods.gramE12[idx][0];
                 final BigDecimal offset = BigDecimal.valueOf(1.0E12);
                 gAtBeta = StaticMethods.getSavedGSeries(t0, offset);
@@ -322,18 +331,96 @@ public class AnalyzeE12GSeries {
     }
     
     
+    private static void readSavedAndVerifyCross(long first, long last, GSeries gSeries11) {
+        double[] cross = new double[]{0, 0};
+        int count = 0;
+        double base = Interpolate.baseLimit + Interpolate.gramIncr*first;
+        double upperLimit = base ;
+        long sampleSize = last - first;
+        double oldZeta = Double.NEGATIVE_INFINITY;
+        while (count < sampleSize  ) {
+            double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
+            final int nmod2 = count%2;
+            if (oldZeta != Double.NEGATIVE_INFINITY) {
+                cross[nmod2] += oldZeta * zeta;
+            }
+            oldZeta = zeta;
+
+            count++;
+            upperLimit += Interpolate.gramIncr;
+        }
+        System.out.println("*** cross Odd " + 2*cross[1]/sampleSize);
+        System.out.println("*** cross Even " + 2*cross[0]/sampleSize);
+    }
+    
+    private static void readSavedAndVerify(long first, long last, GSeries gSeries11) {
+        int count;
+        double[] zetaGramMean = new double[]{0, 0};
+        count = 0;
+        double base = Interpolate.baseLimit + Interpolate.gramIncr*first;
+        double upperLimit = base ;
+        long sampleSize = last - first;
+        while (count < sampleSize  ) {
+            double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
+            final int nmod2 = count%2;
+            zetaGramMean[nmod2] += zeta;
+            count++;
+            upperLimit += Interpolate.gramIncr;
+        }
+        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
+        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
+    }
+    
+    public static void prepare(double firstZero, GSeries gAtBeta, int sample) {
+        try {
+            maxZeroDev = Double.MIN_VALUE;
+            maxDerDev = Double.MIN_VALUE;
+            maxMaxDev = Double.MIN_VALUE;
+            gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta, sample);
+            FixE12GSeries fixE12GSeries = new FixE12GSeries(
+                zeroInfo.subList(2, 7),
+                1999912,
+                gAtBeta
+            );
+        
+            gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
+            BufferedReader[] zeroIn = null;
+            String zerosFile = Rosser.getParam("zerosFile");
+            zeroIn = Interpolate.zerosFile(zerosFile);
+            maxZeroDev = Double.MIN_VALUE;
+            maxDerDev = Double.MIN_VALUE;
+            maxMaxDev = Double.MIN_VALUE;
+            gAtBeta = testGetSavedGSeries1(firstZero, zeroIn, gAtBeta, sample);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public static void main(String[] args) {
     
         String gbetaSource = "Interpolate";
     
         try {
-            double firstZero = 243831.456494008 - 50000*Interpolate.gramIncr;
-            GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
-            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
-                100000);
+            GSeries gAtBeta = getGSeries(243831.456494008, gbetaSource);
+            prepare(243831.456494008, gAtBeta, 25);
+            //gramVerify(firstZero, gAtBeta);
+            resetLimits();
+            double firstZero = 243831.456494008 - 100000*Interpolate.gramIncr;
+            //            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
+//                200000);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    
+    private static void gramVerify(double firstZero, GSeries gAtBeta) {
+        long firstGramIndex = (long) ((firstZero - Interpolate.baseLimit)/Interpolate.gramIncr);
+        long lastGramIndex = (long) ((243839.5956836054 - Interpolate.baseLimit)/Interpolate.gramIncr);
+        
+        System.out.println(" firstGramIndex " + firstGramIndex );
+        System.out.println(" lastGramIndex " + lastGramIndex );
+        readSavedAndVerify(firstGramIndex, lastGramIndex, gAtBeta);
+        readSavedAndVerifyCross(firstGramIndex, lastGramIndex, gAtBeta);
+    }
+    
 }
