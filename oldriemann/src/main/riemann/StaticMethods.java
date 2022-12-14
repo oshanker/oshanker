@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.function.Function;
 
 public class StaticMethods {
+    // 0 - first Gram idx we can evaluate in saved Gseries
+    // 1 - last zero?
     public final static double[][] gramE12 = new double[][] {
         {243.77756012466054, 7551.727850863262},
         {7551.748966209077, 14859.592051701966},
@@ -182,8 +184,15 @@ public class StaticMethods {
       }
       return idx;
    }
-
-   public static GSeries getSavedGSeries(double t0, BigDecimal offset) throws FileNotFoundException, IOException {
+    
+    // find gseries which can evaluate pointToEvaluate
+    public static GSeries getSavedGSeries(double pointToEvaluate) throws IOException {
+        int idx = StaticMethods.findFile(pointToEvaluate);
+        double t0 = StaticMethods.gramE12[idx][0];
+        return getSavedGSeries(t0, BigDecimal.valueOf(1.0E12));
+    }
+    
+    public static GSeries getSavedGSeries(double t0, BigDecimal offset) throws IOException {
        final int k0 = 1, k1=398942;
        final int index = (int) Math.floor(t0);
        File file = new File("data/gSeriesE12/" + Integer.toString(index) +".dat");
