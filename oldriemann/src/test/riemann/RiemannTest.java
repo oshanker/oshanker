@@ -38,11 +38,14 @@ public class RiemannTest {
         for (int i = 0; i < StaticMethods.gramE12.length; i++) {
             double[] limits = StaticMethods.gramE12[i];
             System.out.println(Arrays.toString(limits));
-            System.out.println("idx  " + (limits[0]-244.02115917156451839965694310614387)/0.24359904590398668);
-            System.out.println("idx  " + (limits[1]-244.02115917156451839965694310614387)/0.24359904590398668);
+            System.out.println("idx  " +
+                (limits[0]-244.02115917156451839965694310614387)/0.24359904590398668 +
+                " idx at zero " + (limits[1]-244.02115917156451839965694310614387)/0.24359904590398668);
             GSeries gSeries = StaticMethods.getSavedGSeries(limits[0], BigDecimal.valueOf(1.0E12));
             System.out.println("zeta at i  " + i +   " " +
-                gSeries.evaluateZeta(limits[0], initialPadding));
+                gSeries.evaluateZeta(limits[0], initialPadding) +
+                " t  " +
+                limits[0] + ", " + (limits[0]  + 7307.97133775572));
             if(i < StaticMethods.gramE12.length-1) {
                 System.out.println("zeta at next after " + i +  " "
                     + gSeries.evaluateZeta(StaticMethods.gramE12[i+1][0], initialPadding));
