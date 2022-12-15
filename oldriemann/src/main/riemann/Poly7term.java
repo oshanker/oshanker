@@ -57,7 +57,7 @@ public class Poly7term {
     
     public static void main(String[] args) {
         Poly7term poly7term = new Poly7term(0, 1, 2, 1, 0);
-        //tabulate(poly7term);
+        tabulate(poly7term);
         poly7term.positionMax(0.5, 1, 0);
     }
     

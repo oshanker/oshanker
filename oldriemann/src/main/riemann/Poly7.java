@@ -40,8 +40,13 @@ public class Poly7 {
             return d2;
         }
         double prod = (x-a)*(x-b)*(x-c);
-        //double ret = (x-a)*(x-b) + (x-b)*(x-c) + (x-a)*(x-c);
         double ret = prod* (1/(x-a) + 1/(x-b) + 1/(x-c));
+        double term = (t0*(x-b)*(x-c) + t1*(x-a)*(x-c)+ t2*(x-a)*(x-b));
+        double dterm = (
+            t0*(x-c) + t1*(x-c)+ t2*(x-b) +
+            t0*(x-b) + t1*(x-a)+ t2*(x-a)
+        );
+        ret = ret*term + prod*dterm;
         return ret;
     }
     
@@ -70,7 +75,7 @@ public class Poly7 {
             derNext = der(next);
             System.out.println(next + " " + derNext);
             if (Math.abs(derNext) < 1.0E-8) {
-                return x0;
+                return next;
             }
         }
         return next;
