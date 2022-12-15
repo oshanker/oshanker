@@ -1,8 +1,17 @@
 package riemann;
 
+import java.text.NumberFormat;
+
 public class Poly7 {
+    static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMinimumFractionDigits(7);
+        nf.setMaximumFractionDigits(7);
+        nf.setGroupingUsed(false);
+    }
     final double a, b, c;
     double d0, d1, d2;
+    double t0, t1, t2;
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
@@ -12,6 +21,12 @@ public class Poly7 {
         d0 = a1;
         d1 = b1;
         d2 = c1;
+        t0 = (a-b)*(a-c);
+        t1 = (b-a)*(b-c);
+        t2 = (c-a)*(c-b);
+        t0 = d0/(t0*t0);
+        t1 = d1/(t1*t1);
+        t2 = d2/(t2*t2);
     }
     
     double der(double x) {
@@ -32,7 +47,7 @@ public class Poly7 {
     
     double eval(double x) {
         double prod = (x-a)*(x-b)*(x-c);
-        double ret = prod;
+        double ret = prod*(t0*(x-b)*(x-c) + t1*(x-a)*(x-c)+ t2*(x-a)*(x-b));
         return ret;
     }
     
@@ -64,14 +79,15 @@ public class Poly7 {
     public static void main(String[] args) {
         Poly7 poly7term = new Poly7(0, 1, 2, 2, -1, 2);
         tabulate(poly7term);
-        poly7term.positionMax(0.5, 0, 1);
+        double max1 = poly7term.positionMax(0.5, 0, 1);
+        System.out.println("max1 " + nf.format(max1));
     }
     
     private static void tabulate(Poly7 poly7term) {
         for (double x = -0.1; x < 2.2; x += 0.05) {
-            System.out.println(x +
-                " " + poly7term.eval(x) +
-                " " + poly7term.der(x)
+            System.out.println(nf.format(x) +
+                " " + nf.format(poly7term.eval(x)) +
+                " " + nf.format(poly7term.der(x))
             );
         }
     }

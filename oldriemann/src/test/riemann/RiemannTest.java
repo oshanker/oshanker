@@ -34,6 +34,38 @@ public class RiemannTest {
 	}
     
     @Test
+    public void testCrossProduct() throws IOException {
+        double oldZeta = Double.NEGATIVE_INFINITY;
+        double crossSum = 0;
+        int sample = 0;
+        double[] gramSum = {0,0};
+        double t0 = StaticMethods.gramE12[0][0];
+        for (int i = 0; i < StaticMethods.gramE12.length; i++) {
+            double[] limits = StaticMethods.gramE12[i];
+            GSeries gSeries = StaticMethods.getSavedGSeries(limits[0], BigDecimal.valueOf(1.0E12));
+            double tIncr = gSeries.spacing;
+            for (int j = 0; j < 30100; j++) {
+                double zeta = gSeries.evaluateZeta(t0, initialPadding);
+                gramSum[sample%2] += zeta;
+                if(oldZeta != Double.NEGATIVE_INFINITY) {
+                    crossSum += oldZeta*zeta;
+                    sample++;
+                }
+                oldZeta = zeta;
+                t0 += tIncr;
+                if(t0 > limits[1]) {
+                    break;
+                }
+            }
+            double[] gramMean = {gramSum[0]/sample, gramSum[1]/sample};
+            System.out.println("mean crossSum " + crossSum/sample
+                + " sample " + sample + " " + Arrays.toString(gramMean));
+        }
+        System.out.println("mean crossSum " + crossSum/sample
+         + " sample " + sample);
+    }
+    
+    @Test
     public void testSavedE12() throws IOException {
         for (int i = 0; i < StaticMethods.gramE12.length; i++) {
             double[] limits = StaticMethods.gramE12[i];
