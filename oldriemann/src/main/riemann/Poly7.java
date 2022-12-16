@@ -14,6 +14,8 @@ public class Poly7 {
     final double d0, d1, d2;
     double t0, t1, t2;
     double m0, m1;
+    double currentMax0, currentMax1;
+    double positionMax0, positionMax1;
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
@@ -29,6 +31,10 @@ public class Poly7 {
         t0 = d0/(t0*t0);
         t1 = d1/(t1*t1);
         t2 = d2/(t2*t2);
+        positionMax0 = positionMax((a+b)/2, a, b);
+        currentMax0 = eval(positionMax0);
+        positionMax1 = positionMax((b+c)/2, b, c);
+        currentMax1 = eval(positionMax1);
     }
     
     public Poly7(double a, double b, double c,
@@ -38,6 +44,7 @@ public class Poly7 {
         this.m1 = m1;
         
     }
+    
     
     void setTerm(double a1, double b1) {
         poly7term = new Poly7term(a, b, c, a1, b1);
