@@ -9,6 +9,7 @@ public class Poly7 {
         nf.setMaximumFractionDigits(7);
         nf.setGroupingUsed(false);
     }
+    Poly7term poly7term = null;
     final double a, b, c;
     final double d0, d1, d2;
     double t0, t1, t2;
@@ -38,11 +39,17 @@ public class Poly7 {
         
     }
     
+    void setTerm(double a1, double b1) {
+        poly7term = new Poly7term(a, b, c, a1, b1);
+    }
+    
     double evalMax0() {
         double pmax0 = positionMax((a+b)/2, a, b);
         double max0 = eval(pmax0);
         if(Math.abs(max0-m0) < 1.0E-8) {
             System.out.println("m0 OK");
+        } else {
+            System.out.println("m0 dev " + (max0-m0));
         }
         return max0;
     }
@@ -52,6 +59,8 @@ public class Poly7 {
         double max1 = eval(pmax1);
         if(Math.abs(max1-m1) < 1.0E-8) {
             System.out.println("m1 OK");
+        } else {
+            System.out.println("m1 dev " + (max1-m1));
         }
         return max1;
     }
@@ -74,12 +83,18 @@ public class Poly7 {
             t0*(x-b) + t1*(x-a)+ t2*(x-a)
         );
         ret = ret*term + prod*dterm;
+        if(poly7term != null) {
+            ret += poly7term.der(x);
+        }
         return ret;
     }
     
     double eval(double x) {
         double prod = (x-a)*(x-b)*(x-c);
         double ret = prod*(t0*(x-b)*(x-c) + t1*(x-a)*(x-c)+ t2*(x-a)*(x-b));
+        if(poly7term != null) {
+            ret += poly7term.eval(x);
+        }
         return ret;
     }
     
@@ -111,17 +126,15 @@ public class Poly7 {
     }
     
     public static void main(String[] args) {
-        Poly7 poly7term = new Poly7(0, 1, 2, 2, -1, 2,
+        Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2,
             0.3849001794597505, -0.3849001794597505);
-        System.out.println("max0 " + poly7term.evalMax0());
-        System.out.println("max1 " + poly7term.evalMax1());
-        //tabulate(poly7term);
+        poly7.setTerm(0, 1);
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        tabulate(poly7);
         //y = y0 + (y1-y0)*(x-x0)/(x1-x0)
         //y0*(x1-x0) + (y1-y0)*(x-x0)
         //x = x0-y0*(x1-x0)/(y1-y0)
-        double pmax0 = poly7term.a -
-            poly7term.d0*(poly7term.b - poly7term.a)/(poly7term.d1 - poly7term.d0);
-        System.out.println("pmax0 " + nf.format(pmax0));
     }
     
     private static void tabulate(Poly7 poly7term) {
