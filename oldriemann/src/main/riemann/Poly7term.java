@@ -49,7 +49,7 @@ public class Poly7term {
             derNext = der(next);
             System.out.println(next + " " + derNext);
             if (Math.abs(derNext) < 1.0E-8) {
-                return x0;
+                return next;
             }
         }
         return next;
