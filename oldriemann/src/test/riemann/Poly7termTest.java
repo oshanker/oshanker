@@ -36,6 +36,14 @@ public class Poly7termTest {
         expected = f*f + 2*position*f*polyDer;
         Assert.assertEquals(expected, termDer, 1.0E-8);
         Assert.assertEquals(0, termDer, 1.0E-8);
+    
+        position = 1.610702458700179;
+        polyDer = poly7012.der(position);
+        f = poly7012.eval(position);
+        termDer = poly7term012.der(position);
+        expected = f*f + 2*position*f*polyDer;
+        Assert.assertEquals(expected, termDer, 1.0E-8);
+        Assert.assertEquals(0, termDer, 1.0E-8);
     }
     
     @Test
@@ -49,6 +57,12 @@ public class Poly7termTest {
         valplus = poly7term012.eval(position);
         fplus = poly7012.eval(position);
         Assert.assertEquals(position*fplus*fplus, valplus, 1.0E-8);
+    
+        position = 1.610702458700179;
+        valplus = poly7term012.eval(position);
+        fplus = poly7012.eval(position);
+        Assert.assertEquals(position*fplus*fplus, valplus, 1.0E-8);
+    
         double positionminus = 0.95;
         double valminus = poly7term012.eval(positionminus);
         double fminus = poly7012.eval(positionminus);
@@ -59,12 +73,11 @@ public class Poly7termTest {
     public void testPositionMax() {
         double positionMax05 = poly7term012.positionMax(0.5, 0, 1);
         Assert.assertEquals(0.5321546831790966, positionMax05, 1.0E-8);
-//        double positionMax15 = poly7term012.positionMax(1.5, 1, 2);
-//        Assert.assertEquals(1.577350269950018, positionMax15, 1.0E-8);
-//        double max15 = poly7term012.eval(positionMax15);
-//        Assert.assertEquals(-0.3849001794597505, max15, 1.0E-8);
+        double positionMax15 = poly7term012.positionMax(1.5, 1, 2);
+        Assert.assertEquals(1.610702458700179, positionMax15, 1.0E-8);
+        double max15 = poly7term012.eval(positionMax15);
+        Assert.assertEquals(0.23619387078033371, max15, 1.0E-8);
         double max05 = poly7term012.eval(positionMax05);
         Assert.assertEquals(0.07106877367174713, max05, 1.0E-8);
-//        System.out.println(max15 + " " + max05);
     }
 }

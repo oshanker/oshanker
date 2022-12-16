@@ -18,6 +18,15 @@ public class Poly7Test  {
     
     @Test
     public void testDer() {
+        double x2coeff = poly7012.t0 + poly7012.t1 + poly7012.t2;
+        Assert.assertEquals(0, x2coeff, 1.0E-8);
+        double x1coeff = poly7012.t0* (poly7012.b+ poly7012.c) +
+            poly7012.t1* (poly7012.a+ poly7012.c) + poly7012.t2*(poly7012.a+ poly7012.b);
+        Assert.assertEquals(0, x1coeff, 1.0E-8);
+        double x0coeff = poly7012.t0* poly7012.b* poly7012.c +
+            poly7012.t1* poly7012.a* poly7012.c + poly7012.t2* poly7012.a* poly7012.b;
+        Assert.assertEquals(1, x0coeff, 1.0E-8);
+        
         Assert.assertEquals(2.63, poly7012.der(-0.1), 1.0E-8);
     }
     

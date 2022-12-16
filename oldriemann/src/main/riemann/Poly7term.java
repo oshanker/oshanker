@@ -40,7 +40,7 @@ public class Poly7term {
         double next = x0 + incr;
         double derNext = der(next);
     
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             double oldx0 = x0;
             double oldder = der;
             der = derNext;
@@ -57,8 +57,8 @@ public class Poly7term {
     
     public static void main(String[] args) {
         Poly7term poly7term = new Poly7term(0, 1, 2, 1, 0);
-        tabulate(poly7term);
-        poly7term.positionMax(0.5, 1, 0);
+        //tabulate(poly7term);
+        poly7term.positionMax(1.5, 1, 2);
     }
     
     private static void tabulate(Poly7term poly7term) {
