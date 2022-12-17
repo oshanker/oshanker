@@ -14,6 +14,7 @@ public class Poly7 {
     final double d0, d1, d2;
     double t0, t1, t2;
     double m0, m1;
+    private Poly7term oldTerm;
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
@@ -41,26 +42,49 @@ public class Poly7 {
         double positionMax1 = positionMax((b + c) / 2, b, c);
         double currentMax1 = eval(positionMax1);
         if(Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1)>1.0E-8) {
-            double incr = 0.1;
-            setTerm(0, incr);
-            double pNextMax0 = positionMax((a + b) / 2, a, b);
-            double cNextMax0 = eval(pNextMax0);
-            double pNextMax1 = positionMax((b + c) / 2, b, c);
-            double cNextMax1 = eval(pNextMax1);
-            double coeff01 = (cNextMax0-currentMax0)/incr;
-            double coeff11 = (cNextMax1-currentMax1)/incr;
-            double delB0 = (m0-currentMax0)/coeff01;
+            double[][] coeff = new double[2][2];
+            populateCoeff(currentMax0, currentMax1, 1, coeff);
+            double delB0 = (m0-currentMax0)/coeff[0][1];
             System.out.println(delB0);
-            double delB1 = (m1-currentMax1)/coeff11;
+            double delB1 = (m1-currentMax1)/coeff[0][1];
             System.out.println(delB1);
-            setTerm(0, (delB0+delB1)/2);
+    
+            poly7term = new Poly7term(a, b, c,0, (delB0+delB1)/2);
         }
         
     }
     
+    private double populateCoeff( double currentMax0, double currentMax1, int idx, double[][] coeff) {
+        double deviation = (Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1));
+        if(deviation<1.0E-8){
+            return deviation;
+        }
+        double incr = 0.1;
+        double[] a1b1 = {0, 0};
+        a1b1[idx] = incr;
+        setTermTemp(a1b1);
+        double pNextMax0 = positionMax((a + b) / 2, a, b);
+        double cNextMax0 = eval(pNextMax0);
+        double pNextMax1 = positionMax((b + c) / 2, b, c);
+        double cNextMax1 = eval(pNextMax1);
+        coeff[0][idx] = (cNextMax0- currentMax0)/ incr;
+        coeff[1][idx] = (cNextMax1- currentMax1)/ incr;
+        unsetTerm();
+        return deviation;
+    }
     
     void setTerm(double a1, double b1) {
         poly7term = new Poly7term(a, b, c, a1, b1);
+    }
+    
+    void setTermTemp(double[] a1b1) {
+        oldTerm = poly7term;
+        poly7term = new Poly7term(a, b, c, a1b1[0], a1b1[1]);
+    }
+    
+    void unsetTerm() {
+        poly7term = oldTerm;
+        oldTerm = null;
     }
     
     double evalMax0() {
@@ -130,14 +154,13 @@ public class Poly7 {
             return next;
         }
     
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 15; i++) {
             double oldx0 = x0;
             double oldder = der;
             der = derNext;
             x0 = next;
             next = oldx0 - oldder*(next-oldx0)/(derNext-oldder);
             derNext = der(next);
-            System.out.println(next + " " + derNext);
             if (Math.abs(derNext) < 1.0E-8) {
                 return next;
             }
@@ -146,9 +169,14 @@ public class Poly7 {
     }
     
     public static void main(String[] args) {
+        //B = 0.5
         Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2,
             0.4589742535338246, -0.31082610538567645);
-        poly7.setTerm(0, 0.5);
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        //A = 0.5
+        poly7 = new Poly7(0, 1, 2, 2, -1, 2,
+            0.41689197105413617, -0.2700198241673988);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
         //tabulate(poly7);
