@@ -130,19 +130,8 @@ public class Interpolate {
     private static void readItems(   )
             throws Exception {
         double begin= baseLimit + (noffset-correction)* (gramIncr);
-        GSeries gSeries1 = new GSeries(1, 0, offset, begin, gramIncr);
-        
-        zetaCorrection1 = GSeries.correction( gSeries1.basesqrtArg1);
-        
-        BigDecimal tvalsi = offset.add(BigDecimal.valueOf(begin), Gram.mc);
-        BigDecimal gramIndex1 = Gram.theta(tvalsi, Gram.mc).divide(Gram.pi, Gram.mc);
-        String[] line = Rosser.getParam("header").split("[-L]+");
-        
-        gramIndex1 = 
-                gramIndex1.subtract(new BigDecimal(line[1]), Gram.mc);
-        // is the begin wrong???
-        System.out.println( "gSeries1.begin (not gSeries!!) " + gSeries1.begin + ", zetaCorrection " + zetaCorrection1
-                + ", gram index " + gramIndex1 + ", " + line[1]);
+        GSeries gSeriesNotUsed = new GSeries(1, 0, offset, begin, gramIncr);
+        zetaCorrection1 = GSeries.correction( gSeriesNotUsed.basesqrtArg1);
         
         int N = Rosser.getParamInt("N");
         if(N>1000102) {
