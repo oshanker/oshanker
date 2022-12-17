@@ -1,6 +1,6 @@
 package riemann;
 
-public abstract class Poly3 {
+public abstract class Poly3 implements Poly {
    final double z0, z1;
    final double d0, d1;
    double denom;
@@ -33,6 +33,7 @@ public abstract class Poly3 {
       return ret;
    }
 
+   @Override
    public double der(double x) {
       double ret = (
             (d1 + d0) * (x - z0) * (x - z1) + (x - z0) * ((x - z0) * d1
@@ -56,11 +57,7 @@ public abstract class Poly3 {
    }
 
    abstract void estimateC(double xmin);
-
-   public abstract double eval(double x);
-
-   public abstract double getPositionMax();
-
+   
    protected double processMax() {
       double[] oldest = new double[]{z0, d0, 0};
       double[] upper = new double[]{z1, d1, 1};

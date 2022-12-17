@@ -17,6 +17,13 @@ public class Poly7Test  {
     }
     
     @Test
+    public void testSecondDer(){
+        double t = 1.5;
+        double second = 6*t- 2*(poly7012.a + poly7012.b + poly7012.c);
+        Assert.assertEquals(second , poly7012.secondDer(t), 1.0E-8);
+    }
+    
+    @Test
     public void testDer() {
         double x2coeff = poly7012.t0 + poly7012.t1 + poly7012.t2;
         Assert.assertEquals(0, x2coeff, 1.0E-8);

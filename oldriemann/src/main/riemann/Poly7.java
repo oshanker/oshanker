@@ -5,7 +5,7 @@ import math.LinearEquation;
 import java.text.NumberFormat;
 import java.util.Arrays;
 
-public class Poly7 {
+public class Poly7 implements Poly {
     static NumberFormat nf = NumberFormat.getInstance();
     static {
         nf.setMinimumFractionDigits(7);
@@ -132,7 +132,8 @@ public class Poly7 {
         return max1;
     }
     
-    double der(double x) {
+    @Override
+    public double der(double x) {
         if (Math.abs(x-a) < 1.0E-10 ) {
             return d0;
         }
@@ -156,12 +157,25 @@ public class Poly7 {
         return ret;
     }
     
-    double eval(double x) {
+    @Override
+    public double eval(double x) {
         double prod = (x-a)*(x-b)*(x-c);
         double ret = prod*(t0*(x-b)*(x-c) + t1*(x-a)*(x-c)+ t2*(x-a)*(x-b));
         if(poly7term != null) {
             ret += poly7term.eval(x);
         }
+        return ret;
+    }
+    
+    @Override
+    public double getPositionMax() {
+        return positionMax((a + b) / 2, a, b);
+    }
+    
+    @Override
+    public double secondDer(double t) {
+        double incr = 0.001*(b-a);
+        double ret = (der(t + incr) - der(t - incr)) / (2 * incr);
         return ret;
     }
     
