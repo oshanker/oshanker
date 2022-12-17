@@ -29,6 +29,7 @@ public class Interpolate {
 		USE_POLY4,
 		USE_MIXED,
 		USE_POLY5,
+        USE_POLY7
 	};
 	
 	public enum GramOrMid{
@@ -61,6 +62,8 @@ public class Interpolate {
     static int breaks = 0;
     static double zetaCorrection1;
     static  double absMax = 0;
+    static boolean gotThree = false;
+    
     public static int correction = 0;
     public static double baseLimit;
     public static double gramIncr;
@@ -359,7 +362,9 @@ poly 1.4731822664990701
                 System.out.println(" reached end? "
                   + Arrays.toString(lastZeroSeen1));
             }
-            if (lastZeroSeen1[0] != zeroInput.lastZero[0]){
+            if (lastZeroSeen1[0] != zeroInput.lastZero[0]) {
+                // sometimes, we cross zero intervals which contain no Gram or mid
+                // point (small intervals). This is where we get breaks.
                 breaks++;
             } 
             System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
@@ -368,18 +373,39 @@ poly 1.4731822664990701
             final double d0 = zeroInput.lastZero[1];
             final double d1 = zeroInput.nextValues[1];
             final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
+            
+            //populate poly
             switch (polyOption) {
 			case USE_POLY4:
 				poly = new Poly4(z0,z1, d0,d1,max);
 				break;
-
-			case USE_MIXED:
+    
+                case USE_POLY7:
+                    poly = new Poly4(z0,z1, d0,d1,max);
+                    if (Double.isFinite(Rosser.zeros[0])) {
+                        if(!gotThree) {
+                            gotThree = true;
+                            //{244.15890691298068396, -20.007604626096071598,  -1.232146174810101691},
+                            System.out.println(Arrays.toString(Rosser.zeros));
+                            System.out.println(Arrays.toString(Rosser.derivatives));
+                            System.out.println("Rosser.extrema " + Arrays.toString(Rosser.extrema));
+                            System.out.println( "fAtBeta: " + Arrays.toString(fAtBeta[0]) + ", " );
+                        }
+                        ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+                        double secondDer = zeroPoly.secondDer(1);
+                        poly5 = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+                    } else {
+                        // never comes here
+                        poly5 = new Poly4(z0,z1, d0,d1,max);
+                    }
+                    break;
+    
+                case USE_MIXED:
 				poly = new Poly4(z0,z1, d0,d1,max);
 	            if (Double.isFinite(Rosser.zeros[0])) {
 		            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
 		            double secondDer = zeroPoly.secondDer(1);
 		            poly5 = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
-	            	
 	            } else {
 	            	poly5 = new Poly4(z0,z1, d0,d1,max);
 	            }
@@ -398,6 +424,7 @@ poly 1.4731822664990701
 				break;
 			}
         }
+        
         double zetaEstMid;
         switch (polyOption) {
 		   case USE_MIXED:
@@ -416,7 +443,8 @@ poly 1.4731822664990701
 			break;
         
         }
-       return zetaEstMid;
+        
+        return zetaEstMid;
     }
     
     public static void  consolidatedF(  ) throws IOException {

@@ -41,11 +41,23 @@ public class Rosser {
 	private static int badCount;
     public static Map<String,String> configParams;
     
+    /**
+     * last three zeros
+     */
     public static double[] zeros = new double[] {Double.NEGATIVE_INFINITY, 
     		Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
     };
-    public static double[] derivatives = new double[] {Double.NEGATIVE_INFINITY, 
+    /**
+     * last three derivatives
+     */
+    public static double[] derivatives = new double[] {Double.NEGATIVE_INFINITY,
     		Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
+    };
+    /**
+     * last three extrema
+     */
+    public static double[] extrema = new double[] {Double.NEGATIVE_INFINITY,
+        Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
     };
 	
 	// one instance per type of Gram Block and pattern
@@ -170,6 +182,7 @@ public class Rosser {
                 }
                 update(nextValues);
 			}
+   
 			if(zero >= upperLimit){
 				break;
 			}
@@ -195,10 +208,12 @@ public class Rosser {
 		zeros[1] = zeros[2];
 		zeros[2] = nextValues[0];
 		if (nextValues.length>1) {
-			derivatives[0] = derivatives[1];
-			derivatives[1] = derivatives[2];
-			derivatives[2] = nextValues[1];
-			
+            derivatives[0] = derivatives[1];
+            derivatives[1] = derivatives[2];
+            derivatives[2] = nextValues[1];
+            extrema[0] = extrema[1];
+            extrema[1] = extrema[2];
+            extrema[2] = nextValues[1]>0?nextValues[2]:-nextValues[2];
 		}
 		
 	}
