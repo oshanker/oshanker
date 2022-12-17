@@ -14,8 +14,6 @@ public class Poly7 {
     final double d0, d1, d2;
     double t0, t1, t2;
     double m0, m1;
-    double currentMax0, currentMax1;
-    double positionMax0, positionMax1;
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
@@ -31,10 +29,6 @@ public class Poly7 {
         t0 = d0/(t0*t0);
         t1 = d1/(t1*t1);
         t2 = d2/(t2*t2);
-        positionMax0 = positionMax((a+b)/2, a, b);
-        currentMax0 = eval(positionMax0);
-        positionMax1 = positionMax((b+c)/2, b, c);
-        currentMax1 = eval(positionMax1);
     }
     
     public Poly7(double a, double b, double c,
@@ -42,6 +36,25 @@ public class Poly7 {
         this(a, b, c, a1, b1, c1);
         this.m0 = m0;
         this.m1 = m1;
+        double positionMax0 = positionMax((a + b) / 2, a, b);
+        double currentMax0 = eval(positionMax0);
+        double positionMax1 = positionMax((b + c) / 2, b, c);
+        double currentMax1 = eval(positionMax1);
+        if(Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1)>1.0E-8) {
+            double incr = 0.1;
+            setTerm(0, incr);
+            double pNextMax0 = positionMax((a + b) / 2, a, b);
+            double cNextMax0 = eval(pNextMax0);
+            double pNextMax1 = positionMax((b + c) / 2, b, c);
+            double cNextMax1 = eval(pNextMax1);
+            double coeff01 = (cNextMax0-currentMax0)/incr;
+            double coeff11 = (cNextMax1-currentMax1)/incr;
+            double delB0 = (m0-currentMax0)/coeff01;
+            System.out.println(delB0);
+            double delB1 = (m1-currentMax1)/coeff11;
+            System.out.println(delB1);
+            setTerm(0, (delB0+delB1)/2);
+        }
         
     }
     
@@ -134,11 +147,11 @@ public class Poly7 {
     
     public static void main(String[] args) {
         Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2,
-            0.3849001794597505, -0.3849001794597505);
-        poly7.setTerm(0, 1);
+            0.4589742535338246, -0.31082610538567645);
+        poly7.setTerm(0, 0.5);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
-        tabulate(poly7);
+        //tabulate(poly7);
         //y = y0 + (y1-y0)*(x-x0)/(x1-x0)
         //y0*(x1-x0) + (y1-y0)*(x-x0)
         //x = x0-y0*(x1-x0)/(y1-y0)
