@@ -1,6 +1,9 @@
 package riemann;
 
+import math.LinearEquation;
+
 import java.text.NumberFormat;
+import java.util.Arrays;
 
 public class Poly7 {
     static NumberFormat nf = NumberFormat.getInstance();
@@ -33,36 +36,51 @@ public class Poly7 {
     }
     
     public Poly7(double a, double b, double c,
-                 double a1, double b1, double c1, double m0, double m1) {
+                 double a1, double b1, double c1,
+                 double m0, double m1) {
         this(a, b, c, a1, b1, c1);
         this.m0 = m0;
         this.m1 = m1;
+        
         double positionMax0 = positionMax((a + b) / 2, a, b);
         double currentMax0 = eval(positionMax0);
         double positionMax1 = positionMax((b + c) / 2, b, c);
         double currentMax1 = eval(positionMax1);
-        if(Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1)>1.0E-8) {
+        int iter = 0;
+        double deviation = (Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1));
+        while(deviation>1.0E-8) {
             double[][] coeff = new double[2][2];
+            populateCoeff(currentMax0, currentMax1, 0, coeff);
             populateCoeff(currentMax0, currentMax1, 1, coeff);
-            double delB0 = (m0-currentMax0)/coeff[0][1];
-            System.out.println(delB0);
-            double delB1 = (m1-currentMax1)/coeff[1][1];
-            System.out.println(delB1);
-    
-            poly7term = new Poly7term(a, b, c,0, (delB0+delB1)/2);
+            LinearEquation linearEquation = new LinearEquation(coeff);
+            double[] neededZetaIncrement = {
+                (m0-currentMax0),
+                (m1-currentMax1)
+            };
+            double[] solution = linearEquation.solve(
+                neededZetaIncrement
+            );
+            System.out.println(iter++ + " Required increment " );
+            System.out.println( Arrays.toString(solution));
+            incrementTermTemp(solution);
+            positionMax0 = positionMax(positionMax0, a, b);
+            currentMax0 = eval(positionMax0);
+            positionMax1 = positionMax(positionMax1, b, c);
+            currentMax1 = eval(positionMax1);
+            deviation = (Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1));
+            System.out.println("deviation " + deviation);
+            if (iter>8) {
+                break;
+            }
         }
-        
     }
     
-    private double populateCoeff( double currentMax0, double currentMax1, int idx, double[][] coeff) {
-        double deviation = (Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1));
-        if(deviation<1.0E-8){
-            return deviation;
-        }
+    private void populateCoeff( double currentMax0, double currentMax1, int idx, double[][] coeff) {
+    
         double incr = 0.1;
         double[] a1b1 = {0, 0};
         a1b1[idx] = incr;
-        setTermTemp(a1b1);
+        incrementTermTemp(a1b1);
         double pNextMax0 = positionMax((a + b) / 2, a, b);
         double cNextMax0 = eval(pNextMax0);
         double pNextMax1 = positionMax((b + c) / 2, b, c);
@@ -70,16 +88,21 @@ public class Poly7 {
         coeff[0][idx] = (cNextMax0- currentMax0)/ incr;
         coeff[1][idx] = (cNextMax1- currentMax1)/ incr;
         unsetTerm();
-        return deviation;
     }
     
     void setTerm(double a1, double b1) {
         poly7term = new Poly7term(a, b, c, a1, b1);
     }
     
-    void setTermTemp(double[] a1b1) {
+    void incrementTermTemp(double[] a1b1) {
         oldTerm = poly7term;
-        poly7term = new Poly7term(a, b, c, a1b1[0], a1b1[1]);
+        if(poly7term==null) {
+            poly7term = new Poly7term(a, b, c, a1b1[0], a1b1[1]);
+        } else {
+            poly7term = new Poly7term(a, b, c,
+                poly7term.A + a1b1[0],
+                poly7term.B + a1b1[1]);
+        }
     }
     
     void unsetTerm() {
@@ -174,6 +197,7 @@ public class Poly7 {
             0.4589742535338246, -0.31082610538567645);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("============= " );
         //A = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
             0.41689197105413617, -0.2700198241673988);
