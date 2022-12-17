@@ -66,6 +66,43 @@ public class RiemannTest {
     }
     
     @Test
+    public void testPoly7() throws IOException {
+        double[] limits = StaticMethods.gramE12[0];
+        double t = limits[0];
+        GSeries gSeries = StaticMethods.getSavedGSeries(limits[0], BigDecimal.valueOf(1.0E12));
+        System.out.println("zeta " +
+            gSeries.evaluateZeta(t, initialPadding) +
+            " t  " + t );
+        double[][] zeroInfo = {
+            {244.15890691298068396, -20.007604626096071598,  -1.232146174810101691},
+            {244.367502584863394599,  19.343950349024609636,  1.554959200487025184},
+            {244.588579452072075626,  -27.175877175067416402,  -3.420984658449017779},
+        };
+        Poly7 poly7 = new Poly7(
+            zeroInfo[0][0], zeroInfo[1][0], zeroInfo[2][0],
+            zeroInfo[0][1], zeroInfo[1][1], zeroInfo[2][1],
+            zeroInfo[0][2], zeroInfo[1][2]
+        );
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("poly7term " + poly7.poly7term.A
+            + " " + poly7.poly7term.B);
+        System.out.println("============= " );
+        
+        double incr  = gSeries.spacing/2;
+        t += 3*incr;
+        for (int i = 0; i < 3; i++) {
+            t += incr;
+            System.out.println("zeta " +
+                gSeries.evaluateZeta(t, initialPadding) +
+                " t  " + t );
+            System.out.println("poly " +
+                poly7.eval(t)
+                );
+        }
+    }
+    
+    @Test
     public void testSavedE12() throws IOException {
         for (int i = 0; i < StaticMethods.gramE12.length; i++) {
             double[] limits = StaticMethods.gramE12[i];

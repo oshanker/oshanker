@@ -780,7 +780,7 @@ public class GSeriesTest {
             while (zeroPosition<=upper){
                 double zeta = gAtBeta.evaluateZeta(zeroPosition, 40);
                 double der = gAtBeta.evaluateDer(zeroPosition, 40);
-                System.out.println("zeroPosition " + zeroPosition
+                System.out.println("t " + zeroPosition
                         + " : zeta from GSeries: " + zeta
                         + " : der from GSeries: " + der
                 );
@@ -808,6 +808,7 @@ public class GSeriesTest {
             double der = gAtBeta.evaluateDer(zeroPosition, 40);
             assertEquals(expectedDer, der, 0.00006);
             System.out.println("** i " + ++i);
+            System.out.println("{" + in + "},");
             System.out.println("zeroPosition " + zeroPosition + " : eval from GSeries: " + zeta);
             System.out.println(
                     "expectedDer  "
