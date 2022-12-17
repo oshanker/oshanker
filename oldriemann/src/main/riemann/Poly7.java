@@ -46,7 +46,7 @@ public class Poly7 {
             populateCoeff(currentMax0, currentMax1, 1, coeff);
             double delB0 = (m0-currentMax0)/coeff[0][1];
             System.out.println(delB0);
-            double delB1 = (m1-currentMax1)/coeff[0][1];
+            double delB1 = (m1-currentMax1)/coeff[1][1];
             System.out.println(delB1);
     
             poly7term = new Poly7term(a, b, c,0, (delB0+delB1)/2);
