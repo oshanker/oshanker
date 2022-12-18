@@ -99,6 +99,8 @@ deviation NaN Bad Poly7{
 }
 
          */
+        Poly7.epsilon = 1.0E-6;
+        Poly7.derepsilon = 1.0E-6;
         double[] limits = StaticMethods.gramE12[0];
         double t = limits[0];
         GSeries gSeries = StaticMethods.getSavedGSeries(limits[0], BigDecimal.valueOf(1.0E12));
@@ -155,6 +157,25 @@ deviation NaN Bad Poly7{
             1.3190132125782246,
             -0.9281998769066759,
             366.9272070782925
+        );
+        double deviation = poly7.setTermValues();
+        System.out.println("deviation " + deviation);
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("============= " );
+        
+    }
+    
+    @Test
+    public void badCase2() {
+        Poly7.epsilon = 1.0E-6;
+        Poly7.derepsilon = 1.0E-6;
+        Poly7 poly7 = new Poly7(
+            246.32312342197378, 246.7424183211807, 246.85763257596946,
+            27.697678463431405, -10.289947584846136, 7.2035474908638255
+        );
+        poly7.setExtrema(
+            4.010423055063137,-0.26392412836874457, 246.7424183211807
         );
         double deviation = poly7.setTermValues();
         System.out.println("deviation " + deviation);

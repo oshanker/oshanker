@@ -16,6 +16,15 @@ public class Poly7term {
         this.offset = offset;
     }
     
+    @Override
+    public String toString() {
+        return "Poly7term{" +
+            "A=" + A +
+            ", B=" + B +
+            ", offset=" + offset +
+            '}';
+    }
+    
     double der(double x) {
         if (Math.abs(x-a) < 1.0E-10 || Math.abs(x-b) < 1.0E-10 | Math.abs(x-c) < 1.0E-10) {
             return 0;

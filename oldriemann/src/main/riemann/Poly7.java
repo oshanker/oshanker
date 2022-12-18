@@ -19,6 +19,8 @@ public class Poly7 implements Poly {
     double m0, m1;
     private Poly7term oldTerm;
     double offset;
+    public static double epsilon = 1.0E-8;;
+    public static double derepsilon = 1.0E-8;
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
@@ -50,18 +52,16 @@ public class Poly7 implements Poly {
     @Override
     public String toString() {
         return "Poly7{" +
-            "a=" + a +
-            ", b=" + b +
-            ", c=" + c +
-            ", d0=" + d0 +
-            ", d1=" + d1 +
-            ", d2=" + d2 +
-            ", t0=" + t0 +
-            ", t1=" + t1 +
-            ", t2=" + t2 +
-            ", m0=" + m0 +
-            ", m1=" + m1 +
-            ", offset=" + offset +
+            " \n" + a +
+            ", " + b +
+            ", " + c +
+            ",\n " + d0 +
+            ", " + d1 +
+            ", " + d2 +
+            "\n " + m0 +
+            "," + m1 +
+            ", " + offset + " \n" +
+            (poly7term == null?"":poly7term) +
             '}';
     }
     
@@ -78,28 +78,30 @@ public class Poly7 implements Poly {
         double currentMax1 = eval(positionMax1);
         int iter = 0;
         double deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
-        System.out.println("input: deviation " + deviation);
-        while(deviation>1.0E-8) {
-            double[][] coeff = new double[2][2];
-            populateCoeff(currentMax0, currentMax1, 0, coeff);
-            populateCoeff(currentMax0, currentMax1, 1, coeff);
-            LinearEquation linearEquation = new LinearEquation(coeff);
-            double[] neededZetaIncrement = {
-                (m0 -currentMax0),
-                (m1 -currentMax1)
-            };
-            double[] solution = linearEquation.solve(
-                neededZetaIncrement
-            );
-            System.out.println(iter++ + " Required increment " );
-            System.out.println( Arrays.toString(solution));
-            incrementTermTemp(solution);
-            positionMax0 = positionMax(positionMax0, a, b);
-            currentMax0 = eval(positionMax0);
-            positionMax1 = positionMax(positionMax1, b, c);
-            currentMax1 = eval(positionMax1);
-            deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
-            System.out.println("deviation " + deviation);
+        
+        while(deviation> epsilon) {
+            try {
+                double[][] coeff = new double[2][2];
+                populateCoeff(currentMax0, currentMax1, 0, coeff);
+                populateCoeff(currentMax0, currentMax1, 1, coeff);
+                LinearEquation linearEquation = new LinearEquation(coeff);
+                double[] neededZetaIncrement = {
+                    (m0 -currentMax0),
+                    (m1 -currentMax1)
+                };
+                double[] solution = linearEquation.solve(
+                    neededZetaIncrement
+                );
+                incrementTermTemp(solution);
+                positionMax0 = positionMax(positionMax0, a, b);
+                currentMax0 = eval(positionMax0);
+                positionMax1 = positionMax(positionMax1, b, c);
+                currentMax1 = eval(positionMax1);
+                deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
+            } catch (IllegalStateException e) {
+                System.out.println(this);
+                throw e;
+            }
             if (iter>8) {
                 break;
             }
@@ -213,16 +215,29 @@ public class Poly7 implements Poly {
     
     double positionMax(double x0, double xa, double xb) {
         double derx0 = 0;
-        while (xb-xa>0.001) {
-            double signumxa = Math.signum(der(xa));
+        double derxb = 0;
+        double derxa = 0;
+        while (xb-xa>0.000001) {
+            derxa = der(xa);
+            if (Math.abs(derxa) < derepsilon) {
+                return xa;
+            }
+            double signumxa = Math.signum(derxa);
             if (signumxa == 0) {
                 return xa;
             }
-            double signumxb = Math.signum(der(xb));
+            derxb = der(xb);
+            if (Math.abs(derxb) < derepsilon) {
+                return xb;
+            }
+            double signumxb = Math.signum(derxb);
             if (signumxb == 0) {
                 return xb;
             }
             derx0 = der(x0);
+            if (Math.abs(derx0) < derepsilon) {
+                return x0;
+            }
             double signumx0 = Math.signum(derx0);
             if (signumx0 == 0) {
                 return x0;
@@ -238,13 +253,13 @@ public class Poly7 implements Poly {
 //        + " derx0 " + derx0);
         
         double der = der(x0);
-        if (Math.abs(der) < 1.0E-8) {
+        if (Math.abs(der) < derepsilon) {
             return x0;
         }
-        double incr = 0.001*(xb-xa);
+        double incr = 0.1*(xb-xa);
         double next = x0 + incr;
         double derNext = der(next);
-        if (Math.abs(derNext) < 1.0E-8) {
+        if (Math.abs(derNext) < derepsilon) {
             return next;
         }
     
@@ -255,12 +270,15 @@ public class Poly7 implements Poly {
             x0 = next;
             next = oldx0 - oldder*(next-oldx0)/(derNext-oldder);
             if (next < xa || next > xb){
+                System.out.println("derxa " + derxa + " derxb " + derxb);
+                System.out.println("oldder " + oldder);
+                System.out.println("der " + der);
                 throw new IllegalStateException(xa + " next " + next
                 + " xb " + xb);
             }
             derNext = der(next);
 //            System.out.println(next + " derNext " + derNext);
-            if (Math.abs(derNext) < 1.0E-8) {
+            if (Math.abs(derNext) < derepsilon) {
                 return next;
             }
         }

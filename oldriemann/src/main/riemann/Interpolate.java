@@ -38,10 +38,15 @@ public class Interpolate {
 	}
 	
     static NumberFormat nf = NumberFormat.getInstance();
+    
+    public static final double EPSILON = 1.0E-4;
+    
     static {
         nf.setMinimumFractionDigits(7);
         nf.setMaximumFractionDigits(7);
         nf.setGroupingUsed(false);
+        Poly7.epsilon = EPSILON;
+        Poly7.derepsilon = 1.0E-6;
         getZerosFile();
     }
     public static BigDecimal offset;
@@ -57,7 +62,7 @@ public class Interpolate {
     public static ZeroInfo zeroInput;
     public static Poly poly = null;
     public static Poly poly5 = null;
-    public static PolyOption polyOption = PolyOption.USE_MIXED;
+    public static PolyOption polyOption = PolyOption.USE_POLY7;
     
     static int breaks = 0;
     static double zetaCorrection1;
@@ -181,6 +186,7 @@ poly 1.4731822664990701
             oldZeta = zeta;
 
             upperLimit += gramIncr/2;
+            //
             zeta = getZetaEstimate(nprime, idx, upperLimit, zetaMidMean,
                 imFmid, GramOrMid.MID);
             //            System.out.println("mid  2*zeta " + 2*zeta + ", " +  upperLimit + " (" + (n+1) +")");
@@ -195,20 +201,51 @@ poly 1.4731822664990701
             count++;
         }
         System.out.println( "breaks: " + breaks);
-        System.out.println("*** zetaMidMeanOdd " + 2*zetaMidMean[1]/N);
-        System.out.println("*** zetaGramMeanOdd " + 2*zetaGramMean[1]/N);
-        System.out.println("*** zetaMidMeanEven " + 2*zetaMidMean[0]/N);
-        System.out.println("*** zetaGramMeanEven " + 2*zetaGramMean[0]/N);
+        double zetaMidMeanOdd = 2 * zetaMidMean[1] / N;
+        System.out.println("*** zetaMidMeanOdd " + zetaMidMeanOdd);
+        double zetaGramMeanOdd = 2 * zetaGramMean[1] / N;
+        System.out.println("*** zetaGramMeanOdd " + zetaGramMeanOdd);
+        double zetaMidMeanEven = 2 * zetaMidMean[0] / N;
+        System.out.println("*** zetaMidMeanEven " + zetaMidMeanEven);
+        double zetaGramMeanEven = 2 * zetaGramMean[0] / N;
+        System.out.println("*** zetaGramMeanEven " + zetaGramMeanEven);
         System.out.println("*** ***");
         System.out.println("*** crossEven " + 8*cross[0]/N);
         System.out.println("*** crossOdd " + 8*cross[1]/N);
-        
+        double zeroSum = 0;
+        double oneSum = 0;
+        for (int i = 0; i < fAtBeta.length; i++) {
+            if (i % 2 == 0) {
+                // -zetaGramMeanEven-1
+                fAtBeta[i][0] += (zetaGramMeanEven+1);
+                zeroSum += fAtBeta[i][0];
+            } else {
+                //add 1-zetaGramMeanOdd
+                fAtBeta[i][0] += (1-zetaGramMeanOdd);
+                oneSum += fAtBeta[i][0];
+            }
+        }
+        //System.out.println("zeroSum " + 2*zeroSum/N + " oneSum " + 2*oneSum/N);
+        zeroSum = 0;
+        oneSum = 0;
+        for (int i = 0; i < fAtBeta.length; i++) {
+            if (i % 2 == 0) {
+                // add zetaMidMeanEven
+                //imFmid[i][1] += zetaMidMeanEven;
+                zeroSum += imFmid[i][1];
+            } else {
+                // subt zetaMidMeanOdd
+                //imFmid[i][1] -= zetaMidMeanOdd;
+                oneSum += imFmid[i][1];
+            }
+        }
+        System.out.println("zeroSum " + 2*zeroSum/N + " oneSum " + 2*oneSum/N);
         //imFGramPoints( );
         //reFMidGramPoints();
         //spline fit
         consolidatedF();
         double[][] consolidated = new double[2*imFmid.length][2];
-		  for (int i = 0; i < imFmid.length; i++) {
+		for (int i = 0; i < imFmid.length; i++) {
             consolidated[2*i][0] = fAtBeta[i][0];
             consolidated[2*i][1] = fAtBeta[i][1];
             consolidated[2*i+1][0] = imFmid[i][0];
@@ -383,7 +420,7 @@ poly 1.4731822664990701
                         Poly7 poly7 = (Poly7) Interpolate.poly;
                         poly7.setExtrema(Rosser.extrema[0], Rosser.extrema[1], Rosser.zeros[1]);
                         double deviation = poly7.setTermValues();
-                        if(deviation > 1.0E-5 || !Double.isFinite(deviation)){
+                        if(deviation > EPSILON || !Double.isFinite(deviation)){
                             System.out.println("deviation " + deviation + " Bad " + poly7);
                             throw new IllegalStateException("no convergence");
                         }
