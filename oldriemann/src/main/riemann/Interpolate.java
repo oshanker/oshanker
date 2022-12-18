@@ -386,8 +386,9 @@ poly 1.4731822664990701
         if(polyOption == PolyOption.USE_POLY7 && useNewCode){
             //logic for PolyOption.USE_POLY7
             //move here
-            if(zeroInfo.size()<3) {
-                int needed = 3 - zeroInfo.size();
+            int desiredSize = 4;
+            if(zeroInfo.size()< desiredSize) {
+                int needed = desiredSize - zeroInfo.size();
                 for (int i = 0; i < needed; i++) {
                     double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
                     if(nextValues[1]<0){
@@ -412,7 +413,7 @@ poly 1.4731822664990701
             while (upperLimit > zeroInfo.get(2)[0]) {
                 double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
                 if(nextValues == null) {
-                    throw new IllegalStateException("input exhausted");
+                    break;
                 }
                 if(nextValues[1]<0){
                     nextValues[2]=-nextValues[2];
