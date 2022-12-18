@@ -57,7 +57,7 @@ public class Interpolate {
     public static ZeroInfo zeroInput;
     public static Poly poly = null;
     public static Poly poly5 = null;
-    public static PolyOption polyOption = PolyOption.USE_POLY7;
+    public static PolyOption polyOption = PolyOption.USE_MIXED;
     
     static int breaks = 0;
     static double zetaCorrection1;
@@ -379,9 +379,14 @@ poly 1.4731822664990701
                         }
                         poly = new Poly7(
                             Rosser.zeros[0], Rosser.zeros[1], Rosser.zeros[2],
-                            Rosser.derivatives[0], Rosser.derivatives[1], Rosser.derivatives[2],
-                            Rosser.extrema[0], Rosser.extrema[1], 0
-                        );
+                            Rosser.derivatives[0], Rosser.derivatives[1], Rosser.derivatives[2]);
+                        Poly7 poly7 = (Poly7) Interpolate.poly;
+                        poly7.setExtrema(Rosser.extrema[0], Rosser.extrema[1], Rosser.zeros[1]);
+                        double deviation = poly7.setTermValues();
+                        if(deviation > 1.0E-5 || !Double.isFinite(deviation)){
+                            System.out.println("deviation " + deviation + " Bad " + poly7);
+                            throw new IllegalStateException("no convergence");
+                        }
                     } else {
                         // never comes here
                         throw new IllegalStateException("shouldnt get here");

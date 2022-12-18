@@ -47,7 +47,31 @@ public class Poly7 implements Poly {
         setTermValues();
     }
     
-    public void setTermValues() {
+    @Override
+    public String toString() {
+        return "Poly7{" +
+            "a=" + a +
+            ", b=" + b +
+            ", c=" + c +
+            ", d0=" + d0 +
+            ", d1=" + d1 +
+            ", d2=" + d2 +
+            ", t0=" + t0 +
+            ", t1=" + t1 +
+            ", t2=" + t2 +
+            ", m0=" + m0 +
+            ", m1=" + m1 +
+            ", offset=" + offset +
+            '}';
+    }
+    
+    public void setExtrema (double m0, double m1, double offset) {
+        this.m0 = m0;
+        this.m1 = m1;
+        this.offset = offset;
+    }
+    
+    public double setTermValues() {
         double positionMax0 = positionMax((a + b) / 2, a, b);
         double currentMax0 = eval(positionMax0);
         double positionMax1 = positionMax((b + c) / 2, b, c);
@@ -79,6 +103,7 @@ public class Poly7 implements Poly {
                 break;
             }
         }
+        return deviation;
     }
     
     private void populateCoeff( double currentMax0, double currentMax1, int idx, double[][] coeff) {
