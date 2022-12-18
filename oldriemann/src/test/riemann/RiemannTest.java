@@ -137,6 +137,34 @@ deviation NaN Bad Poly7{
     }
     
     @Test
+    public void badCase1() {
+        Poly7 poly7 = new Poly7(
+            366.6474495506842,
+            366.9272070782925,
+            367.1694973548008,
+            9.49029728124495,
+            -14.602482306322326,
+            6.709988520987169
+        );
+        poly7.tabulate(
+            366.927207078292,
+            367.1694973548008,
+            20
+        );
+        poly7.setExtrema(
+            1.3190132125782246,
+            -0.9281998769066759,
+            366.9272070782925
+        );
+        double deviation = poly7.setTermValues();
+        System.out.println("deviation " + deviation);
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("============= " );
+        
+    }
+    
+    @Test
     public void testSavedE12() throws IOException {
         for (int i = 0; i < StaticMethods.gramE12.length; i++) {
             double[] limits = StaticMethods.gramE12[i];

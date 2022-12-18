@@ -6,18 +6,13 @@ public class Poly7term {
     double offset;
     
     public Poly7term(double a, double b, double c,
-                     double a1, double b1) {
+                     double a1, double b1, double offset)
+    {
         this.a = a;
         this.b = b;
         this.c = c;
         A = a1;
         B = b1;
-    }
-    
-    public Poly7term(double a, double b, double c,
-                     double a1, double b1, double offset)
-    {
-        this(a, b, c, a1, b1);
         this.offset = offset;
     }
     
@@ -65,7 +60,7 @@ public class Poly7term {
     }
     
     public static void main(String[] args) {
-        Poly7term poly7term = new Poly7term(0, 1, 2, 0, 1);
+        Poly7term poly7term = new Poly7term(0, 1, 2, 0, 1, 0);
         tabulate(poly7term);
         poly7term.positionMax(0.5, 0, 1);
     }

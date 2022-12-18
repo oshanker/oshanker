@@ -78,6 +78,7 @@ public class Poly7 implements Poly {
         double currentMax1 = eval(positionMax1);
         int iter = 0;
         double deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
+        System.out.println("input: deviation " + deviation);
         while(deviation>1.0E-8) {
             double[][] coeff = new double[2][2];
             populateCoeff(currentMax0, currentMax1, 0, coeff);
@@ -128,11 +129,11 @@ public class Poly7 implements Poly {
     void incrementTermTemp(double[] a1b1) {
         oldTerm = poly7term;
         if(poly7term==null) {
-            poly7term = new Poly7term(a, b, c, a1b1[0], a1b1[1]);
+            poly7term = new Poly7term(a, b, c, a1b1[0], a1b1[1], offset);
         } else {
             poly7term = new Poly7term(a, b, c,
                 poly7term.A + a1b1[0],
-                poly7term.B + a1b1[1]);
+                poly7term.B + a1b1[1], offset);
         }
     }
     
@@ -211,6 +212,31 @@ public class Poly7 implements Poly {
     }
     
     double positionMax(double x0, double xa, double xb) {
+        double derx0 = 0;
+        while (xb-xa>0.001) {
+            double signumxa = Math.signum(der(xa));
+            if (signumxa == 0) {
+                return xa;
+            }
+            double signumxb = Math.signum(der(xb));
+            if (signumxb == 0) {
+                return xb;
+            }
+            derx0 = der(x0);
+            double signumx0 = Math.signum(derx0);
+            if (signumx0 == 0) {
+                return x0;
+            }
+            if(signumx0 == signumxa) {
+                xa = x0;
+            } else {
+                xb = x0;
+            }
+            x0 = (xa+xb)/2;
+        }
+//        System.out.println("x0 " + x0 + " xa " + xa + " xb " + xb
+//        + " derx0 " + derx0);
+        
         double der = der(x0);
         if (Math.abs(der) < 1.0E-8) {
             return x0;
@@ -228,10 +254,18 @@ public class Poly7 implements Poly {
             der = derNext;
             x0 = next;
             next = oldx0 - oldder*(next-oldx0)/(derNext-oldder);
+            if (next < xa || next > xb){
+                throw new IllegalStateException(xa + " next " + next
+                + " xb " + xb);
+            }
             derNext = der(next);
+//            System.out.println(next + " derNext " + derNext);
             if (Math.abs(derNext) < 1.0E-8) {
                 return next;
             }
+        }
+        if(!Double.isFinite(next)){
+            throw new IllegalStateException(xa + " ");
         }
         return next;
     }
@@ -254,6 +288,18 @@ public class Poly7 implements Poly {
         //x = x0-y0*(x1-x0)/(y1-y0)
     }
     
+    public void tabulate(double xa, double xb, int steps) {
+        double incr = (xb-xa)/(steps-1);
+        
+        for (int i = 0; i < steps; i++) {
+            double x = xa + i*incr;
+            System.out.println(nf.format(x) +
+                " " + nf.format(eval(x)) +
+                " der " + nf.format(der(x))
+            );
+        }
+        
+    }
     private static void tabulate(Poly7 poly7term) {
         for (double x = -0.1; x < 2.2; x += 0.05) {
             System.out.println(nf.format(x) +

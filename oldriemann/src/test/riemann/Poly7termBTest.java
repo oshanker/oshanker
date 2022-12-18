@@ -12,7 +12,7 @@ public class Poly7termBTest {
     static double B = 0.5;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        poly7term012 = new Poly7term(0, 1, 2, 0, 1);
+        poly7term012 = new Poly7term(0, 1, 2, 0, 1, 0);
         poly7012 = new Poly7(0, 1, 2, 2, -1, 2);
         poly7B012 = new Poly7(0, 1, 2, 2, -1, 2);
         poly7B012.setTerm(0, B, 0);
