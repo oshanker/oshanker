@@ -9,6 +9,10 @@ import java.util.Arrays;
 import riemann.Rosser.ZeroInfo;
 
 public class CopyZeroInformation {
+    /**
+     * Always reads at least one line.
+     * Reads one line if lower is zero or less.
+     */
     public static double[] skipUntil(
           BufferedReader[] zeroIn,  double lower)
           throws IOException {

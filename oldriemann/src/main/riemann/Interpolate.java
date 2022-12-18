@@ -17,6 +17,7 @@ import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +26,9 @@ import math.ZeroPoly;
 import riemann.Rosser.ZeroInfo;
 
 public class Interpolate {
-	public enum PolyOption{
+    private static boolean useNewCode = true;
+    
+    public enum PolyOption{
 		USE_POLY4,
 		USE_MIXED,
 		USE_POLY5,
@@ -39,7 +42,7 @@ public class Interpolate {
 	
     static NumberFormat nf = NumberFormat.getInstance();
     
-    public static final double EPSILON = 1.0E-4;
+    public static final double EPSILON = 1.0E-6;
     
     static {
         nf.setMinimumFractionDigits(7);
@@ -63,6 +66,7 @@ public class Interpolate {
     public static Poly poly = null;
     public static Poly poly5 = null;
     public static PolyOption polyOption = PolyOption.USE_POLY7;
+    private static LinkedList<double[]> zeroInfo = new LinkedList<>();
     
     static int breaks = 0;
     static double zetaCorrection1;
@@ -151,14 +155,15 @@ poly 0.370781357369394
 zeta 1.4730916429534908 t  244.50835726537247
 poly 1.4731822664990701
          */
+        if(polyOption != PolyOption.USE_POLY7 || !useNewCode) {
         /*
         Reading the first zero
          */
-        zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
-        System.out.println(Arrays.toString(zeroInput.lastZero)  +
+            zeroInput = Rosser.readZeros(baseLimit, out, zeroIn, null);
+            System.out.println(Arrays.toString(zeroInput.lastZero) +
                 ", " + baseLimit + ", " + Arrays.toString(zeroInput.nextValues));
-        System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
-        
+            System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
+        }
         //f at Mid. 0 -> real. 1 -> im
         imFmid = new double[N][2];
         //f at Gram. 0 -> real. 1 -> im
@@ -193,8 +198,11 @@ poly 1.4731822664990701
             if (count == N - 1) {
                 System.out.println("final n " + nprime);
                 System.out.println();
-                System.out.println(Arrays.toString(zeroInput.lastZero) + ", \n" + upperLimit + ", "
-                        + Arrays.toString(zeroInput.nextValues));
+                System.out.println( upperLimit  );
+                if(zeroInput != null) {
+                    System.out.println(Arrays.toString(zeroInput.lastZero)   );
+                    System.out.println(Arrays.toString(zeroInput.nextValues));
+                }
                 System.out.println("mid " + zeta + ", " +  upperLimit + " (" + (nprime+1) +")");
             }
             idx++;
@@ -302,14 +310,16 @@ poly 1.4731822664990701
         count = 0;
         double base = baseLimit + gramIncr/4;
         long sampleSize = N - 2*initialPadding;
+        double upperLimit = 0;
         while (count < sampleSize  ) {
             int n = count + noffset+initialPadding;
-            double upperLimit = base + (n-correction-1) * (gramIncr);
+            upperLimit = base + (n-correction-1) * (gramIncr);
             double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
             final int nmod2 = n%2;
             zetaGramMean[nmod2] += zeta;
             count++;
         }
+        System.out.println(" upperLimit " + upperLimit);
         System.out.println("*** zetaGram_pi4MeanOdd " + 2*zetaGramMean[1]/sampleSize);
         System.out.println("*** zetaGram_pi4MeanEven " + 2*zetaGramMean[0]/sampleSize);
     }
@@ -373,88 +383,138 @@ poly 1.4731822664990701
     private static final double updateZeroInput (
         double upperLimit, GramOrMid gramOrMid
     		) throws IOException {
-        
-        if ( upperLimit <= zeroInput.nextValues[0]) {
-            zeroInput = new ZeroInfo(0, zeroInput);
-        } else {
+        if(polyOption == PolyOption.USE_POLY7 && useNewCode){
+            //logic for PolyOption.USE_POLY7
+            //move here
+            if(zeroInfo.size()<3) {
+                int needed = 3 - zeroInfo.size();
+                for (int i = 0; i < needed; i++) {
+                    double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
+                    if(nextValues[1]<0){
+                        nextValues[2]=-nextValues[2];
+                    }
+                    
+                    zeroInfo.add(nextValues);
+                }
+                for (int i = 0; i < zeroInfo.size(); i++) {
+                    System.out.println(Arrays.toString(zeroInfo.get(i)));
+                }
+            }
+            if (upperLimit < zeroInfo.get(0)[0]) {
+                System.out.println(" out of range, upperLimit < zeroInfo.get(0)[0] "
+                + upperLimit + " < " + zeroInfo.get(0)[0]);
+                throw new IllegalStateException("out of range");
+            }
+            Poly7 poly7 = null;
+            if (poly != null) {
+                poly7 = (Poly7) Interpolate.poly;
+            }
+            while (upperLimit > zeroInfo.get(2)[0]) {
+                double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
+                if(nextValues == null) {
+                    throw new IllegalStateException("input exhausted");
+                }
+                if(nextValues[1]<0){
+                    nextValues[2]=-nextValues[2];
+                }
+                zeroInfo.pollFirst();
+                zeroInfo.add(nextValues);
+            }
+            if (poly == null || poly7.c < upperLimit) {
+                poly = new Poly7(
+                    zeroInfo.get(0)[0], zeroInfo.get(1)[0], zeroInfo.get(2)[0],
+                    zeroInfo.get(0)[1], zeroInfo.get(1)[1], zeroInfo.get(2)[1]);
+                poly7 = (Poly7) Interpolate.poly;
+                poly7.setExtrema(zeroInfo.get(0)[2], zeroInfo.get(1)[2], zeroInfo.get(1)[0]);
+                double deviation = poly7.setTermValues();
+                if (deviation > EPSILON || !Double.isFinite(deviation)) {
+                    System.out.println("deviation " + deviation + " Bad " + poly7);
+                    throw new IllegalStateException("no convergence");
+                }
+            }
+       } else {
+            if (upperLimit <= zeroInput.nextValues[0]) {
+                zeroInput = new ZeroInfo(0, zeroInput);
+            } else {
         /*
         Reading the next zero
          */
-            zeroInput = Rosser.readZeros(upperLimit , out, zeroIn,
+                zeroInput = Rosser.readZeros(upperLimit, out, zeroIn,
                     zeroInput.nextValues);
-            if ( zeroInput == null) {
-                System.out.println(" reached end? "
-                  + Arrays.toString(lastZeroSeen1));
-            }
-            if (lastZeroSeen1[0] != zeroInput.lastZero[0]) {
-                // sometimes, we cross zero intervals which contain no Gram or mid
-                // point (small intervals). This is where we get breaks.
-                breaks++;
-            } 
-            System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
-            final double z0 = zeroInput.lastZero[0];
-            final double z1 = zeroInput.nextValues[0];
-            final double d0 = zeroInput.lastZero[1];
-            final double d1 = zeroInput.nextValues[1];
-            final double max = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
-            
-            //populate poly
-            switch (polyOption) {
-			case USE_POLY4:
-				poly = new Poly4(z0,z1, d0,d1,max);
-				break;
-    
-                case USE_POLY7:
-                    if (Double.isFinite(Rosser.zeros[0])) {
-                        if(!gotThree) {
-                            gotThree = true;
-                            //{244.15890691298068396, -20.007604626096071598,  -1.232146174810101691},
-                            System.out.println(Arrays.toString(Rosser.zeros));
-                            System.out.println(Arrays.toString(Rosser.derivatives));
-                            System.out.println("Rosser.extrema " + Arrays.toString(Rosser.extrema));
-                            System.out.println( "fAtBeta: " + Arrays.toString(fAtBeta[0]) + ", " );
-                        }
-                        poly = new Poly7(
-                            Rosser.zeros[0], Rosser.zeros[1], Rosser.zeros[2],
-                            Rosser.derivatives[0], Rosser.derivatives[1], Rosser.derivatives[2]);
-                        Poly7 poly7 = (Poly7) Interpolate.poly;
-                        poly7.setExtrema(Rosser.extrema[0], Rosser.extrema[1], Rosser.zeros[1]);
-                        double deviation = poly7.setTermValues();
-                        if(deviation > EPSILON || !Double.isFinite(deviation)){
-                            System.out.println("deviation " + deviation + " Bad " + poly7);
-                            throw new IllegalStateException("no convergence");
-                        }
-                    } else {
-                        // never comes here
-                        throw new IllegalStateException("shouldnt get here");
-                    }
-                    break;
-    
-                case USE_MIXED:
-				poly = new Poly4(z0,z1, d0,d1,max);
-	            if (Double.isFinite(Rosser.zeros[0])) {
-		            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
-		            double secondDer = zeroPoly.secondDer(1);
-		            poly5 = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
-	            } else {
-	            	poly5 = new Poly4(z0,z1, d0,d1,max);
-	            }
-				break;
-    
-                case USE_POLY5:
-                    //use poly5
-                    if(Double.isFinite(Rosser.zeros[0])) {
-                        ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
-                        double secondDer = zeroPoly.secondDer(1);
-                        poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+                if (zeroInput == null) {
+                    System.out.println(" reached end? "
+                        + Arrays.toString(lastZeroSeen1));
+                }
+                if (lastZeroSeen1[0] != zeroInput.lastZero[0]) {
+                    // sometimes, we cross zero intervals which contain no Gram or mid
+                    // point (small intervals). This is where we get breaks.
+                    breaks++;
+                }
+                System.arraycopy(zeroInput.nextValues, 0, lastZeroSeen1, 0, zeroIn.length);
+                final double z0 = zeroInput.lastZero[0];
+                final double z1 = zeroInput.nextValues[0];
+                final double d0 = zeroInput.lastZero[1];
+                final double d1 = zeroInput.nextValues[1];
+                final double max = d0 > 0 ? zeroInput.lastZero[2] : -zeroInput.lastZero[2];
         
-                    } else {
-                        poly = new Poly4(z0,z1, d0,d1,max);
-                    }
-                    break;
-    
-                default:
-                    throw new IllegalStateException("bad poly option");
+                //populate poly
+                switch (polyOption) {
+                    case USE_POLY4:
+                        poly = new Poly4(z0, z1, d0, d1, max);
+                        break;
+            
+                    case USE_POLY7:
+                        if (Double.isFinite(Rosser.zeros[0])) {
+                            if (!gotThree) {
+                                gotThree = true;
+                                //{244.15890691298068396, -20.007604626096071598,  -1.232146174810101691},
+                                System.out.println(Arrays.toString(Rosser.zeros));
+                                System.out.println(Arrays.toString(Rosser.derivatives));
+                                System.out.println("Rosser.extrema " + Arrays.toString(Rosser.extrema));
+                                System.out.println("fAtBeta: " + Arrays.toString(fAtBeta[0]) + ", ");
+                            }
+                            poly = new Poly7(
+                                Rosser.zeros[0], Rosser.zeros[1], Rosser.zeros[2],
+                                Rosser.derivatives[0], Rosser.derivatives[1], Rosser.derivatives[2]);
+                            Poly7 poly7 = (Poly7) Interpolate.poly;
+                            poly7.setExtrema(Rosser.extrema[0], Rosser.extrema[1], Rosser.zeros[1]);
+                            double deviation = poly7.setTermValues();
+                            if (deviation > EPSILON || !Double.isFinite(deviation)) {
+                                System.out.println("deviation " + deviation + " Bad " + poly7);
+                                throw new IllegalStateException("no convergence");
+                            }
+                        } else {
+                            // never comes here
+                            throw new IllegalStateException("shouldnt get here");
+                        }
+                        break;
+            
+                    case USE_MIXED:
+                        poly = new Poly4(z0, z1, d0, d1, max);
+                        if (Double.isFinite(Rosser.zeros[0])) {
+                            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+                            double secondDer = zeroPoly.secondDer(1);
+                            poly5 = new PolyInterpolate.Poly5(z0, z1, d0, d1, secondDer, max);
+                        } else {
+                            poly5 = new Poly4(z0, z1, d0, d1, max);
+                        }
+                        break;
+            
+                    case USE_POLY5:
+                        //use poly5
+                        if (Double.isFinite(Rosser.zeros[0])) {
+                            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+                            double secondDer = zeroPoly.secondDer(1);
+                            poly = new PolyInterpolate.Poly5(z0, z1, d0, d1, secondDer, max);
+                    
+                        } else {
+                            poly = new Poly4(z0, z1, d0, d1, max);
+                        }
+                        break;
+            
+                    default:
+                        throw new IllegalStateException("bad poly option");
+                }
             }
         }
         

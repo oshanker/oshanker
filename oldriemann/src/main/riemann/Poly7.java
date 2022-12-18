@@ -251,6 +251,10 @@ public class Poly7 implements Poly {
         }
 //        System.out.println("x0 " + x0 + " xa " + xa + " xb " + xb
 //        + " derx0 " + derx0);
+        /*
+        return x0;
+        
+         */
         
         double der = der(x0);
         if (Math.abs(der) < derepsilon) {
