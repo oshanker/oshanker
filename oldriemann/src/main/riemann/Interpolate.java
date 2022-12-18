@@ -57,7 +57,7 @@ public class Interpolate {
     public static ZeroInfo zeroInput;
     public static Poly poly = null;
     public static Poly poly5 = null;
-    public static PolyOption polyOption = PolyOption.USE_MIXED;
+    public static PolyOption polyOption = PolyOption.USE_POLY7;
     
     static int breaks = 0;
     static double zetaCorrection1;
@@ -380,7 +380,7 @@ poly 1.4731822664990701
                         poly = new Poly7(
                             Rosser.zeros[0], Rosser.zeros[1], Rosser.zeros[2],
                             Rosser.derivatives[0], Rosser.derivatives[1], Rosser.derivatives[2],
-                            Rosser.extrema[0], Rosser.extrema[1]
+                            Rosser.extrema[0], Rosser.extrema[1], 0
                         );
                     } else {
                         // never comes here

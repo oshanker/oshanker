@@ -3,13 +3,22 @@ package riemann;
 public class Poly7term {
     final double a, b, c;
     double A, B;
+    double offset;
     
-    public Poly7term(double a, double b, double c, double a1, double b1) {
+    public Poly7term(double a, double b, double c,
+                     double a1, double b1) {
         this.a = a;
         this.b = b;
         this.c = c;
         A = a1;
         B = b1;
+    }
+    
+    public Poly7term(double a, double b, double c,
+                     double a1, double b1, double offset)
+    {
+        this(a, b, c, a1, b1);
+        this.offset = offset;
     }
     
     double der(double x) {
@@ -18,7 +27,7 @@ public class Poly7term {
         }
         double prod = (x-a)*(x-b)*(x-c);
         prod = prod*prod;
-        double ret = 2*(A*x+B)*prod*
+        double ret = 2*(A*(x-offset)+B)*prod*
             (1/(x-a) + 1/(x-b) + 1/(x-c)) + A*prod;
         return ret;
     }
@@ -26,7 +35,7 @@ public class Poly7term {
     double eval(double x) {
         double prod = (x-a)*(x-b)*(x-c);
         prod = prod*prod;
-        double ret = prod*(A*x+B);
+        double ret = prod*(A*(x-offset)+B);
         return ret;
     }
     

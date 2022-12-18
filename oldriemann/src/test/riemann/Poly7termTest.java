@@ -13,10 +13,10 @@ public class Poly7termTest {
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        poly7term012 = new Poly7term(0, 1, 2, 1, 0);
+        poly7term012 = new Poly7term(0, 1, 2, 1, 5, 5);
         poly7012 = new Poly7(0, 1, 2, 2, -1, 2);
         poly7A012 = new Poly7(0, 1, 2, 2, -1, 2);
-        poly7A012.setTerm(A, 0);
+        poly7A012.setTerm(A, A*5, 5);
     }
     
     @AfterClass

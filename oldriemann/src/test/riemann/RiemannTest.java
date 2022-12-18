@@ -81,7 +81,7 @@ public class RiemannTest {
         Poly7 poly7 = new Poly7(
             zeroInfo[0][0], zeroInfo[1][0], zeroInfo[2][0],
             zeroInfo[0][1], zeroInfo[1][1], zeroInfo[2][1],
-            zeroInfo[0][2], zeroInfo[1][2]
+            zeroInfo[0][2], zeroInfo[1][2], 0
         );
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());

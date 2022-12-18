@@ -15,7 +15,7 @@ public class Poly7termBTest {
         poly7term012 = new Poly7term(0, 1, 2, 0, 1);
         poly7012 = new Poly7(0, 1, 2, 2, -1, 2);
         poly7B012 = new Poly7(0, 1, 2, 2, -1, 2);
-        poly7B012.setTerm(0, B);
+        poly7B012.setTerm(0, B, 0);
     }
     
     @AfterClass

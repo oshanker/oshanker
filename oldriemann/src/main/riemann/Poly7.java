@@ -18,6 +18,7 @@ public class Poly7 implements Poly {
     double t0, t1, t2;
     double m0, m1;
     private Poly7term oldTerm;
+    double offset;
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
@@ -37,25 +38,30 @@ public class Poly7 implements Poly {
     
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1,
-                 double m0, double m1) {
+                 double m0, double m1, double offset) {
         this(a, b, c, a1, b1, c1);
         this.m0 = m0;
         this.m1 = m1;
-        
+        this.offset = offset;
+    
+        setTermValues();
+    }
+    
+    public void setTermValues() {
         double positionMax0 = positionMax((a + b) / 2, a, b);
         double currentMax0 = eval(positionMax0);
         double positionMax1 = positionMax((b + c) / 2, b, c);
         double currentMax1 = eval(positionMax1);
         int iter = 0;
-        double deviation = (Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1));
+        double deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
         while(deviation>1.0E-8) {
             double[][] coeff = new double[2][2];
             populateCoeff(currentMax0, currentMax1, 0, coeff);
             populateCoeff(currentMax0, currentMax1, 1, coeff);
             LinearEquation linearEquation = new LinearEquation(coeff);
             double[] neededZetaIncrement = {
-                (m0-currentMax0),
-                (m1-currentMax1)
+                (m0 -currentMax0),
+                (m1 -currentMax1)
             };
             double[] solution = linearEquation.solve(
                 neededZetaIncrement
@@ -67,7 +73,7 @@ public class Poly7 implements Poly {
             currentMax0 = eval(positionMax0);
             positionMax1 = positionMax(positionMax1, b, c);
             currentMax1 = eval(positionMax1);
-            deviation = (Math.abs(m0-currentMax0) + Math.abs(m1-currentMax1));
+            deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
             System.out.println("deviation " + deviation);
             if (iter>8) {
                 break;
@@ -90,8 +96,8 @@ public class Poly7 implements Poly {
         unsetTerm();
     }
     
-    void setTerm(double a1, double b1) {
-        poly7term = new Poly7term(a, b, c, a1, b1);
+    void setTerm(double a1, double b1, double offset) {
+        poly7term = new Poly7term(a, b, c, a1, b1, offset);
     }
     
     void incrementTermTemp(double[] a1b1) {
@@ -208,13 +214,13 @@ public class Poly7 implements Poly {
     public static void main(String[] args) {
         //B = 0.5
         Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2,
-            0.4589742535338246, -0.31082610538567645);
+            0.4589742535338246, -0.31082610538567645, 0);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
         System.out.println("============= " );
         //A = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
-            0.41689197105413617, -0.2700198241673988);
+            0.41689197105413617, -0.2700198241673988, 0);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
         //tabulate(poly7);
