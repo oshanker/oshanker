@@ -195,10 +195,10 @@ poly 1.4731822664990701
             count++;
         }
         System.out.println( "breaks: " + breaks);
-        System.out.println("*** zetaMidMeanOdd " + zetaMidMean[1]/N);
-        System.out.println("*** zetaGramMeanOdd " + zetaGramMean[1]/N);
-        System.out.println("*** zetaMidMeanEven " + zetaMidMean[0]/N);
-        System.out.println("*** zetaGramMeanEven " + zetaGramMean[0]/N);
+        System.out.println("*** zetaMidMeanOdd " + 2*zetaMidMean[1]/N);
+        System.out.println("*** zetaGramMeanOdd " + 2*zetaGramMean[1]/N);
+        System.out.println("*** zetaMidMeanEven " + 2*zetaMidMean[0]/N);
+        System.out.println("*** zetaGramMeanEven " + 2*zetaGramMean[0]/N);
         System.out.println("*** ***");
         System.out.println("*** crossEven " + 8*cross[0]/N);
         System.out.println("*** crossOdd " + 8*cross[1]/N);
@@ -273,8 +273,8 @@ poly 1.4731822664990701
             zetaGramMean[nmod2] += zeta;
             count++;
         }
-        System.out.println("*** zetaGram_MeanOdd " + 2*zetaGramMean[1]/sampleSize);
-        System.out.println("*** zetaGram_MeanEven " + 2*zetaGramMean[0]/sampleSize);
+        System.out.println("*** zetaGram_pi4MeanOdd " + 2*zetaGramMean[1]/sampleSize);
+        System.out.println("*** zetaGram_pi4MeanEven " + 2*zetaGramMean[0]/sampleSize);
     }
     
     public static double getZetaEstimate(
@@ -284,18 +284,16 @@ poly 1.4731822664990701
     	  
         double zetaEstMid = updateZeroInput(upperLimit, gramOrMidEnum);
         
-        if  (Math.abs(zeroInput.lastZero[2]) > absMax) {
-            absMax = Math.abs(zeroInput.lastZero[2]);
-            if(absMax>130){
-                System.out.println();
-                System.out.println(Arrays.toString(zeroInput.lastZero)  +
-                        ", \n positionMax " + poly.getPositionMax()  +
-                        ", der " + poly.der(poly.getPositionMax()) + 
-                        ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
-                System.out.println("secondDerRHS " + ((Poly3)poly).secondDerRHS()
-                + ", zetaEstMid " + zetaEstMid + " (" + (nprime+1) +")");
-             }
-        }
+//        if  (Math.abs(zeroInput.lastZero[2]) > absMax) {
+//            absMax = Math.abs(zeroInput.lastZero[2]);
+//            if(absMax>130){
+//                System.out.println();
+//                System.out.println(Arrays.toString(zeroInput.lastZero)  +
+//                        ", \n positionMax " + poly.getPositionMax()  +
+//                        ", der " + poly.der(poly.getPositionMax()) +
+//                        ", \n" + upperLimit + ", " + Arrays.toString(zeroInput.nextValues));
+//             }
+//        }
         double zeta = (zetaEstMid - zetaCorrection1)/2;
         final int nmod2 = nprime%2;
         // mean of zeta
@@ -370,7 +368,6 @@ poly 1.4731822664990701
 				break;
     
                 case USE_POLY7:
-                    poly = new Poly4(z0,z1, d0,d1,max);
                     if (Double.isFinite(Rosser.zeros[0])) {
                         if(!gotThree) {
                             gotThree = true;
@@ -380,12 +377,14 @@ poly 1.4731822664990701
                             System.out.println("Rosser.extrema " + Arrays.toString(Rosser.extrema));
                             System.out.println( "fAtBeta: " + Arrays.toString(fAtBeta[0]) + ", " );
                         }
-                        ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
-                        double secondDer = zeroPoly.secondDer(1);
-                        poly5 = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+                        poly = new Poly7(
+                            Rosser.zeros[0], Rosser.zeros[1], Rosser.zeros[2],
+                            Rosser.derivatives[0], Rosser.derivatives[1], Rosser.derivatives[2],
+                            Rosser.extrema[0], Rosser.extrema[1]
+                        );
                     } else {
                         // never comes here
-                        poly5 = new Poly4(z0,z1, d0,d1,max);
+                        throw new IllegalStateException("shouldnt get here");
                     }
                     break;
     
@@ -399,38 +398,40 @@ poly 1.4731822664990701
 	            	poly5 = new Poly4(z0,z1, d0,d1,max);
 	            }
 				break;
-
-			default:
-				//use poly5
-	            if(Double.isFinite(Rosser.zeros[0])) {
-		            ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
-		            double secondDer = zeroPoly.secondDer(1);
-		            poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
-	            	
-	            } else {
-	            	poly = new Poly4(z0,z1, d0,d1,max);
-	            }
-				break;
-			}
+    
+                case USE_POLY5:
+                    //use poly5
+                    if(Double.isFinite(Rosser.zeros[0])) {
+                        ZeroPoly zeroPoly = new ZeroPoly(Rosser.zeros, Rosser.derivatives);
+                        double secondDer = zeroPoly.secondDer(1);
+                        poly = new PolyInterpolate.Poly5(z0,z1, d0,d1,secondDer,max);
+        
+                    } else {
+                        poly = new Poly4(z0,z1, d0,d1,max);
+                    }
+                    break;
+    
+                default:
+                    throw new IllegalStateException("bad poly option");
+            }
         }
         
         double zetaEstMid;
         switch (polyOption) {
 		   case USE_MIXED:
-	        switch (gramOrMid) {
-			case GRAM:
-    			zetaEstMid = poly5.eval(upperLimit);
-				break;
-
-			default:
-    			zetaEstMid = poly.eval(upperLimit);
-				break;
-			}
-			break;
-		default:
-			zetaEstMid = poly.eval(upperLimit);
-			break;
-        
+                switch (gramOrMid) {
+                case GRAM:
+                    zetaEstMid = poly5.eval(upperLimit);
+                    break;
+    
+                default:
+                    zetaEstMid = poly.eval(upperLimit);
+                    break;
+                }
+                break;
+            default:
+                zetaEstMid = poly.eval(upperLimit);
+                break;
         }
         
         return zetaEstMid;
