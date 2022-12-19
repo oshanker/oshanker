@@ -64,11 +64,7 @@ public class FixE12GSeries {
     
     public void init()  {
         //gAtBeta = getgSeries(pointBeingInflunced[0]);
-        try {
-            gAtBeta = Interpolate.readGSeries();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gAtBeta = Interpolate.readGSeries();
     }
     
     public void testIncrementGValuesAtIndices() {
@@ -404,11 +400,23 @@ public class FixE12GSeries {
     }
     
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        GSeries gAtBeta = Interpolate.readGSeries();
+        int R = gAtBeta.gAtBeta.length;
+        double begin = gAtBeta.begin + (initialPadding-18)*gAtBeta.spacing;
+        System.out.println(gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
+        double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
+        System.out.println(gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
+        
+//        for (int i = 0; i < R; i++) {
+//
+//        }
+    }
     
+    private static void oldMain() {
         double firstZero = 243831.456494008;
         String gbetaSource = "Interpolate";
-    
+        
         try {
             GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
             gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
@@ -426,10 +434,6 @@ public class FixE12GSeries {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        FixE12GSeries fixE12GSeries = new FixE12GSeries();
-//        fixE12GSeries.testChangeToZetaAndDer();
-        //fixE12GSeries.testIncrementGValuesAtIndices();
     }
-
+    
 }

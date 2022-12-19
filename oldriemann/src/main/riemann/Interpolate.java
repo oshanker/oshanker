@@ -629,13 +629,17 @@ poly 1.4731822664990701
      * @return
      * @throws IOException
      */
-    public static GSeries readGSeries() throws IOException {
+    public static GSeries readGSeries()  {
 
         File file = new File("out/gSeries" + prefix + "/gSeriesConsolidated.dat");
-        return readGSeries(file);
+        try {
+            return readGSeries(file);
+        } catch (IOException e) {
+            throw new IllegalStateException("gseries source file", e);
+        }
     }
 
-    public static GSeries readGSeries(File file) throws FileNotFoundException, IOException {
+    public static GSeries readGSeries(File file) throws IOException {
         DataInputStream in = dataInputStream(file);
         double begin = in.readDouble();
         double gincr = in.readDouble();

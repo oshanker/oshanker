@@ -61,11 +61,7 @@ public class AnalyzeE12GSeries {
     }
     
     public void init()  {
-        try {
-            gAtBeta = Interpolate.readGSeries();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gAtBeta = Interpolate.readGSeries();
     }
     
     public GSeries testChangeToZetaAndDer() {
