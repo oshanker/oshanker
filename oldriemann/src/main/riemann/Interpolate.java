@@ -311,10 +311,10 @@ poly 1.4731822664990701
         double incr = gramIncr / 3 - gramIncr / 4;
         count = 0;
         double base = baseLimit + gramIncr/4;
-        long sampleSize = N - 2*initialPadding;
+        long sampleSize = N - initialPadding;
         double upperLimit = 0;
         while (count < sampleSize  ) {
-            int n = count + noffset+initialPadding;
+            int n = count + noffset+initialPadding/2;
             upperLimit = base + (n-correction-1) * (gramIncr);
             double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
             double zeta60 =  Interpolate.evaluateZeta(upperLimit+incr, initialPadding, gSeries11);
