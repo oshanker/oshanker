@@ -193,7 +193,7 @@ public class AnalyzeE12GSeries {
     
         zeroInfo = new LinkedList<>();
         //final double stopValue = 243839.5;
-        final double stopValue = 243833.62760012946;
+        final double stopValue = 243839.0;
     
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
@@ -462,7 +462,7 @@ maxMaxDev  91.34973738048444 iMax 1961926
 246.94434772241235 0.6460803728552249
 243840.8746717451 1.5644965586518857
              */
-            double firstZero = 250;
+            double firstZero = 248;
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
                 2000002);
         } catch (IOException e) {
