@@ -3,7 +3,6 @@ package math;
 import javafx.util.Pair;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
-import riemann.Poly4;
 import riemann.Rosser;
 import riemann.StaticMethods;
 
@@ -23,6 +22,8 @@ public class AnalyzeE12GSeries {
     private static double maxZeroDev;
     private static double maxDerDev;
     private static double maxMaxDev;
+    private static int iMax;
+    public static double derepsilon = 1.0E-5;
     double[][] nextValues;
     
     double[] pointBeingInflunced;
@@ -178,10 +179,9 @@ public class AnalyzeE12GSeries {
     }
     
     public static GSeries testGetSavedGSeries1(
-        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta, int sampleSize) throws IOException {
-    
-    
-        int iMax = 0;
+        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta, int sampleSize
+    ) throws IOException {
+        iMax = 0;
         int iZero = 0;
         int iDer = 0;
         
@@ -190,14 +190,11 @@ public class AnalyzeE12GSeries {
         double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, firstZero);
         int i = 0;
         double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
-        // cant go below 40
-        final int initialPadding = 40;
     
         zeroInfo = new LinkedList<>();
         //final double stopValue = 243839.5;
         final double stopValue = 243833.62760012946;
     
-        int countEnd = 0;
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
             double expectedDer =  nextValues[1];
@@ -216,7 +213,6 @@ public class AnalyzeE12GSeries {
                 zeroPosition, initialPadding, 0.00025*gAtBeta.spacing);
             double absDer = Math.abs(expectedDer - der);
             boolean maxUpdated = false;
-            boolean maxMaxUpdated = false;
             if(Math.abs(zeta) > maxZeroDev){
                 maxZeroDev = Math.abs(zeta);
                 iZero = gAtBeta.midIdx;
@@ -237,65 +233,11 @@ public class AnalyzeE12GSeries {
                         + " : eval from GSeries: " + der
                         + " diff(der) " + absDer
                 );
-                maxUpdated = false;
             }
             if (i>0) {
-                Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
-                    extremumFromFile);
-                double positionMax = poly.getPositionMax();
-                //if (positionMax < 243840.87137482915) {
-                    if (!Double.isFinite(positionMax)) {
-                        System.out.println(positionMax + " i " + i);
-                        throw new IllegalArgumentException("positionMax NaN");
-                    }
-                    double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
-                    double[] maxder = gAtBeta.doubleDer(positionMax, initialPadding,
-                        evalMax, 0.0005 * gAtBeta.spacing);
-                    double maxDev = extremumFromFile - evalMax;
-                    for (int j = 0; j < 10; j++) {
-                        if (Math.abs(maxder[0]) > 0.0001) {
-                            positionMax -= maxder[0] / maxder[1];
-                            if(positionMax>stopValue){
-                                System.out.println("positionMax>stopValue "
-                                + positionMax+ " " +stopValue);
-                                break;
-                            } else {
-                                evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
-                                maxDev = extremumFromFile - evalMax;
-                                maxder = gAtBeta.doubleDer(positionMax, initialPadding,
-                                    evalMax, 0.0005 * gAtBeta.spacing);
-                            }
-                        } else {
-                            break;
-                        }
-                    }
-                    double[] oldZero = zeroInfo.getLast();
-                    oldZero[3] = positionMax;
-                    if (oldZero[1] < 0) {
-                        oldZero[2] = -oldZero[2];
-                    }
-                    if (Math.abs(maxDev) > maxMaxDev) {
-                        maxMaxDev = Math.abs(maxDev);
-                        iMax = gAtBeta.midIdx;
-                        maxMaxUpdated = true;
-                    }
-                    if (maxMaxUpdated) {
-                        System.out.println("** i " + i + " ===========================");
-                        System.out.println(
-                            "positionMax " + positionMax
-                                + ", eval " + evalMax
-                                + " read " + extremumFromFile
-                                + " diff(Max) " + maxDev
-                        );
-                        System.out.println(
-                            "positionMax der " + Arrays.toString(maxder)
-                        );
-                        System.out.println(" =========*******===========");
-                        maxMaxUpdated = false;
-                    }
-//                } else {
-//                    System.out.println(" damn");
-//                }
+                findMax(gAtBeta, i, z0, extremumFromFile, zeroPosition
+                );
+    
             }
             double[] zeroEntry = new double[4];
             System.arraycopy(nextValues, 0, zeroEntry, 0, nextValues.length);
@@ -323,6 +265,84 @@ public class AnalyzeE12GSeries {
         );
         
         return gAtBeta;
+    }
+    
+    public static double positionMax(
+        GSeries gAtBeta, double x0, double xa, double xb
+    ) {
+        double derx0 = 0;
+        double derxb = 0;
+        double derxa = 0;
+        for(int i = 0; i < 12; i++) {
+            if (xb - xa > 0.00001) {
+                break;
+            }
+            derxa = gAtBeta.evalDer(
+                xa, initialPadding, 0.00025*gAtBeta.spacing);
+            if (Math.abs(derxa) < derepsilon) {
+                return xa;
+            }
+            double signumxa = Math.signum(derxa);
+            if (signumxa == 0) {
+                return xa;
+            }
+            derxb = gAtBeta.evalDer(xb, initialPadding, 0.00025*gAtBeta.spacing);
+            if (Math.abs(derxb) < derepsilon) {
+                return xb;
+            }
+            double signumxb = Math.signum(derxb);
+            if (signumxb == 0) {
+                return xb;
+            }
+            derx0 = gAtBeta.evalDer(x0, initialPadding, 0.00025*gAtBeta.spacing);
+            if (Math.abs(derx0) < derepsilon) {
+                return x0;
+            }
+            double signumx0 = Math.signum(derx0);
+            if (signumx0 == 0) {
+                return x0;
+            }
+            if (signumx0 == signumxa) {
+                xa = x0;
+            } else {
+                xb = x0;
+            }
+            x0 = (xa + xb) / 2;
+        }
+        return x0;
+    }
+    
+    private static void findMax(
+        GSeries gAtBeta, int i, double z0,
+        double extremumFromFile,
+        double z1
+    ) {
+        boolean maxMaxUpdated = false;
+        double positionMax = positionMax(gAtBeta,(z0+z1)/2, z0, z1);
+        double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+        double maxDev = extremumFromFile - evalMax;
+        if (Math.abs(maxDev) > maxMaxDev) {
+            maxMaxDev = Math.abs(maxDev);
+            iMax = gAtBeta.midIdx;
+            maxMaxUpdated = true;
+        }
+        
+        if (maxMaxUpdated) {
+            System.out.println("** i " + i + " ===========================");
+            System.out.println(
+                "positionMax " + positionMax
+                    + ", eval " + evalMax
+                    + " read " + extremumFromFile
+                    + " diff(Max) " + maxDev
+            );
+            System.out.println(" =========*******===========");
+        }
+        
+        double[] oldZero = zeroInfo.getLast();
+        oldZero[3] = positionMax;
+        if (oldZero[1] < 0) {
+            oldZero[2] = -oldZero[2];
+        }
     }
     
     private static GSeries getGSeries(double firstZero,  String gbetaSource) throws IOException {
@@ -435,9 +455,9 @@ maxMaxDev  91.34973738048444 iMax 1961926
             //prepare(243831.456494008, gAtBeta, 25);
             //gramVerify(firstZero, gAtBeta);
             //resetLimits();
-            maxZeroDev = 2.4;
-            maxDerDev = 100.4;
-            maxMaxDev = 91.3;
+            maxZeroDev = 2.65;
+            maxDerDev = 112.6;
+            maxMaxDev = 17;
             /*
 246.94434772241235 0.6460803728552249
 243840.8746717451 1.5644965586518857

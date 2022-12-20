@@ -217,7 +217,10 @@ public class Poly7 implements Poly {
         double derx0 = 0;
         double derxb = 0;
         double derxa = 0;
-        while (xb-xa>0.000001) {
+        for (int i = 0; i < 12; i++) {
+            if (xb - xa > 0.00001) {
+                break;
+            }
             derxa = der(xa);
             if (Math.abs(derxa) < derepsilon) {
                 return xa;

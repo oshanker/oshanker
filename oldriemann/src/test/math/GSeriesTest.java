@@ -3,6 +3,7 @@
  */
 package math;
 
+import static math.AnalyzeE12GSeries.positionMax;
 import static math.FixGSeries.evaluateAtT;
 import static org.junit.Assert.*;
 import static riemann.StaticMethods.findFile;
@@ -668,14 +669,8 @@ public class GSeriesTest {
             if (i>0) {
                 Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
                         extremumFromFile);
-                double positionMax = poly.getPositionMax();
-                if(!Double.isFinite(positionMax)){
-                    System.out.println(positionMax + " i " + i);
-                    throw new IllegalArgumentException("positionMax NaN");
-                }
+                double positionMax = positionMax(gAtBeta,(z0+zeroPosition)/2, z0, zeroPosition);
                 double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
-                double[] maxder = gAtBeta.doubleDer(positionMax, initialPadding,
-                        evalMax, 0.0005*gAtBeta.spacing);
                 double maxDev = extremumFromFile - evalMax;
                 System.out.println(
                         "positionMax " + positionMax
@@ -683,29 +678,6 @@ public class GSeriesTest {
                                 + " read " + extremumFromFile
                                 + " diff(Max) " + maxDev
                 );
-                System.out.println(
-                        "positionMax der " + Arrays.toString(maxder)
-                );
-                for (int j = 0; j < 2; j++) {
-                    if(Math.abs(maxder[0]) > 0.0001 ) {
-                        positionMax -= maxder[0] /maxder[1];
-                        evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
-                        maxDev = extremumFromFile - evalMax;
-                        System.out.println(
-                                "positionMax " + positionMax
-                                        + ", eval " + evalMax
-                                        + " read " + extremumFromFile
-                                        + " diff(Max) " + maxDev
-                        );
-                        maxder = gAtBeta.doubleDer(positionMax, initialPadding,
-                                evalMax, 0.0005*gAtBeta.spacing);
-                        System.out.println(
-                                "positionMax der " + Arrays.toString(maxder)
-                        );
-                    } else {
-                        break;
-                    }
-                }
                 double[] oldZero = zeroInfo.getLast();
                 oldZero[3] = positionMax;
                 if (oldZero[1] < 0) {
