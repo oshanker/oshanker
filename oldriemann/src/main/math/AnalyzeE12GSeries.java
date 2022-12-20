@@ -60,6 +60,17 @@ public class AnalyzeE12GSeries {
         init();
     }
     
+    public AnalyzeE12GSeries(double[][] nextValues, int[] midIdxCausingInfluence) {
+        this.nextValues = new double[][]{
+            {239208.52954627108, 3.4052889402502724, 0.043196050102728534, 239205.96746787973},
+            {239208.59376377583, -1.9148244022304233, -0.0942049203052947, 239208.65863886403},
+            {239208.72389090285, 2.8047558244728013, 0.23779268540780152, 239208.8225715278},
+            {239208.905327034, -5.859201787344891, -0.8499433258858862, 239209.06328053446},
+        };
+        this.midIdxCausingInfluence = 1961947;
+        init();
+    }
+    
     public void init()  {
         gAtBeta = Interpolate.readGSeries();
     }
