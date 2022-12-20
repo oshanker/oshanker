@@ -424,12 +424,16 @@ maxMaxDev  91.34973738048444 iMax 1961926
             //prepare(243831.456494008, gAtBeta, 25);
             //gramVerify(firstZero, gAtBeta);
             //resetLimits();
-            maxZeroDev = Double.MIN_VALUE;
-            maxDerDev = Double.MIN_VALUE;
-            maxMaxDev = Double.MIN_VALUE;
-            double firstZero = 243831.456494008 - 100000*Interpolate.gramIncr;
+            maxZeroDev = 2.4;
+            maxDerDev = 100.4;
+            maxMaxDev = 91.3;
+            /*
+246.94434772241235 0.6460803728552249
+243840.8746717451 1.5644965586518857
+             */
+            double firstZero = 250;
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
-                200000);
+                2000002);
         } catch (IOException e) {
             e.printStackTrace();
         }

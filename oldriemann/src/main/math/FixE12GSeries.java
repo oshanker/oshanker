@@ -404,9 +404,9 @@ public class FixE12GSeries {
         GSeries gAtBeta = Interpolate.readGSeries();
         int R = gAtBeta.gAtBeta.length;
         double begin = gAtBeta.begin + (initialPadding-18)*gAtBeta.spacing;
-        System.out.println(gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
+        System.out.println(begin + " " + gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
-        System.out.println(gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
+        System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
         
 //        for (int i = 0; i < R; i++) {
 //
