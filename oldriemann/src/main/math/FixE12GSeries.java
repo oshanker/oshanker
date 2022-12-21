@@ -3,7 +3,6 @@ package math;
 import javafx.util.Pair;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
-import riemann.Poly4;
 import riemann.Rosser;
 import riemann.StaticMethods;
 
@@ -27,7 +26,7 @@ public class FixE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo = new LinkedList<>();
     double[][] nextValues;
-    static int desiredSize = 5;
+    static int desiredSize = 6;
     
     double[] pointBeingInflunced;
     GSeries gAtBeta = null;
@@ -381,6 +380,25 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
+    
+    public static boolean advanceZeroInfo(
+        BufferedReader[] zeroIn, double firstZero
+    ) {
+        if (zeroInfo.get(1)[0] < firstZero) {
+            double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
+            if(nextValues == null) {
+                return false;
+            }
+            if(nextValues[1]<0){
+                nextValues[2]=-nextValues[2];
+            }
+            zeroInfo.pollFirst();
+            zeroInfo.add(nextValues);
+            return true;
+        }
+        return false;
+    }
+    
     public static void initZeroInfo(
         BufferedReader[] zeroIn, double firstZero
     ){
@@ -391,12 +409,15 @@ public class FixE12GSeries {
                 if(nextValues[1]<0){
                     nextValues[2]=-nextValues[2];
                 }
-            
                 zeroInfo.add(nextValues);
             }
-            for (int i = 0; i < zeroInfo.size(); i++) {
-                System.out.println(Arrays.toString(zeroInfo.get(i)));
-            }
+            printZeroInfo();
+        }
+    }
+    
+    private static void printZeroInfo() {
+        for (int i = 0; i < zeroInfo.size(); i++) {
+            System.out.println(Arrays.toString(zeroInfo.get(i)));
         }
     }
     
@@ -408,6 +429,9 @@ public class FixE12GSeries {
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
          + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
         initZeroInfo(Interpolate.zeroIn, begin - 2*gAtBeta.spacing);
+        advanceZeroInfo(Interpolate.zeroIn, begin);
+        System.out.println("==========");
+        printZeroInfo();
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
         System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
