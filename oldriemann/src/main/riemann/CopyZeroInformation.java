@@ -1,12 +1,11 @@
 package riemann;
 
+import riemann.Rosser.ZeroInfo;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-
-import riemann.Rosser.ZeroInfo;
 
 public class CopyZeroInformation {
     /**
@@ -15,21 +14,25 @@ public class CopyZeroInformation {
      */
     public static double[] skipUntil(
           BufferedReader[] zeroIn,  double lower)
-          throws IOException {
+    {
         String[] input = new String[zeroIn.length];
         double[] lastValue = new double[zeroIn.length];
         double zero = Double.MAX_VALUE;
-
-        while (true) {
-            for (int i = 0; i < input.length; i++) {
-                input[i] = zeroIn[i].readLine();
-                if(input[i] == null){
-                    System.out.println("End reached");
-                    return null;
+    
+        try {
+            while (true) {
+                for (int i = 0; i < input.length; i++) {
+                        input[i] = zeroIn[i].readLine();
+                    if(input[i] == null){
+                        System.out.println("End reached");
+                        return null;
+                    }
                 }
+                zero = populateNextValues(lastValue, input);
+                if(zero >= lower){break;}
             }
-            zero = populateNextValues(lastValue, input);
-            if(zero >= lower){break;}
+        } catch (IOException e) {
+            throw new IllegalStateException("readline", e);
         }
 
         return lastValue;

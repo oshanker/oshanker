@@ -25,8 +25,9 @@ import static riemann.StaticMethods.gramE12;
 
 public class FixE12GSeries {
     static final int initialPadding = 40;
-    private static LinkedList<double[]> zeroInfo;
+    private static LinkedList<double[]> zeroInfo = new LinkedList<>();
     double[][] nextValues;
+    static int desiredSize = 5;
     
     double[] pointBeingInflunced;
     GSeries gAtBeta = null;
@@ -380,14 +381,37 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
+    public static void initZeroInfo(
+        BufferedReader[] zeroIn, double firstZero
+    ){
+        if(zeroInfo.size()< desiredSize) {
+            int needed = desiredSize - zeroInfo.size();
+            for (int i = 0; i < needed; i++) {
+                double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, firstZero);
+                if(nextValues[1]<0){
+                    nextValues[2]=-nextValues[2];
+                }
+            
+                zeroInfo.add(nextValues);
+            }
+            for (int i = 0; i < zeroInfo.size(); i++) {
+                System.out.println(Arrays.toString(zeroInfo.get(i)));
+            }
+        }
+    }
     
     public static void main(String[] args) throws IOException {
         GSeries gAtBeta = Interpolate.readGSeries();
         int R = gAtBeta.gAtBeta.length;
         double begin = gAtBeta.begin + (initialPadding-18)*gAtBeta.spacing;
         System.out.println(begin + " " + gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
+        System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
+         + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
+        initZeroInfo(Interpolate.zeroIn, begin - 2*gAtBeta.spacing);
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
         System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
+        System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
+            + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
         
 //        for (int i = 0; i < R; i++) {
 //
