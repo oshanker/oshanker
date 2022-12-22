@@ -167,6 +167,26 @@ deviation NaN Bad Poly7{
     }
     
     @Test
+    public void testBadCase() {
+        Poly7.epsilon = 1.0E-6;
+        Poly7.derepsilon = 1.0E-6;
+
+        Poly7 poly7 = new Poly7(
+            486.3902307179473, 486.98204008599225, 487.2942577672686,
+            144.1523312047277, -151.65833064960663, 11.140905633588714
+        );
+        poly7.setExtrema(
+            61.88279229320297,-7.1392647725414236, 486.98204008599225
+        );
+        double deviation = poly7.setTermValues();
+        System.out.println("deviation " + deviation);
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("============= " );
+        
+    }
+    
+    @Test
     public void badCase2() {
         Poly7.epsilon = 1.0E-6;
         Poly7.derepsilon = 1.0E-6;

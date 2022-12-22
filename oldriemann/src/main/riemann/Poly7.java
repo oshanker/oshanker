@@ -12,6 +12,8 @@ public class Poly7 implements Poly {
         nf.setMaximumFractionDigits(7);
         nf.setGroupingUsed(false);
     }
+    public static boolean avoidDer = true;
+    
     Poly7term poly7term = null;
     final double a, b, c;
     final double d0, d1, d2;
@@ -217,10 +219,11 @@ public class Poly7 implements Poly {
         double derx0 = 0;
         double derxb = 0;
         double derxa = 0;
-        for (int i = 0; i < 12; i++) {
-            if (xb - xa > 0.00001) {
-                break;
-            }
+        while (xb-xa>0.0000001) {
+            // causes instability or inaccuracy
+//            if (xb - xa > 0.00001) {
+//                break;
+//            }
             derxa = der(xa);
             if (Math.abs(derxa) < derepsilon) {
                 return xa;
@@ -251,6 +254,9 @@ public class Poly7 implements Poly {
                 xb = x0;
             }
             x0 = (xa+xb)/2;
+        }
+        if(avoidDer) {
+            return x0;
         }
 //        System.out.println("x0 " + x0 + " xa " + xa + " xb " + xb
 //        + " derx0 " + derx0);

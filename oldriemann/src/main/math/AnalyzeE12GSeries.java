@@ -476,6 +476,10 @@ maxMaxDev  91.34973738048444 iMax 1961926
             /*
 246.94434772241235 0.6460803728552249
 243840.8746717451 1.5644965586518857
+
+ ZeroDev  0.020492069614571562
+ DerDev  0.4955268712260961
+ MaxDev  0.08082092773322669
              */
             double firstZero = 248;
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,

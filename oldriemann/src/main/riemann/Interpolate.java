@@ -42,7 +42,7 @@ public class Interpolate {
 	
     static NumberFormat nf = NumberFormat.getInstance();
     
-    public static final double EPSILON = 1.0E-6;
+    public static final double EPSILON = 1.0E-8;
     
     static {
         nf.setMinimumFractionDigits(7);
