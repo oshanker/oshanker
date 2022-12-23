@@ -421,6 +421,52 @@ public class FixE12GSeries {
         }
     }
     
+    private static void printZeroInfoWithMax(GSeries gAtBeta) {
+        double[] oldzero = null;
+        int size = zeroInfo.size();
+        for (int i = 0; i < size; i++) {
+            double[] zero = zeroInfo.get(i);
+            if (i>0) {
+                double positionMax = positionMax(gAtBeta,
+                    (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]);
+                double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+                double maxDev = oldzero[2] - evalMax;
+                double absMaxDev = Math.abs(maxDev);
+                System.out.println(positionMax + " " + evalMax);
+            }
+            oldzero = zero;
+            System.out.println(Arrays.toString(zero));
+        }
+        double[] evaluateWithMax = evaluateWithMax(
+            zeroInfo.subList(size - 3, size),
+            gAtBeta
+        );
+        System.out.println(Arrays.toString(evaluateWithMax));
+    }
+    
+    public static double[] evaluateWithMax(
+        List<double[]> zeroInfo,  GSeries gAtBeta
+    ) {
+        double[] ret = new double[3*zeroInfo.size()-1];
+        double[] oldzero = null;
+        for (int i = 0; i < zeroInfo.size(); i++) {
+            double[] zero = zeroInfo.get(i);
+            if (i>0) {
+                double positionMax = positionMax(gAtBeta,
+                    (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]);
+                double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+                double maxDev = oldzero[2] - evalMax;
+                double absMaxDev = Math.abs(maxDev);
+                ret[3*i-1] = evalMax;
+            }
+            oldzero = zero;
+            ret[3*i] = gAtBeta.evaluateZeta(zero[0], initialPadding);
+            ret[3*i+1] = gAtBeta.evalDer(
+                zero[0], initialPadding, 0.00025* gAtBeta.spacing);
+        }
+        return ret;
+    }
+    
     public static void main(String[] args) throws IOException {
         GSeries gAtBeta = Interpolate.readGSeries();
         int R = gAtBeta.gAtBeta.length;
@@ -428,10 +474,10 @@ public class FixE12GSeries {
         System.out.println(begin + " " + gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
          + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
-        initZeroInfo(Interpolate.zeroIn, begin - 2*gAtBeta.spacing);
-        advanceZeroInfo(Interpolate.zeroIn, begin);
+        initZeroInfo(Interpolate.zeroIn, begin + 5*gAtBeta.spacing );
+        advanceZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing);
         System.out.println("==========");
-        printZeroInfo();
+        printZeroInfoWithMax(gAtBeta);
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
         System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
