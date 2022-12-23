@@ -168,7 +168,7 @@ public class FixE12GSeries {
                 // even i, zero
                 if ( pointBeingInflunced[i] != nextValues[indexIntoNext][0] ) {
                     throw new RuntimeException("zero");
-                };
+                }
                 neededZetaIncrement[2 * i] = -initial[2 * i];
                 neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
             } else {
@@ -177,7 +177,7 @@ public class FixE12GSeries {
                     System.out.println("pointBeingInflunced[i] != nextValues[indexIntoNext][2]  "
                         + pointBeingInflunced[i] + " != " + nextValues[indexIntoNext][2] );
                     throw new RuntimeException("max");
-                };
+                }
                 neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
                 neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
             }
@@ -402,7 +402,7 @@ public class FixE12GSeries {
     public static void initZeroInfo(
         BufferedReader[] zeroIn, double firstZero
     ){
-        if(zeroInfo.size()< desiredSize) {
+        if (zeroInfo.size() < desiredSize) {
             int needed = desiredSize - zeroInfo.size();
             for (int i = 0; i < needed; i++) {
                 double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, firstZero);
@@ -415,8 +415,8 @@ public class FixE12GSeries {
     }
     
     private static void printZeroInfo() {
-        for (int i = 0; i < zeroInfo.size(); i++) {
-            System.out.println(Arrays.toString(zeroInfo.get(i)));
+        for (double[] doubles : zeroInfo) {
+            System.out.println(Arrays.toString(doubles));
         }
     }
     
@@ -448,6 +448,51 @@ public class FixE12GSeries {
         System.out.println(Arrays.toString(evaluateWithMax));
     }
     
+    public static double[][] gradient(
+        GSeries gSeries, List<double[]> zeroInfo,
+                int[] midIdx_in,
+               double increment
+    ) {
+        int size = zeroInfo.size();
+        double[] initialValue  = new double[3* size -1];
+        double[] t = new double[2000]; // ToDo
+        for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
+            double[] zero = zeroInfo.get(idxZeroInfo);
+            initialValue[3*idxZeroInfo] = 0;
+            initialValue[3*idxZeroInfo+1] = zero[1];
+            if (idxZeroInfo < size-1) {
+                initialValue[3 * idxZeroInfo + 2] = zero[2];
+            }
+        }
+        double[][] gradient = new double[initialValue.length][2*midIdx_in.length];
+        for (int gSeriesIndex = 0; gSeriesIndex < midIdx_in.length; gSeriesIndex++) {
+            int midIdx = midIdx_in[gSeriesIndex];
+            gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+            for (int i = 0; i < t.length; i++) {
+                gradient[2*i][2*gSeriesIndex] = (gSeries.evaluateZeta(t[i], initialPadding)-initialValue[2*i])/ increment;
+                double a0ValAtZero = gSeries.evalDer(
+                    t[i], initialPadding, 0.00025 * gSeries.spacing);
+                gradient[2*i+1][2*gSeriesIndex] = (a0ValAtZero - initialValue[2 * i + 1]) / increment;
+            }
+            
+            gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
+            
+            // change second index
+            
+            gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
+            
+            for (int i = 0; i < t.length; i++) {
+                gradient[2*i][2*gSeriesIndex+1] = (gSeries.evaluateZeta(t[i], initialPadding) - initialValue[2*i]) / increment;
+                double a0ValAtZero = gSeries.evalDer(
+                    t[i], initialPadding, 0.00025 * gSeries.spacing);
+                
+                gradient[2*i + 1][2*gSeriesIndex+1] = (a0ValAtZero - initialValue[2*i + 1]) / increment;
+            }
+            gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
+        }
+        
+        return gradient;
+    }
     
     public static double[] actual(
         List<double[]> zeroInfo
