@@ -283,6 +283,14 @@ public class AnalyzeE12GSeries {
         return gAtBeta;
     }
     
+    public static double evalMax(
+        GSeries gAtBeta, double x0, double xa, double xb
+    ) {
+        double positionMax = positionMax(gAtBeta, x0, xa, xb);
+        double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
+        return evalMax;
+    }
+    
     public static double positionMax(
         GSeries gAtBeta, double x0, double xa, double xb
     ) {

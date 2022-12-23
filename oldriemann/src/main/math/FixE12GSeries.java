@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static math.AnalyzeE12GSeries.evalMax;
 import static math.AnalyzeE12GSeries.positionMax;
 import static riemann.StaticMethods.changeToDer;
 import static riemann.StaticMethods.changeToZeta;
@@ -455,24 +456,41 @@ public class FixE12GSeries {
     ) {
         int size = zeroInfo.size();
         double[] initialValue  = new double[3* size -1];
-        double[] t = new double[2000]; // ToDo
-        for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
-            double[] zero = zeroInfo.get(idxZeroInfo);
-            initialValue[3*idxZeroInfo] = 0;
-            initialValue[3*idxZeroInfo+1] = zero[1];
-            if (idxZeroInfo < size-1) {
-                initialValue[3 * idxZeroInfo + 2] = zero[2];
+        double[] oldzero = null;
+        for (int i = 0; i < zeroInfo.size(); i++) {
+            double[] zero = zeroInfo.get(i);
+            if (i>0) {
+                double evalMax = evalMax(gSeries,
+                    (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]);
+                initialValue[3 * i - 1] = evalMax;
             }
+            initialValue[3*i] = gSeries.evaluateZeta(zero[0], initialPadding);
+            initialValue[3*i+1] = gSeries.evalDer(
+                zero[0], initialPadding, 0.00025* gSeries.spacing);
+            oldzero = zero;
         }
+        
+//        for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
+//            double[] zero = zeroInfo.get(idxZeroInfo);
+//            initialValue[3*idxZeroInfo] = 0;
+//            initialValue[3*idxZeroInfo+1] = zero[1];
+//            if (idxZeroInfo < size-1) {
+//                initialValue[3 * idxZeroInfo + 2] = zero[2];
+//            }
+//        }
         double[][] gradient = new double[initialValue.length][2*midIdx_in.length];
         for (int gSeriesIndex = 0; gSeriesIndex < midIdx_in.length; gSeriesIndex++) {
             int midIdx = midIdx_in[gSeriesIndex];
             gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-            for (int i = 0; i < t.length; i++) {
-                gradient[2*i][2*gSeriesIndex] = (gSeries.evaluateZeta(t[i], initialPadding)-initialValue[2*i])/ increment;
+            for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
+                double[] zero = zeroInfo.get(idxZeroInfo);
+                gradient[3*idxZeroInfo][2*gSeriesIndex] = (gSeries.evaluateZeta(zero[0], initialPadding)-initialValue[3*idxZeroInfo])/ increment;
                 double a0ValAtZero = gSeries.evalDer(
-                    t[i], initialPadding, 0.00025 * gSeries.spacing);
-                gradient[2*i+1][2*gSeriesIndex] = (a0ValAtZero - initialValue[2 * i + 1]) / increment;
+                    zero[0], initialPadding, 0.00025 * gSeries.spacing);
+                gradient[3*idxZeroInfo+1][2*gSeriesIndex] = (a0ValAtZero - initialValue[3*idxZeroInfo + 1]) / increment;
+                if (idxZeroInfo < size-1) {
+                    gradient[3 * idxZeroInfo + 2][2 * gSeriesIndex] = Double.NEGATIVE_INFINITY;
+                }
             }
             
             gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
@@ -481,12 +499,16 @@ public class FixE12GSeries {
             
             gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
             
-            for (int i = 0; i < t.length; i++) {
-                gradient[2*i][2*gSeriesIndex+1] = (gSeries.evaluateZeta(t[i], initialPadding) - initialValue[2*i]) / increment;
+            for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
+                double[] zero = zeroInfo.get(idxZeroInfo);
+                gradient[3*idxZeroInfo][2*gSeriesIndex+1] = (gSeries.evaluateZeta(zero[0], initialPadding)-initialValue[3*idxZeroInfo])/ increment;
+    
                 double a0ValAtZero = gSeries.evalDer(
-                    t[i], initialPadding, 0.00025 * gSeries.spacing);
-                
-                gradient[2*i + 1][2*gSeriesIndex+1] = (a0ValAtZero - initialValue[2*i + 1]) / increment;
+                    zero[0], initialPadding, 0.00025 * gSeries.spacing);
+                gradient[3*idxZeroInfo+1][2*gSeriesIndex+1] = (a0ValAtZero - initialValue[3*idxZeroInfo + 1]) / increment;
+                if (idxZeroInfo < size-1) {
+                    gradient[3 * idxZeroInfo + 2][2 * gSeriesIndex + 1] = Double.POSITIVE_INFINITY;
+                }
             }
             gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
         }
@@ -518,12 +540,10 @@ public class FixE12GSeries {
         for (int i = 0; i < zeroInfo.size(); i++) {
             double[] zero = zeroInfo.get(i);
             if (i>0) {
-                double positionMax = positionMax(gAtBeta,
+                double evalMax = evalMax(gAtBeta,
                     (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]);
-                double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
                 double maxDev = oldzero[2] - evalMax;
-                double absMaxDev = Math.abs(maxDev);
-                ret[3*i-1] = evalMax;
+                ret[3 * i - 1] = evalMax;
             }
             oldzero = zero;
             ret[3*i] = gAtBeta.evaluateZeta(zero[0], initialPadding);
