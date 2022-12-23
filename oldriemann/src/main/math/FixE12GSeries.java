@@ -411,7 +411,6 @@ public class FixE12GSeries {
                 }
                 zeroInfo.add(nextValues);
             }
-            printZeroInfo();
         }
     }
     
@@ -422,6 +421,7 @@ public class FixE12GSeries {
     }
     
     private static void printZeroInfoWithMax(GSeries gAtBeta) {
+        int count = 3;
         double[] oldzero = null;
         int size = zeroInfo.size();
         for (int i = 0; i < size; i++) {
@@ -438,12 +438,33 @@ public class FixE12GSeries {
             System.out.println(Arrays.toString(zero));
         }
         double[] evaluateWithMax = evaluateWithMax(
-            zeroInfo.subList(size - 3, size),
+            zeroInfo.subList(size - count, size),
             gAtBeta
         );
+        double[] actual = actual(
+            zeroInfo.subList(size - count, size)
+        );
+        System.out.println(Arrays.toString(actual));
         System.out.println(Arrays.toString(evaluateWithMax));
     }
     
+    
+    public static double[] actual(
+        List<double[]> zeroInfo
+    ) {
+        int size = zeroInfo.size();
+        double[] ret = new double[3* size -1];
+        for (int i = 0; i < size; i++) {
+            double[] zero = zeroInfo.get(i);
+            ret[3*i] = 0;
+            ret[3*i+1] = zero[1];
+            if (i < size-1) {
+                ret[3 * i + 2] = zero[2];
+            }
+        }
+        return ret;
+    }
+   
     public static double[] evaluateWithMax(
         List<double[]> zeroInfo,  GSeries gAtBeta
     ) {
@@ -474,8 +495,7 @@ public class FixE12GSeries {
         System.out.println(begin + " " + gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
          + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
-        initZeroInfo(Interpolate.zeroIn, begin + 5*gAtBeta.spacing );
-        advanceZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing);
+        initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing );
         System.out.println("==========");
         printZeroInfoWithMax(gAtBeta);
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
