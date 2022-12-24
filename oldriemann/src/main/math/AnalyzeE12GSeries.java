@@ -286,7 +286,12 @@ public class AnalyzeE12GSeries {
     public static double evalMax(
         GSeries gAtBeta, double x0, double xa, double xb
     ) {
-        double positionMax = positionMax(gAtBeta, x0, xa, xb);
+        double positionMax;
+        try {
+            positionMax = positionMax(gAtBeta, x0, xa, xb);
+        } catch (IllegalStateException e) {
+            positionMax = (xa + xb)/2;
+        }
         double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
         return evalMax;
     }
@@ -294,31 +299,36 @@ public class AnalyzeE12GSeries {
     public static double positionMax(
         GSeries gAtBeta, double x0, double xa, double xb
     ) {
-        double derx0 = 0;
         double derxb = 0;
-        double derxa = 0;
-        for(int i = 0; i < 12; i++) {
-            if (xb - xa > 0.00001) {
+        double derxa = gAtBeta.evalDer(
+            xa, initialPadding, 0.00025*gAtBeta.spacing);
+        if (Math.abs(derxa) < derepsilon) {
+            return xa;
+        }
+        double signumxa = Math.signum(derxa);
+        if (signumxa == 0) {
+            return xa;
+        }
+    
+        derxb = gAtBeta.evalDer(xb, initialPadding, 0.00025*gAtBeta.spacing);
+        if (Math.abs(derxb) < derepsilon) {
+            return xb;
+        }
+        
+        double signumxb = Math.signum(derxb);
+        if (signumxb == 0) {
+            return xb;
+        }
+        if(signumxa == signumxb) {
+            //System.out.println("signumxa == signumxb, " + xa + " " + xb);
+            throw new IllegalStateException("signumxa == signumxb");
+        }
+    
+        for (int i = 0; i < 12; i++) {
+            if (xb - xa > 0.000001) {
                 break;
             }
-            derxa = gAtBeta.evalDer(
-                xa, initialPadding, 0.00025*gAtBeta.spacing);
-            if (Math.abs(derxa) < derepsilon) {
-                return xa;
-            }
-            double signumxa = Math.signum(derxa);
-            if (signumxa == 0) {
-                return xa;
-            }
-            derxb = gAtBeta.evalDer(xb, initialPadding, 0.00025*gAtBeta.spacing);
-            if (Math.abs(derxb) < derepsilon) {
-                return xb;
-            }
-            double signumxb = Math.signum(derxb);
-            if (signumxb == 0) {
-                return xb;
-            }
-            derx0 = gAtBeta.evalDer(x0, initialPadding, 0.00025*gAtBeta.spacing);
+            double derx0 = gAtBeta.evalDer(x0, initialPadding, 0.00025*gAtBeta.spacing);
             if (Math.abs(derx0) < derepsilon) {
                 return x0;
             }
@@ -328,8 +338,25 @@ public class AnalyzeE12GSeries {
             }
             if (signumx0 == signumxa) {
                 xa = x0;
+                derxa = gAtBeta.evalDer(
+                    xa, initialPadding, 0.00025*gAtBeta.spacing);
+                if (Math.abs(derxa) < derepsilon) {
+                    return xa;
+                }
+                signumxa = Math.signum(derxa);
+                if (signumxa == 0) {
+                    return xa;
+                }
             } else {
                 xb = x0;
+                derxb = gAtBeta.evalDer(xb, initialPadding, 0.00025*gAtBeta.spacing);
+                if (Math.abs(derxb) < derepsilon) {
+                    return xb;
+                }
+                signumxb = Math.signum(derxb);
+                if (signumxb == 0) {
+                    return xb;
+                }
             }
             x0 = (xa + xb) / 2;
         }

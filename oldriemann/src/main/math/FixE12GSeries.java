@@ -382,7 +382,7 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
-    public static GSeries updateGSeries(
+    public static double updateGSeries(
         GSeries gSeries, List<double[]> zeroInfo,
         double[] initial, double[] actual, int[] indices
     ) {
@@ -409,9 +409,9 @@ public class FixE12GSeries {
         for (int i = 0; i < after.length; i++) {
             deviation += Math.abs(after[i] - actual[i]);
         }
-        System.out.println("deviation " + deviation/ after.length );
+        deviation /= after.length;
         
-        return gSeries;
+        return deviation;
     }
     
     public static boolean advanceZeroInfo(
@@ -457,6 +457,7 @@ public class FixE12GSeries {
         int size = zeroInfo.size();
         initial = new double[3*size-1];
         actual = new double[3*size-1];
+        // initial, actual
         double[] oldzero = null;
         for (int i = 0; i < size; i++) {
             double[] zero = zeroInfo.get(i);
@@ -482,14 +483,40 @@ public class FixE12GSeries {
             oldzero = zero;
             System.out.println(Arrays.toString(zero));
         }
+        
+        // indices
         int[] indices = new int[(3*size-1)/2];
         for (int i = 0; i < indices.length; i++) {
             indices[i] = midIdxCausingInfluence + i;
         }
-        updateGSeries(
+        
+        // update
+        double deviation = updateGSeries(
             gAtBeta, zeroInfo,
             initial,  actual,  indices
         );
+        System.out.println("deviation " + deviation );
+    }
+    
+    private static double advanceFix(
+        GSeries gAtBeta, int midIdxCausingInfluence
+    ) {
+        int size = zeroInfo.size();
+        double[] initial = evaluateWithMax(zeroInfo, gAtBeta);
+        double[] actual = actual(zeroInfo);
+        
+        // indices
+        int[] indices = new int[(3*size-1)/2];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = midIdxCausingInfluence + i;
+        }
+        
+        // update
+        double deviation = updateGSeries(
+            gAtBeta, zeroInfo,
+            initial,  actual,  indices
+        );
+        return deviation;
     }
     
     public static double[][] gradient(
@@ -582,6 +609,14 @@ public class FixE12GSeries {
     }
     
     public static void main(String[] args) throws IOException {
+        fixGSeries01();
+
+//        for (int i = 0; i < R; i++) {
+//
+//        }
+    }
+    
+    private static void fixGSeries01() {
         GSeries gAtBeta = Interpolate.readGSeries();
         int R = gAtBeta.gAtBeta.length;
         double begin = gAtBeta.begin + (initialPadding-18)*gAtBeta.spacing;
@@ -593,14 +628,24 @@ public class FixE12GSeries {
         System.out.println("==========");
         printZeroInfoWithMax(gAtBeta);
         System.out.println("==========");
+        for (int iter = 0; iter < 10; iter++) {
+            midIdxCausingInfluence++;
+            double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
+            System.out.println("midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+            advanceZeroInfo(Interpolate.zeroIn, nextValue);
+            double deviation = advanceFix(gAtBeta, midIdxCausingInfluence);
+            System.out.println("deviation " + deviation );
+            if (deviation > 0.001) {
+                System.out.println("deviation too large");
+                deviation = advanceFix(gAtBeta, midIdxCausingInfluence);
+                System.out.println("deviation " + deviation );
+            }
+            System.out.println("==========");
+        }
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
         System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
             + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
-        
-//        for (int i = 0; i < R; i++) {
-//
-//        }
     }
     
     private static void oldMain() {
