@@ -27,7 +27,7 @@ public class FixE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo = new LinkedList<>();
     double[][] nextValues;
-    static int desiredSize = 6;
+    static int desiredSize = 3;
     
     double[] pointBeingInflunced;
     GSeries gAtBeta = null;
@@ -381,6 +381,69 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
+    public GSeries updateGSeries(
+        GSeries gSeries, List<double[]> zeroInfo
+
+    ) {
+        
+        double[] initial = evaluateWithMax(zeroInfo, gSeries);
+        //3*zeroInfo.size()-1
+        
+        System.out.println("initial " + Arrays.toString(initial));
+        int[] indices = new int[(3*zeroInfo.size()-1)/2];
+        int idxOfCentral = indices.length/2 ;
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = midIdxCausingInfluence  - idxOfCentral + i;
+        }
+        System.out.println(Arrays.toString(indices));
+        //new double[initialValue.length][2*midIdx_in.length];
+        double[][] zetaDerCoeff = gradient(
+            gSeries, initial, zeroInfo,
+            indices,
+            0.125
+        );
+        double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
+        for (int i = 0; i < pointBeingInflunced.length; i++) {
+            int indexIntoNext = i/2;
+            if(i%2 == 0) {
+                // even i, zero
+                if ( pointBeingInflunced[i] != nextValues[indexIntoNext][0] ) {
+                    throw new RuntimeException("zero");
+                }
+                neededZetaIncrement[2 * i] = -initial[2 * i];
+                neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
+            } else {
+                // odd i, max
+                if ( pointBeingInflunced[i] != nextValues[indexIntoNext][3] ) {
+                    System.out.println("pointBeingInflunced[i] != nextValues[indexIntoNext][2]  "
+                        + pointBeingInflunced[i] + " != " + nextValues[indexIntoNext][2] );
+                    throw new RuntimeException("max");
+                }
+                neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
+                neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
+            }
+        }
+        
+        LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
+        
+        double[] solution = linearEquation.solve(
+            neededZetaIncrement
+        );
+        System.out.println("Required g increment " );
+        System.out.println( Arrays.toString(solution));
+        gAtBeta.incrementGValuesAtIndices(indices[0], solution);
+        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        System.out.println("after " );
+        System.out.println(Arrays.toString(after));
+        double[] actualIncrementInValues = new double[after.length];
+        for (int i = 0; i < actualIncrementInValues.length; i++) {
+            actualIncrementInValues[i] = after[i] - initial[i];
+        }
+        System.out.println("actualIncrementInValues " );
+        System.out.println( Arrays.toString(actualIncrementInValues));
+        
+        return gAtBeta;
+    }
     
     public static boolean advanceZeroInfo(
         BufferedReader[] zeroIn, double firstZero
@@ -450,25 +513,12 @@ public class FixE12GSeries {
     }
     
     public static double[][] gradient(
-        GSeries gSeries, List<double[]> zeroInfo,
+        GSeries gSeries, double[] initialValue, List<double[]> zeroInfo,
                 int[] midIdx_in,
                double increment
     ) {
         int size = zeroInfo.size();
-        double[] initialValue  = new double[3* size -1];
         double[] oldzero = null;
-        for (int i = 0; i < zeroInfo.size(); i++) {
-            double[] zero = zeroInfo.get(i);
-            if (i>0) {
-                double evalMax = evalMax(gSeries,
-                    (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]);
-                initialValue[3 * i - 1] = evalMax;
-            }
-            initialValue[3*i] = gSeries.evaluateZeta(zero[0], initialPadding);
-            initialValue[3*i+1] = gSeries.evalDer(
-                zero[0], initialPadding, 0.00025* gSeries.spacing);
-            oldzero = zero;
-        }
         
 //        for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
 //            double[] zero = zeroInfo.get(idxZeroInfo);
@@ -482,15 +532,18 @@ public class FixE12GSeries {
         for (int gSeriesIndex = 0; gSeriesIndex < midIdx_in.length; gSeriesIndex++) {
             int midIdx = midIdx_in[gSeriesIndex];
             gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
+            oldzero = null;
             for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
                 double[] zero = zeroInfo.get(idxZeroInfo);
                 gradient[3*idxZeroInfo][2*gSeriesIndex] = (gSeries.evaluateZeta(zero[0], initialPadding)-initialValue[3*idxZeroInfo])/ increment;
                 double a0ValAtZero = gSeries.evalDer(
                     zero[0], initialPadding, 0.00025 * gSeries.spacing);
                 gradient[3*idxZeroInfo+1][2*gSeriesIndex] = (a0ValAtZero - initialValue[3*idxZeroInfo + 1]) / increment;
-                if (idxZeroInfo < size-1) {
-                    gradient[3 * idxZeroInfo + 2][2 * gSeriesIndex] = Double.NEGATIVE_INFINITY;
+                if (idxZeroInfo > 0) {
+                    gradient[3 * idxZeroInfo - 1][2 * gSeriesIndex] = (evalMax(gSeries,
+                        (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]) - initialValue[3*idxZeroInfo - 1]) / increment;
                 }
+                oldzero = zero;
             }
             
             gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
@@ -498,7 +551,8 @@ public class FixE12GSeries {
             // change second index
             
             gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
-            
+    
+            oldzero = null;
             for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
                 double[] zero = zeroInfo.get(idxZeroInfo);
                 gradient[3*idxZeroInfo][2*gSeriesIndex+1] = (gSeries.evaluateZeta(zero[0], initialPadding)-initialValue[3*idxZeroInfo])/ increment;
@@ -506,9 +560,11 @@ public class FixE12GSeries {
                 double a0ValAtZero = gSeries.evalDer(
                     zero[0], initialPadding, 0.00025 * gSeries.spacing);
                 gradient[3*idxZeroInfo+1][2*gSeriesIndex+1] = (a0ValAtZero - initialValue[3*idxZeroInfo + 1]) / increment;
-                if (idxZeroInfo < size-1) {
-                    gradient[3 * idxZeroInfo + 2][2 * gSeriesIndex + 1] = Double.POSITIVE_INFINITY;
+                if (idxZeroInfo > 0) {
+                    gradient[3 * idxZeroInfo - 1][2 * gSeriesIndex + 1] = (evalMax(gSeries,
+                        (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]) - initialValue[3*idxZeroInfo - 1]) / increment;
                 }
+                oldzero = zero;
             }
             gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
         }
@@ -547,6 +603,11 @@ public class FixE12GSeries {
             }
             oldzero = zero;
             ret[3*i] = gAtBeta.evaluateZeta(zero[0], initialPadding);
+            if(i==0){
+                System.out.println("*** gAtBeta.midIdx " + gAtBeta.midIdx
+                    + " " + (zero[0]));
+    
+            }
             ret[3*i+1] = gAtBeta.evalDer(
                 zero[0], initialPadding, 0.00025* gAtBeta.spacing);
         }
@@ -560,6 +621,7 @@ public class FixE12GSeries {
         System.out.println(begin + " " + gAtBeta.evaluateZeta(begin+ gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
          + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
+        System.out.println("==========");
         initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing );
         System.out.println("==========");
         printZeroInfoWithMax(gAtBeta);
