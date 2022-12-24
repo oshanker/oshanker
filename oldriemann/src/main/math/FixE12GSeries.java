@@ -407,6 +407,10 @@ public class FixE12GSeries {
         double[] after = evaluateWithMax(zeroInfo, gSeries);
         double deviation = 0;
         for (int i = 0; i < after.length; i++) {
+            if (i%3 == 1) {
+                //ignore derivative
+                continue;
+            }
             deviation += Math.abs(after[i] - actual[i]);
         }
         deviation /= after.length;
@@ -498,7 +502,7 @@ public class FixE12GSeries {
         System.out.println("deviation " + deviation );
     }
     
-    private static double advanceFix(
+    private static double applyFix(
         GSeries gAtBeta, int midIdxCausingInfluence
     ) {
         int size = zeroInfo.size();
@@ -628,20 +632,40 @@ public class FixE12GSeries {
         System.out.println("==========");
         printZeroInfoWithMax(gAtBeta);
         System.out.println("==========");
-        for (int iter = 0; iter < 10; iter++) {
+        int devCount = 0;
+        int worseCount = 0;
+        for (int iter = 0; iter < 10000; iter++) {
             midIdxCausingInfluence++;
             double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
-            System.out.println("midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
             advanceZeroInfo(Interpolate.zeroIn, nextValue);
-            double deviation = advanceFix(gAtBeta, midIdxCausingInfluence);
-            System.out.println("deviation " + deviation );
-            if (deviation > 0.001) {
-                System.out.println("deviation too large");
-                deviation = advanceFix(gAtBeta, midIdxCausingInfluence);
-                System.out.println("deviation " + deviation );
+            double deviation = applyFix(gAtBeta, midIdxCausingInfluence);
+            if (deviation > 0.01) {
+                if (deviation > 10.0) {
+                    System.out.println("midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+                    System.out.println("deviation too large, " + deviation);
+                    System.out.println("=====** " + ++devCount);
+                    if (deviation > 1000000) {
+                        throw new IllegalStateException("check this value!");
+                    }
+                }
+                double oldDeviation = deviation;
+                deviation = applyFix(gAtBeta, midIdxCausingInfluence);
+                if (deviation > 0.1) {
+                    System.out.println("midIdx " + midIdxCausingInfluence +
+                        " nextValue " + nextValue + " oldDeviation " + oldDeviation);
+                    System.out.println("deviation too large (after retry), " + deviation );
+                    if(deviation > oldDeviation) {
+                        System.out.println("=====!!!!!!!!!=== "  + ++worseCount);
+                    }
+                    System.out.println("===============");
+                }
             }
-            System.out.println("==========");
         }
+    
+        System.out.println("==========");
+        double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
+        System.out.println("Final: midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+        System.out.println("==========");
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
         System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
