@@ -26,13 +26,14 @@ import static riemann.StaticMethods.gramE12;
 public class FixE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo = new LinkedList<>();
+    private static double[] actual;
     double[][] nextValues;
     static int desiredSize = 3;
     
     double[] pointBeingInflunced;
     GSeries gAtBeta = null;
-    double[] initial = null;
-    int midIdxCausingInfluence;
+    static double[] initial = null;
+    static int midIdxCausingInfluence;
     
     public FixE12GSeries() {
         this(new double[][]{
@@ -381,20 +382,11 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
-    public GSeries updateGSeries(
-        GSeries gSeries, List<double[]> zeroInfo
-
+    public static GSeries updateGSeries(
+        GSeries gSeries, List<double[]> zeroInfo,
+        double[] initial, double[] actual, int[] indices
     ) {
         
-        double[] initial = evaluateWithMax(zeroInfo, gSeries);
-        //3*zeroInfo.size()-1
-        
-        System.out.println("initial " + Arrays.toString(initial));
-        int[] indices = new int[(3*zeroInfo.size()-1)/2];
-        int idxOfCentral = indices.length/2 ;
-        for (int i = 0; i < indices.length; i++) {
-            indices[i] = midIdxCausingInfluence  - idxOfCentral + i;
-        }
         System.out.println(Arrays.toString(indices));
         //new double[initialValue.length][2*midIdx_in.length];
         double[][] zetaDerCoeff = gradient(
@@ -402,26 +394,9 @@ public class FixE12GSeries {
             indices,
             0.125
         );
-        double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
-        for (int i = 0; i < pointBeingInflunced.length; i++) {
-            int indexIntoNext = i/2;
-            if(i%2 == 0) {
-                // even i, zero
-                if ( pointBeingInflunced[i] != nextValues[indexIntoNext][0] ) {
-                    throw new RuntimeException("zero");
-                }
-                neededZetaIncrement[2 * i] = -initial[2 * i];
-                neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
-            } else {
-                // odd i, max
-                if ( pointBeingInflunced[i] != nextValues[indexIntoNext][3] ) {
-                    System.out.println("pointBeingInflunced[i] != nextValues[indexIntoNext][2]  "
-                        + pointBeingInflunced[i] + " != " + nextValues[indexIntoNext][2] );
-                    throw new RuntimeException("max");
-                }
-                neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
-                neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
-            }
+        double[] neededZetaIncrement = new double[actual.length];
+        for (int i = 0; i < actual.length; i++) {
+            neededZetaIncrement[i] = actual[i] - initial[i];
         }
         
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
@@ -431,18 +406,21 @@ public class FixE12GSeries {
         );
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
-        gAtBeta.incrementGValuesAtIndices(indices[0], solution);
-        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-        System.out.println("after " );
+        gSeries.incrementGValuesAtIndices(indices[0], solution);
+        double[] after = evaluateWithMax(zeroInfo, gSeries);
+        System.out.println("actual/ after /initial" );
+        System.out.println(Arrays.toString(actual));
         System.out.println(Arrays.toString(after));
+        System.out.println( Arrays.toString(initial));
         double[] actualIncrementInValues = new double[after.length];
         for (int i = 0; i < actualIncrementInValues.length; i++) {
             actualIncrementInValues[i] = after[i] - initial[i];
         }
-        System.out.println("actualIncrementInValues " );
+        System.out.println("actualIncrementInValues / neededZetaIncrement" );
         System.out.println( Arrays.toString(actualIncrementInValues));
+        System.out.println( Arrays.toString(neededZetaIncrement));
         
-        return gAtBeta;
+        return gSeries;
     }
     
     public static boolean advanceZeroInfo(
@@ -485,31 +463,50 @@ public class FixE12GSeries {
     }
     
     private static void printZeroInfoWithMax(GSeries gAtBeta) {
-        int count = 3;
-        double[] oldzero = null;
         int size = zeroInfo.size();
+        initial = new double[3*size-1];
+        actual = new double[3*size-1];
+        double[] oldzero = null;
         for (int i = 0; i < size; i++) {
             double[] zero = zeroInfo.get(i);
+            initial[3*i] = gAtBeta.evaluateZeta(zero[0], initialPadding);
+            if(i==0){
+                midIdxCausingInfluence = gAtBeta.midIdx;
+                System.out.println("*** gAtBeta.midIdx " + midIdxCausingInfluence
+                    + " " + (zero[0]));
+        
+            }
+            initial[3*i+1] = gAtBeta.evalDer(
+                zero[0], initialPadding, 0.00025* gAtBeta.spacing);
+            actual[3*i] = 0;
+            actual[3*i+1] = zero[1];
             if (i>0) {
                 double positionMax = positionMax(gAtBeta,
                     (oldzero[0] + zero[0]) / 2, oldzero[0], zero[0]);
                 double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
-                double maxDev = oldzero[2] - evalMax;
-                double absMaxDev = Math.abs(maxDev);
+                initial[3 * i - 1] = evalMax;
+                actual[3 * i - 1] = oldzero[2];
                 System.out.println(positionMax + " " + evalMax);
             }
             oldzero = zero;
             System.out.println(Arrays.toString(zero));
         }
-        double[] evaluateWithMax = evaluateWithMax(
-            zeroInfo.subList(size - count, size),
-            gAtBeta
-        );
-        double[] actual = actual(
-            zeroInfo.subList(size - count, size)
-        );
+        double[] neededZetaIncrement = new double[actual.length];
+        for (int i = 0; i < actual.length; i++) {
+            neededZetaIncrement[i] = actual[i] - initial[i];
+        }
+        System.out.println("actual/initial/needed");
         System.out.println(Arrays.toString(actual));
-        System.out.println(Arrays.toString(evaluateWithMax));
+        System.out.println(Arrays.toString(initial));
+        System.out.println(Arrays.toString(neededZetaIncrement));
+        int[] indices = new int[(3*size-1)/2];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = midIdxCausingInfluence + i;
+        }
+        updateGSeries(
+            gAtBeta, zeroInfo,
+            initial,  actual,  indices
+        );
     }
     
     public static double[][] gradient(
@@ -520,14 +517,6 @@ public class FixE12GSeries {
         int size = zeroInfo.size();
         double[] oldzero = null;
         
-//        for (int idxZeroInfo = 0; idxZeroInfo < size; idxZeroInfo++) {
-//            double[] zero = zeroInfo.get(idxZeroInfo);
-//            initialValue[3*idxZeroInfo] = 0;
-//            initialValue[3*idxZeroInfo+1] = zero[1];
-//            if (idxZeroInfo < size-1) {
-//                initialValue[3 * idxZeroInfo + 2] = zero[2];
-//            }
-//        }
         double[][] gradient = new double[initialValue.length][2*midIdx_in.length];
         for (int gSeriesIndex = 0; gSeriesIndex < midIdx_in.length; gSeriesIndex++) {
             int midIdx = midIdx_in[gSeriesIndex];
@@ -603,11 +592,6 @@ public class FixE12GSeries {
             }
             oldzero = zero;
             ret[3*i] = gAtBeta.evaluateZeta(zero[0], initialPadding);
-            if(i==0){
-                System.out.println("*** gAtBeta.midIdx " + gAtBeta.midIdx
-                    + " " + (zero[0]));
-    
-            }
             ret[3*i+1] = gAtBeta.evalDer(
                 zero[0], initialPadding, 0.00025* gAtBeta.spacing);
         }
@@ -625,6 +609,7 @@ public class FixE12GSeries {
         initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing );
         System.out.println("==========");
         printZeroInfoWithMax(gAtBeta);
+        System.out.println("==========");
         double end = gAtBeta.begin + (R-22)*gAtBeta.spacing;
         System.out.println(end + " " + gAtBeta.evaluateZeta(end - gAtBeta.spacing/2, initialPadding));
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx

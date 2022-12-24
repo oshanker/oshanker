@@ -138,7 +138,9 @@ public class LinearEquation
         return ret;
     }
 
-    public double[] solve(double[] transformFromIdentity) {
+    public double[] solve(double[] input) {
+        double[] transformFromIdentity = new double[input.length];
+        System.arraycopy(input, 0, transformFromIdentity, 0, input.length);
         int n = coefficients.length;
         for (int i=0; i < n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {
