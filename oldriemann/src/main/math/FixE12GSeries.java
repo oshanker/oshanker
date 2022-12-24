@@ -27,13 +27,13 @@ public class FixE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo = new LinkedList<>();
     private static double[] actual;
-    double[][] nextValues;
-    static int desiredSize = 3;
-    
-    double[] pointBeingInflunced;
-    GSeries gAtBeta = null;
+    static int desiredSize = 7;
     static double[] initial = null;
     static int midIdxCausingInfluence;
+    
+    double[] pointBeingInflunced;
+    double[][] nextValues;
+    GSeries gAtBeta = null;
     
     public FixE12GSeries() {
         this(new double[][]{
@@ -387,7 +387,6 @@ public class FixE12GSeries {
         double[] initial, double[] actual, int[] indices
     ) {
         
-        System.out.println(Arrays.toString(indices));
         //new double[initialValue.length][2*midIdx_in.length];
         double[][] zetaDerCoeff = gradient(
             gSeries, initial, zeroInfo,
@@ -404,21 +403,13 @@ public class FixE12GSeries {
         double[] solution = linearEquation.solve(
             neededZetaIncrement
         );
-        System.out.println("Required g increment " );
-        System.out.println( Arrays.toString(solution));
         gSeries.incrementGValuesAtIndices(indices[0], solution);
         double[] after = evaluateWithMax(zeroInfo, gSeries);
-        System.out.println("actual/ after /initial" );
-        System.out.println(Arrays.toString(actual));
-        System.out.println(Arrays.toString(after));
-        System.out.println( Arrays.toString(initial));
-        double[] actualIncrementInValues = new double[after.length];
-        for (int i = 0; i < actualIncrementInValues.length; i++) {
-            actualIncrementInValues[i] = after[i] - initial[i];
+        double deviation = 0;
+        for (int i = 0; i < after.length; i++) {
+            deviation += Math.abs(after[i] - actual[i]);
         }
-        System.out.println("actualIncrementInValues / neededZetaIncrement" );
-        System.out.println( Arrays.toString(actualIncrementInValues));
-        System.out.println( Arrays.toString(neededZetaIncrement));
+        System.out.println("deviation " + deviation/ after.length );
         
         return gSeries;
     }
@@ -491,14 +482,6 @@ public class FixE12GSeries {
             oldzero = zero;
             System.out.println(Arrays.toString(zero));
         }
-        double[] neededZetaIncrement = new double[actual.length];
-        for (int i = 0; i < actual.length; i++) {
-            neededZetaIncrement[i] = actual[i] - initial[i];
-        }
-        System.out.println("actual/initial/needed");
-        System.out.println(Arrays.toString(actual));
-        System.out.println(Arrays.toString(initial));
-        System.out.println(Arrays.toString(neededZetaIncrement));
         int[] indices = new int[(3*size-1)/2];
         for (int i = 0; i < indices.length; i++) {
             indices[i] = midIdxCausingInfluence + i;
