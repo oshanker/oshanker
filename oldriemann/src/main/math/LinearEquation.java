@@ -1,12 +1,10 @@
 package math;
 
-import java.util.Arrays;
-
 public class LinearEquation
 {
     double [][] coefficients;
     double [][] values;
-    int index[];
+    int rowIndex[];
 
     public static void main(String args[]) {
         LinearEquation linearEquation = new LinearEquation(7);
@@ -34,16 +32,32 @@ public class LinearEquation
         //multiplyByInverse(inverted_mat);
 
     }
-
-    public static void printMatrix(double[][] inverted_mat) {
-        for (int i = 0; i < inverted_mat.length; ++i)
+    
+    public static void printMatrix(double[][] matrix) {
+        int length = matrix.length;
+        for (int i = 0; i < length; ++i)
         {
-            for (int j = 0; j < inverted_mat[i].length; ++j)
+            for (int j = 0; j < matrix[i].length; ++j)
             {
-                System.out.print(inverted_mat[i][j] + "  ");
+                System.out.print(matrix[i][j] + "  ");
             }
             System.out.println();
         }
+    }
+    
+    public static double[][] transpose(double[][] matrix) {
+        int length = Math.min(matrix.length, matrix[0].length);
+        double[][] transpose = new double[matrix[0].length][matrix.length];
+        for (int row = 0; row < length; ++row)
+        {
+            transpose[row][row] = matrix[row][row];
+            for (int j = row+1; j < matrix[row].length; ++j)
+            {
+                transpose[row][j] = matrix[j][row];
+                transpose[j][row] = matrix[row][j];
+            }
+        }
+        return transpose;
     }
 
     private void multiplyByInverse(double[][] inverted_mat) {
@@ -144,23 +158,23 @@ public class LinearEquation
         int n = coefficients.length;
         for (int i=0; i < n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {
-                    int indexj = index[j];
+                    int indexj = rowIndex[j];
                     transformFromIdentity[indexj]
-                          -= coefficients[indexj][i] * transformFromIdentity[index[i]];
+                          -= coefficients[indexj][i] * transformFromIdentity[rowIndex[i]];
             }
         }
 
         double inverse[] = new double[n];
         inverse[n -1] =
-              transformFromIdentity[index[n -1]]/coefficients[index[n -1]][n -1];
+              transformFromIdentity[rowIndex[n -1]]/coefficients[rowIndex[n -1]][n -1];
         for (int row = n -2; row>=0; --row)
         {
-            inverse[row] = transformFromIdentity[index[row]];
+            inverse[row] = transformFromIdentity[rowIndex[row]];
             for (int k = row+1; k< n; ++k)
             {
-                inverse[row] -= coefficients[index[row]][k]*inverse[k];
+                inverse[row] -= coefficients[rowIndex[row]][k]*inverse[k];
             }
-            inverse[row] /= coefficients[index[row]][row];
+            inverse[row] /= coefficients[rowIndex[row]][row];
         }
         return inverse;
     }
@@ -170,9 +184,9 @@ public class LinearEquation
         for (int i=0; i < n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {
                 for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN) {
-                    int indexj = index[j];
+                    int indexj = rowIndex[j];
                     transformFromIdentity[indexj][COLumN]
-                          -= coefficients[indexj][i] * transformFromIdentity[index[i]][COLumN];
+                          -= coefficients[indexj][i] * transformFromIdentity[rowIndex[i]][COLumN];
                 }
             }
         }
@@ -181,15 +195,15 @@ public class LinearEquation
         for (int COLumN = 0; COLumN < transformFromIdentity[0].length; ++COLumN)
         {
             inverse[n -1][COLumN] =
-                  transformFromIdentity[index[n -1]][COLumN]/coefficients[index[n -1]][n -1];
+                  transformFromIdentity[rowIndex[n -1]][COLumN]/coefficients[rowIndex[n -1]][n -1];
             for (int row = n -2; row>=0; --row)
             {
-                inverse[row][COLumN] = transformFromIdentity[index[row]][COLumN];
+                inverse[row][COLumN] = transformFromIdentity[rowIndex[row]][COLumN];
                 for (int k = row+1; k< n; ++k)
                 {
-                    inverse[row][COLumN] -= coefficients[index[row]][k]*inverse[k][COLumN];
+                    inverse[row][COLumN] -= coefficients[rowIndex[row]][k]*inverse[k][COLumN];
                 }
-                inverse[row][COLumN] /= coefficients[index[row]][row];
+                inverse[row][COLumN] /= coefficients[rowIndex[row]][row];
             }
         }
         return inverse;
@@ -222,35 +236,35 @@ public class LinearEquation
     public  void gaussian(double coefficients[][])
     {
         int n = coefficients.length;
-        index = new int[n];
-        double c[] = new double[n];
+        rowIndex = new int[n];
+        double colMax[] = new double[n];
  
         // Initialize the index
-        for (int i=0; i<n; ++i) {
-            index[i] = i;
+        for (int i = 0; i < n; ++i) {
+            rowIndex[i] = i;
         }
  
         // Find the rescaling factors, one from each row
-        for (int i=0; i<n; ++i) 
+        for (int row = 0; row < n; ++row)
         {
             double max = 0;
-            for (int j=0; j<n; ++j) 
+            for (int col = 0; col<n; ++col)
             {
-                double c0 = Math.abs(coefficients[i][j]);
+                double c0 = Math.abs(coefficients[row][col]);
                 if (c0 > max) max = c0;
             }
-            c[i] = max;
+            colMax[row] = max;
         }
  
         // Search the pivoting element from each column
         int k = 0;
-        for (int j=0; j<n-1; ++j) 
+        for (int column = 0; column < n-1; ++column)
         {
             double pivot_maxrow = 0;
-            for (int i = j; i < n; ++i)
+            for (int i = column; i < n; ++i)
             {
-                double pi0 = Math.abs(coefficients[index[i]][j]);
-                pi0 /= c[index[i]];
+                double pi0 = Math.abs(coefficients[rowIndex[i]][column]);
+                pi0 /= colMax[rowIndex[i]];
                 if (pi0 > pivot_maxrow)
                 {
                     pivot_maxrow = pi0;
@@ -259,19 +273,19 @@ public class LinearEquation
             }
  
             // Interchange rows according to the pivoting order
-            int itmp = index[j];
-            index[j] = index[k];
-            index[k] = itmp;
-            for (int i=j+1; i<n; ++i) 	
+            int itmp = rowIndex[column];
+            rowIndex[column] = rowIndex[k];
+            rowIndex[k] = itmp;
+            for (int i = column + 1; i < n; ++i)
             {
-                double pj = coefficients[index[i]][j]/coefficients[index[j]][j];
+                double pj = coefficients[rowIndex[i]][column]/coefficients[rowIndex[column]][column];
  
                 // Record pivoting ratios below the diagonal
-                coefficients[index[i]][j] = pj;
+                coefficients[rowIndex[i]][column] = pj;
  
-                // Modify other elements accordingly
-                for (int l=j+1; l<n; ++l) {
-                    coefficients[index[i]][l] -= pj * coefficients[index[j]][l];
+                // Modify other elements accordingly (top triangular)
+                for (int cols_right = column + 1; cols_right < n; ++cols_right) {
+                    coefficients[rowIndex[i]][cols_right] -= pj * coefficients[rowIndex[column]][cols_right];
                 }
             }
         }

@@ -23,7 +23,6 @@ public class LinearEquationTest {
     static double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147} ;
     static double[]  nextValues2 = {243831.92506103282, -46.745064213360436, 4.265426650034286} ;
     
-    //static double[] pointBeingInflunced = {nextValues[0], nextValues1[0]};
     static double[] pointBeingInflunced = {nextValues[0], nextValues1[0], nextValues2[0]};
     static GSeries gAtBeta = null;
     static double[] initial = null;
@@ -33,7 +32,7 @@ public class LinearEquationTest {
     public static void beforeClass() throws Exception {
         gAtBeta = getgSeries(pointBeingInflunced[0]);
         initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-        System.out.println("initial " + Arrays.toString(initial));
+        //System.out.println("initial " + Arrays.toString(initial));
     }
     
     @Test
@@ -98,6 +97,46 @@ public class LinearEquationTest {
         LinearEquation.printMatrix(zetaDerCoeff);
     }
     
+    @Test
+    public void testCoeff1() {
+        double[][] coefficients = {
+            {1, -1},
+            {1, 1},
+        };
+        LinearEquation linearEquation = new LinearEquation(coefficients);
+        LinearEquation.printMatrix(linearEquation.coefficients);
+        System.out.println("=======");
+        coefficients = new double[][]{
+            {1, 0.999},
+            {1, 1},
+        };
+        linearEquation = new LinearEquation(coefficients);
+        LinearEquation.printMatrix(linearEquation.coefficients);
+    }
+    
+    @Test
+    public void testCoeff() {
+        int n = 5;
+        double[][] coefficients = new double[n][n];
+        double[] values = new double[n];
+        for(int row = 0; row < n; row++)
+        {
+            coefficients[row][row ] = row + 1;
+            for(int col = row+1; col < n; col ++)
+            {
+                coefficients[row][col ] = 1;
+            }
+            values[row] = 2*row + 1;
+        }
+        double[][] transpose = LinearEquation.transpose(coefficients);
+        LinearEquation linearEquation = new LinearEquation(transpose);
+        LinearEquation.printMatrix(transpose);
+        System.out.println("=======");
+        LinearEquation.printMatrix(linearEquation.coefficients);
+        double[] solution = linearEquation.solve(values);
+        System.out.println(Arrays.toString(solution));
+        
+    }
     
     @Test
     public void testChangeToZetaAndDer() {
