@@ -141,7 +141,7 @@ public class FixE12GSeries {
         LinearEquation.printMatrix(zetaDerCoeff);
     }
     
-    public GSeries testChangeToZetaAndDer() {
+    public double[][] testChangeToZetaAndDer(GSeries gAtBeta) {
     
         Pair<double[], double[]> initValues = evaluateNextValues(nextValues, initialPadding, gAtBeta);
         double[] initial = initValues.getKey();
@@ -205,8 +205,12 @@ public class FixE12GSeries {
         System.out.println( Arrays.toString(actualIncrementInValues));
         System.out.println("neededZetaIncrement " );
         System.out.println( Arrays.toString(neededZetaIncrement));
+    
+        return new double[][]{
+            actualIncrementInValues,
+            neededZetaIncrement
+        };
         
-        return gAtBeta;
     }
     
     public static Pair<double[], double[]> evaluateNextValues(
@@ -380,8 +384,8 @@ public class FixE12GSeries {
                 break;
             default:
                 FixE12GSeries fixE12GSeries = new FixE12GSeries();
-                gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
-            
+                fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
+                gAtBeta = fixE12GSeries.gAtBeta;
         }
         return gAtBeta;
     }
@@ -648,7 +652,7 @@ public class FixE12GSeries {
     
     }
     
-    public GSeries testChangeToZetaAndDerNoMax() {
+    public double[][] testChangeToZetaAndDerNoMax(GSeries gAtBeta) {
         
         pointBeingInflunced = new double[nextValues.length];
         int[] indices = new int[pointBeingInflunced.length];
@@ -704,13 +708,16 @@ public class FixE12GSeries {
         System.out.println("neededZetaIncrement " );
         System.out.println( Arrays.toString(neededZetaIncrement));
         
-        return gAtBeta;
+        return new double[][]{
+            actualIncrementInValues,
+            neededZetaIncrement
+        };
     }
     
     
     private static void simpleTestChangeToZetaAndDer() {
         FixE12GSeries fixE12GSeries = new FixE12GSeries();
-        fixE12GSeries.testChangeToZetaAndDerNoMax();
+        fixE12GSeries.testChangeToZetaAndDerNoMax(fixE12GSeries.gAtBeta);
         
     }
     
@@ -810,7 +817,8 @@ public class FixE12GSeries {
                 gAtBeta
             );
             
-            gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
+            fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
+            gAtBeta = fixE12GSeries.gAtBeta;
             BufferedReader[] zeroIn = null;
             String zerosFile = Rosser.getParam("zerosFile");
             zeroIn = Interpolate.zerosFile(zerosFile);

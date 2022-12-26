@@ -462,14 +462,14 @@ public class AnalyzeE12GSeries {
             maxZeroDev = Double.MIN_VALUE;
             maxDerDev = Double.MIN_VALUE;
             maxMaxDev = Double.MIN_VALUE;
-            gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta, sample);
+            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta, sample);
             FixE12GSeries fixE12GSeries = new FixE12GSeries(
                 zeroInfo.subList(2, 7),
                 1999912,
                 gAtBeta
             );
         
-            gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
+            fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
             BufferedReader[] zeroIn = null;
             String zerosFile = Rosser.getParam("zerosFile");
             zeroIn = Interpolate.zerosFile(zerosFile);

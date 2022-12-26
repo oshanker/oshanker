@@ -616,7 +616,8 @@ public class GSeriesTest {
                 break;
             default:
                 FixE12GSeries fixE12GSeries = new FixE12GSeries();
-                gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
+                fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
+                gAtBeta = fixE12GSeries.gAtBeta;
                 upperforzero = 0.5;
                 deltader = 10.0;
                 deltamax = 1.0;
