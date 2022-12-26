@@ -406,14 +406,16 @@ public class FixE12GSeries {
         gSeries.incrementGValuesAtIndices(indices[0], solution);
         double[] after = evaluateWithMax(zeroInfo, gSeries);
         double deviation = 0;
+        int sample = 0;
         for (int i = 0; i < after.length; i++) {
             if (i%3 == 1) {
                 //ignore derivative
                 continue;
             }
+            sample++;
             deviation += Math.abs(after[i] - actual[i]);
         }
-        deviation /= after.length;
+        deviation /= sample;
     
         return new double[] {deviation, linearEquation.determinant()};
     }
