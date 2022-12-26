@@ -154,7 +154,8 @@ public class FixE12GSeries {
             indices[i] = midIdxCausingInfluence  - idxOfCentral + i;
         }
         System.out.println(Arrays.toString(indices));
-        
+        // this only looks at indices, initial and pointbeinginfluenced.
+        // no assumptions regarding zero, max
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -202,6 +203,8 @@ public class FixE12GSeries {
         }
         System.out.println("actualIncrementInValues " );
         System.out.println( Arrays.toString(actualIncrementInValues));
+        System.out.println("neededZetaIncrement " );
+        System.out.println( Arrays.toString(neededZetaIncrement));
         
         return gAtBeta;
     }
@@ -219,6 +222,7 @@ public class FixE12GSeries {
             if (nextValues[i][3] <= 0) {
                 break;
             }
+            // max??
             pointBeingInflunced.add(nextValues[i][3]);
             values.add(
                 gAtBeta.evaluateZeta(nextValues[i][3], initialPadding));
@@ -399,12 +403,28 @@ public class FixE12GSeries {
         }
         
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
+        double determinant = linearEquation.determinant();
         
         double[] solution = linearEquation.solve(
             neededZetaIncrement
         );
         gSeries.incrementGValuesAtIndices(indices[0], solution);
         double[] after = evaluateWithMax(zeroInfo, gSeries);
+        double deviation = getDeviation(actual, after);
+        if (deviation > 250) {
+            gSeries.decrementGValuesAtIndices(indices[0], solution);
+            System.out.println("ignoring =======================");
+            LinearEquation.printMatrix(linearEquation.coefficients);
+            System.out.println("indices " + Arrays.toString(indices));
+            System.out.println("after " + Arrays.toString(after));
+            System.out.println("          =======================");
+            return new double[] {getDeviation(actual, initial), determinant};
+        }
+    
+        return new double[] {deviation, determinant};
+    }
+    
+    private static double getDeviation(double[] actual, double[] after) {
         double deviation = 0;
         int sample = 0;
         for (int i = 0; i < after.length; i++) {
@@ -416,8 +436,7 @@ public class FixE12GSeries {
             deviation += Math.abs(after[i] - actual[i]);
         }
         deviation /= sample;
-    
-        return new double[] {deviation, linearEquation.determinant()};
+        return deviation;
     }
     
     public static boolean advanceZeroInfo(
@@ -517,13 +536,21 @@ public class FixE12GSeries {
         for (int i = 0; i < indices.length; i++) {
             indices[i] = midIdxCausingInfluence + i;
         }
+//        double deviation = getDeviation(actual, initial);
+//        if (deviation < 0.001) {
+//            return new double[] {deviation, 1000};
+//        }
         
         // update
-        double[] deviation = updateGSeries(
+        double[] deviationDet = updateGSeries(
             gAtBeta, zeroInfo,
             initial,  actual,  indices
         );
-        return deviation;
+        if (deviationDet[0] > 250) {
+                System.out.println("actual " + Arrays.toString(actual));
+                System.out.println("initial " + Arrays.toString(initial));
+        }
+        return deviationDet;
     }
     
     public static double[][] gradient(
@@ -616,11 +643,14 @@ public class FixE12GSeries {
     }
     
     public static void main(String[] args) throws IOException {
-        fixGSeries01();
-
-//        for (int i = 0; i < R; i++) {
-//
-//        }
+        //fixGSeries01();
+        simpleTestChangeToZetaAndDer();
+    
+    }
+    
+    private static void simpleTestChangeToZetaAndDer() {
+        FixE12GSeries fixE12GSeries = new FixE12GSeries();
+        fixE12GSeries.testChangeToZetaAndDer();
     }
     
     private static void fixGSeries01() {
@@ -639,15 +669,26 @@ public class FixE12GSeries {
         int worseCount = 0;
         double maxDev = Double.MIN_VALUE;
         double minDet = Double.MAX_VALUE;
-        for (int iter = 0; iter < 10000; iter++) {
+        for (int iter = 0; iter < 50000; iter++) {
             midIdxCausingInfluence++;
             double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
             advanceZeroInfo(Interpolate.zeroIn, nextValue);
-            double[] ret = applyFix(gAtBeta, midIdxCausingInfluence);
+            double[] ret = null;
+            try {
+                ret = applyFix(gAtBeta, midIdxCausingInfluence);
+            } catch (IllegalStateException e) {
+                //positionMax = (xa + xb)/2;
+                //System.out.println(" skipping, xa xb same sign, " + midIdxCausingInfluence);
+                continue;
+            }
+            
             double deviation = ret[0];
             double det = Math.abs(ret[1]);
             if (deviation > maxDev) {
                 maxDev = deviation;
+            }
+            if (det == 0) {
+                System.out.println(" det == 0, " + midIdxCausingInfluence);
             }
             if (det < minDet) {
                 minDet = det;
@@ -663,6 +704,9 @@ public class FixE12GSeries {
                         + ", det " + det);
                     System.out.println("=====** " + ++devCount);
                     if (deviation > 250) {
+                        for (int zeroIdx = 0; zeroIdx < zeroInfo.size(); zeroIdx++) {
+                            System.out.println(" " + Arrays.toString(zeroInfo.get(zeroIdx)));
+                        }
                         throw new IllegalStateException("check this value!");
                     }
                 }

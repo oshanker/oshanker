@@ -667,8 +667,6 @@ public class GSeriesTest {
                 maxUpdated = true;
             }
             if (i>0) {
-                Poly4 poly = new Poly4(z0, zeroPosition, d0, expectedDer,
-                        extremumFromFile);
                 double positionMax = positionMax(gAtBeta,(z0+zeroPosition)/2, z0, zeroPosition);
                 double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
                 double maxDev = extremumFromFile - evalMax;
@@ -711,11 +709,14 @@ public class GSeriesTest {
             }
         }
         System.out.println("done");
+        /*
         for (double[] zeroEntry: zeroInfo) {
             System.out.println(
                 Arrays.toString(zeroEntry)
             );
         }
+        
+         */
         System.out.println(
             "maxZeroDev  " + maxZeroDev
                 + " iZero " + iZero

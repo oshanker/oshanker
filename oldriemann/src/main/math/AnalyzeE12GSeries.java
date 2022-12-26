@@ -290,7 +290,7 @@ public class AnalyzeE12GSeries {
         try {
             positionMax = positionMax(gAtBeta, x0, xa, xb);
         } catch (IllegalStateException e) {
-            positionMax = (xa + xb)/2;
+            throw e;
         }
         double evalMax = gAtBeta.evaluateZeta(positionMax, initialPadding);
         return evalMax;
