@@ -3,6 +3,8 @@ package math;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.LinkedList;
+
 public class FixE12GSeriesTest  {
     public void testTestIncrementGValuesAtIndices() {
     }
@@ -18,7 +20,15 @@ public class FixE12GSeriesTest  {
         }
     }
     
+    @Test
     public void testGradient() {
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        FixE12GSeries fixE12GSeries = new FixE12GSeries();
+        for (int i = 0; i < FixE12GSeries.desiredSize; i++) {
+            zeroInfo.add(fixE12GSeries.nextValues[i]);
+        }
+        double[] deviation = FixE12GSeries.printZeroInfoWithMax(fixE12GSeries.gAtBeta, zeroInfo);
+        Assert.assertTrue(deviation[0] < 1.0E-9);
     }
     
     @Test

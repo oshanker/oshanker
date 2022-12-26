@@ -26,9 +26,7 @@ import static riemann.StaticMethods.gramE12;
 public class FixE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo = new LinkedList<>();
-    private static double[] actual;
     static int desiredSize = 3;
-    static double[] initial = null;
     static int midIdxCausingInfluence;
     
     double[] pointBeingInflunced;
@@ -77,7 +75,7 @@ public class FixE12GSeries {
             nextValues[2][0], nextValues[3][0],
             nextValues[4][0],
         };
-        initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        double[] initial = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
         System.out.println("initial " + Arrays.toString(initial));
 
         double[][] zetaCoeff = changeToZeta(
@@ -482,10 +480,10 @@ public class FixE12GSeries {
         }
     }
     
-    private static void printZeroInfoWithMax(GSeries gAtBeta) {
-        int size = zeroInfo.size();
-        initial = new double[3*size-1];
-        actual = new double[3*size-1];
+    static double[] printZeroInfoWithMax(GSeries gAtBeta, LinkedList<double[]> zeroInfo) {
+        int size =  zeroInfo.size();
+        double[] initial = new double[3*size-1];
+        double[] actual = new double[3*size-1];
         // initial, actual
         double[] oldzero = null;
         for (int i = 0; i < size; i++) {
@@ -526,6 +524,7 @@ public class FixE12GSeries {
         );
         System.out.println("deviation " + deviation[0]
             + " det " + deviation[1]);
+        return deviation;
     }
     
     private static double[] applyFix(
@@ -731,7 +730,7 @@ public class FixE12GSeries {
         System.out.println("==========");
         initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing );
         System.out.println("==========");
-        printZeroInfoWithMax(gAtBeta);
+        printZeroInfoWithMax(gAtBeta, zeroInfo);
         System.out.println("==========");
         int devCount = 0;
         int worseCount = 0;
