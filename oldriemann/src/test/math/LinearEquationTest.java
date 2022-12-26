@@ -1,5 +1,6 @@
 package math;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -105,6 +106,7 @@ public class LinearEquationTest {
         };
         LinearEquation linearEquation = new LinearEquation(coefficients);
         LinearEquation.printMatrix(linearEquation.coefficients);
+        Assert.assertEquals(2.0, linearEquation.determinant(), 1.0E-9);
         System.out.println("=======");
         coefficients = new double[][]{
             {1, 0.999},
@@ -112,6 +114,7 @@ public class LinearEquationTest {
         };
         linearEquation = new LinearEquation(coefficients);
         LinearEquation.printMatrix(linearEquation.coefficients);
+        Assert.assertEquals(0.001, linearEquation.determinant(), 1.0E-9);
     }
     
     @Test

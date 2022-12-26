@@ -27,7 +27,7 @@ public class FixE12GSeries {
     static final int initialPadding = 40;
     private static LinkedList<double[]> zeroInfo = new LinkedList<>();
     private static double[] actual;
-    static int desiredSize = 7;
+    static int desiredSize = 3;
     static double[] initial = null;
     static int midIdxCausingInfluence;
     
@@ -382,7 +382,7 @@ public class FixE12GSeries {
         return gAtBeta;
     }
     
-    public static double updateGSeries(
+    public static double[] updateGSeries(
         GSeries gSeries, List<double[]> zeroInfo,
         double[] initial, double[] actual, int[] indices
     ) {
@@ -414,8 +414,8 @@ public class FixE12GSeries {
             deviation += Math.abs(after[i] - actual[i]);
         }
         deviation /= after.length;
-        
-        return deviation;
+    
+        return new double[] {deviation, linearEquation.determinant()};
     }
     
     public static boolean advanceZeroInfo(
@@ -495,14 +495,15 @@ public class FixE12GSeries {
         }
         
         // update
-        double deviation = updateGSeries(
+        double[] deviation = updateGSeries(
             gAtBeta, zeroInfo,
             initial,  actual,  indices
         );
-        System.out.println("deviation " + deviation );
+        System.out.println("deviation " + deviation[0]
+            + " det " + deviation[1]);
     }
     
-    private static double applyFix(
+    private static double[] applyFix(
         GSeries gAtBeta, int midIdxCausingInfluence
     ) {
         int size = zeroInfo.size();
@@ -516,7 +517,7 @@ public class FixE12GSeries {
         }
         
         // update
-        double deviation = updateGSeries(
+        double[] deviation = updateGSeries(
             gAtBeta, zeroInfo,
             initial,  actual,  indices
         );
@@ -634,22 +635,38 @@ public class FixE12GSeries {
         System.out.println("==========");
         int devCount = 0;
         int worseCount = 0;
+        double maxDev = Double.MIN_VALUE;
+        double minDet = Double.MAX_VALUE;
         for (int iter = 0; iter < 10000; iter++) {
             midIdxCausingInfluence++;
             double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
             advanceZeroInfo(Interpolate.zeroIn, nextValue);
-            double deviation = applyFix(gAtBeta, midIdxCausingInfluence);
+            double[] ret = applyFix(gAtBeta, midIdxCausingInfluence);
+            double deviation = ret[0];
+            double det = Math.abs(ret[1]);
+            if (deviation > maxDev) {
+                maxDev = deviation;
+            }
+            if (det < minDet) {
+                minDet = det;
+            }
+            
+//            System.out.println(midIdxCausingInfluence + " **** " + deviation
+//                + ", det " + det);
+            
             if (deviation > 0.01) {
-                if (deviation > 10.0) {
+                if (deviation > 1.0) {
                     System.out.println("midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
-                    System.out.println("deviation too large, " + deviation);
+                    System.out.println("deviation too large, " + deviation
+                        + ", det " + det);
                     System.out.println("=====** " + ++devCount);
-                    if (deviation > 1000000) {
+                    if (deviation > 250) {
                         throw new IllegalStateException("check this value!");
                     }
                 }
                 double oldDeviation = deviation;
-                deviation = applyFix(gAtBeta, midIdxCausingInfluence);
+                ret = applyFix(gAtBeta, midIdxCausingInfluence);
+                deviation = ret[0];
                 if (deviation > 0.1) {
                     System.out.println("midIdx " + midIdxCausingInfluence +
                         " nextValue " + nextValue + " oldDeviation " + oldDeviation);
@@ -661,6 +678,7 @@ public class FixE12GSeries {
                 }
             }
         }
+        System.out.println("maxDev " + maxDev + " minDet " + minDet);
     
         System.out.println("==========");
         double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;

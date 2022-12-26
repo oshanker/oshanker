@@ -97,6 +97,15 @@ public class LinearEquation
         gaussian(this.coefficients);
     }
 
+    public double determinant(){
+        double determinant = 1;
+        for (int col = 0; col  < coefficients.length; ++col)
+        {
+            determinant *= coefficients[col][col];
+        }
+        return determinant;
+    }
+    
     public LinearEquation(int n) {
         coefficients = new double[n][n];
         values = new double[n][1];
