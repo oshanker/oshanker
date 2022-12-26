@@ -648,9 +648,70 @@ public class FixE12GSeries {
     
     }
     
+    public GSeries testChangeToZetaAndDerNoMax() {
+        
+        pointBeingInflunced = new double[nextValues.length];
+        int[] indices = new int[pointBeingInflunced.length];
+        double[] initial =  new double[2*nextValues.length];
+        for (int i = 0; i < nextValues.length; i++) {
+            pointBeingInflunced[i] = nextValues[i][0];
+            initial[2*i] =
+                gAtBeta.evaluateZeta(nextValues[i][0], initialPadding);
+            if (i == 0){
+                midIdxCausingInfluence = gAtBeta.midIdx;
+            }
+            initial[2*i+1] =
+                gAtBeta.evalDer(
+                nextValues[i][0], initialPadding, 0.00025 * gAtBeta.spacing);
+            indices[i] = midIdxCausingInfluence + i;
+        }
+        
+        System.out.println("initial " + Arrays.toString(initial));
+        System.out.println(Arrays.toString(indices));
+        // this only looks at indices, initial and pointbeinginfluenced.
+        // no assumptions regarding zero, max
+        double[][] zetaDerCoeff = changeToZetaAndDer(
+            gAtBeta,
+            initialPadding,
+            pointBeingInflunced,
+            initial,
+            indices,
+            0.125
+        );
+        double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
+        for (int i = 0; i < pointBeingInflunced.length; i++) {
+            neededZetaIncrement[2 * i] = -initial[2 * i];
+            neededZetaIncrement[2 * i + 1] = nextValues[i][1] - initial[2 * i + 1];
+        }
+        
+        LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
+        
+        double[] solution = linearEquation.solve(
+            neededZetaIncrement
+        );
+        System.out.println("Required g increment " );
+        System.out.println( Arrays.toString(solution));
+        gAtBeta.incrementGValuesAtIndices(indices[0], solution);
+        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
+        System.out.println("after " );
+        System.out.println(Arrays.toString(after));
+        double[] actualIncrementInValues = new double[after.length];
+        for (int i = 0; i < actualIncrementInValues.length; i++) {
+            actualIncrementInValues[i] = after[i] - initial[i];
+        }
+        System.out.println("actualIncrementInValues " );
+        System.out.println( Arrays.toString(actualIncrementInValues));
+        System.out.println("neededZetaIncrement " );
+        System.out.println( Arrays.toString(neededZetaIncrement));
+        
+        return gAtBeta;
+    }
+    
+    
     private static void simpleTestChangeToZetaAndDer() {
         FixE12GSeries fixE12GSeries = new FixE12GSeries();
-        fixE12GSeries.testChangeToZetaAndDer();
+        fixE12GSeries.testChangeToZetaAndDerNoMax();
+        
     }
     
     private static void fixGSeries01() {
@@ -677,7 +738,7 @@ public class FixE12GSeries {
             try {
                 ret = applyFix(gAtBeta, midIdxCausingInfluence);
             } catch (IllegalStateException e) {
-                //positionMax = (xa + xb)/2;
+                // do a fit with only zeros and derivative
                 //System.out.println(" skipping, xa xb same sign, " + midIdxCausingInfluence);
                 continue;
             }
