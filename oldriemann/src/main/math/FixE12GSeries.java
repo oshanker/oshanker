@@ -48,16 +48,21 @@ public class FixE12GSeries {
     }
     
     public FixE12GSeries(
-        List<double[]> zeroInfo, int midIdxCausingInfluence, GSeries gAtBeta
+        List<double[]> zeroInfo, GSeries gAtBeta
     ) {
         this.nextValues = new double[zeroInfo.size()][];
-        this.midIdxCausingInfluence = midIdxCausingInfluence;
         this.gAtBeta = gAtBeta;
         for (int row = 0; row < nextValues.length; row++) {
             nextValues[row] = zeroInfo.get(row);
         }
     }
     
+    public FixE12GSeries(
+        List<double[]> zeroInfo, int midIdxCausingInfluence, GSeries gAtBeta
+    ) {
+        this(zeroInfo, gAtBeta);
+        this.midIdxCausingInfluence = midIdxCausingInfluence;
+    }
     public FixE12GSeries(double[][] nextValues, int midIdxCausingInfluence) {
         this.nextValues = nextValues;
         this.midIdxCausingInfluence = midIdxCausingInfluence;
@@ -647,8 +652,8 @@ public class FixE12GSeries {
     }
     
     public static void main(String[] args) throws IOException {
-        //fixGSeries01();
-        simpleTestChangeToZetaAndDer();
+        fixGSeries01();
+        //simpleTestChangeToZetaAndDer();
     
     }
     
@@ -657,17 +662,18 @@ public class FixE12GSeries {
         pointBeingInflunced = new double[nextValues.length];
         int[] indices = new int[pointBeingInflunced.length];
         double[] initial =  new double[2*nextValues.length];
+        int idxCausingInfluence = 0;
         for (int i = 0; i < nextValues.length; i++) {
             pointBeingInflunced[i] = nextValues[i][0];
             initial[2*i] =
                 gAtBeta.evaluateZeta(nextValues[i][0], initialPadding);
-            if (i == 0){
-                midIdxCausingInfluence = gAtBeta.midIdx;
+            if (i == 0) {
+                idxCausingInfluence = gAtBeta.midIdx;
             }
             initial[2*i+1] =
                 gAtBeta.evalDer(
                 nextValues[i][0], initialPadding, 0.00025 * gAtBeta.spacing);
-            indices[i] = midIdxCausingInfluence + i;
+            indices[i] = idxCausingInfluence + i;
         }
         
         System.out.println("initial " + Arrays.toString(initial));

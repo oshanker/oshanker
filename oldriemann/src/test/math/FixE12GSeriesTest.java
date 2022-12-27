@@ -44,7 +44,7 @@ public class FixE12GSeriesTest  {
     
         GSeries gAtBeta = Interpolate.readGSeries();
     
-        FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, -1000, gAtBeta);
+        FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
         double[][] ret = fixE12GSeries.testChangeToZetaAndDerNoMax(gAtBeta);
         double[] neededZetaIncrement = ret[1];
         double[] actualIncrementInValues = ret[0];
