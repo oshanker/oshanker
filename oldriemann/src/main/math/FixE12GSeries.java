@@ -681,13 +681,17 @@ public class FixE12GSeries {
             indices,
             0.125
         );
+        double[] actual = new double[2*pointBeingInflunced.length];
         double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
         for (int i = 0; i < pointBeingInflunced.length; i++) {
             neededZetaIncrement[2 * i] = -initial[2 * i];
             neededZetaIncrement[2 * i + 1] = nextValues[i][1] - initial[2 * i + 1];
+            actual[2 * i] = 0;
+            actual[2 * i + 1] = nextValues[i][1];
         }
         
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
+        double determinant = linearEquation.determinant();
         
         double[] solution = linearEquation.solve(
             neededZetaIncrement
@@ -699,9 +703,16 @@ public class FixE12GSeries {
         System.out.println("after " );
         System.out.println(Arrays.toString(after));
         double[] actualIncrementInValues = new double[after.length];
+        double deviation = 0;
+        int sample = 0;
         for (int i = 0; i < actualIncrementInValues.length; i++) {
             actualIncrementInValues[i] = after[i] - initial[i];
+            if (i%2 == 0) {
+                sample++;
+                deviation += Math.abs(after[i] - actual[i]);
+            }
         }
+        deviation /= sample;
         System.out.println("actualIncrementInValues " );
         System.out.println( Arrays.toString(actualIncrementInValues));
         System.out.println("neededZetaIncrement " );
@@ -709,7 +720,8 @@ public class FixE12GSeries {
         
         return new double[][]{
             actualIncrementInValues,
-            neededZetaIncrement
+            neededZetaIncrement,
+            new double[] {deviation, determinant}
         };
     }
     
