@@ -56,9 +56,11 @@ public class FixE12GSeriesTest  {
         double[][] ret = fixE12GSeries.testChangeToZetaAndDerNoMax(gAtBeta, -1);
         double[] neededZetaIncrement = ret[1];
         double[] actualIncrementInValues = ret[0];
+        double[] deviation = ret[2];
         for (int i = 0; i < actualIncrementInValues.length; i++) {
             Assert.assertEquals(actualIncrementInValues[i], neededZetaIncrement[i], 5.0E-6) ;
         }
+        Assert.assertTrue(deviation[0] < 1.0E-9);
         //System.out.println(" " + Arrays.toString(actualIncrementInValues));
     }
     

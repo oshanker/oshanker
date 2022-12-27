@@ -684,12 +684,17 @@ public class FixE12GSeries {
             double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
             advanceZeroInfo(Interpolate.zeroIn, nextValue);
             double[] ret = null;
+            boolean useMax = true;
             try {
                 ret = applyFix(gAtBeta, midIdxCausingInfluence);
             } catch (IllegalStateException e) {
                 // do a fit with only zeros and derivative
                 //System.out.println(" skipping, xa xb same sign, " + midIdxCausingInfluence);
+                useMax = false;
                 continue;
+//                FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
+//                double[][] ret1 = fixE12GSeries.testChangeToZetaAndDerNoMax(gAtBeta, midIdxCausingInfluence);
+//                ret = ret1[2];
             }
             
             double deviation = ret[0];
@@ -720,17 +725,20 @@ public class FixE12GSeries {
                         throw new IllegalStateException("check this value!");
                     }
                 }
-                double oldDeviation = deviation;
-                ret = applyFix(gAtBeta, midIdxCausingInfluence);
-                deviation = ret[0];
-                if (deviation > 0.1) {
-                    System.out.println("midIdx " + midIdxCausingInfluence +
-                        " nextValue " + nextValue + " oldDeviation " + oldDeviation);
-                    System.out.println("deviation too large (after retry), " + deviation );
-                    if(deviation > oldDeviation) {
-                        System.out.println("=====!!!!!!!!!=== "  + ++worseCount);
+                if (useMax) {
+                    double oldDeviation = deviation;
+                    ret = applyFix(gAtBeta, midIdxCausingInfluence);
+                    // need signum check here too.
+                    deviation = ret[0];
+                    if (deviation > 0.1) {
+                        System.out.println("midIdx " + midIdxCausingInfluence +
+                            " nextValue " + nextValue + " oldDeviation " + oldDeviation);
+                        System.out.println("deviation too large (after retry), " + deviation);
+                        if (deviation > oldDeviation) {
+                            System.out.println("=====!!!!!!!!!=== " + ++worseCount);
+                        }
+                        System.out.println("===============");
                     }
-                    System.out.println("===============");
                 }
             }
         }
