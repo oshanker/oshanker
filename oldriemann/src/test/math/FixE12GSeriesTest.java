@@ -31,6 +31,27 @@ public class FixE12GSeriesTest  {
     }
     
     @Test
+    public void testGradient1() {
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        double[][] nextValues = {
+            {490.8522279298088, 27.694175364012526, 2.2591989985805814, 490.9649293406849},
+            {491.077630751561, -38.40311109971628, -4.196432798508113, 491.20420495587484},
+            {491.33077916018874, 72.25062982634255, 14.450288488557158, 0.0},
+            {491.89945544848615, -6.8841110643202965, -0.09212140202372199},
+        };
+        for (int i = 0; i < nextValues.length; i++) {
+            zeroInfo.add(nextValues[i]);
+        }
+        GSeries gAtBeta = Interpolate.readGSeries();
+    
+        FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
+        double[][] ret = FixE12GSeries.printZeroInfoWithMax(fixE12GSeries.gAtBeta, zeroInfo);
+        double[] deviation = ret[0];
+        Assert.assertTrue(deviation[0] < 1.0E-9);
+        Assert.assertEquals(1999906, (int)ret[1][0] );
+    }
+    
+    @Test
     public void testGradient() {
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         FixE12GSeries fixE12GSeries = new FixE12GSeries();
