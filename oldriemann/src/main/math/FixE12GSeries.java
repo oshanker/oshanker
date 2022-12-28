@@ -699,22 +699,14 @@ public class FixE12GSeries {
             
             double deviation = ret[0];
             double det = Math.abs(ret[1]);
-            if (deviation > maxDev) {
-                maxDev = deviation;
-            }
-            if (det == 0) {
-                System.out.println(" det == 0, " + midIdxCausingInfluence);
-            }
-            if (det < minDet) {
-                minDet = det;
-            }
             
 //            System.out.println(midIdxCausingInfluence + " **** " + deviation
 //                + ", det " + det);
             
             if (deviation > 0.01) {
                 if (deviation > 1.0) {
-                    System.out.println("midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+                    System.out.println("midIdx " + midIdxCausingInfluence +
+                        " nextValue " + nextValue);
                     System.out.println("deviation too large, " + deviation
                         + ", det " + det);
                     System.out.println("=====** " + ++devCount);
@@ -730,6 +722,7 @@ public class FixE12GSeries {
                     ret = applyFix(gAtBeta, midIdxCausingInfluence);
                     // need signum check here too.
                     deviation = ret[0];
+                    det = Math.abs(ret[1]);
                     if (deviation > 0.1) {
                         System.out.println("midIdx " + midIdxCausingInfluence +
                             " nextValue " + nextValue + " oldDeviation " + oldDeviation);
@@ -740,6 +733,15 @@ public class FixE12GSeries {
                         System.out.println("===============");
                     }
                 }
+            }
+            if (deviation > maxDev) {
+                maxDev = deviation;
+            }
+            if (det == 0) {
+                System.out.println(" det == 0, " + midIdxCausingInfluence);
+            }
+            if (det < minDet) {
+                minDet = det;
             }
         }
         System.out.println("maxDev " + maxDev + " minDet " + minDet);

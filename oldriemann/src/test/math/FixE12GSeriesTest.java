@@ -15,7 +15,13 @@ import static riemann.StaticMethods.evaluateAtT;
 
 public class FixE12GSeriesTest  {
     static final int initialPadding = 40;
-
+    static double[][] badSigmum = {
+        {490.8522279298088, 27.694175364012526, 2.2591989985805814, 490.9649293406849},
+        {491.077630751561, -38.40311109971628, -4.196432798508113, 491.20420495587484},
+        {491.33077916018874, 72.25062982634255, 14.450288488557158, 0.0},
+        {491.89945544848615, -6.8841110643202965, -0.09212140202372199},
+    };
+    
     public void testTestIncrementGValuesAtIndices() {
     }
     
@@ -33,14 +39,8 @@ public class FixE12GSeriesTest  {
     @Test
     public void testGradient1() {
         LinkedList<double[]> zeroInfo = new LinkedList<>();
-        double[][] nextValues = {
-            {490.8522279298088, 27.694175364012526, 2.2591989985805814, 490.9649293406849},
-            {491.077630751561, -38.40311109971628, -4.196432798508113, 491.20420495587484},
-            {491.33077916018874, 72.25062982634255, 14.450288488557158, 0.0},
-            {491.89945544848615, -6.8841110643202965, -0.09212140202372199},
-        };
-        for (int i = 0; i < nextValues.length; i++) {
-            zeroInfo.add(nextValues[i]);
+        for (int i = 0; i < badSigmum.length; i++) {
+            zeroInfo.add(badSigmum[i]);
         }
         GSeries gAtBeta = Interpolate.readGSeries();
     
@@ -49,6 +49,22 @@ public class FixE12GSeriesTest  {
         double[] deviation = ret[0];
         Assert.assertTrue(deviation[0] < 1.0E-9);
         Assert.assertEquals(1999906, (int)ret[1][0] );
+    }
+    
+    @Test
+    public void testChangeToZetaAndDerNoMax2() {
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        for (int i = 0; i < badSigmum.length; i++) {
+            zeroInfo.add(badSigmum[i]);
+        }
+        GSeries gAtBeta = Interpolate.readGSeries();
+        
+        FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
+        double[][] ret = fixE12GSeries.testChangeToZetaAndDerNoMax(
+            fixE12GSeries.gAtBeta, 2024);
+        double[] deviation = ret[2];
+        System.out.println(Arrays.toString(deviation));
+        Assert.assertTrue(deviation[0] < 1.0E-9);
     }
     
     @Test
