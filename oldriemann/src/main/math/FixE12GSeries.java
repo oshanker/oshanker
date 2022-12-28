@@ -480,6 +480,7 @@ public class FixE12GSeries {
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
     
         double[] initialNoMax =  fixE12GSeries.initialNoMax();
+        boolean useNoMax = false;
         for (int i = 1; i < initialNoMax.length-1; i+=2) {
             double signumxa = Math.signum(initialNoMax[i]);
             double signumxb = Math.signum(initialNoMax[i+2]);
@@ -488,10 +489,15 @@ public class FixE12GSeries {
                 signumxb == 0 ||
                 signumxa == signumxb
             ) {
-                System.out.println("max out of range");
+                useNoMax = true;
+                break;
             }
-            System.out.println(i + " applyFix " + initialNoMax[i] + " " + signumxa
-                + " " + signumxb);
+        }
+        if(useNoMax) {
+            double[][] ret = fixE12GSeries.testChangeToZetaAndDerNoMax(
+                fixE12GSeries.gAtBeta, midIdxCausingInfluence, false);
+            double[] deviation = ret[2];
+            return deviation;
         }
         double[] initial = evaluateWithMax(zeroInfo, gAtBeta, initialNoMax);
         double[] actual = actual(zeroInfo);

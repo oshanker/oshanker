@@ -37,7 +37,7 @@ public class FixE12GSeriesTest  {
     }
     
     @Test
-    public void testGradient1() {
+    public void testApplyFix1() {
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         for (int i = 0; i < badSigmum.length; i++) {
             zeroInfo.add(badSigmum[i]);
@@ -48,6 +48,7 @@ public class FixE12GSeriesTest  {
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
         double[] deviation  = FixE12GSeries.applyFix(fixE12GSeries.gAtBeta, 2024);
         Assert.assertTrue(deviation[0] < 1.0E-9);
+        System.out.println(Arrays.toString(deviation));
     }
     
     @Test
