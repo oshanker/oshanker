@@ -44,11 +44,10 @@ public class FixE12GSeriesTest  {
         }
         GSeries gAtBeta = Interpolate.readGSeries();
     
+        FixE12GSeries.zeroInfo = zeroInfo;
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
-        double[][] ret = FixE12GSeries.printZeroInfoWithMax(fixE12GSeries.gAtBeta, zeroInfo);
-        double[] deviation = ret[0];
+        double[] deviation  = FixE12GSeries.applyFix(fixE12GSeries.gAtBeta, 2024);
         Assert.assertTrue(deviation[0] < 1.0E-9);
-        Assert.assertEquals(1999906, (int)ret[1][0] );
     }
     
     @Test
@@ -81,6 +80,31 @@ public class FixE12GSeriesTest  {
     }
     
     @Test
+    public void testApplyFix() {
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        for (int i = 0; i < TEST_VALES.length; i++) {
+            zeroInfo.add(TEST_VALES[i]);
+        }
+        
+        GSeries gAtBeta = Interpolate.readGSeries();
+        FixE12GSeries.zeroInfo = zeroInfo;
+        double[] deviation = FixE12GSeries.applyFix(gAtBeta, 1999906);
+        Assert.assertTrue(deviation[0] < 1.0E-9);
+        System.out.println(" " + Arrays.toString(deviation));
+        FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
+        double[][] ret = fixE12GSeries.testChangeToZetaAndDerNoMax(
+            gAtBeta, 1999906, false);
+        double[] neededZetaIncrement = ret[1];
+        double[] actualIncrementInValues = ret[0];
+        double[] deviation1 = ret[2];
+        for (int i = 0; i < actualIncrementInValues.length; i++) {
+            Assert.assertEquals(actualIncrementInValues[i], neededZetaIncrement[i], 5.0E-6) ;
+        }
+        Assert.assertTrue(deviation1[0] < 1.0E-9);
+        System.out.println(" " + Arrays.toString(deviation1));
+    }
+    
+    @Test
     public void testTestChangeToZetaAndDerNoMax1() {
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         for (int i = 0; i < TEST_VALES.length; i++) {
@@ -91,7 +115,7 @@ public class FixE12GSeriesTest  {
     
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
         double[][] ret = fixE12GSeries.testChangeToZetaAndDerNoMax(
-            gAtBeta, -1, true);
+            gAtBeta, 1999906, true);
         double[] neededZetaIncrement = ret[1];
         double[] actualIncrementInValues = ret[0];
         double[] deviation = ret[2];

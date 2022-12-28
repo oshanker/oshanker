@@ -30,7 +30,7 @@ public class FixE12GSeries {
         {243832.7750114288, 29.690772236512505, 4.33929464564258, 243832.94901641435},
         {243833.16396249548, -15.05094530616091, -0.5122852558563304, 243833.23656405782},
     };
-    private static LinkedList<double[]> zeroInfo = new LinkedList<>();
+    static LinkedList<double[]> zeroInfo = new LinkedList<>();
     static int desiredSize = 3;
     int midIdxCausingInfluence;
     
@@ -473,13 +473,26 @@ public class FixE12GSeries {
         return ret;
     }
     
-    private static double[] applyFix(
+    static double[] applyFix(
         GSeries gAtBeta, int midIdxCausingInfluence
     ) {
         int size = zeroInfo.size();
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
     
         double[] initialNoMax =  fixE12GSeries.initialNoMax();
+        for (int i = 1; i < initialNoMax.length-1; i+=2) {
+            double signumxa = Math.signum(initialNoMax[i]);
+            double signumxb = Math.signum(initialNoMax[i+2]);
+            if (
+                signumxa == 0 ||
+                signumxb == 0 ||
+                signumxa == signumxb
+            ) {
+                System.out.println("max out of range");
+            }
+            System.out.println(i + " applyFix " + initialNoMax[i] + " " + signumxa
+                + " " + signumxb);
+        }
         double[] initial = evaluateWithMax(zeroInfo, gAtBeta, initialNoMax);
         double[] actual = actual(zeroInfo);
         
