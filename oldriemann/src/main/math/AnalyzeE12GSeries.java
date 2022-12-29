@@ -28,7 +28,6 @@ public class AnalyzeE12GSeries {
     
     double[] pointBeingInflunced;
     GSeries gAtBeta = null;
-    double[] initial = null;
     int midIdxCausingInfluence;
     
     public AnalyzeE12GSeries() {
@@ -105,7 +104,7 @@ public class AnalyzeE12GSeries {
                 // even i, zero
                 if ( pointBeingInflunced[i] != nextValues[indexIntoNext][0] ) {
                     throw new RuntimeException("zero");
-                };
+                }
                 neededZetaIncrement[2 * i] = -initial[2 * i];
                 neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
             } else {
@@ -114,7 +113,7 @@ public class AnalyzeE12GSeries {
                     System.out.println("pointBeingInflunced[i] != nextValues[indexIntoNext][2]  "
                         + pointBeingInflunced[i] + " != " + nextValues[indexIntoNext][2] );
                     throw new RuntimeException("max");
-                };
+                }
                 neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
                 neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
             }
@@ -179,8 +178,10 @@ public class AnalyzeE12GSeries {
     }
     
     public static GSeries testGetSavedGSeries1(
-        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta, int sampleSize
-    ) throws IOException {
+        double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta,
+        int sampleSize, double stopValue, boolean ignoreMax
+
+    )  {
         iMax = 0;
         int iZero = 0;
         int iDer = 0;
@@ -190,11 +191,10 @@ public class AnalyzeE12GSeries {
         double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, firstZero);
         if(nextValues[1]<0) nextValues[2] = -nextValues[2];
         int i = 0;
-        double z0 = 0, d0 = -1.0, extremumFromFile = -1.0;
+        double z0 = 0, extremumFromFile = -1.0;
     
         zeroInfo = new LinkedList<>();
         //final double stopValue = 243839.5;
-        final double stopValue = 243839.0;
         double ZeroDev = 0;
         double DerDev = 0;
         double MaxDev = 0;
@@ -242,7 +242,7 @@ public class AnalyzeE12GSeries {
                         + " diff(der) " + absDer
                 );
             }
-            if (i>0) {
+            if (!ignoreMax && i>0) {
                 double absMaxDev = findMax(gAtBeta, i, z0, extremumFromFile, zeroPosition);
                 MaxDev += absMaxDev;
             }
@@ -271,13 +271,13 @@ public class AnalyzeE12GSeries {
                 + " iMax " + iMax
         );
         System.out.println(
-            " ZeroDev  " + ZeroDev/i
+            "mean ZeroDev  " + ZeroDev/i
         );
         System.out.println(
-            " DerDev  " + DerDev/i
+            "mean DerDev  " + DerDev/i
         );
         System.out.println(
-            " MaxDev  " +  MaxDev/i
+            "mean MaxDev  " +  MaxDev/i
         );
         
         return gAtBeta;
@@ -439,7 +439,7 @@ public class AnalyzeE12GSeries {
         System.out.println("*** cross Even " + 2*cross[0]/sampleSize);
     }
     
-    private static void readSavedAndVerify(long first, long last, GSeries gSeries11) {
+    static void readSavedAndVerify(long first, long last, GSeries gSeries11) {
         int count;
         double[] zetaGramMean = new double[]{0, 0};
         count = 0;
@@ -462,7 +462,10 @@ public class AnalyzeE12GSeries {
             maxZeroDev = Double.MIN_VALUE;
             maxDerDev = Double.MIN_VALUE;
             maxMaxDev = Double.MIN_VALUE;
-            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta, sample);
+            final double stopValue = 243839.0;
+            boolean ignoreMax = true;
+            testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
+                sample, stopValue, ignoreMax);
             FixE12GSeries fixE12GSeries = new FixE12GSeries(
                 zeroInfo.subList(2, 7),
                 1999912,
@@ -476,7 +479,8 @@ public class AnalyzeE12GSeries {
             maxZeroDev = Double.MIN_VALUE;
             maxDerDev = Double.MIN_VALUE;
             maxMaxDev = Double.MIN_VALUE;
-            gAtBeta = testGetSavedGSeries1(firstZero, zeroIn, gAtBeta, sample);
+            testGetSavedGSeries1(firstZero, zeroIn, gAtBeta,
+                sample, stopValue, ignoreMax);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -517,14 +521,16 @@ maxMaxDev  91.34973738048444 iMax 1961926
  MaxDev  0.08082092773322669
              */
             double firstZero = 248;
+            final double stopValue = 243839.0;
+            boolean ignoreMax = true;
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
-                2000002);
+                2000002, stopValue, ignoreMax);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-    private static void gramVerify(double firstZero, GSeries gAtBeta) {
+    static void gramVerify(double firstZero, GSeries gAtBeta) {
         long firstGramIndex = (long) ((firstZero - Interpolate.baseLimit)/Interpolate.gramIncr);
         long lastGramIndex = (long) ((243839.5956836054 - Interpolate.baseLimit)/Interpolate.gramIncr);
         

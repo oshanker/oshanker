@@ -26,6 +26,24 @@ public class FixE12GSeriesTest  {
     }
     
     @Test
+    public void testChangeToZetaAndDerBadSig() {
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        for (int i = 0; i < badSigmum.length; i++) {
+            zeroInfo.add(badSigmum[i]);
+        }
+        GSeries gAtBeta = Interpolate.readGSeries();
+    
+        FixE12GSeries.zeroInfo = zeroInfo;
+        FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, 2024, gAtBeta);
+        double[][] ret = fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
+        double[] neededZetaIncrement = ret[1];
+        double[] actualIncrementInValues = ret[0];
+        for (int i = 0; i < actualIncrementInValues.length; i++) {
+            Assert.assertEquals(actualIncrementInValues[i], neededZetaIncrement[i], 5.0E-6) ;
+        }
+    }
+    
+    @Test
     public void testTestChangeToZetaAndDer() {
         FixE12GSeries fixE12GSeries = new FixE12GSeries();
         double[][] ret = fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
