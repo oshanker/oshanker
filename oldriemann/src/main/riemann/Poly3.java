@@ -100,6 +100,9 @@ public abstract class Poly3 implements Poly {
             xmin = upper[0];
          }
       }
+      if(xmin<=z0 || xmin >= z1) {
+         throw new IllegalStateException(xmin + " out of range, " + z0 + " " + z1);
+      }
       return xmin;
    }
 

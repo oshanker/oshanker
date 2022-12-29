@@ -222,17 +222,17 @@ poly 1.4731822664990701
         System.out.println("*** crossOdd " + 8*cross[1]/N);
         double zeroSum = 0;
         double oneSum = 0;
-        for (int i = 0; i < fAtBeta.length; i++) {
-            if (i % 2 == 0) {
-                // -zetaGramMeanEven-1
-                fAtBeta[i][0] += (zetaGramMeanEven+1);
-                zeroSum += fAtBeta[i][0];
-            } else {
-                //add 1-zetaGramMeanOdd
-                fAtBeta[i][0] += (1-zetaGramMeanOdd);
-                oneSum += fAtBeta[i][0];
-            }
-        }
+//        for (int i = 0; i < fAtBeta.length; i++) {
+//            if (i % 2 == 0) {
+//                // -zetaGramMeanEven-1
+//                fAtBeta[i][0] += (zetaGramMeanEven+1);
+//                zeroSum += fAtBeta[i][0];
+//            } else {
+//                //add 1-zetaGramMeanOdd
+//                fAtBeta[i][0] += (1-zetaGramMeanOdd);
+//                oneSum += fAtBeta[i][0];
+//            }
+//        }
         //System.out.println("zeroSum " + 2*zeroSum/N + " oneSum " + 2*oneSum/N);
         zeroSum = 0;
         oneSum = 0;

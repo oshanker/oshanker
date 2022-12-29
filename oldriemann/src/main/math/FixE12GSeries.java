@@ -348,12 +348,6 @@ public class FixE12GSeries {
         gSeries.incrementGValuesAtIndices(indices[0], solution);
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gSeries);
         double[] initialNoMax =  fixE12GSeries.initialNoMax();
-        for (int i = 1; i < initialNoMax.length-1; i+=2) {
-            double signumxa = Math.signum(initialNoMax[i]);
-            double signumxb = Math.signum(initialNoMax[i+2]);
-            System.out.println(i + " " + initialNoMax[i] + " " + signumxa
-                + " " + signumxb);
-        }
         double[] after = evaluateWithMax(zeroInfo, gSeries, initialNoMax);
         double deviation = getDeviation(actual, after);
         if (deviation > 250) {
