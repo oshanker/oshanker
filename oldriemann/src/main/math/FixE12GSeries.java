@@ -411,7 +411,7 @@ public class FixE12GSeries {
         }
     }
     
-    private static void printZeroInfo(LinkedList<double[]> zeroInfo) {
+    static void printZeroInfo(LinkedList<double[]> zeroInfo) {
         for (double[] doubles : zeroInfo) {
             System.out.println(Arrays.toString(doubles));
         }

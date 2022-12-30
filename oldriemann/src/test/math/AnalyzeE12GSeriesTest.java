@@ -19,6 +19,14 @@ import static math.FixE12GSeries.TEST_VALES;
 
 public class AnalyzeE12GSeriesTest  {
     @Test
+    public void testFixGSeriesUsingPosmax() {
+        GSeries gAtBeta = Interpolate.readGSeries();
+        String zerosFile = Rosser.getParam("zerosFile");
+        BufferedReader[] zeroIn = AnalyzeE12GSeries.zerosFileWithMaxPos(zerosFile);
+        AnalyzeE12GSeries.fixGSeriesUsingPosmax(zeroIn, gAtBeta);
+    }
+    
+    @Test
     public void testChangeToZetaAndDer() {
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         for (int i = 0; i < TEST_VALES.length; i++) {
@@ -26,7 +34,7 @@ public class AnalyzeE12GSeriesTest  {
         }
         AnalyzeE12GSeries analyzeE12GSeries = new AnalyzeE12GSeries();
         double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
-            zeroInfo, 1999907, analyzeE12GSeries.gAtBeta);
+            zeroInfo, 1999907, analyzeE12GSeries.gAtBeta, false);
         Assert.assertTrue(deviation1[0] < 1.0E-9);
         System.out.println(" " + Arrays.toString(deviation1));
     }
