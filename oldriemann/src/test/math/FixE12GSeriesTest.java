@@ -33,20 +33,21 @@ public class FixE12GSeriesTest  {
         }
         GSeries gAtBeta = Interpolate.readGSeries();
     
-        FixE12GSeries.zeroInfo = zeroInfo;
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, 2024, gAtBeta);
-        double[][] ret = fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
+        double[][] ret = fixE12GSeries.testChangeToZetaAndDer(gAtBeta);
         double[] neededZetaIncrement = ret[1];
         double[] actualIncrementInValues = ret[0];
         for (int i = 0; i < actualIncrementInValues.length; i++) {
             Assert.assertEquals(actualIncrementInValues[i], neededZetaIncrement[i], 5.0E-6) ;
         }
+        //Assert.assertTrue(ret[2][0]<1.0E-9);
     }
     
     @Test
     public void testTestChangeToZetaAndDer() {
         FixE12GSeries fixE12GSeries = new FixE12GSeries();
-        double[][] ret = fixE12GSeries.testChangeToZetaAndDer(fixE12GSeries.gAtBeta);
+        GSeries gAtBeta = Interpolate.readGSeries();
+        double[][] ret = fixE12GSeries.testChangeToZetaAndDer(gAtBeta);
         double[] neededZetaIncrement = ret[1];
         double[] actualIncrementInValues = ret[0];
         for (int i = 0; i < actualIncrementInValues.length; i++) {
@@ -62,9 +63,10 @@ public class FixE12GSeriesTest  {
         }
         GSeries gAtBeta = Interpolate.readGSeries();
     
-        FixE12GSeries.zeroInfo = zeroInfo;
+        //FixE12GSeries.zeroInfo = zeroInfo;
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
-        double[] deviation  = FixE12GSeries.applyFix(fixE12GSeries.gAtBeta, 2024);
+        double[] deviation  = FixE12GSeries.applyFix(
+            fixE12GSeries.gAtBeta, 2024, zeroInfo);
         Assert.assertTrue(deviation[0] < 1.0E-9);
         System.out.println(Arrays.toString(deviation));
     }
@@ -89,7 +91,8 @@ public class FixE12GSeriesTest  {
     public void testGradient() {
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         FixE12GSeries fixE12GSeries = new FixE12GSeries();
-        for (int i = 0; i < FixE12GSeries.desiredSize; i++) {
+        int desiredSize = 3;
+        for (int i = 0; i < desiredSize; i++) {
             zeroInfo.add(fixE12GSeries.nextValues[i]);
         }
         double[][] ret = FixE12GSeries.printZeroInfoWithMax(fixE12GSeries.gAtBeta, zeroInfo);
@@ -106,8 +109,9 @@ public class FixE12GSeriesTest  {
         }
         
         GSeries gAtBeta = Interpolate.readGSeries();
-        FixE12GSeries.zeroInfo = zeroInfo;
-        double[] deviation = FixE12GSeries.applyFix(gAtBeta, 1999906);
+        //FixE12GSeries.zeroInfo = zeroInfo;
+        double[] deviation = FixE12GSeries.applyFix(
+            gAtBeta, 1999906, zeroInfo);
         Assert.assertTrue(deviation[0] < 1.0E-9);
         System.out.println(" " + Arrays.toString(deviation));
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);

@@ -39,9 +39,10 @@ public class AnalyzeE12GSeriesTest  {
         GSeries gAtBeta = Interpolate.readGSeries();
         String zerosFile = Rosser.getParam("zerosFile");
         BufferedReader[] zeroIn = AnalyzeE12GSeries.zerosFileWithMaxPos(zerosFile);
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
         testGetSavedGSeries1(firstZero, zeroIn, gAtBeta,
-            2000002, stopValue, ignoreMax);
-        System.out.println(Arrays.toString(AnalyzeE12GSeries.zeroInfo.get(0)));
+            2000002, stopValue, ignoreMax, zeroInfo);
+        System.out.println(Arrays.toString(zeroInfo.get(0)));
     }
     
     @Test

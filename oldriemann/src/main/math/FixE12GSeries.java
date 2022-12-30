@@ -30,8 +30,7 @@ public class FixE12GSeries {
         {243832.7750114288, 29.690772236512505, 4.33929464564258, 243832.94901641435},
         {243833.16396249548, -15.05094530616091, -0.5122852558563304, 243833.23656405782},
     };
-    static LinkedList<double[]> zeroInfo = new LinkedList<>();
-    static int desiredSize = 3;
+    
     int midIdxCausingInfluence;
     
     double[] pointBeingInflunced;
@@ -39,8 +38,8 @@ public class FixE12GSeries {
     GSeries gAtBeta = null;
     
     public FixE12GSeries() {
-        this(TEST_VALES,
-            //9999
+        this(
+            TEST_VALES,
             1999912
         );
     }
@@ -210,7 +209,7 @@ public class FixE12GSeries {
         // cant go below 40
         final int initialPadding = 40;
     
-        zeroInfo = new LinkedList<>();
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
         
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
@@ -398,7 +397,7 @@ public class FixE12GSeries {
     
     public static void initZeroInfo(
         BufferedReader[] zeroIn, double firstZero,
-        LinkedList<double[]> zeroInfo
+        LinkedList<double[]> zeroInfo, int desiredSize
     ){
         if (zeroInfo.size() < desiredSize) {
             int needed = desiredSize - zeroInfo.size();
@@ -412,7 +411,7 @@ public class FixE12GSeries {
         }
     }
     
-    private static void printZeroInfo() {
+    private static void printZeroInfo(LinkedList<double[]> zeroInfo) {
         for (double[] doubles : zeroInfo) {
             System.out.println(Arrays.toString(doubles));
         }
@@ -469,7 +468,7 @@ public class FixE12GSeries {
     }
     
     static double[] applyFix(
-        GSeries gAtBeta, int midIdxCausingInfluence
+        GSeries gAtBeta, int midIdxCausingInfluence, LinkedList<double[]> zeroInfo
     ) {
         int size = zeroInfo.size();
         FixE12GSeries fixE12GSeries = new FixE12GSeries(zeroInfo, gAtBeta);
@@ -710,7 +709,10 @@ public class FixE12GSeries {
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
          + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
         System.out.println("==========");
-        initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing, zeroInfo );
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        int desiredSize = 3;
+        initZeroInfo(
+            Interpolate.zeroIn, begin + 6*gAtBeta.spacing, zeroInfo, desiredSize);
         System.out.println("==========");
         double[][] initialRet = printZeroInfoWithMax(gAtBeta, zeroInfo);
         int midIdxCausingInfluence = (int)initialRet[1][0];
@@ -726,7 +728,7 @@ public class FixE12GSeries {
             double[] ret = null;
             boolean useMax = true;
             try {
-                ret = applyFix(gAtBeta, midIdxCausingInfluence);
+                ret = applyFix(gAtBeta, midIdxCausingInfluence, zeroInfo);
             } catch (IllegalStateException e) {
                 // do a fit with only zeros and derivative
                 //System.out.println(" skipping, xa xb same sign, " + midIdxCausingInfluence);
@@ -759,7 +761,7 @@ public class FixE12GSeries {
                 }
                 if (useMax) {
                     double oldDeviation = deviation;
-                    ret = applyFix(gAtBeta, midIdxCausingInfluence);
+                    ret = applyFix(gAtBeta, midIdxCausingInfluence, zeroInfo);
                     // need signum check here too.
                     deviation = ret[0];
                     det = Math.abs(ret[1]);
@@ -803,6 +805,7 @@ public class FixE12GSeries {
         try {
             GSeries gAtBeta = getGSeries(firstZero, gbetaSource);
             gAtBeta = testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta);
+            LinkedList<double[]> zeroInfo = new LinkedList<>();
             FixE12GSeries fixE12GSeries = new FixE12GSeries(
                 zeroInfo.subList(2, 7),
                 1999912,

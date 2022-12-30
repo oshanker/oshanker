@@ -24,7 +24,6 @@ import static riemann.StaticMethods.evaluateAtT;
 
 public class AnalyzeE12GSeries {
     static final int initialPadding = 40;
-    static LinkedList<double[]> zeroInfo;
     private static double maxZeroDev;
     private static double maxDerDev;
     private static double maxMaxDev;
@@ -32,12 +31,12 @@ public class AnalyzeE12GSeries {
     public static double derepsilon = 1.0E-5;
     double[][] nextValues;
     
-    double[] pointBeingInflunced;
     GSeries gAtBeta = null;
     int midIdxCausingInfluence;
     
     public AnalyzeE12GSeries() {
-        this(FixE12GSeries.TEST_VALES,
+        this(
+            FixE12GSeries.TEST_VALES,
             1999912
         );
     }
@@ -214,8 +213,8 @@ public class AnalyzeE12GSeries {
     
     public static GSeries testGetSavedGSeries1(
         double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta,
-        int sampleSize, double stopValue, boolean calculatePosMax
-
+        int sampleSize, double stopValue, boolean calculatePosMax,
+        LinkedList<double[]> zeroInfo
     )  {
         iMax = 0;
         int iZero = 0;
@@ -228,7 +227,6 @@ public class AnalyzeE12GSeries {
         int i = 0;
         double z0 = 0, extremumFromFile = -1.0;
     
-        zeroInfo = new LinkedList<>();
         //final double stopValue = 243839.5;
         double ZeroDev = 0;
         double DerDev = 0;
@@ -285,7 +283,8 @@ public class AnalyzeE12GSeries {
                 double absMaxDev = Math.abs(maxDev);
                 MaxDev += absMaxDev;
             } else if ( i>0) {
-                double absMaxDev = findMax(gAtBeta, i, z0, extremumFromFile, zeroPosition);
+                double absMaxDev = findMax(
+                    gAtBeta, i, z0, extremumFromFile, zeroPosition, zeroInfo);
                 MaxDev += absMaxDev;
             }
             double[] zeroEntry = new double[4];
@@ -409,7 +408,7 @@ public class AnalyzeE12GSeries {
     private static double findMax(
         GSeries gAtBeta, int i, double z0,
         double extremumFromFile,
-        double z1
+        double z1, LinkedList<double[]> zeroInfo
     ) {
         boolean maxMaxUpdated = false;
         double positionMax = positionMax(gAtBeta,(z0+z1)/2, z0, z1);
@@ -512,8 +511,9 @@ public class AnalyzeE12GSeries {
             maxMaxDev = Double.MIN_VALUE;
             final double stopValue = 243839.0;
             boolean ignoreMax = true;
+            LinkedList<double[]> zeroInfo = new LinkedList<>();
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
-                sample, stopValue, ignoreMax);
+                sample, stopValue, ignoreMax, zeroInfo);
             FixE12GSeries fixE12GSeries = new FixE12GSeries(
                 zeroInfo.subList(2, 7),
                 1999912,
@@ -528,7 +528,7 @@ public class AnalyzeE12GSeries {
             maxDerDev = Double.MIN_VALUE;
             maxMaxDev = Double.MIN_VALUE;
             testGetSavedGSeries1(firstZero, zeroIn, gAtBeta,
-                sample, stopValue, ignoreMax);
+                sample, stopValue, ignoreMax, zeroInfo);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -539,7 +539,9 @@ public class AnalyzeE12GSeries {
         double begin = gAtBeta.begin + (initialPadding - 18) * gAtBeta.spacing;
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         System.out.println("==========");
-        initZeroInfo(Interpolate.zeroIn, begin + 6 * gAtBeta.spacing, zeroInfo);
+        int desiredSize = 3;
+        initZeroInfo(
+            Interpolate.zeroIn, begin + 6 * gAtBeta.spacing, zeroInfo, desiredSize);
         System.out.println("==========");
         double[][] initialRet = printZeroInfoWithMax(gAtBeta, zeroInfo);
         int midIdxCausingInfluence = (int) initialRet[1][0];
@@ -628,7 +630,7 @@ maxMaxDev  91.34973738048444 iMax 1961926
             final double stopValue = 243839.0;
             boolean ignoreMax = true;
             testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
-                2000002, stopValue, ignoreMax);
+                2000002, stopValue, ignoreMax, new LinkedList<>());
         } catch (IOException e) {
             e.printStackTrace();
         }
