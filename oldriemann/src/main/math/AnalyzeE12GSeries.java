@@ -7,6 +7,9 @@ import riemann.Rosser;
 import riemann.StaticMethods;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -18,7 +21,7 @@ import static riemann.StaticMethods.evaluateAtT;
 
 public class AnalyzeE12GSeries {
     static final int initialPadding = 40;
-    private static LinkedList<double[]> zeroInfo;
+    static LinkedList<double[]> zeroInfo;
     private static double maxZeroDev;
     private static double maxDerDev;
     private static double maxMaxDev;
@@ -177,9 +180,33 @@ public class AnalyzeE12GSeries {
         
     }
     
+    public static BufferedReader[] zerosFileWithMaxPos(
+        String zerosFile
+    )  {
+    
+        File filePosMax = new File("out/gSeries" + Interpolate.prefix + "/positionMax.csv");
+        String derFile = zerosFile + ".der";
+        BufferedReader[] zeroIn;
+        try {
+             zeroIn = new BufferedReader[] {
+                new BufferedReader(new FileReader(zerosFile)),
+                null,
+                null,
+                 null
+            };
+            zeroIn[1] = new BufferedReader(new FileReader(derFile));
+            String maxFile = zerosFile + ".max";
+            zeroIn[2] = new BufferedReader(new FileReader(maxFile));
+            zeroIn[3] = new BufferedReader(new FileReader(filePosMax));
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException(" source file", e);
+        }
+        return zeroIn;
+    }
+    
     public static GSeries testGetSavedGSeries1(
         double firstZero, BufferedReader[] zeroIn, GSeries gAtBeta,
-        int sampleSize, double stopValue, boolean ignoreMax
+        int sampleSize, double stopValue, boolean calculatePosMax
 
     )  {
         iMax = 0;
@@ -242,7 +269,12 @@ public class AnalyzeE12GSeries {
                         + " diff(der) " + absDer
                 );
             }
-            if (!ignoreMax && i>0) {
+            if (calculatePosMax && nextValues.length > 3) {
+                double evalMax = gAtBeta.evaluateZeta(nextValues[3], initialPadding);
+                double maxDev = nextValues[2] - evalMax;
+                double absMaxDev = Math.abs(maxDev);
+                MaxDev += absMaxDev;
+            } else if ( i>0) {
                 double absMaxDev = findMax(gAtBeta, i, z0, extremumFromFile, zeroPosition);
                 MaxDev += absMaxDev;
             }

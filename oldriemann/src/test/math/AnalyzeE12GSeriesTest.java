@@ -5,8 +5,10 @@ import org.junit.Test;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
 import riemann.Poly4;
+import riemann.Rosser;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -30,8 +32,11 @@ public class AnalyzeE12GSeriesTest  {
         final double stopValue = 243839.0;
         boolean ignoreMax = true;
         GSeries gAtBeta = Interpolate.readGSeries();
-        testGetSavedGSeries1(firstZero, Interpolate.zeroIn, gAtBeta,
+        String zerosFile = Rosser.getParam("zerosFile");
+        BufferedReader[] zeroIn = AnalyzeE12GSeries.zerosFileWithMaxPos(zerosFile);
+        testGetSavedGSeries1(firstZero, zeroIn, gAtBeta,
             2000002, stopValue, ignoreMax);
+        System.out.println(Arrays.toString(AnalyzeE12GSeries.zeroInfo.get(0)));
     }
     
     @Test
