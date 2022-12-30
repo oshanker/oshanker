@@ -16,6 +16,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static math.FixE12GSeries.advanceZeroInfo;
+import static math.FixE12GSeries.initZeroInfo;
+import static math.FixE12GSeries.printZeroInfoWithMax;
 import static riemann.StaticMethods.changeToZetaAndDer;
 import static riemann.StaticMethods.evaluateAtT;
 
@@ -34,14 +37,7 @@ public class AnalyzeE12GSeries {
     int midIdxCausingInfluence;
     
     public AnalyzeE12GSeries() {
-        this(new double[][]{
-                {243831.92506103282, -46.745064213360436, -4.265426650034286, 243832.05279114266},
-                {243832.1554065314, 81.36514195973275, 17.833911663155945, 243832.3974116106},
-                {243832.65617699016, -38.76085656480121, -1.0548384326966262, 243832.71687337887},
-                {243832.7750114288, 29.690772236512505, 4.33929464564258, 243832.94901641435},
-                {243833.16396249548, -15.05094530616091, -0.5122852558563304, 243833.23656405782},
-            },
-            //9999
+        this(FixE12GSeries.TEST_VALES,
             1999912
         );
     }
@@ -78,17 +74,22 @@ public class AnalyzeE12GSeries {
         gAtBeta = Interpolate.readGSeries();
     }
     
-    public GSeries testChangeToZetaAndDer() {
-    
-        Pair<double[], double[]> initValues = evaluateNextValues(nextValues, initialPadding, gAtBeta);
+    public static double[] testChangeToZetaAndDer(
+        List<double[]> zeroInfo, int idxCausingInfluence, GSeries gAtBeta
+    ) {
+        double[][] nextValues = new double[zeroInfo.size()][];
+        for (int row = 0; row < nextValues.length; row++) {
+            nextValues[row] = zeroInfo.get(row);
+        }
+        Pair<double[], double[]> initValues = evaluateNextValues(
+            nextValues, initialPadding, gAtBeta);
         double[] initial = initValues.getKey();
-        pointBeingInflunced = initValues.getValue();
+        double[] pointBeingInflunced = initValues.getValue();
         
         System.out.println("initial " + Arrays.toString(initial));
         int[] indices = new int[pointBeingInflunced.length];
-        int idxOfCentral = indices.length/2 ;
         for (int i = 0; i < indices.length; i++) {
-            indices[i] = midIdxCausingInfluence  - idxOfCentral + i;
+            indices[i] = idxCausingInfluence   + i;
         }
         System.out.println(Arrays.toString(indices));
         
@@ -123,6 +124,7 @@ public class AnalyzeE12GSeries {
         }
     
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
+        double determinant = linearEquation.determinant();
     
         double[] solution = linearEquation.solve(
             neededZetaIncrement
@@ -137,10 +139,16 @@ public class AnalyzeE12GSeries {
         for (int i = 0; i < actualIncrementInValues.length; i++) {
             actualIncrementInValues[i] = after[i] - initial[i];
         }
+        System.out.println("neededZetaIncrement " );
+        System.out.println( Arrays.toString(neededZetaIncrement));
         System.out.println("actualIncrementInValues " );
         System.out.println( Arrays.toString(actualIncrementInValues));
-        
-        return gAtBeta;
+        double deviation = 0;
+        for (int i = 0; i < pointBeingInflunced.length; i++) {
+             deviation = Math.abs(neededZetaIncrement[2*i] - actualIncrementInValues[2*i]);
+        }
+    
+        return new double[] {deviation, determinant};
     }
     
     public static Pair<double[], double[]> evaluateNextValues(
@@ -444,9 +452,14 @@ public class AnalyzeE12GSeries {
                 gAtBeta = Interpolate.readGSeries();
                 break;
             default:
-                AnalyzeE12GSeries fixE12GSeries = new AnalyzeE12GSeries();
-                gAtBeta = fixE12GSeries.testChangeToZetaAndDer();
-            
+                AnalyzeE12GSeries analyzeE12GSeries = new AnalyzeE12GSeries();
+                LinkedList<double[]> zeroInfo = new LinkedList<>();
+                for (int i = 0; i < analyzeE12GSeries.nextValues.length; i++) {
+                    zeroInfo.add(analyzeE12GSeries.nextValues[i]);
+                }
+                AnalyzeE12GSeries.testChangeToZetaAndDer(
+                    zeroInfo, 1999907, analyzeE12GSeries.gAtBeta);
+                gAtBeta = analyzeE12GSeries.gAtBeta;
         }
         return gAtBeta;
     }
@@ -518,6 +531,62 @@ public class AnalyzeE12GSeries {
                 sample, stopValue, ignoreMax);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    
+    private static void fixGSeriesUsingPosmax() {
+        GSeries gAtBeta = Interpolate.readGSeries();
+        double begin = gAtBeta.begin + (initialPadding - 18) * gAtBeta.spacing;
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        System.out.println("==========");
+        initZeroInfo(Interpolate.zeroIn, begin + 6 * gAtBeta.spacing, zeroInfo);
+        System.out.println("==========");
+        double[][] initialRet = printZeroInfoWithMax(gAtBeta, zeroInfo);
+        int midIdxCausingInfluence = (int) initialRet[1][0];
+        System.out.println("==========");
+        int devCount = 0;
+        double maxDev = Double.MIN_VALUE;
+        double minDet = Double.MAX_VALUE;
+        for (int iter = 0; iter < 50000; iter++) {
+            midIdxCausingInfluence++;
+            double nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
+            advanceZeroInfo(Interpolate.zeroIn, nextValue, zeroInfo);
+            double[] ret = null;
+            ret = testChangeToZetaAndDer(zeroInfo, midIdxCausingInfluence, gAtBeta );
+    
+            double deviation = ret[0];
+            double det = Math.abs(ret[1]);
+   
+            if (deviation > 0.01) {
+                if (deviation > 1.0) {
+                    System.out.println("midIdx " + midIdxCausingInfluence +
+                        " nextValue " + nextValue);
+                    System.out.println("deviation too large, " + deviation
+                        + ", det " + det);
+                    System.out.println("=====** " + ++devCount);
+                    if (deviation > 250) {
+                        for (int zeroIdx = 0; zeroIdx < zeroInfo.size(); zeroIdx++) {
+                            System.out.println(" " + Arrays.toString(zeroInfo.get(zeroIdx)));
+                        }
+                        throw new IllegalStateException("check this value!");
+                    }
+                }
+                if (deviation > maxDev) {
+                    maxDev = deviation;
+                }
+                if (det == 0) {
+                    System.out.println(" det == 0, " + midIdxCausingInfluence);
+                }
+                if (det < minDet) {
+                    minDet = det;
+                }
+            }
+            System.out.println("maxDev " + maxDev + " minDet " + minDet);
+    
+            System.out.println("==========");
+            nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
+            System.out.println("Final: midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+            System.out.println("==========");
         }
     }
     

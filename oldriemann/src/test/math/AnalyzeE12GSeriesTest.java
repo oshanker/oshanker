@@ -7,23 +7,28 @@ import riemann.Interpolate;
 import riemann.Poly4;
 import riemann.Rosser;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 
 import static math.AnalyzeE12GSeries.testGetSavedGSeries1;
+import static math.FixE12GSeries.TEST_VALES;
 
 public class AnalyzeE12GSeriesTest  {
     @Test
     public void testChangeToZetaAndDer() {
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        for (int i = 0; i < TEST_VALES.length; i++) {
+            zeroInfo.add(TEST_VALES[i]);
+        }
         AnalyzeE12GSeries analyzeE12GSeries = new AnalyzeE12GSeries();
-        analyzeE12GSeries.testChangeToZetaAndDer();
+        double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
+            zeroInfo, 1999907, analyzeE12GSeries.gAtBeta);
+        Assert.assertTrue(deviation1[0] < 1.0E-9);
+        System.out.println(" " + Arrays.toString(deviation1));
     }
     
     @Test

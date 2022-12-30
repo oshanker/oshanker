@@ -379,7 +379,7 @@ public class FixE12GSeries {
     }
     
     public static boolean advanceZeroInfo(
-        BufferedReader[] zeroIn, double firstZero
+        BufferedReader[] zeroIn, double firstZero, LinkedList<double[]> zeroInfo
     ) {
         if (zeroInfo.get(1)[0] < firstZero) {
             double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
@@ -397,7 +397,8 @@ public class FixE12GSeries {
     }
     
     public static void initZeroInfo(
-        BufferedReader[] zeroIn, double firstZero
+        BufferedReader[] zeroIn, double firstZero,
+        LinkedList<double[]> zeroInfo
     ){
         if (zeroInfo.size() < desiredSize) {
             int needed = desiredSize - zeroInfo.size();
@@ -709,7 +710,7 @@ public class FixE12GSeries {
         System.out.println("gAtBeta.midIdx " + gAtBeta.midIdx
          + " " + (gAtBeta.begin + gAtBeta.midIdx*gAtBeta.spacing));
         System.out.println("==========");
-        initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing );
+        initZeroInfo(Interpolate.zeroIn, begin + 6*gAtBeta.spacing, zeroInfo );
         System.out.println("==========");
         double[][] initialRet = printZeroInfoWithMax(gAtBeta, zeroInfo);
         int midIdxCausingInfluence = (int)initialRet[1][0];
@@ -721,7 +722,7 @@ public class FixE12GSeries {
         for (int iter = 0; iter < 50000; iter++) {
             midIdxCausingInfluence++;
             double nextValue = gAtBeta.begin + midIdxCausingInfluence*gAtBeta.spacing;
-            advanceZeroInfo(Interpolate.zeroIn, nextValue);
+            advanceZeroInfo(Interpolate.zeroIn, nextValue, zeroInfo);
             double[] ret = null;
             boolean useMax = true;
             try {
