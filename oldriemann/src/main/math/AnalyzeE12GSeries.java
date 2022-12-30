@@ -225,6 +225,7 @@ public class AnalyzeE12GSeries {
         double ZeroDev = 0;
         double DerDev = 0;
         double MaxDev = 0;
+        double meanValueAtZeros = 0;
     
         for (i = 0; i <= sampleSize; i++) {
             double zeroPosition = nextValues[0];
@@ -247,6 +248,7 @@ public class AnalyzeE12GSeries {
             boolean maxUpdated = false;
             double absZeta = Math.abs(zeta);
             ZeroDev += absZeta;
+            meanValueAtZeros += zeta;
             if(absZeta > maxZeroDev){
                 maxZeroDev = absZeta;
                 iZero = gAtBeta.midIdx;
@@ -303,7 +305,8 @@ public class AnalyzeE12GSeries {
                 + " iMax " + iMax
         );
         System.out.println(
-            "mean ZeroDev  " + ZeroDev/i
+            "mean ZeroDev " + ZeroDev/i +
+            " meanValueAtZeros " +   meanValueAtZeros/i
         );
         System.out.println(
             "mean DerDev  " + DerDev/i
