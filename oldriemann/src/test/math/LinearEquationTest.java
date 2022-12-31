@@ -53,7 +53,7 @@ public class LinearEquationTest {
             midIdxCausingInfluence, 0.125
         );
     
-        // row = gseries indices
+        // row = gseries indices NO!
         // col = points being influenced
         double[][] coefficients = new double[][]{zetaCoeff[0], derCoeff[0]};
         LinearEquation linearEquation = new LinearEquation(coefficients);
@@ -77,7 +77,6 @@ public class LinearEquationTest {
         for (int i = 0; i < actualIncrement.length; i++) {
             actualIncrement[i] = after[i] - initial[i];
         }
-        System.out.println("actualIncrement " + Arrays.toString(actualIncrement));
         assertEquals(1.0, actualIncrement[0], 0.000001);
         assertEquals(0.5, actualIncrement[1], 0.000001);
     
@@ -97,6 +96,17 @@ public class LinearEquationTest {
         );
         System.out.println("zetaderCoeff ");
         LinearEquation.printMatrix(zetaDerCoeff);
+        double[] testGIncrements = {
+            0.13861482493261557, 0.8115131385775348,
+            0, 0
+        };
+        System.out.println("test prod ");
+        System.out.println("actualIncrement " + Arrays.toString(actualIncrement));
+        double[] expected = LinearEquation.multiply(zetaDerCoeff, testGIncrements);
+        System.out.println(Arrays.toString(expected));
+        for (int i = 0; i < solution.length; i++) {
+            Assert.assertEquals(expected[i], actualIncrement[i], 1.0E-9);
+        }
     }
     
     @Test
@@ -182,10 +192,14 @@ public class LinearEquationTest {
             new double[]{1, 0.5, -0.16821753315955723, -2.0541382955436056, -0.06545828959341304, -1.0119912921417438});
         System.out.println("Required g increment " );
         System.out.println( Arrays.toString(solution));
-
-//        double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
-//        System.out.println("after " );
-//        System.out.println( Arrays.toString(after));
+        double[] testGIncrements = {
+            0.13861482493261557, 0.8115131385775348,
+            0, 0, 0, 0
+        };
+        for (int i = 0; i < solution.length; i++) {
+            Assert.assertEquals(testGIncrements[i], solution[i], 1.0E-9);
+        
+        }
     }
     
     private static GSeries getgSeries(double pointBeingInflunced) throws IOException {

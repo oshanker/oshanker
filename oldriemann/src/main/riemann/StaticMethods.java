@@ -57,17 +57,22 @@ public class StaticMethods {
         return ret;
     }
     
+    /**
+     * initialValue len == t len.
+     * midIdx_in len need not equal t len
+     */
     public static double[][] changeToZetaAndDer(GSeries gSeries, final int initialPadding,
-                                          double[] t, double[] initialValue, int[] midIdx_in, double increment) {
+               double[] t, double[] initialValue, int[] midIdx_in, double increment
+    ) {
         double[][] a0 = new double[2*t.length][2*midIdx_in.length];
-        for (int j = 0; j < midIdx_in.length; j++) {
-            int midIdx = midIdx_in[j];
+        for (int gbetaIndex = 0; gbetaIndex < midIdx_in.length; gbetaIndex++) {
+            int midIdx = midIdx_in[gbetaIndex];
             gSeries.incrementGValueAtIndex(midIdx, new double[]{increment, 0});
-            for (int i = 0; i < t.length; i++) {
-                a0[2*i][2*j] = (gSeries.evaluateZeta(t[i], initialPadding)-initialValue[2*i])/ increment;
+            for (int evalPoint = 0; evalPoint < t.length; evalPoint++) {
+                a0[2*evalPoint][2*gbetaIndex] = (gSeries.evaluateZeta(t[evalPoint], initialPadding)-initialValue[2*evalPoint])/ increment;
                 double a0ValAtZero = gSeries.evalDer(
-                    t[i], initialPadding, 0.00025 * gSeries.spacing);
-                a0[2*i+1][2*j] = (a0ValAtZero - initialValue[2 * i + 1]) / increment;
+                    t[evalPoint], initialPadding, 0.00025 * gSeries.spacing);
+                a0[2*evalPoint+1][2*gbetaIndex] = (a0ValAtZero - initialValue[2 * evalPoint + 1]) / increment;
             }
             
             gSeries.incrementGValueAtIndex(midIdx, new double[]{-increment, 0});
@@ -76,12 +81,12 @@ public class StaticMethods {
             
             gSeries.incrementGValueAtIndex(midIdx, new double[]{0, increment});
             
-            for (int i = 0; i < t.length; i++) {
-                a0[2*i][2*j+1] = (gSeries.evaluateZeta(t[i], initialPadding) - initialValue[2*i]) / increment;
+            for (int evalPoint = 0; evalPoint < t.length; evalPoint++) {
+                a0[2*evalPoint][2*gbetaIndex+1] = (gSeries.evaluateZeta(t[evalPoint], initialPadding) - initialValue[2*evalPoint]) / increment;
                 double a0ValAtZero = gSeries.evalDer(
-                    t[i], initialPadding, 0.00025 * gSeries.spacing);
+                    t[evalPoint], initialPadding, 0.00025 * gSeries.spacing);
         
-                a0[2*i + 1][2*j+1] = (a0ValAtZero - initialValue[2*i + 1]) / increment;
+                a0[2*evalPoint + 1][2*gbetaIndex+1] = (a0ValAtZero - initialValue[2*evalPoint + 1]) / increment;
             }
             gSeries.incrementGValueAtIndex(midIdx, new double[]{0, -increment});
         }
