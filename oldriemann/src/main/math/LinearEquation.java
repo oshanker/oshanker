@@ -48,13 +48,10 @@ public class LinearEquation
     public static double[][] transpose(double[][] matrix) {
         int length = Math.min(matrix.length, matrix[0].length);
         double[][] transpose = new double[matrix[0].length][matrix.length];
-        for (int row = 0; row < length; ++row)
+        for (int row = 0; row < transpose.length; ++row)
         {
-            transpose[row][row] = matrix[row][row];
-            for (int j = row+1; j < matrix[row].length; ++j)
-            {
-                transpose[row][j] = matrix[j][row];
-                transpose[j][row] = matrix[row][j];
+            for (int col = 0; col < transpose[0].length; col++) {
+                transpose[row][col] = matrix[col][row];
             }
         }
         return transpose;
@@ -156,6 +153,19 @@ public class LinearEquation
             ret[row] = 0;
             for (int col = 0; col < vector.length; col++) {
                 ret[row] += matrix[row][col]*vector[col];
+            }
+        }
+        return ret;
+    }
+    
+    public static double[][] multiply(double[][] matrix, double[][] matrix2) {
+        double[][] ret = new double[matrix.length][matrix2[0].length];
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix2[0].length; col++) {
+                ret[row][col] = 0;
+                for (int colindex = 0; colindex < matrix2.length; colindex++) {
+                    ret[row][col] += matrix[row][colindex]*matrix2[colindex][col];
+                }
             }
         }
         return ret;

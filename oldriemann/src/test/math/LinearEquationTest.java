@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import static riemann.StaticMethods.changeToDer;
 import static riemann.StaticMethods.changeToZeta;
@@ -21,13 +22,13 @@ public class LinearEquationTest {
     static final int initialPadding = 40;
     static double[] nextValues = {
         243831.456494008, -22.69554476177354, 1.538114456203189};
-    static double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147} ;
-    static double[]  nextValues2 = {243831.92506103282, -46.745064213360436, 4.265426650034286} ;
+    static double[] nextValues1 = {243831.660443468, 28.68660904273845, 3.261849766062147};
+    static double[] nextValues2 = {243831.92506103282, -46.745064213360436, 4.265426650034286};
     
     static double[] pointBeingInflunced = {nextValues[0], nextValues1[0], nextValues2[0]};
     static GSeries gAtBeta = null;
     static double[] initial = null;
-    int midIdxCausingInfluence  = 9994;
+    int midIdxCausingInfluence = 9994;
     
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -38,36 +39,36 @@ public class LinearEquationTest {
     
     @Test
     public void testIncrementGValuesAtIndices() {
-
+    
         double[][] zetaCoeff = changeToZeta(
-                gAtBeta,
-                initialPadding,
-                pointBeingInflunced,
-                initial,
-                midIdxCausingInfluence,
-                0.125
+            gAtBeta,
+            initialPadding,
+            pointBeingInflunced,
+            initial,
+            midIdxCausingInfluence,
+            0.125
         );
         double[][] derCoeff = changeToDer(
-                gAtBeta, initialPadding, pointBeingInflunced, initial,
-                midIdxCausingInfluence, 0.125
+            gAtBeta, initialPadding, pointBeingInflunced, initial,
+            midIdxCausingInfluence, 0.125
         );
-
+    
         // row = gseries indices
         // col = points being influenced
         double[][] coefficients = new double[][]{zetaCoeff[0], derCoeff[0]};
-        LinearEquation linearEquation = new LinearEquation(coefficients );
-
+        LinearEquation linearEquation = new LinearEquation(coefficients);
+    
         double[] solution = linearEquation.solve(new double[]{1, 0.5});
         System.out.println("Required g increment " + Arrays.toString(solution));
-
+    
         System.out.println("multiply(coefficients, solution) " +
             Arrays.toString(LinearEquation.multiply(coefficients, solution)));
         double[][] coefficients1 = new double[][]{zetaCoeff[1], derCoeff[1]};
         System.out.println("multiply(coefficients1, solution) " +
             Arrays.toString(LinearEquation.multiply(coefficients1, solution)));
         double[][] requiredGIncrements = {
-                {0.13861482493261557, 0.8115131385775348},
-                {0, 0}
+            {0.13861482493261557, 0.8115131385775348},
+            {0, 0}
         };
         gAtBeta.incrementGValuesAtIndices(midIdxCausingInfluence, requiredGIncrements);
         double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);
@@ -85,7 +86,7 @@ public class LinearEquationTest {
         System.out.println("derCoeff " + Arrays.deepToString(derCoeff));
     
         //================================
-        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence+1};
+        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence + 1};
         double[][] zetaDerCoeff = changeToZetaAndDer(
             gAtBeta,
             initialPadding,
@@ -94,8 +95,29 @@ public class LinearEquationTest {
             indices,
             0.125
         );
-        System.out.println("zetaderCoeff " );
+        System.out.println("zetaderCoeff ");
         LinearEquation.printMatrix(zetaDerCoeff);
+    }
+    
+    @Test
+    public void testoverdetermined() {
+        double[][] a = {
+            {1, 1},
+            {1, 2},
+            {1, 3},
+        };
+        double[][] at = LinearEquation.transpose(a);
+        double[] y = {6, 11, 16};
+        double[][] coefficients = LinearEquation.multiply(at, a);
+        double[] values = LinearEquation.multiply(at, y);
+        LinearEquation linearEquation = new LinearEquation(coefficients);
+        double[] solution = linearEquation.solve(values);
+        System.out.println(Arrays.toString(solution));
+        double[] expected = {1, 5};
+        for (int i = 0; i < solution.length; i++) {
+            Assert.assertEquals(expected[i], solution[i], 1.0E-9);
+            
+        }
     }
     
     @Test
