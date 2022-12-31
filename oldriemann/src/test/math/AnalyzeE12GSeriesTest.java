@@ -32,10 +32,28 @@ public class AnalyzeE12GSeriesTest  {
         for (int i = 0; i < TEST_VALES.length; i++) {
             zeroInfo.add(TEST_VALES[i]);
         }
-        AnalyzeE12GSeries analyzeE12GSeries = new AnalyzeE12GSeries();
+        //AnalyzeE12GSeries analyzeE12GSeries = new AnalyzeE12GSeries();
+        GSeries gAtBeta = Interpolate.readGSeries();
         double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
-            zeroInfo, 1999907, analyzeE12GSeries.gAtBeta, false);
+            zeroInfo, 1999907, gAtBeta, false);
         Assert.assertTrue(deviation1[0] < 1.0E-9);
+        System.out.println(" " + Arrays.toString(deviation1));
+    }
+    
+    @Test
+    public void testChangeToZetaAndDerBad() {
+        double[][] badZeros = {
+            {5195.318244135411, 7.516433369861296, 0.9165390902393957, 5195.478496162874},
+            {5195.672422220875, -1.3049505772938506, -0.009900533082844082, 5195.687646467244},
+            {5195.703116888218, 1.2633640076170625, 0.4813896177508429, 5195.853812920017},
+        };
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        for (int i = 0; i < badZeros.length; i++) {
+            zeroInfo.add(badZeros[i]);
+        }
+        GSeries gAtBeta = Interpolate.readGSeries();
+        double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
+            zeroInfo, 40650, gAtBeta, true);
         System.out.println(" " + Arrays.toString(deviation1));
     }
     

@@ -85,9 +85,6 @@ public class AnalyzeE12GSeries {
             nextValues, initialPadding, gAtBeta);
         double[] initial = initValues.getKey();
         double[] pointBeingInflunced = initValues.getValue();
-        if (verbose) {
-            System.out.println("initial " + Arrays.toString(initial));
-        }
         int[] indices = new int[pointBeingInflunced.length];
         for (int i = 0; i < indices.length; i++) {
             indices[i] = idxCausingInfluence   + i;
@@ -146,17 +143,31 @@ public class AnalyzeE12GSeries {
             actualIncrementInValues[i] = after[i] - initial[i];
         }
         if (verbose) {
-            System.out.println("neededZetaIncrement ");
-            System.out.println(Arrays.toString(neededZetaIncrement));
-            System.out.println("actualIncrementInValues ");
-            System.out.println(Arrays.toString(actualIncrementInValues));
+            printTestChangeToZetaAndDer(zeroInfo, neededZetaIncrement, actualIncrementInValues, initial);
         }
         double deviation = 0;
         for (int i = 0; i < pointBeingInflunced.length; i++) {
              deviation = Math.abs(neededZetaIncrement[2*i] - actualIncrementInValues[2*i]);
         }
-    
+        if (deviation > 100) {
+            printTestChangeToZetaAndDer(zeroInfo, neededZetaIncrement, actualIncrementInValues, initial);
+        }
+        
         return new double[] {deviation, determinant};
+    }
+    
+    private static void printTestChangeToZetaAndDer(
+        List<double[]> zeroInfo, double[] neededZetaIncrement,
+        double[] actualIncrementInValues,
+        double[] initial
+    ) {
+        System.out.println("zeroInfo ");
+        FixE12GSeries.printZeroInfo(zeroInfo);
+        System.out.println("initial " + Arrays.toString(initial));
+        System.out.println("neededZetaIncrement ");
+        System.out.println(Arrays.toString(neededZetaIncrement));
+        System.out.println("actualIncrementInValues ");
+        System.out.println(Arrays.toString(actualIncrementInValues));
     }
     
     public static Pair<double[], double[]> evaluateNextValues(
@@ -567,8 +578,7 @@ public class AnalyzeE12GSeries {
             double deviation = ret[0];
             double det = Math.abs(ret[1]);
    
-            if (deviation > 0.01) {
-                if (deviation > 1.0) {
+            if (deviation > 0.5) {
                     System.out.println("midIdx " + midIdxCausingInfluence +
                         " nextValue " + nextValue);
                     System.out.println("deviation too large, " + deviation
@@ -580,24 +590,27 @@ public class AnalyzeE12GSeries {
                         }
                         throw new IllegalStateException("check this value!");
                     }
-                }
-                if (deviation > maxDev) {
-                    maxDev = deviation;
-                }
-                if (det == 0) {
-                    System.out.println(" det == 0, " + midIdxCausingInfluence);
-                }
-                if (det < minDet) {
-                    minDet = det;
-                }
+            }
+            
+            if (deviation > maxDev) {
+                maxDev = deviation;
+            }
+            if (det == 0) {
+                System.out.println(" det == 0, " + midIdxCausingInfluence);
+            }
+            if (det < minDet) {
+                minDet = det;
+            }
+            if ( iter%10000 == 0) {
+                System.out.println(iter + " maxDev " + maxDev + " minDet " + minDet);
             }
         }
-            System.out.println("maxDev " + maxDev + " minDet " + minDet);
-    
-            System.out.println("==========");
-            double nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
-            System.out.println("Final: midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
-            System.out.println("==========");
+        System.out.println("maxDev " + maxDev + " minDet " + minDet);
+
+        System.out.println("==========");
+        double nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
+        System.out.println("Final: midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+        System.out.println("==========");
     }
     
     public static void main(String[] args) {
