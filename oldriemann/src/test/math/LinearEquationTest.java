@@ -110,6 +110,35 @@ public class LinearEquationTest {
     }
     
     @Test
+    public void unequalzpoints() {
+        //================================
+        int[] indices = {midIdxCausingInfluence, midIdxCausingInfluence + 1};
+        double[][] zetaDerCoeff = changeToZetaAndDer(
+            gAtBeta,
+            initialPadding,
+            pointBeingInflunced,
+            initial,
+            indices,
+            0.125
+        );
+       double[] testGIncrements = {
+            0.13861482493261557, 0.8115131385775348,
+            0, 0
+        };
+        double[][] at = LinearEquation.transpose(zetaDerCoeff);
+        double[] requiredIncrement = {1.0, 0.5, -0.16821753315955723, -2.0541382955436056, -0.06545828959341304, -1.0119912921417438};
+        double[][] coefficients = LinearEquation.multiply(at, zetaDerCoeff);
+        double[] values = LinearEquation.multiply(at, requiredIncrement);
+        LinearEquation linearEquation = new LinearEquation(coefficients);
+        double[] solution = linearEquation.solve(values);
+    
+        System.out.println(Arrays.toString(solution));
+        for (int i = 0; i < solution.length; i++) {
+            Assert.assertEquals(testGIncrements[i], solution[i], 1.0E-9);
+        }
+    }
+    
+    @Test
     public void testoverdetermined() {
         double[][] a = {
             {1, 1},
