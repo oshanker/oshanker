@@ -100,6 +100,7 @@ public class AnalyzeE12GSeries {
             indices,
             0.125
         );
+        boolean bad = false;
         double[] neededZetaIncrement = new double[2*pointBeingInflunced.length];
         for (int i = 0; i < pointBeingInflunced.length; i++) {
             int indexIntoNext = i/2;
@@ -109,6 +110,9 @@ public class AnalyzeE12GSeries {
                     throw new RuntimeException("zero");
                 }
                 neededZetaIncrement[2 * i] = -initial[2 * i];
+                if(Math.abs(neededZetaIncrement[2 * i]) > 1.0E6){
+                    bad = true;
+                }
                 neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
             } else {
                 // odd i, max
@@ -118,12 +122,22 @@ public class AnalyzeE12GSeries {
                     throw new RuntimeException("max");
                 }
                 neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
+                if(Math.abs(neededZetaIncrement[2 * i]) > 1.0E6){
+                    bad = true;
+                }
                 neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
             }
         }
     
         LinearEquation linearEquation = new LinearEquation(zetaDerCoeff );
         double determinant = linearEquation.determinant();
+        if(bad || Math.abs(determinant) < 1.0E-25){
+            System.out.println("skip " + determinant + ", " + idxCausingInfluence);
+            FixE12GSeries.printZeroInfo(zeroInfo);
+            System.out.println("neededZetaIncrement ");
+            System.out.println(Arrays.toString(neededZetaIncrement));
+            return new double[] {0, determinant};
+        }
     
         double[] solution = linearEquation.solve(
             neededZetaIncrement
