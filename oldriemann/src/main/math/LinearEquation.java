@@ -3,6 +3,7 @@ package math;
 public class LinearEquation
 {
     double [][] coefficients;
+    double [][] transpose;
     double [][] values;
     int rowIndex[];
 
@@ -46,7 +47,6 @@ public class LinearEquation
     }
     
     public static double[][] transpose(double[][] matrix) {
-        int length = Math.min(matrix.length, matrix[0].length);
         double[][] transpose = new double[matrix[0].length][matrix.length];
         for (int row = 0; row < transpose.length; ++row)
         {
@@ -83,13 +83,16 @@ public class LinearEquation
     }
 
     public LinearEquation(double[][] coeff) {
-        this.coefficients = new double[coeff.length][coeff[0].length];
-        for(int row = 0; row < coefficients.length; row++)
-        {
-            for(int col = 0; col < coefficients[0].length; col ++)
-            {
-                this.coefficients[row][col ] = coeff[row][col ];
+        if (coeff.length == coeff[0].length) {
+            this.coefficients = new double[coeff.length][coeff[0].length];
+            for (int row = 0; row < coefficients.length; row++) {
+                for (int col = 0; col < coefficients[0].length; col++) {
+                    this.coefficients[row][col] = coeff[row][col];
+                }
             }
+        } else {
+            transpose =  transpose(coeff);
+            this.coefficients = LinearEquation.multiply(transpose, coeff);
         }
         gaussian(this.coefficients);
     }
@@ -172,8 +175,13 @@ public class LinearEquation
     }
 
     public double[] solve(double[] input) {
-        double[] transformFromIdentity = new double[input.length];
-        System.arraycopy(input, 0, transformFromIdentity, 0, input.length);
+        int length = transpose!= null? transpose[0].length : input.length;
+        double[] transformFromIdentity = new double[length];
+        if (transpose != null) {
+            transformFromIdentity = LinearEquation.multiply(transpose, input);
+        } else {
+            System.arraycopy(input, 0, transformFromIdentity, 0, input.length);
+        }
         int n = coefficients.length;
         for (int i=0; i < n-1; ++i) {
             for (int j = i + 1; j < n; ++j) {

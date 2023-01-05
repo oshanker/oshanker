@@ -139,6 +139,31 @@ public class LinearEquationTest {
     }
     
     @Test
+    public void testInconsistent() {
+        double[][] a = {
+            {1, -1},
+            {1, 1},
+            {1, 1},
+        };
+        double[] y = {0, 2, 1,};
+        LinearEquation linearEquation1 = new LinearEquation(a);
+        double[] solution1 = linearEquation1.solve(y);
+    
+        System.out.println(Arrays.toString(solution1));
+        double[] expected = {0.75, 0.75};
+        for (int i = 0; i < solution1.length; i++) {
+            Assert.assertEquals(expected[i], solution1[i], 1.0E-9);
+        }
+        a[1][0] *= 1000;
+        a[1][1] *= 1000;
+        y[1] *= 1000;
+        linearEquation1 = new LinearEquation(a);
+        solution1 = linearEquation1.solve(y);
+    
+        System.out.println(Arrays.toString(solution1));
+    }
+    
+    @Test
     public void testoverdetermined() {
         double[][] a = {
             {1, 1},
@@ -152,11 +177,15 @@ public class LinearEquationTest {
         double[] values = LinearEquation.multiply(at, y);
         LinearEquation linearEquation = new LinearEquation(coefficients);
         double[] solution = linearEquation.solve(values);
-        System.out.println(Arrays.toString(solution));
+    
+        LinearEquation linearEquation1 = new LinearEquation(a);
+        double[] solution1 = linearEquation1.solve(y);
+    
+        System.out.println(Arrays.toString(solution1));
         double[] expected = {1, 5};
         for (int i = 0; i < solution.length; i++) {
             Assert.assertEquals(expected[i], solution[i], 1.0E-9);
-            
+            Assert.assertEquals(solution1[i], solution[i], 1.0E-9);
         }
     }
     
