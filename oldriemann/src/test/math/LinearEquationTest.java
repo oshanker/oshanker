@@ -144,9 +144,10 @@ public class LinearEquationTest {
             {1, 1},
             {1, 2},
             {1, 3},
+            {0, 0},
         };
         double[][] at = LinearEquation.transpose(a);
-        double[] y = {6, 11, 16};
+        double[] y = {6, 11, 16, 0};
         double[][] coefficients = LinearEquation.multiply(at, a);
         double[] values = LinearEquation.multiply(at, y);
         LinearEquation linearEquation = new LinearEquation(coefficients);
