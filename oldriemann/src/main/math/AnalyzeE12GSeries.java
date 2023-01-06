@@ -1,6 +1,5 @@
 package math;
 
-import javafx.util.Pair;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
 import riemann.Rosser;
@@ -81,10 +80,13 @@ public class AnalyzeE12GSeries {
         for (int row = 0; row < nextValues.length; row++) {
             nextValues[row] = zeroInfo.get(row);
         }
-        Pair<double[], double[]> initValues = evaluateNextValues(
+        double[][] initValues = evaluateNextValues(
             nextValues, initialPadding, gAtBeta);
-        double[] initial = initValues.getKey();
-        double[] pointBeingInflunced = initValues.getValue();
+        double[] initial = initValues[0];
+        double[] pointBeingInflunced = initValues[1];
+        if (verbose) {
+            System.out.println(Arrays.toString(initValues[2]));
+        }
         int[] indices = new int[pointBeingInflunced.length];
         for (int i = 0; i < indices.length; i++) {
             indices[i] = idxCausingInfluence   + i;
@@ -184,34 +186,39 @@ public class AnalyzeE12GSeries {
         System.out.println(Arrays.toString(actualIncrementInValues));
     }
     
-    public static Pair<double[], double[]> evaluateNextValues(
+    public static double[][] evaluateNextValues(
         double[][] nextValues, int initialPadding, GSeries gAtBeta) {
         LinkedList<Double> values = new LinkedList<>();
         LinkedList<Double> pointBeingInflunced = new LinkedList<>();
+        LinkedList<Integer> gIndices = new LinkedList<>();
         for (int i = 0; i < nextValues.length; i++) {
-            pointBeingInflunced.add(nextValues[i][0]);
             values.add(
                 gAtBeta.evaluateZeta(nextValues[i][0], initialPadding));
             values.add( gAtBeta.evalDer(
                 nextValues[i][0], initialPadding, 0.00025* gAtBeta.spacing));
+            pointBeingInflunced.add(nextValues[i][0]);
+            gIndices.add(gAtBeta.midIdx);
             if (nextValues[i][3] <= 0) {
                 break;
             }
-            pointBeingInflunced.add(nextValues[i][3]);
             values.add(
                 gAtBeta.evaluateZeta(nextValues[i][3], initialPadding));
             values.add( gAtBeta.evalDer(
                 nextValues[i][3], initialPadding, 0.00025* gAtBeta.spacing));
+            pointBeingInflunced.add(nextValues[i][3]);
+            gIndices.add(gAtBeta.midIdx);
         }
         double[] eval = new double[values.size()];
         for (int i = 0; i < eval.length; i++) {
             eval[i] = values.pollFirst();
         }
         double[] points = new double[pointBeingInflunced.size()];
+        double[] indices = new double[pointBeingInflunced.size()];
         for (int i = 0; i < points.length; i++) {
             points[i] = pointBeingInflunced.pollFirst();
+            indices[i] = gIndices.pollFirst();
         }
-        return new Pair<>(eval, points);
+        return new double[][]{eval, points, indices};
     }
     
     static void resetLimits() {
