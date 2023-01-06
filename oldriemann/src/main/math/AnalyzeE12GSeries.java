@@ -91,11 +91,7 @@ public class AnalyzeE12GSeries {
         }
         //zeroInfo.size()
         //int[] indices = new int[pointBeingInflunced.length];
-        int[] indices = new int[zeroInfo.size() + 2];
-        int start = (int) Math.min(idxCausingInfluence, evalIndices[0]);
-        for (int i = 0; i < indices.length; i++) {
-            indices[i] = start   + i;
-        }
+        int[] indices = getIndices(idxCausingInfluence, evalIndices);
         if (verbose) {
             System.out.println(Arrays.toString(indices));
         }
@@ -188,6 +184,15 @@ public class AnalyzeE12GSeries {
         }
         
         return new double[] {deviation, determinant};
+    }
+    
+    private static int[] getIndices(int idxCausingInfluence, double[] evalIndices) {
+        int[] indices = new int[evalIndices.length/2 + 2];
+        int start = (int) Math.min(idxCausingInfluence, evalIndices[0]);
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = start   + i;
+        }
+        return indices;
     }
     
     private static void printTestChangeToZetaAndDer(
