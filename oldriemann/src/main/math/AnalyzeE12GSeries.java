@@ -23,6 +23,7 @@ import static riemann.StaticMethods.evaluateAtT;
 
 public class AnalyzeE12GSeries {
     static final int initialPadding = 40;
+    private static final double breakThreshold = 1.0E3;
     private static double maxZeroDev;
     private static double maxDerDev;
     private static double maxMaxDev;
@@ -84,12 +85,16 @@ public class AnalyzeE12GSeries {
             nextValues, initialPadding, gAtBeta);
         double[] initial = initValues[0];
         double[] pointBeingInflunced = initValues[1];
+        double[] evalIndices = initValues[2];
         if (verbose) {
-            System.out.println(Arrays.toString(initValues[2]));
+            System.out.println(Arrays.toString(evalIndices));
         }
-        int[] indices = new int[pointBeingInflunced.length];
+        //zeroInfo.size()
+        //int[] indices = new int[pointBeingInflunced.length];
+        int[] indices = new int[zeroInfo.size() + 2];
+        int start = (int) Math.min(idxCausingInfluence, evalIndices[0]);
         for (int i = 0; i < indices.length; i++) {
-            indices[i] = idxCausingInfluence   + i;
+            indices[i] = start   + i;
         }
         if (verbose) {
             System.out.println(Arrays.toString(indices));
@@ -112,7 +117,7 @@ public class AnalyzeE12GSeries {
                     throw new RuntimeException("zero");
                 }
                 neededZetaIncrement[2 * i] = -initial[2 * i];
-                if(Math.abs(neededZetaIncrement[2 * i]) > 1.0E6){
+                if(Math.abs(neededZetaIncrement[2 * i]) > breakThreshold){
                     System.out.println("neededZetaIncrement[2 * i] " + neededZetaIncrement[2 * i]);
                     bad = true;
                 }
@@ -125,8 +130,9 @@ public class AnalyzeE12GSeries {
                     throw new RuntimeException("max");
                 }
                 neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
-                if(Math.abs(neededZetaIncrement[2 * i]) > 1.0E6){
-                    System.out.println("odd i, max neededZetaIncrement[2 * i] " + neededZetaIncrement[2 * i]);
+                if(Math.abs(neededZetaIncrement[2 * i]) > breakThreshold){
+                    System.out.println(
+                        "odd i, max neededZetaIncrement[2 * i] " + neededZetaIncrement[2 * i]);
                     bad = true;
                 }
                 neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
@@ -140,6 +146,10 @@ public class AnalyzeE12GSeries {
             FixE12GSeries.printZeroInfo(zeroInfo);
             System.out.println("neededZetaIncrement ");
             System.out.println(Arrays.toString(neededZetaIncrement));
+            System.out.println(Arrays.toString(indices));
+            printTestChangeToZetaAndDer(
+                zeroInfo, neededZetaIncrement, null, initial,
+                evalIndices);
             throw new IllegalStateException("neededZetaIncrement ");
         }
     
@@ -161,14 +171,17 @@ public class AnalyzeE12GSeries {
             actualIncrementInValues[i] = after[i] - initial[i];
         }
         if (verbose) {
-            printTestChangeToZetaAndDer(zeroInfo, neededZetaIncrement, actualIncrementInValues, initial);
+            printTestChangeToZetaAndDer(
+                zeroInfo, neededZetaIncrement, actualIncrementInValues, initial,
+                evalIndices);
         }
         double deviation = 0;
         for (int i = 0; i < pointBeingInflunced.length; i++) {
              deviation = Math.abs(neededZetaIncrement[2*i] - actualIncrementInValues[2*i]);
         }
         if (deviation > 100) {
-            printTestChangeToZetaAndDer(zeroInfo, neededZetaIncrement, actualIncrementInValues, initial);
+            printTestChangeToZetaAndDer(
+                zeroInfo, neededZetaIncrement, actualIncrementInValues, initial, evalIndices);
         }
         
         return new double[] {deviation, determinant};
@@ -177,15 +190,19 @@ public class AnalyzeE12GSeries {
     private static void printTestChangeToZetaAndDer(
         List<double[]> zeroInfo, double[] neededZetaIncrement,
         double[] actualIncrementInValues,
-        double[] initial
+        double[] initial,
+        double[] evalIndices
     ) {
+        System.out.println(Arrays.toString(evalIndices));
         System.out.println("zeroInfo ");
         FixE12GSeries.printZeroInfo(zeroInfo);
         System.out.println("initial " + Arrays.toString(initial));
         System.out.println("neededZetaIncrement ");
         System.out.println(Arrays.toString(neededZetaIncrement));
-        System.out.println("actualIncrementInValues ");
-        System.out.println(Arrays.toString(actualIncrementInValues));
+        if (actualIncrementInValues != null) {
+            System.out.println("actualIncrementInValues ");
+            System.out.println(Arrays.toString(actualIncrementInValues));
+        }
     }
     
     public static double[][] evaluateNextValues(
@@ -581,7 +598,7 @@ public class AnalyzeE12GSeries {
         double begin = gAtBeta.begin + (initialPadding - 18) * gAtBeta.spacing;
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         System.out.println("==========");
-        int desiredSize = 3;
+        int desiredSize = 5;
         initZeroInfo(
             zeroIn, begin + 6 * gAtBeta.spacing, zeroInfo, desiredSize);
         System.out.println("init done ==========");
@@ -601,7 +618,7 @@ public class AnalyzeE12GSeries {
             double deviation = ret[0];
             double det = Math.abs(ret[1]);
    
-            if (deviation > 0.5) {
+            if (deviation > 2.0) {
                     System.out.println("midIdx " + midIdxCausingInfluence +
                         " nextValue " + nextValue);
                     System.out.println("deviation too large, " + deviation
