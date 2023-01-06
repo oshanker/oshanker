@@ -6,6 +6,8 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.function.Function;
 
+import static riemann.Interpolate.outputStream;
+
 public class StaticMethods {
     // 0 - first Gram idx we can evaluate in saved Gseries
     // 1 - last zero?
@@ -189,6 +191,34 @@ public class StaticMethods {
       }
       return idx;
    }
+    
+    
+    public static void storeG(GSeries gSeries, String pathName)
+    {
+        //new File("out/gSeries" + Interpolate.prefix + "/corrected/gSeries.dat");
+        
+        File file = new File(pathName);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        double begin = gSeries.begin;
+        double incr = gSeries.spacing;
+        double[][] gAtBeta = gSeries.gAtBeta;
+         try {
+             DataOutputStream out = outputStream( file);
+             out.writeDouble(begin);
+             out.writeDouble(incr);
+             out.writeInt(gAtBeta.length);
+             for (int i = 0; i < gAtBeta.length; i++) {
+                 out.writeDouble(gAtBeta[i][0]);
+                 out.writeDouble(gAtBeta[i][1]);
+             }
+             out.close();
+         } catch (IOException e) {
+             throw new IllegalStateException("saveG", e);
+         }
+    }
+    
     
     // find gseries which can evaluate pointToEvaluate
     public static GSeries getSavedGSeries(double pointToEvaluate) throws IOException {
