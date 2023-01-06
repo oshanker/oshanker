@@ -29,6 +29,7 @@ public class AnalyzeE12GSeries {
     private static double maxMaxDev;
     private static int iMax;
     public static double derepsilon = 1.0E-5;
+    private static double logThreshold = 3.0;
     double[][] nextValues;
     
     GSeries gAtBeta = null;
@@ -177,6 +178,9 @@ public class AnalyzeE12GSeries {
         double deviation = 0;
         for (int i = 0; i < pointBeingInflunced.length; i++) {
              deviation = Math.abs(neededZetaIncrement[2*i] - actualIncrementInValues[2*i]);
+        }
+        if (deviation > 10) {
+            gAtBeta.decrementGValuesAtIndices(indices[0], solution);
         }
         if (deviation > 100) {
             printTestChangeToZetaAndDer(
@@ -616,7 +620,7 @@ public class AnalyzeE12GSeries {
         int devCount = 0;
         double maxDev = Double.MIN_VALUE;
         double minDet = Double.MAX_VALUE;
-        for (int iter = 0; iter < 50000; iter++) {
+        for (int iter = 0; iter < 100000; iter++) {
             midIdxCausingInfluence++;
             double nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
             advanceZeroInfo(zeroIn, nextValue, zeroInfo);
@@ -625,8 +629,8 @@ public class AnalyzeE12GSeries {
     
             double deviation = ret[0];
             double det = Math.abs(ret[1]);
-   
-            if (deviation > 2.0) {
+    
+            if (deviation > logThreshold) {
                     System.out.println("midIdx " + midIdxCausingInfluence +
                         " nextValue " + nextValue);
                     System.out.println("deviation too large, " + deviation
