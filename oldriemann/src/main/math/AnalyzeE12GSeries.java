@@ -157,8 +157,11 @@ public class AnalyzeE12GSeries {
             neededZetaIncrement
             );
         if (verbose) {
-            System.out.println("Required g increment ");
+            System.out.println("== zetaDerCoeff == ");
+            LinearEquation.printMatrix(zetaDerCoeff);
+            System.out.println("Required g increment, coeff ");
             System.out.println(Arrays.toString(solution));
+            LinearEquation.printMatrix(linearEquation.coefficients);
         }
         gAtBeta.incrementGValuesAtIndices(indices[0], solution);
         double[] after = evaluateAtT(pointBeingInflunced, initialPadding, gAtBeta);

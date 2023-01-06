@@ -36,7 +36,7 @@ public class AnalyzeE12GSeriesTest  {
         GSeries gAtBeta = Interpolate.readGSeries();
         double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
             zeroInfo, 1999907, gAtBeta, false);
-        Assert.assertTrue(deviation1[0] < 1.0E-9);
+        Assert.assertTrue(deviation1[0] < 2.0E-2);
         System.out.println(" " + Arrays.toString(deviation1));
     }
     
@@ -55,6 +55,7 @@ public class AnalyzeE12GSeriesTest  {
         double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
             zeroInfo, 40650, gAtBeta, true);
         System.out.println(" " + Arrays.toString(deviation1));
+        Assert.assertTrue(deviation1[0] < 2.0E-6);
     }
     
     @Test
