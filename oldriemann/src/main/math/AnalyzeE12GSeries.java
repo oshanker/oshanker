@@ -655,6 +655,7 @@ public class AnalyzeE12GSeries {
             }
             if ( iter%10000 == 0) {
                 System.out.println(iter + " maxDev " + maxDev + " minDet " + minDet);
+                maxDev = 0;
             }
         }
         System.out.println("maxDev " + maxDev + " minDet " + minDet);
