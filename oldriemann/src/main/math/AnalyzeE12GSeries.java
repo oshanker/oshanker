@@ -113,6 +113,7 @@ public class AnalyzeE12GSeries {
                 }
                 neededZetaIncrement[2 * i] = -initial[2 * i];
                 if(Math.abs(neededZetaIncrement[2 * i]) > 1.0E6){
+                    System.out.println("neededZetaIncrement[2 * i] " + neededZetaIncrement[2 * i]);
                     bad = true;
                 }
                 neededZetaIncrement[2 * i + 1] = nextValues[indexIntoNext][1] - initial[2 * i + 1];
@@ -125,6 +126,7 @@ public class AnalyzeE12GSeries {
                 }
                 neededZetaIncrement[2 * i] = nextValues[indexIntoNext][2]-initial[2 * i];
                 if(Math.abs(neededZetaIncrement[2 * i]) > 1.0E6){
+                    System.out.println("odd i, max neededZetaIncrement[2 * i] " + neededZetaIncrement[2 * i]);
                     bad = true;
                 }
                 neededZetaIncrement[2 * i + 1] =  - initial[2 * i + 1];
@@ -138,7 +140,7 @@ public class AnalyzeE12GSeries {
             FixE12GSeries.printZeroInfo(zeroInfo);
             System.out.println("neededZetaIncrement ");
             System.out.println(Arrays.toString(neededZetaIncrement));
-            return new double[] {0, determinant};
+            throw new IllegalStateException("neededZetaIncrement ");
         }
     
         double[] solution = linearEquation.solve(
