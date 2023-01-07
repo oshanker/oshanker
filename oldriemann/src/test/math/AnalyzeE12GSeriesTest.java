@@ -59,6 +59,26 @@ public class AnalyzeE12GSeriesTest  {
     }
     
     @Test
+    public void testBad() {
+        double[][] badZeros = {
+            {6732.5882520169, -97.28131387798376, -32.93158982907843, 6732.856666403028},
+            {6733.135168405372, 67.83072697855856, 2.440186562197333, 6733.214071703634},
+            {6733.334922219515, -21.525001480626745, -0.7922264315072882, 6733.404754726609},
+            {6733.479186667505, 18.470110482016185, 2.0576277280678155, 6733.627163088824},
+            {6733.776490763871, -17.79314991310343, -1.113397864994599, 6733.899622036224},
+        };
+        LinkedList<double[]> zeroInfo = new LinkedList<>();
+        for (int i = 0; i < badZeros.length; i++) {
+            zeroInfo.add(badZeros[i]);
+        }
+        GSeries gAtBeta = Interpolate.readGSeries();
+        double[] deviation1 = AnalyzeE12GSeries.testChangeToZetaAndDer(
+            zeroInfo, 53270, gAtBeta, true);
+        System.out.println(" " + Arrays.toString(deviation1));
+        Assert.assertTrue(deviation1[0] < 2.0E-1);
+    }
+    
+    @Test
     public void testTestGetSavedGSeries1() {
         double firstZero = 248;
         final double stopValue = 243839.0;

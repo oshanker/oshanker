@@ -191,7 +191,7 @@ public class AnalyzeE12GSeries {
     }
     
     private static int[] getIndices(int idxCausingInfluence, double[] evalIndices) {
-        int[] indices = new int[evalIndices.length/2 + 2];
+        int[] indices = new int[evalIndices.length/2 + 1];
         int start = (int) Math.min(idxCausingInfluence, evalIndices[0]);
         for (int i = 0; i < indices.length; i++) {
             indices[i] = start   + i;
@@ -663,6 +663,8 @@ public class AnalyzeE12GSeries {
         System.out.println("==========");
         double nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
         System.out.println("Final: midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
+        String pathName = "out/gSeries" + Interpolate.prefix + "/corrected/gSeries.dat";
+        StaticMethods.storeG(gAtBeta, pathName);
         System.out.println("==========");
     }
     
