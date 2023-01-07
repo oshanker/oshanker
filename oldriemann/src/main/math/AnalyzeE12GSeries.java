@@ -191,7 +191,7 @@ public class AnalyzeE12GSeries {
     }
     
     private static int[] getIndices(int idxCausingInfluence, double[] evalIndices) {
-        int[] indices = new int[evalIndices.length/2 + 1];
+        int[] indices = new int[evalIndices.length/2 ];
         int start = (int) Math.min(idxCausingInfluence, evalIndices[0]);
         for (int i = 0; i < indices.length; i++) {
             indices[i] = start   + i;
@@ -610,7 +610,8 @@ public class AnalyzeE12GSeries {
         double begin = gAtBeta.begin + (initialPadding - 18) * gAtBeta.spacing;
         LinkedList<double[]> zeroInfo = new LinkedList<>();
         System.out.println("==========");
-        int desiredSize = 5;
+        String pathName = "out/gSeries" + Interpolate.prefix + "/posmax/gSeries.dat";
+        int desiredSize = 6;
         initZeroInfo(
             zeroIn, begin + 6 * gAtBeta.spacing, zeroInfo, desiredSize);
         System.out.println("init done ==========");
@@ -656,6 +657,7 @@ public class AnalyzeE12GSeries {
             if ( iter%10000 == 0) {
                 System.out.println(iter + " maxDev " + maxDev + " minDet " + minDet);
                 maxDev = 0;
+                minDet = Double.MAX_VALUE;
             }
         }
         System.out.println("maxDev " + maxDev + " minDet " + minDet);
@@ -663,7 +665,6 @@ public class AnalyzeE12GSeries {
         System.out.println("==========");
         double nextValue = gAtBeta.begin + midIdxCausingInfluence * gAtBeta.spacing;
         System.out.println("Final: midIdx " + midIdxCausingInfluence + " nextValue " + nextValue);
-        String pathName = "out/gSeries" + Interpolate.prefix + "/corrected/gSeries.dat";
         StaticMethods.storeG(gAtBeta, pathName);
         System.out.println("==========");
     }
