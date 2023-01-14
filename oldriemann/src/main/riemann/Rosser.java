@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package riemann;
 
@@ -25,203 +25,210 @@ import riemann.Rosser.GramBlock.TYPE;
  */
 public class Rosser {
     static NumberFormat nf = NumberFormat.getInstance();
+    
     static {
         nf.setMinimumFractionDigits(13);
         nf.setMaximumFractionDigits(13);
         nf.setGroupingUsed(false);
     }
-	static HashMap<String, GramBlock> rosser = new HashMap<>();
+    
+    static HashMap<String, GramBlock> rosser = new HashMap<>();
     static int[][] intervalCounts = new int[2][6];
     static int[] goodIntervalCounts = new int[intervalCounts[0].length];
     static int[] badIntervalCounts = new int[intervalCounts[0].length];
-	private static int maxS = 10;
-	static int pEvenGood = 0, pEvenBad = 0;
-	static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
-	private static int goodCount;
-	private static int badCount;
-    public static Map<String,String> configParams;
+    private static int maxS = 10;
+    static int pEvenGood = 0, pEvenBad = 0;
+    static int goodBad = 0, badGood = 0, goodGood = 0, badBad = 0;
+    private static int goodCount;
+    private static int badCount;
+    public static Map<String, String> configParams;
     
     /**
      * last three zeros
      */
-    public static double[] zeros = new double[] {Double.NEGATIVE_INFINITY, 
-    		Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
+    public static double[] zeros = new double[]{Double.NEGATIVE_INFINITY,
+        Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
     };
     /**
      * last three derivatives
      */
-    public static double[] derivatives = new double[] {Double.NEGATIVE_INFINITY,
-    		Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
+    public static double[] derivatives = new double[]{Double.NEGATIVE_INFINITY,
+        Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
     };
     /**
      * last three extrema
      */
-    public static double[] extrema = new double[] {Double.NEGATIVE_INFINITY,
+    public static double[] extrema = new double[]{Double.NEGATIVE_INFINITY,
         Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
     };
-	
-	// one instance per type of Gram Block and pattern
-	public static class GramBlock{
-	    enum TYPE{
-	        I,II,III,NOT_REGULAR;
-	    	int count;
-	    	TYPE get() {
-	    		count++;
-				return this;
-	    	}
-	    }
-	    TYPE type;
-	    double occurrence;
-	    String pattern;
-	    static int blocks = 0;
+    
+    // one instance per type of Gram Block and pattern
+    public static class GramBlock {
+        enum TYPE {
+            I, II, III, NOT_REGULAR;
+            int count;
+            
+            TYPE get() {
+                count++;
+                return this;
+            }
+        }
+        
+        TYPE type;
+        double occurrence;
+        String pattern;
+        static int blocks = 0;
+        
         public GramBlock(String pattern, int blockZerosCount) {
-        	blocks++;
+            blocks++;
             this.occurrence = 1;
             this.pattern = pattern;
             int len = pattern.length();
-            if(blockZerosCount==len ){
+            if (blockZerosCount == len) {
                 //we are in a regular Gram block
-                if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='0'){
+                if (pattern.charAt(0) == '0' && pattern.charAt(len - 1) == '0') {
                     type = TYPE.III.get();
-                }else if(pattern.charAt(0)=='0' && pattern.charAt(len-1)=='2'){
+                } else if (pattern.charAt(0) == '0' && pattern.charAt(len - 1) == '2') {
                     type = TYPE.II.get();
-                }else if(pattern.charAt(0)=='2' && pattern.charAt(len-1)=='0'){
+                } else if (pattern.charAt(0) == '2' && pattern.charAt(len - 1) == '0') {
                     type = TYPE.I.get();
-                }else {
+                } else {
                     throw new IllegalStateException();
                 }
-            }else{
+            } else {
                 type = TYPE.NOT_REGULAR.get();
             }
         }
-	    @Override
-		public String toString() {
-			return "GramBlock [type=" + type + ", occurrence=" + occurrence + ", pattern=" + pattern + "]";
-		}
-		public void increment(){
-        	blocks++;
-			type.get();
-	        occurrence++;
-	    }
-	}
-	
-	/**
-	 * 
-	 * 
-	 *
-	 */
-	public static class ZeroInfo{
-		final int countZeros;
-		public final double[] lastZero;
-		//zero, slope, max
-		public  final double[] nextValues;
-		
-		ZeroInfo(int countZeros2, double[] lastZero, double[] nextValues) {
-               this.nextValues = nextValues;
-               this.countZeros = countZeros2;
-               this.lastZero = lastZero;
+        
+        @Override
+        public String toString() {
+            return "GramBlock [type=" + type + ", occurrence=" + occurrence + ", pattern=" + pattern + "]";
         }
-
+        
+        public void increment() {
+            blocks++;
+            type.get();
+            occurrence++;
+        }
+    }
+    
+    /**
+     *
+     *
+     *
+     */
+    public static class ZeroInfo {
+        final int countZeros;
+        public final double[] lastZero;
+        //zero, slope, max
+        public final double[] nextValues;
+        
+        ZeroInfo(int countZeros2, double[] lastZero, double[] nextValues) {
+            this.nextValues = nextValues;
+            this.countZeros = countZeros2;
+            this.lastZero = lastZero;
+        }
+        
         public ZeroInfo(int countZeros2, ZeroInfo zeroInfo) {
             this(countZeros2, zeroInfo.lastZero, zeroInfo.nextValues);
         }
-	}
-	
-	static void println(PrintStream out, String message){
-		if(out != null){
-			out.println(message);
-		}
-	}
-	
-	static void print(PrintStream out, String message){
-		if(out != null){
-			out.print(message);
-		}
-	}
-	
-	public static ZeroInfo readZeros(  double upperLimit, PrintStream out, 
-			BufferedReader[] zeroIn,  double[] nextValues)
-			throws FileNotFoundException, IOException {
-		ArrayList<Double> countZeros = new ArrayList<>();
-		boolean skipParse = true;
-		String[] input = new String[zeroIn.length];
-		double[] lastValue  = new double[zeroIn.length];
-		if(nextValues == null){
-		    skipParse = false;
+    }
+    
+    static void println(PrintStream out, String message) {
+        if (out != null) {
+            out.println(message);
+        }
+    }
+    
+    static void print(PrintStream out, String message) {
+        if (out != null) {
+            out.print(message);
+        }
+    }
+    
+    public static ZeroInfo readZeros(double upperLimit, PrintStream out,
+                                     BufferedReader[] zeroIn, double[] nextValues)
+        throws FileNotFoundException, IOException {
+        ArrayList<Double> countZeros = new ArrayList<>();
+        boolean skipParse = true;
+        String[] input = new String[zeroIn.length];
+        double[] lastValue = new double[zeroIn.length];
+        if (nextValues == null) {
+            skipParse = false;
             nextValues = new double[zeroIn.length];
-		    for (int i = 0; i < input.length; i++) {
-	            input[i] = zeroIn[i].readLine();
+            for (int i = 0; i < input.length; i++) {
+                input[i] = zeroIn[i].readLine();
             }
-            if(input[0] == null || input[0].trim().length()==0){
+            if (input[0] == null || input[0].trim().length() == 0) {
                 System.out.println("done");
                 return null;
             }
-		}
-		double zero = 0;
-		while (zero < upperLimit ) {
-			if(skipParse){
-			    zero = nextValues[0];
-			    skipParse = false;
+        }
+        double zero = 0;
+        while (zero < upperLimit) {
+            if (skipParse) {
+                zero = nextValues[0];
+                skipParse = false;
 //	            for (int i = 0; i < input.length; i++) {
 //	                lastValue[i] = nextValues[i];
 //	            }
-			} else {
-    			input[0] = input[0].trim();
+            } else {
+                input[0] = input[0].trim();
                 String[] parsed = input[0].split("\\s+");
                 zero = Double.parseDouble(parsed[0]);
-                if(zero < 0){
+                if (zero < 0) {
                     break;
                 }
-    			if(parsed.length>1){
-    				zero += Double.parseDouble(parsed[1]);
-    			} 
+                if (parsed.length > 1) {
+                    zero += Double.parseDouble(parsed[1]);
+                }
                 nextValues[0] = zero;
                 for (int i = 1; i < input.length; i++) {
                     input[i] = input[i].trim();
                     nextValues[i] = Double.parseDouble(input[i]);
                 }
                 update(nextValues);
-			}
-   
-			if(zero >= upperLimit){
-				break;
-			}
-			print( out, zero + ",");
+            }
+            
+            if (zero >= upperLimit) {
+                break;
+            }
+            print(out, zero + ",");
             for (int i = 0; i < input.length; i++) {
                 lastValue[i] = nextValues[i];
             }
-			countZeros.add(zero);
+            countZeros.add(zero);
             for (int i = 0; i < input.length; i++) {
                 input[i] = zeroIn[i].readLine();
             }
-            if(input[0] == null || input[0].trim().length()==0){
+            if (input[0] == null || input[0].trim().length() == 0) {
                 System.out.println("done");
                 return null;
             }
-		}
-		println(out, Integer.toString(countZeros.size()));
-		return new ZeroInfo(countZeros.size(), lastValue, nextValues);
-	}
-	
-	private static void update(double[] nextValues) {
-		zeros[0] = zeros[1];
-		zeros[1] = zeros[2];
-		zeros[2] = nextValues[0];
-		if (nextValues.length>1) {
+        }
+        println(out, Integer.toString(countZeros.size()));
+        return new ZeroInfo(countZeros.size(), lastValue, nextValues);
+    }
+    
+    private static void update(double[] nextValues) {
+        zeros[0] = zeros[1];
+        zeros[1] = zeros[2];
+        zeros[2] = nextValues[0];
+        if (nextValues.length > 1) {
             derivatives[0] = derivatives[1];
             derivatives[1] = derivatives[2];
             derivatives[2] = nextValues[1];
             extrema[0] = extrema[1];
             extrema[1] = extrema[2];
-            extrema[2] = nextValues[1]>0?nextValues[2]:-nextValues[2];
-		}
-		
-	}
-
-	public static Map<String,String> readConfig(String configFile) throws IOException{
-	    configParams = new HashMap<>();
-        try(BufferedReader configIn = new BufferedReader(
-                new FileReader(configFile))) {
+            extrema[2] = nextValues[1] > 0 ? nextValues[2] : -nextValues[2];
+        }
+        
+    }
+    
+    public static Map<String, String> readConfig(String configFile) throws IOException {
+        configParams = new HashMap<>();
+        try (BufferedReader configIn = new BufferedReader(
+            new FileReader(configFile))) {
             String input = configIn.readLine();
             int line = 1;
             boolean inCommentSection = false;
@@ -254,225 +261,228 @@ public class Rosser {
             }
         }
         return configParams;
-	}
-
+    }
+    
     public static BufferedReader[] getZerosFile() throws FileNotFoundException {
         String zerosFile = getParam("zerosFile");
         System.out.println("zerosFile " + zerosFile);
-        BufferedReader[] zeroIn = 
-                {new BufferedReader(new FileReader(zerosFile))};
+        BufferedReader[] zeroIn =
+            {new BufferedReader(new FileReader(zerosFile))};
         return zeroIn;
     }
-	
-	private static void readItems(  PrintStream out, double baseLimit, int N)
-			throws FileNotFoundException, IOException {
-	    BufferedReader[] zeroIn = getZerosFile();
+    
+    private static void readItems(PrintStream out, double baseLimit, int N)
+        throws FileNotFoundException, IOException {
+        BufferedReader[] zeroIn = getZerosFile();
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int signumGram = Rosser.getParamInt("signumGram");
         int noffset = Rosser.getParamInt("noffset");
         int correction = 0;
-        if(Rosser.configParams.containsKey("correction")){
+        if (Rosser.configParams.containsKey("correction")) {
             correction = Rosser.getParamInt("correction");
         }
         BigDecimal offset = null;
-        if(configParams.containsKey("toffset")){
+        if (configParams.containsKey("toffset")) {
             String toffset = getParam("toffset");
             offset = new BigDecimal(toffset);
         }
         String header = getParam("header");
-		//assuming that we start at a good regular (odd/even-hiary) Gram Point
-		int count = 0;
-		ZeroInfo zeroInput = readZeros(baseLimit, out, zeroIn, null);
-		boolean oldGood = true;
-		boolean good = false;
-		boolean inGramBlock = false;
-		String interval = null;
-		goodCount = 0; badCount = 0;
-		boolean evenInterval = false;
-		println(out, header);
-		int S = 0;//starting at regular Gram Point
-		int blockZerosCount = 0;
-		while (count < N  ) {
-			int n = count + noffset;
-			double upperLimit = baseLimit + (n-correction-1)* (gramIncr);
-			if(offset != null && count%1000000 == 0){
-			    double localGram = Gram.gramInterval(offset.add(BigDecimal.valueOf(upperLimit), Gram.mc));
-			    System.out.println(count + ": " + upperLimit + ", " + (localGram-gramIncr));
-			}
-			//at entry, upperLimit=244.264758217468505 for e12
-			//first zero is 244.158906912980683962
-			//prev gram is 244.02115917156451839965694310614387
-			//idx at entry is 3945951431270L + 2
-			if((n%2 == 1 && signumGram <= 0) || (n%2 == 0 && signumGram > 0)){
-				print(out, n + ", 1 , " + S + ", " + nf.format(upperLimit-gramIncr));
-				good = true;
-				goodCount++;
-			} else {
-				print(out, n + ", 0 , " + S + ", " + nf.format(upperLimit-gramIncr));
-				good = false;
-				badCount++;
-			}
-			//still dealing with old interval ( n)
-			if(!(good ^ oldGood)){
-				//both good or both bad
-				println(out, "" );
-			    if(evenInterval){
-			    	throw new IllegalStateException();
-			    }
-				if(inGramBlock){
-					interval += zeroInput.countZeros;
-			        blockZerosCount += zeroInput.countZeros;
-					badBad++;
-				} else {
-					goodGood++;
-				}
-			} else {
-				//transition
-				if(inGramBlock){
-					interval += zeroInput.countZeros;
+        //assuming that we start at a good regular (odd/even-hiary) Gram Point
+        int count = 0;
+        ZeroInfo zeroInput = readZeros(baseLimit, out, zeroIn, null);
+        boolean oldGood = true;
+        boolean good = false;
+        boolean inGramBlock = false;
+        String interval = null;
+        goodCount = 0;
+        badCount = 0;
+        boolean evenInterval = false;
+        println(out, header);
+        int S = 0;//starting at regular Gram Point
+        int blockZerosCount = 0;
+        while (count < N) {
+            int n = count + noffset;
+            double upperLimit = baseLimit + (n - correction - 1) * (gramIncr);
+            if (offset != null && count % 1000000 == 0) {
+                double localGram = Gram.gramInterval(offset.add(BigDecimal.valueOf(upperLimit), Gram.mc));
+                System.out.println(count + ": " + upperLimit + ", " + (localGram - gramIncr));
+            }
+            //at entry, upperLimit=244.264758217468505 for e12
+            //first zero is 244.158906912980683962
+            //prev gram is 244.02115917156451839965694310614387
+            //idx at entry is 3945951431270L + 2
+            if ((n % 2 == 1 && signumGram <= 0) || (n % 2 == 0 && signumGram > 0)) {
+                print(out, n + ", 1 , " + S + ", " + nf.format(upperLimit - gramIncr));
+                good = true;
+                goodCount++;
+            } else {
+                print(out, n + ", 0 , " + S + ", " + nf.format(upperLimit - gramIncr));
+                good = false;
+                badCount++;
+            }
+            //still dealing with old interval ( n)
+            if (!(good ^ oldGood)) {
+                //both good or both bad
+                println(out, "");
+                if (evenInterval) {
+                    throw new IllegalStateException();
+                }
+                if (inGramBlock) {
+                    interval += zeroInput.countZeros;
                     blockZerosCount += zeroInput.countZeros;
-				    println(out,  ", exited gram Block: config " + interval);
-				    if(rosser.containsKey(interval)){
-				        rosser.get(interval).increment();
-				    } else {
-				    	rosser.put(interval, new GramBlock(interval, blockZerosCount));
-				    }
-				    if(oldGood || !evenInterval){
-				    	throw new IllegalStateException();
-				    }
-				    
-				    badGood++;
-				} else {
-					interval = Integer.toString(zeroInput.countZeros);
+                    badBad++;
+                } else {
+                    goodGood++;
+                }
+            } else {
+                //transition
+                if (inGramBlock) {
+                    interval += zeroInput.countZeros;
+                    blockZerosCount += zeroInput.countZeros;
+                    println(out, ", exited gram Block: config " + interval);
+                    if (rosser.containsKey(interval)) {
+                        rosser.get(interval).increment();
+                    } else {
+                        rosser.put(interval, new GramBlock(interval, blockZerosCount));
+                    }
+                    if (oldGood || !evenInterval) {
+                        throw new IllegalStateException();
+                    }
+                    
+                    badGood++;
+                } else {
+                    interval = Integer.toString(zeroInput.countZeros);
                     blockZerosCount = zeroInput.countZeros;
-					println(out, ", entered gram Block" );
-					goodBad++;
-				    if(!oldGood || !evenInterval){
-				    	throw new IllegalStateException();
-				    }
-				}
-				inGramBlock = !inGramBlock;
-			}
-			//fetching zero count for current interval
-			zeroInput = readZeros(upperLimit , out, zeroIn,  
-			        zeroInput.nextValues);
-			if (count==N-1) {
-				System.out.println("final n " + n + " good " + good + " signumGram " + signumGram);
-			}
-			if (zeroInput==null) {
-				break;
-			}
-			//store odd in 0, this is for current interval
-			intervalCounts[0][zeroInput.countZeros]++;
-			if(good){
-			    goodIntervalCounts[zeroInput.countZeros]++;
-			} else {
+                    println(out, ", entered gram Block");
+                    goodBad++;
+                    if (!oldGood || !evenInterval) {
+                        throw new IllegalStateException();
+                    }
+                }
+                inGramBlock = !inGramBlock;
+            }
+            //fetching zero count for current interval
+            zeroInput = readZeros(upperLimit, out, zeroIn,
+                zeroInput.nextValues);
+            if (count == N - 1) {
+                System.out.println("final n " + n + " good " + good + " signumGram " + signumGram);
+            }
+            if (zeroInput == null) {
+                break;
+            }
+            //store odd in 0, this is for current interval
+            intervalCounts[0][zeroInput.countZeros]++;
+            if (good) {
+                goodIntervalCounts[zeroInput.countZeros]++;
+            } else {
                 badIntervalCounts[zeroInput.countZeros]++;
-			}
-
-			S += zeroInput.countZeros - 1;
-			if(Math.abs(S) > maxS ){
-				System.out.println("S " + S + ", n " + n + ", zeroInput.countZeros " + zeroInput.countZeros );
-			}
-			if(zeroInput.countZeros%2 == 1){
-				signumGram = signumGram==-1?1:-1;
-				evenInterval = false;
-			} else {
-				evenInterval = true;
-			}
-			oldGood = good;
-			count++;
-		}
-		double ratio = ((double)badCount)/(goodCount+badCount);
-		System.out.println("goodCount " + goodCount + " badCount " + badCount + " " + ratio);
+            }
+            
+            S += zeroInput.countZeros - 1;
+            if (Math.abs(S) > maxS) {
+                System.out.println("S " + S + ", n " + n + ", zeroInput.countZeros " + zeroInput.countZeros);
+            }
+            if (zeroInput.countZeros % 2 == 1) {
+                signumGram = signumGram == -1 ? 1 : -1;
+                evenInterval = false;
+            } else {
+                evenInterval = true;
+            }
+            oldGood = good;
+            count++;
+        }
+        double ratio = ((double) badCount) / (goodCount + badCount);
+        System.out.println("goodCount " + goodCount + " badCount " + badCount + " " + ratio);
         for (int i = 0; i < zeroIn.length; i++) {
             zeroIn[i].close();
         }
-	}
-
+    }
+    
     public static String getParam(String key) {
         String header = configParams.get(key);
-        if(header != null) {
-           header = header.substring(1, header.length()-1);
+        if (header != null) {
+            header = header.substring(1, header.length() - 1);
         }
         return header;
     }
-
+    
     public static int getParamInt(String key) {
         int header = Integer.parseInt(configParams.get(key));
         return header;
     }
-
+    
     public static double getParamDouble(String key) {
         double header = Double.parseDouble(configParams.get(key));
         return header;
     }
-
-    private static void calculateRatio(String key,  GramBlock block, double[][] ratio) {
+    
+    private static void calculateRatio(String key, GramBlock block, double[][] ratio) {
         int len = key.length();
         char[] chars = key.toCharArray();
         chars[0] = '2';
-        chars[len-1]='0';
+        chars[len - 1] = '0';
         String typeI = new String(chars);
-        if(rosser.containsKey(typeI)){
-            ratio[len-2][0]=block.occurrence;
-            ratio[len-2][1] = rosser.get(new String(typeI)).occurrence;
+        if (rosser.containsKey(typeI)) {
+            ratio[len - 2][0] = block.occurrence;
+            ratio[len - 2][1] = rosser.get(new String(typeI)).occurrence;
         }
-        return ;
+        return;
     }
-
-    private static void calculateRatio3(String key,  GramBlock block, double[][] ratio) {
+    
+    private static void calculateRatio3(String key, GramBlock block, double[][] ratio) {
         int len = key.length();
         int idx = key.indexOf('3');
-        if(len%2==1 && idx == len/2){
-            return ;
+        if (len % 2 == 1 && idx == len / 2) {
+            return;
         }
-        if( idx != 1 && idx != len-2){
-            return ;
+        if (idx != 1 && idx != len - 2) {
+            return;
         }
-        if(idx < len/2){
-            ratio[len-2][0] += block.occurrence;
+        if (idx < len / 2) {
+            ratio[len - 2][0] += block.occurrence;
         } else {
-            ratio[len-2][1] += block.occurrence;
+            ratio[len - 2][1] += block.occurrence;
         }
-        return ;
+        return;
     }
+    
     private static String reverse(String data) {
         int length = data.length();
         char[] reversed = new char[length];
         for (int i = 0; i < length; i++) {
-            reversed[length-i-1] = data.charAt(i);
+            reversed[length - i - 1] = data.charAt(i);
         }
         return new String(reversed);
     }
     
     /**
      * @param args
-     * @throws IOException 
-     * @throws FileNotFoundException 
+     * @throws IOException
+     * @throws FileNotFoundException
      */
     public static void main(String[] args) throws Exception {
         readConfig("data/RosserConfig.txt");
+        boolean verbose = false;
         PrintStream out = null;
         int N = Rosser.getParamInt("N");
         if (N <= 125) {
-              File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
-              if (!file.exists()) {
-                  try {
-                      file.createNewFile();
-                  } catch (IOException e) {
-                      e.printStackTrace();
-                  }
-              }
-              try {
-                  out = new PrintStream(file);
-              } catch (FileNotFoundException e) {
-                  e.printStackTrace();
-              }
+            File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                out = new PrintStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         //int displacementCount = 1;
         int displacementCount = 5;
-        if(configParams.containsKey("displacementCount")){
+        if (configParams.containsKey("displacementCount")) {
             displacementCount = Integer.parseInt(configParams.get("displacementCount"));
         }
         double[][] typeIIratios = new double[10][displacementCount];
@@ -481,6 +491,9 @@ public class Rosser {
         double gramIncr = Rosser.getParamDouble("gramIncr");
         for (int displacement = 0; displacement < displacementCount; displacement++) {
             rosser.clear();
+            for (TYPE type: TYPE.values()) {
+                type.count = 0;
+            }
             for (int j = 0; j < intervalCounts.length; j++) {
                 for (int i = 0; i < intervalCounts[j].length; i++) {
                     intervalCounts[j][i] = 0;
@@ -492,55 +505,71 @@ public class Rosser {
             for (int i = 0; i < badIntervalCounts.length; i++) {
                 badIntervalCounts[i] = 0;
             }
-            goodBad = 0; badGood = 0; goodGood = 0; badBad = 0;
+            goodBad = 0;
+            badGood = 0;
+            goodGood = 0;
+            badBad = 0;
+            double phi = (displacement - displacementCount / 2) / 10.0;
             System.out.println("displacement " + displacement);
-            readItems( out, baseLimit+(displacement-displacementCount/2)*gramIncr/10, N );
+            System.out.println("============== " + phi + " ==============");
+            readItems(out, baseLimit + phi * gramIncr, N);
             TreeSet<String>[] stats = new TreeSet[10];
             for (int i = 0; i < stats.length; i++) {
                 stats[i] = new TreeSet<String>();
             }
             
-            double[][]  ratio = new double[typeIIratios.length][];
+            double[][] ratio = new double[typeIIratios.length][];
             for (int i = 0; i < ratio.length; i++) {
                 ratio[i] = new double[]{0, 0};
             }
-
+            
             //System.out.println(rosser);
-            System.out.println(GramBlock.blocks);
+            System.out.println("GramBlock.blocks " + GramBlock.blocks);
             //[TYPE.values().length]
+            
             for (TYPE type : TYPE.values()) {
-				System.out.println(type + ": " + type.count);
-			}
+                System.out.println(type + ": " + type.count);
+            }
             for (String key : rosser.keySet()) {
                 GramBlock block = rosser.get(key);
                 block.type.ordinal();
-            	
+
 //                GramBlock reversedKey = rosser.get(reverse(key));
 //                System.out.println("***** " + key + " ***** " + rosser.get(key).occurrence
 //                        + ", reversed " + ((reversedKey==null)?0:reversedKey.occurrence) );
                 int len = key.length();
-                if(len>11){continue;}
-                int idx = len -2;
-                if(block.type == TYPE.II){
+                if (len > 11) {
+                    continue;
+                }
+                int idx = len - 2;
+                if (block.type == TYPE.II) {
                     calculateRatio(key, block, ratio);
                 }
 //                if(block.type == TYPE.III){
 //                    calculateRatio3(key, block, ratio);
 //                }
-                if(idx < stats.length){
-                    stats[idx].add(key + " : " + block .occurrence);
+                if (idx < stats.length) {
+                    stats[idx].add(key + " : " + block.occurrence);
                 } else {
                     System.out.println("* " + key.length() + " " + key + " " + block.occurrence);
                 }
             }
             for (int i = 0; i < ratio.length; i++) {
-                if(ratio[i][0]<1 || (ratio[i][1]<1) ){
+                if (ratio[i][0] < 1 || (ratio[i][1] < 1)) {
                     continue;
                 }
 //                if( i > 5){
 //                    System.out.println(stats[i] + "\n" + Arrays.toString(ratio[i]));
 //                }
-                typeIIratios[i][displacement] = ratio[i][0]/ratio[i][1];
+                typeIIratios[i][displacement] = ratio[i][0] / ratio[i][1];
+            }
+            if(verbose) {
+                System.out.println(
+                    " ratio[0][0]" + ratio[0][0] +
+                        " ratio[0][1]" + ratio[0][1] +
+            
+                        " typeIIratios[0][" + displacement
+                        + "] " + typeIIratios[0][displacement]);
             }
             /*
             for (int i = 0; i < stats.length; i++) {
@@ -566,59 +595,64 @@ public class Rosser {
                 }
             }
     */
-     for (int i = 0; i < intervalCounts[0].length; i++) {
-          System.out.print((i==0?("goodIntervalCounts &"): " &") 
-                  + Conjectures.nf.format(((double)goodIntervalCounts[i])/goodCount)) ;
-      }
-     System.out.println(" \\\\");
-      for (int i = 0; i < intervalCounts[0].length; i++) {
-          System.out.print((i==0?("badIntervalCounts &"): " &") 
-                  + Conjectures.nf.format(((double)badIntervalCounts[i])/badCount)) ;
-      }
-      System.out.println(" \\\\");
-            System.out.println(" goodIntervalCounts "  + Arrays.toString(goodIntervalCounts) );
-            System.out.println(" badIntervalCounts "  + Arrays.toString(badIntervalCounts) );
-            for (int j = 0; j < intervalCounts.length; j++) {
-                int sum = 0;
-                for (int i = 0; i < intervalCounts[j].length; i++) {
-                    sum += i*intervalCounts[j][i];
+            if(verbose) {
+                for (int i = 0; i < intervalCounts[0].length; i++) {
+                    System.out.print((i == 0 ? ("goodIntervalCounts &") : " &")
+                        + Conjectures.nf.format(((double) goodIntervalCounts[i]) / goodCount));
                 }
-                System.out.println(" intervalCounts " + j + " "+ Arrays.toString(intervalCounts[j]) + " sum " + sum);
-                if(j==0){
+                System.out.println(" \\\\");
+                for (int i = 0; i < intervalCounts[0].length; i++) {
+                    System.out.print((i == 0 ? ("badIntervalCounts &") : " &")
+                        + Conjectures.nf.format(((double) badIntervalCounts[i]) / badCount));
+                }
+                System.out.println(" \\\\");
+                System.out.println(" goodIntervalCounts " + Arrays.toString(goodIntervalCounts));
+                System.out.println(" badIntervalCounts " + Arrays.toString(badIntervalCounts));
+                for (int j = 0; j < intervalCounts.length; j++) {
+                    int sum = 0;
                     for (int i = 0; i < intervalCounts[j].length; i++) {
-                        frequencies[displacement][i] = ((double)intervalCounts[j][i])/sum;
+                        sum += i * intervalCounts[j][i];
+                    }
+                    System.out.println(" intervalCounts " + j + " " + Arrays.toString(intervalCounts[j]) + " sum " + sum);
+                    if (j == 0) {
+                        for (int i = 0; i < intervalCounts[j].length; i++) {
+                            frequencies[displacement][i] = ((double) intervalCounts[j][i]) / sum;
+                        }
                     }
                 }
+                double count = goodCount + badCount;
+                double pGood = ((double) goodCount) / count;
+                double pBad = ((double) badCount) / count;
+                System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad
+                    + "\n sum " + (goodGood + badGood + goodBad + badBad));
+                System.out.println("pEvenBad " + ((double) badGood) / badCount + " pEvenGood " + ((double) goodBad) / goodCount + " ");
+                System.out.println("Table 10: pEvenBad/pEvenGood " + (((double) badGood) / badCount) / (((double) goodBad) / goodCount)
+                    + " pGood/pBad " + pGood / pBad);
             }
-            double count = goodCount+badCount;
-            double pGood = ((double)goodCount)/count ;
-            double pBad = ((double)badCount)/count;
-            System.out.println("goodGood " + goodGood + " badGood " + badGood + " goodBad " + goodBad + " badBad " + badBad
-                    + "\n sum " + (goodGood +  badGood +  goodBad +  badBad));
-            System.out.println("pEvenBad " + ((double)badGood)/badCount + " pEvenGood " + ((double)goodBad)/goodCount + " ");
-            System.out.println("Table 10: pEvenBad/pEvenGood " +( ((double)badGood)/badCount )/(((double)goodBad)/goodCount)
-                    + " pGood/pBad " + pGood/pBad);
+            System.out.println("=========================");
         }
         
         System.out.println("Table 6");
-
+        
         for (int j = 0; j < typeIIratios.length; j++) {
             for (int displacement = 0; displacement < displacementCount; displacement++) {
-                System.out.print((displacement==0?(j+2+" &"): "&") 
-                        + Conjectures.nf.format(typeIIratios[j][displacement] ) );
+                System.out.print((displacement == 0 ? (j + 2 + " & ") : "& ")
+                    + Conjectures.nf.format(typeIIratios[j][displacement]));
             }
             System.out.println(" \\\\");
         }
-
-        System.out.println("Product");
-
-        int minDisplacementCount = (displacementCount+1)/2;
-        for (int j = 0; j < typeIIratios.length; j++) {
-            for (int displacement = minDisplacementCount; displacement < displacementCount; displacement++) {
-                System.out.print((displacement==minDisplacementCount?(j+2+" &"): " &") 
-                        + Conjectures.nf.format(typeIIratios[j][displacement]* typeIIratios[j][displacementCount-1-displacement]) );
+    
+        if(verbose) {
+            System.out.println("Product");
+    
+            int minDisplacementCount = (displacementCount + 1) / 2;
+            for (int j = 0; j < typeIIratios.length; j++) {
+                for (int displacement = minDisplacementCount; displacement < displacementCount; displacement++) {
+                    System.out.print((displacement == minDisplacementCount ? (j + 2 + " &") : " &")
+                        + Conjectures.nf.format(typeIIratios[j][displacement] * typeIIratios[j][displacementCount - 1 - displacement]));
+                }
+                System.out.println(" \\\\");
             }
-            System.out.println(" \\\\");
         }
 //        for (int displacement = 0; displacement < displacementCount; displacement++) {
 //            double fracDisplacement = ((double)(displacement-displacementCount/2))/10.0d;
@@ -629,7 +663,9 @@ public class Rosser {
 //            System.out.println(" \\\\");
 //        }
         //      System.out.println(rosser);
-        if(out != null){out.close();}
+        if (out != null) {
+            out.close();
+        }
     }
-
+    
 }
