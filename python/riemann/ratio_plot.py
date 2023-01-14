@@ -25,8 +25,15 @@ def main():
             [10 , 361.615385, 13.306122, 0.949264, 0.057506, 0.004515 , ],
             [11 , 1397.000000, 34.533333, 1.027888, 0.041000, 0.001084 , ],
         ]
+    dataE12 =  [
+            [2, 3.167, 1.760, 1.000, 0.567, 0.316], 
+            [3, 7.323, 2.672, 0.993, 0.376, 0.138], 
+            [4, 20.958, 4.352, 0.982, 0.221, 0.043], 
+            [5, 170.829, 10.344, 1.041, 0.094, 0.008], 
+            [6, 1409.500, 35.516, 1.016, 0.023, 0.001], 
+        ]
     x = np.arange(-0.2, 0.3, 0.1)
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(dataE12)
     #df = df.T
     df.drop(df.columns[0], axis=1, inplace=True)
     print(df)
@@ -54,9 +61,10 @@ def main():
              label="5")
     plt.plot(x, df.iloc[4], 
              linestyle='-',
-             color='springgreen',
+             color='darkgoldenrod',
              #marker='v',
              label="6")
+    """
     plt.plot(x, df.iloc[5], 
              linestyle='-',
              color='black',
@@ -82,8 +90,9 @@ def main():
              color='darkgoldenrod',
              #marker='+',
              label="11")
+    """
     plt.grid(True)
-    plt.xlabel('displacement')
+    plt.xlabel(r'$\phi$')
     plt.ylabel('ratio')
     plt.ylim([0, 10])
 
