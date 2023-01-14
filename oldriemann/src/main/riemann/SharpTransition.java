@@ -31,7 +31,8 @@ public class SharpTransition {
     };
     
     public static void main(String[] args) throws Exception {
-        fitRatio(ratioE12);
+        printValues(ratioE12);
+        //fitRatio(ratioE12);
         //printValues(ratioE28);
     
     }
