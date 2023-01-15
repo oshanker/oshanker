@@ -92,8 +92,8 @@ def main():
              label="11")
     """
     plt.grid(True)
-    plt.xlabel(r'$\phi$')
-    plt.ylabel('ratio')
+    plt.xlabel(r'$\phi/\pi$')
+    plt.ylabel('Type II/Type I ratio')
     plt.ylim([0, 10])
 
     plt.title('sharp transition')
