@@ -289,7 +289,15 @@ public class Rosser {
         String header = getParam("header");
         //assuming that we start at a good regular (odd/even-hiary) Gram Point
         int count = 0;
-        ZeroInfo zeroInput = readZeros(baseLimit, out, zeroIn, null);
+        // in case we dont begin at first zero
+        ZeroInfo zeroInput;
+        if (Rosser.configParams.containsKey("initialZero")) {
+            double initialZero = Rosser.getParamDouble("initialZero");
+            zeroInput = readZeros(initialZero, out, zeroIn, null);
+            zeroInput = readZeros(baseLimit, out, zeroIn, zeroInput.nextValues);
+        } else {
+            zeroInput = readZeros(baseLimit, out, zeroIn, null);
+        }
         boolean oldGood = true;
         boolean good = false;
         boolean inGramBlock = false;
@@ -457,11 +465,13 @@ public class Rosser {
     
     /**
      noffset = 4
+     correction = 2
      signumGram = 1
      baseLimit = 244.508357263372492
      
      All go together
      noffset = 3
+     correction = 1
      signumGram = -1
      baseLimit = 244.264758217468505
      
