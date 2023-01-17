@@ -456,30 +456,21 @@ public class Rosser {
     }
     
     /**
-     * @param args
-     * @throws IOException
-     * @throws FileNotFoundException
+     noffset = 4
+     signumGram = 1
+     baseLimit = 244.508357263372492
+     
+     All go together
+     noffset = 3
+     signumGram = -1
+     baseLimit = 244.264758217468505
+     
      */
     public static void main(String[] args) throws Exception {
         readConfig("data/RosserConfig.txt");
         boolean verbose = false;
         PrintStream out = null;
         int N = Rosser.getParamInt("N");
-        if (N <= 125) {
-            File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
-            if (!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                out = new PrintStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
         //int displacementCount = 1;
         int displacementCount = 5;
         if (configParams.containsKey("displacementCount")) {
@@ -510,6 +501,23 @@ public class Rosser {
             goodGood = 0;
             badBad = 0;
             double phi = (displacement - displacementCount / 2) / 10.0;
+            if (N <= 125 && phi == 0.0) {
+                File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
+                if (!file.exists()) {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    out = new PrintStream(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                out = null;
+            }
             System.out.println("displacement " + displacement);
             System.out.println("============== " + phi + " ==============");
             readItems(out, baseLimit + phi * gramIncr, N);
