@@ -206,6 +206,8 @@ public class Rosser {
                 return null;
             }
         }
+        println(out,"");
+    
         return new ZeroInfo(countZeros.size(), lastValue, nextValues);
     }
     
@@ -292,7 +294,7 @@ public class Rosser {
         ZeroInfo zeroInput;
         if (Rosser.configParams.containsKey("initialZero")) {
             double initialZero = Rosser.getParamDouble("initialZero");
-            zeroInput = readZeros(initialZero, out, zeroIn, null);
+            zeroInput = readZeros(initialZero, null, zeroIn, null);
             zeroInput = readZeros(baseLimit, out, zeroIn, zeroInput.nextValues);
         } else {
             zeroInput = readZeros(baseLimit, out, zeroIn, null);
