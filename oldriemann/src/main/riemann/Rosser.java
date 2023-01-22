@@ -206,7 +206,6 @@ public class Rosser {
                 return null;
             }
         }
-        println(out, Integer.toString(countZeros.size()));
         return new ZeroInfo(countZeros.size(), lastValue, nextValues);
     }
     
@@ -414,6 +413,20 @@ public class Rosser {
         return header;
     }
     
+    public static double[] getParamDoubleArray(String key) {
+        String header = configParams.get(key);
+        if (header != null) {
+            // delimited by , end markers {}
+            header = header.substring(1, header.length() - 1);
+        }
+        String[] parsed = header.split(",");
+        double[] ret = new double[parsed.length];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = Double.parseDouble(parsed[i]);
+        }
+        return ret;
+    }
+    
     public static int getParamInt(String key) {
         int header = Integer.parseInt(configParams.get(key));
         return header;
@@ -490,6 +503,11 @@ public class Rosser {
         double[][] frequencies = new double[displacementCount][intervalCounts[0].length];
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
+        if (configParams.containsKey("phi")) {
+            double[] phiArray = Rosser.getParamDoubleArray("phi");
+            System.out.println(Arrays.toString(phiArray));
+        }
+        
         for (int displacement = 0; displacement < displacementCount; displacement++) {
             rosser.clear();
             for (TYPE type: TYPE.values()) {
