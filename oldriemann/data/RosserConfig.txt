@@ -6,19 +6,25 @@
 #zerosFile ="/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002"
 #get 10 lines der max
 zerosFile ="data/zerosE12.csv"
-#noffset = 2
+
+noffset = 2
+signumGram = 1
+baseLimit = 244.02115917156451839965694310614387
+phi = {-0.2, -0.1, 0, 0.1, 0.2}
+
+#beginComment ##################
 noffset = 10
 correction = 8
 signumGram = 1
 baseLimit = 245.969951538796412
 initialZero = 245.91655065008993
+#endComment ##################
+
 header = "n-3945951431270L,good, S"
-#baseLimit = 244.02115917156451839965694310614387
 gramIncr = 0.24359904590398668
 bdoffset = "1.0E12"
-phi = {-0.2,-0.1,0,0.1,0.2}
-#baseLimit = 244.02115917156451839965694310614387
-N = 1000001
+N = 100
+displacementCount = 1
 conjecturesOutFile="out/statsE12.csv"
 
 #beginComment

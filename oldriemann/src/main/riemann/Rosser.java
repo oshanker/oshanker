@@ -235,13 +235,13 @@ public class Rosser {
             boolean inCommentSection = false;
             while (input != null) {
                 input = input.trim();
-                if (input.equals("#endComment")) {
+                if (input.startsWith("#endComment")) {
                     if (!inCommentSection) {
                         throw new IllegalStateException("not in #beginComment: line " + line);
                     }
                     inCommentSection = false;
                 }
-                if (input.equals("#beginComment")) {
+                if (input.startsWith("#beginComment")) {
                     if (inCommentSection) {
                         throw new IllegalStateException("nested #beginComment: line " + line);
                     }
@@ -424,7 +424,7 @@ public class Rosser {
         String[] parsed = header.split(",");
         double[] ret = new double[parsed.length];
         for (int i = 0; i < ret.length; i++) {
-            ret[i] = Double.parseDouble(parsed[i]);
+            ret[i] = Double.parseDouble(parsed[i].trim());
         }
         return ret;
     }
@@ -496,25 +496,35 @@ public class Rosser {
         boolean verbose = false;
         PrintStream out = null;
         int N = Rosser.getParamInt("N");
-        //int displacementCount = 1;
-        int displacementCount = 5;
-        if (configParams.containsKey("displacementCount")) {
-            displacementCount = Integer.parseInt(configParams.get("displacementCount"));
+        double[] phiArray;
+        int displacementCount;
+        if (configParams.containsKey("phi")) {
+            phiArray = Rosser.getParamDoubleArray("phi");
+            System.out.println(Arrays.toString(phiArray));
+            displacementCount = phiArray.length;
+        } else {
+            if (configParams.containsKey("displacementCount")) {
+                displacementCount = Integer.parseInt(configParams.get("displacementCount"));
+            } else {
+                displacementCount = 5;
+            }
+            phiArray = new double[displacementCount];
+            for (int displacement = 0; displacement < displacementCount; displacement++) {
+                double phi = (displacement - displacementCount / 2) / 10.0;
+                phiArray[displacement] = phi;
+            }
         }
         double[][] typeIIratios = new double[10][displacementCount];
         double[][] frequencies = new double[displacementCount][intervalCounts[0].length];
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
-        if (configParams.containsKey("phi")) {
-            double[] phiArray = Rosser.getParamDoubleArray("phi");
-            System.out.println(Arrays.toString(phiArray));
-        }
         
         for (int displacement = 0; displacement < displacementCount; displacement++) {
             rosser.clear();
             for (TYPE type: TYPE.values()) {
                 type.count = 0;
             }
+            GramBlock.blocks = 0;
             for (int j = 0; j < intervalCounts.length; j++) {
                 for (int i = 0; i < intervalCounts[j].length; i++) {
                     intervalCounts[j][i] = 0;
@@ -530,7 +540,7 @@ public class Rosser {
             badGood = 0;
             goodGood = 0;
             badBad = 0;
-            double phi = (displacement - displacementCount / 2) / 10.0;
+            double phi = phiArray[displacement];
             if (N <= 125 && phi == 0.0) {
                 File file = new File(getParam("conjecturesOutFile").replace("stats", "rosser"));
                 if (!file.exists()) {
@@ -548,7 +558,6 @@ public class Rosser {
             } else {
                 out = null;
             }
-            System.out.println("displacement " + displacement);
             System.out.println("============== " + phi + " ==============");
             readItems(out, baseLimit + phi * gramIncr, N);
             TreeSet<String>[] stats = new TreeSet[10];
