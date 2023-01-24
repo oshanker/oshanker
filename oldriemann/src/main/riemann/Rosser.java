@@ -273,7 +273,8 @@ public class Rosser {
     }
     
     private static void readItems(PrintStream out, double baseLimit, int N)
-        throws FileNotFoundException, IOException {
+        throws IOException
+    {
         BufferedReader[] zeroIn = getZerosFile();
         double gramIncr = Rosser.getParamDouble("gramIncr");
         int signumGram = Rosser.getParamInt("signumGram");
@@ -288,6 +289,7 @@ public class Rosser {
             offset = new BigDecimal(toffset);
         }
         String header = getParam("header");
+        println(out, header + ",gramVal,prevDist,nextDist");
         //assuming that we start at a good regular (odd/even-hiary) Gram Point
         int count = 0;
         // in case we dont begin at first zero
@@ -306,7 +308,6 @@ public class Rosser {
         goodCount = 0;
         badCount = 0;
         boolean evenInterval = false;
-        println(out, header);
         int S = 0;//starting at regular Gram Point
         int blockZerosCount = 0;
         while (count < N) {
@@ -320,16 +321,26 @@ public class Rosser {
             //first zero is 244.158906912980683962
             //prev gram is 244.02115917156451839965694310614387
             //idx at entry is 3945951431270L + 2
+            double currentGram = upperLimit - gramIncr;
             if ((n % 2 == 1 && signumGram <= 0) || (n % 2 == 0 && signumGram > 0)) {
-                print(out, n + ", 1 , " + S + ", " + nf.format(upperLimit - gramIncr));
+                print(out, n + ", 1 , " + S + ", " + nf.format(currentGram));
                 good = true;
                 goodCount++;
             } else {
-                print(out, n + ", 0 , " + S + ", " + nf.format(upperLimit - gramIncr));
+                print(out, n + ", 0 , " + S + ", " + nf.format(currentGram));
                 good = false;
                 badCount++;
             }
-            //still dealing with old interval ( n)
+            double lastZero = zeroInput.lastZero[zeroInput.lastZero.length - 1];
+            if (lastZero > 0) {
+                double prevDist = (currentGram - lastZero) / gramIncr;
+                print(out, "," + nf.format(prevDist));
+            } else {
+                print(out, "," );
+            }
+            double nextDist = (zeroInput.nextValues[0]  - currentGram)/ gramIncr;
+            print(out,  "," +  nf.format(nextDist));
+                //still dealing with old interval ( n)
             if (!(good ^ oldGood)) {
                 //both good or both bad
                 println(out, "");
