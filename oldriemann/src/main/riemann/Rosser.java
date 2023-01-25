@@ -691,14 +691,8 @@ public class Rosser {
         }
         
         System.out.println("Table 6");
-        
-        for (int j = 0; j < typeIIratios.length; j++) {
-            for (int displacement = 0; displacement < displacementCount; displacement++) {
-                System.out.print((displacement == 0 ? (j + 2 + " & ") : "& ")
-                    + Conjectures.nf.format(typeIIratios[j][displacement]));
-            }
-            System.out.println(" \\\\");
-        }
+        table6(phiArray, typeIIratios);
+        table6Out(phiArray, typeIIratios);
     
         if(verbose) {
             System.out.println("Product");
@@ -712,6 +706,7 @@ public class Rosser {
                 System.out.println(" \\\\");
             }
         }
+        
 //        for (int displacement = 0; displacement < displacementCount; displacement++) {
 //            double fracDisplacement = ((double)(displacement-displacementCount/2))/10.0d;
 //            for (int i = 0; i < intervalCounts[0].length; i++) {
@@ -724,6 +719,55 @@ public class Rosser {
         if (out != null) {
             out.close();
         }
+    }
+    
+    private static void table6(double[] phiArray,  double[][] typeIIratios) {
+        int displacementCount = phiArray.length;
+        for (int displacement = 0; displacement < displacementCount; displacement++) {
+            System.out.print((displacement == 0 ? ( "l & ") : "& ")
+                + Conjectures.nf.format(phiArray[displacement]));
+        }
+        System.out.println(" \\\\");
+        for (int j = 0; j < typeIIratios.length; j++) {
+            for (int displacement = 0; displacement < displacementCount; displacement++) {
+                System.out.print((displacement == 0 ? (j + 2 + " & ") : "& ")
+                    + Conjectures.nf.format(typeIIratios[j][displacement]));
+            }
+            System.out.println(" \\\\");
+        }
+    }
+    
+    private static void table6Out(double[] phiArray,  double[][] typeIIratios) {
+        File file = new File(getParam("conjecturesOutFile")
+            .replace("stats", "ratio"));
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        PrintStream out;
+        try {
+            out = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+        int displacementCount = phiArray.length;
+        for (int displacement = 0; displacement < displacementCount; displacement++) {
+            print(out, (displacement == 0 ? ( "{0 , ") : ", ")
+                + Conjectures.nf.format(phiArray[displacement]));
+        }
+        println(out," },");
+        for (int j = 0; j < typeIIratios.length; j++) {
+            for (int displacement = 0; displacement < displacementCount; displacement++) {
+                print(out,
+                    (displacement == 0 ? ("{" + (j + 2) + " , ") : ", ")
+                    + Conjectures.nf.format(typeIIratios[j][displacement]));
+            }
+            println(out," },");
+        }
+        out.close();
     }
     
 }
