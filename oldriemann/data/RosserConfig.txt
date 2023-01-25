@@ -7,11 +7,15 @@
 #get 10 lines der max
 zerosFile ="data/zerosE12.csv"
 
+#beginComment ##################
 noffset = 2
 signumGram = 1
 baseLimit = 244.02115917156451839965694310614387
+#endComment ##################
 
+#beginComment ##################
 phi = {-0.2, -0.1, 0, 0.1, 0.2}
+#endComment ##################
 
 #beginComment ##################
 noffset = 10
@@ -21,10 +25,17 @@ baseLimit = 245.969951538796412
 initialZero = 245.91655065008993
 #endComment ##################
 
+noffset = 12
+correction = 10
+signumGram = 1
+baseLimit = 246.457149630604
+initialZero = 246.323123421973
+phi = {-0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9}
+
 header = "n-3945951431270L,good, S"
 gramIncr = 0.24359904590398668
 bdoffset = "1.0E12"
-N = 100
+N = 1000003
 displacementCount = 1
 conjecturesOutFile="out/statsE12.csv"
 

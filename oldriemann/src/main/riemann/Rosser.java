@@ -525,6 +525,8 @@ public class Rosser {
                 phiArray[displacement] = phi;
             }
         }
+        int[] typeICounts = new int[displacementCount];
+        int[] typeIICounts = new int[displacementCount];
         double[][] typeIIratios = new double[10][displacementCount];
         double[][] frequencies = new double[displacementCount][intervalCounts[0].length];
         double baseLimit = Rosser.getParamDouble("baseLimit");
@@ -588,6 +590,8 @@ public class Rosser {
             for (TYPE type : TYPE.values()) {
                 System.out.println(type + ": " + type.count);
             }
+            typeICounts[displacement] = TYPE.I.count;
+            typeIICounts[displacement] = TYPE.II.count;
             for (String key : rosser.keySet()) {
                 GramBlock block = rosser.get(key);
                 block.type.ordinal();
@@ -692,7 +696,7 @@ public class Rosser {
         
         System.out.println("Table 6");
         table6(phiArray, typeIIratios);
-        table6Out(phiArray, typeIIratios);
+        table6Out(phiArray, typeIIratios, typeICounts, typeIICounts);
     
         if(verbose) {
             System.out.println("Product");
@@ -737,7 +741,10 @@ public class Rosser {
         }
     }
     
-    private static void table6Out(double[] phiArray,  double[][] typeIIratios) {
+    private static void table6Out(
+        double[] phiArray, double[][] typeIIratios,
+        int[] typeICounts, int[] typeIICounts)
+    {
         File file = new File(getParam("conjecturesOutFile")
             .replace("stats", "ratio"));
         if (!file.exists()) {
@@ -767,6 +774,8 @@ public class Rosser {
             }
             println(out," },");
         }
+        println(out, "I  " + Arrays.toString(typeICounts));
+        println(out, "II " + Arrays.toString(typeIICounts));
         out.close();
     }
     
