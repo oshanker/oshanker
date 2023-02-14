@@ -1,0 +1,468 @@
+%-----------------------------------------------------------------------
+% 
+%-----------------------------------------------------------------------
+%
+%     
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[twoside]{article}
+\usepackage{amsmath,amsthm,amssymb,verbatim}
+
+%     If your article includes graphics, uncomment this command.
+\usepackage{graphicx}
+
+%     If the article includes commutative diagrams, ...
+%\usepackage[cmtip,all]{xy}
+
+\usepackage{url}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
+
+	\addtolength{\oddsidemargin}{1cm}
+	\addtolength{\evensidemargin}{-1cm}
+
+\setcounter{page}{1}
+
+\begin{document}
+
+%     If you need symbols beyond the basic set, uncomment this command.
+%\usepackage{amssymb}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{xca}[theorem]{Exercise}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+
+\date{}
+\lhead[]{}
+\chead[\underline{Circular Unitary Ensemble  Value Distribution}]{\it{O. Shanker}}
+\rhead[]{}
+
+% \title[short text for running head]{full title}
+\title{\bf{Random Matrix Theory explanation for Riemann Zeta Value Distribution Symmetry}}
+
+\maketitle
+
+
+%    author one information
+% \author[short version for running head]{name for top of paper}
+\author{{\textbf{O. Shanker}},}
+\thanks{ Mountain View, CA 94041, U. S. A. email: oshanker@gmail.com}
+
+\thispagestyle{fancy}
+
+%    Abstract is required.
+\begin{abstract}
+We show that the value distribution 
+of the characteristic polynomial of the Circular Unitary Ensemble (CUE) at discrete points
+can be expressed in terms of three functions 
+which do not depend on the angle characterizing the Generalized Gram point.
+These relationships are very similar to those  observed for 
+the Riemann zeta function and Dirichlet $L$ functions.
+\end{abstract}
+{\textbf {Keywords}:} Circular Unitary Ensemble, Riemann zeta, Value Distribution, Symmetry 
+{\textbf {Mathematics Subject Classification (MSC)}:} 11M06, 11-04.
+
+
+\symbolfootnote[0]{*}
+
+
+\section{Introduction}
+
+Inspired by striking new results found for the value distribution of the Riemann zeta function and Dirichlet $L$ functions,
+we searched for similar results for the Circular Unitary Ensemble (CUE)
+at discrete points. We did the study because of the well-known correspondence between the
+zeros of the Riemann zeta function and the eigenvalues of Random Matrix Theory (RMT).
+We show that the value distribution 
+can be expressed in terms of three  functions 
+which do not depend on the angle characterizing the Generalized Gram point. 
+
+RMT has found applications~\cite{KeatingSnaith 2000,Odlyzko 1992} 
+in many areas of physics, mathematics,  probability, statistics, and engineering. 
+ RMT is closely associated with the study of the zeroes of the Riemann zeta function 
+ and Generalized Zeta functions. The zeros are of interest to mathematicians and physicists. 
+Mathematicians 
+study the spacings because of its applications to analytic number theory, 
+while physicists study it because of its  relation 
+to the theory of the spectra of random matrix theories 
+and the spectra of classically chaotic quantum systems.
+Ref.~\cite{Chhaibi 2014} shows that the characteristic polynomial 
+of the CUE has a limiting form when properly rescaled. 
+See Ref.~\cite{Francesco 2007,os6, Hanga 2020} for  further references,
+examples and discussion. 
+ Ref.~\cite{KeatingSnaith 2000} shows that the CUE provides
+a good model for the moments and other properties of the $|\zeta(1/2 + it)|$.
+
+We were motivated to do the current study because of almost identical 
+properties observed
+for the Riemann zeta function and Dirichlet $L$ functions. 
+Ref.~\cite{Shanker 2018a,Shanker 2018b} studied empirically 
+the distribution of $Z(t)$ values 
+at Gram points and showed  that  the  value
+distribution of the Hardy $Z$ function at discrete points is anti-symmetrical for 
+reflections around the mid-points of the Gram intervals (Eq.~\ref{eq:Rieantisym}) 
+and symmetrical for reflections around the Gram points(Eq.~\ref{eq:Riesym}). 
+Ref.~\cite{Shanker 2020} showed that the value distribution of the Riemann zeta function 
+can be expressed in terms of three  functions 
+ which do not depend on the angle characterizing the Generalized Gram point. 
+Ref.~\cite{Shanker 2022} showed similar results for the Dirichlet $L$ functions.
+
+\section{\label{sec2}Materials and Methods: the Riemann zeta function}
+
+In this section we  establish the required notation for the 
+Riemann Zeta Function. This will help us to define the
+corresponding quantities for the CUE characteristic polynomial.
+For $\mathrm{Re} (s) > 1$ the Riemann Zeta function is defined as
+\begin{equation}
+\zeta ( s ) \, = \, \sum^{\infty}_{n = 1} \; n^{-s} \, = \, \prod_{p \in primes} \;
+\left( 1 - p^{-s} \right)^{-1}.
+\label{eqRie}
+\end{equation}
+ $\zeta ( s )$ can be continued to
+the complex plane. Riemann's hypothesis, that the non-trivial zeros of $\zeta ( s )$ lie on the 
+critical axis $1/2+it$, is probably the most famous unsolved problem in mathematics.
+The mean spacing $\delta$ of the zeros  at large height $T$ is $\delta = 2\pi(\ln (T/2\pi))^{-1}$. 
+One defines Hardy's function
+\begin{equation}
+Z(t)=exp(i\theta_{Riemann}(t))\zeta(1/2 +it) 
+\label{eq:hardy}
+\end{equation}
+where 
+\begin{equation}
+\theta_{Riemann}(t) = arg (\pi^{it/2} \Gamma(\frac{1}{4} + \frac{it}{2})). 
+\label{eq:theta}
+\end{equation}
+We use the subscript in $\theta_{Riemann}$ to differentiate this $\theta$ from the 
+one which occurs in the study of the CUE matrices.
+The argument in Eq.~\ref{eq:theta} is defined by continuous variation of $t$ 
+starting with the value $0$ at $t = 0$.
+$Z(t)$ is real valued for real $t$,
+and we have $|Z(t)| = |\zeta(1/2+it)|$. Thus the zeros of $Z(t)$ are the 
+imaginary part of the zeros 
+of $\zeta(s)$ which lie on the critical line.  
+
+Gram points play an important role in the the theory because many of the 
+zeros are separated by them.  
+When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
+For $n \ge -1$, the $n$-th Gram point $g_n$ is defined as the unique solution $> 7$ to
+$\theta_{Riemann} (g_n) = n\pi$. A Gram interval is the interval $G_n = [g_n,g_{n+1})$.
+ In analogy with Gram points, we can associate an angle $\phi$ with a point $t$ on the 
+ critical axis as follows:
+\begin{definition}\label{phi}
+For $t \ge 7$, $t$ is said to be a generalized Gram point with value $\phi$  if
+$\theta_{Riemann} (t) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
+\end{definition}
+We define the probability distribution function for $Z(t)$ at generalized Gram  points
+ $p_{\phi}(y)$:
+\begin{definition}\label{pphi}
+\begin{equation}
+\int\limits_{a}^{b} p_{\phi}(z)dz
+\label{eq:pdfphi}
+\end{equation}
+is the probability that $a<Z(t)<b$ when we consider the values of $Z(t)$ 
+for a large number of 
+generalized Gram points in the sample space. 
+\end{definition}
+
+It is known (Ref.~\cite{Shanker 2018b}) that the average value of the 
+$Z$ distribution is $2cos(\phi)$ where $\phi$
+is the angle characterizing the Generalized Gram point. We have also shown
+(Ref.~\cite{Shanker 2020}) that the probability distributions
+satisfy the anti-symmetry relation 
+\begin{equation}
+p_{\phi}(z) = p_{\phi+\pi}(-z)
+\label{eq:Rieantisym}
+\end{equation}
+and the symmetry relation is
+\begin{equation}
+p_{\phi}(z) = p_{2\pi-\phi}(z).
+\label{eq:Riesym}
+\end{equation}
+Ref.~\cite{Shanker 2020} showed 
+that the probability distributions at different $\phi$ can all be expressed in
+terms of three functions which are independent of $\phi$ and depend only on $z$.
+These are the observations which we wanted to model using the CUE. For generating the
+CUE samples for the study we extend the programs and results of Ref.~\cite{Francesco 2007}.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{1.png}
+\caption[]{ 
+  Probability density  for $\phi = 0$. 
+  }
+\vspace{1mm}
+\label{z1}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{2.png}
+\caption[]{ 
+  Probability density  for $\phi = \pi/2$. 
+  }
+\vspace{1mm}
+\label{z2}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{3.png}
+\caption[]{ 
+  Probability density  for $\phi = \pi$. Compare with
+ Fig.~\ref{z1} to observe the mirror symmetry.
+  }
+\vspace{1mm}
+\label{z3}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{4.png}
+\caption[]{ 
+  Probability density  for $\phi = 3\pi/2$. 
+  }
+\vspace{1mm}
+\label{z4}
+\end{figure*}
+
+
+
+\section{\label{sec3}Results}
+
+\subsection{\label{sec3.1} Symmetry relations for CUE}
+
+The question of the values of the characteristic polynomial of a CUE matrix 
+at a discrete sequence of points is quite interesting. 
+In this section we present our numerical studies. The results provide very good evidence 
+for two  symmetry properties. Since the Riemann zeta studies were done at a
+height $T = 10^{28}$, we use the well-known correspondence $N \thicksim \ln(T/2\pi)$ where $N$ 
+is the size of the unitary matrix we should consider. Thus, we chose $N = 63$ for our
+study. We studied $10000$ sample $U$ to generate the distributions.
+
+The characteristic polynomial can be written as
+\begin{align}
+\Lambda(U, \theta) = det(I-U\exp^{-i\theta})\\
+                   = \prod_{n}(1-\exp^{i(\theta_{n} - \theta)}).
+\label{eq:cueDet}
+\end{align}
+This expression simplifies to
+\begin{align}
+\Lambda(U, \theta)  = 2^N\exp^{i(3N\pi/2 + \sum_{n}\theta_{n}/2 - N\theta/2)}\prod_{n}\sin((\theta_{n} - \theta)/2).
+\label{eq:cueExpanded}
+\end{align}
+In analogy with the $Z$ in the Riemann zeta case, we can identify a $Z_{CUE}$ by defining
+\begin{align}
+Z_{CUE}(\theta))    = \exp^{-i(3N\pi/2 + \sum_{n}\theta_{n}/2 - N\theta/2)}\Lambda(U, \theta)\\
+                    = 2^N\prod_{n}\sin((\theta_{n} - \theta)/2).
+\label{eq:cueZ}
+\end{align}
+$Z_{CUE}(\theta))$ is real valued,
+and we have $|Z_{CUE}(\theta)| = |\Lambda(U, \theta)|$. The analogue of the Riemann zeta 
+Gram points occurs when $\Lambda(U, \theta)$ is real, i.e., 
+$(3N\pi/2 + \sum_{n}\theta_{n}/2 - N\theta/2) = m\pi$.
+We call $\theta$  a CUE generalized Gram point with value $\phi$  if
+$(3N\pi/2 + \sum_{n}\theta_{n}/2 - N\theta/2) = 2k\pi + \phi$, where $0 \le \phi < 2\pi$.
+For a given $\phi$, we have $N$ distinct CUE generalized Gram points spaced uniformly
+around the unit circle.
+The definition for the probability distribution is analogous to the Riemann zeta definition.
+
+The CUE probability distributions satisfy (see Fig.~\ref{z1},~\ref{z2},~\ref{z3},~\ref{z4}) 
+the anti-symmetry relation 
+\begin{equation}
+p_{\phi}(z) = p_{\phi+\pi}(-z)
+\label{eq:antisym}
+\end{equation}
+and the symmetry relation 
+\begin{equation}
+p_{\phi}(z) = p_{2\pi-\phi}(z).
+\label{eq:sym}
+\end{equation}
+We also found  (see Table~\ref{tab:mean12}) that the average value of the 
+distribution is $2cos(\phi)$ where $\phi$
+is the angle characterizing the CUE generalized Gram point, i.e., 
+\begin{equation}
+<z>_{\phi} = 2\cos(\phi).
+\label{eq:cosphi}
+\end{equation}
+Thus, we reproduce the behaviour for the Riemann zeta case.
+
+
+\begin{table}
+\centering \(\begin{array}{cccccccccccc}
+
+\hline
+0     &\pi/2  &\pi  &3\pi/2  \\
+2.03  &0.00  &-2.02 & -0.03  \\
+\hline
+\end{array}\)
+\caption{Mean  $Z(t)$. Row 1: $\phi$, 
+Row 2: mean~$Z$}
+\label{tab:mean12}
+\end{table}
+
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{z1.jpg}
+\caption[]{ 
+ Test of universality. Comparison of probability density prediction from
+ universality with actual values, for $z=1.0$. The y axis is the probability density.
+ The x axis is the angle characterizing the Generalized Gram point.
+  }
+\vspace{1mm}
+\label{z05}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{z_1.jpg}
+\caption[]{ 
+ Test of universality. Comparison of probability density prediction from
+ universality with actual values, for $z=-1.0$. 
+  }
+\vspace{1mm}
+\label{z00}
+\end{figure*}
+
+
+
+\subsection{\label{relation}Relations for distributions at different $\phi$}
+
+
+
+For the Riemann zeta and Dirchlet $L$ function probability distributions, we found~\cite{Shanker 2022, Shanker 2020}
+that the probability distributions at different $\phi$ can all be expressed in
+terms of three functions which are independent of $\phi$ and depend only on $z$.
+We show that such a relation holds for the CUE distributions also.
+This is a very intriguing direction to probe more deeply.
+
+The universality relation is
+\begin{equation}
+p_{\phi}(z) = A(z) + B(z)\cos(\phi) +C(z)\cos(2\phi),
+\label{eq:universality}
+\end{equation}
+where $A(z)$, $B(z)$ and $C(z)$ are  functions which do not depend on $\phi$. 
+We estimated $A(z)$, $B(z)$ and $C(z)$ by fitting Eq.~\ref{eq:universality} to the actual
+probability densities for several values of $z$ and $\phi$. 
+Fig~\ref{z05} and Fig.~\ref{z00} show the comparison of the predictions 
+from the universality 
+relation to the actual probability densities, for some values of the argument $z$.
+We find that the function 
+$B(z)$ is anti-symmetric in $z$, and $A(z)$ and $C(z)$ are symmetric in $z$, which 
+leads to Eq.~\ref{eq:sym} and Eq.~\ref{eq:antisym}.
+The figures show the excellent agreement of the actual probability densities with the
+universality relations prediction.
+
+
+\section{\label{conclusions}Conclusions}
+
+We relate  anti-symmetry and symmetry properties 
+for the value distribution of the CUE characteristic polynomial at discrete points
+to the observed properties for the Riemann zeta function. 
+We presented a simple relation for the average value 
+of the  distribution. We showed that the value distribution 
+can be expressed in terms of three  functions 
+ which do not depend on the angle characterizing the Generalized Gram point. 
+These relations are very similar to the relations observed for 
+the Riemann zeta function.
+
+\section*{Acknowledgments and Funding Statement}
+
+ The study was done as an independent researcher. There was no
+external funding.
+
+\section*{Ethical Compliance}
+
+ No procedures were performed  involving human participants in the study.
+
+\section*{Data Availability Statement}
+
+The computer programs used during the current study are
+available from the corresponding author on reasonable request.
+
+\section*{Conflict of Interest declaration} 
+
+The authors declare that they have NO affiliations with or involvement in any organization 
+or entity with any financial interest in the subject matter or materials discussed 
+in this manuscript.
+
+
+\bibliographystyle{amsplain}
+\begin{thebibliography}{10}
+
+\bibitem{KeatingSnaith 2000} J.P. Keating and N.C. Snaith, 
+``Random matrix theory and $\zeta (1/2+it)$", 
+{\it Commun. Math. Phys.} {\bf 214}, 57–89, (2000)
+
+\bibitem{Odlyzko 1992}  A. Odlyzko,
+``The $10^{20}$-th Zero of the Riemann Zeta
+Function and 175 Million of its Neighbors", report,
+\url{http://www.dtc.umn.edu/~odlyzko/unpublished/zeta.10to20.1992.pdf}, (1992)
+
+\bibitem{Chhaibi 2014} Reda Chhaibi, Joseph Najnudel and Ashkan Nikeghbali,
+``A limiting random analytic function related to the CUE''
+report,
+\url{https://arxiv.org/abs/1403.7814}
+(2014).
+
+\bibitem{Francesco 2007}Francesco Mezzadri,
+``How to Generate Random Matrices from the Classical
+Compact Groups", {\it Notices of the AMS} {\bf 54}, 592-604, (2007)
+
+\bibitem{os6} O. Shanker, 
+``Generalised Zeta Functions and Self-Similarity of Zero Distributions",
+{\it J.  Phys. A} {\bf39}(2006), 13983-13997
+
+\bibitem{Hanga 2020} Catalin Hanga and Christopher Hughes, 
+``Probabilistic Models for Gram's Law''
+ report,
+\url{http://etheses.whiterose.ac.uk/27858/}, 
+(2020). 
+
+\bibitem{Shanker 2018a} O. Shanker, 
+``Good to Bad Gram Point Ratio For Riemann Zeta Function",
+{\it Experimental Mathematics} {\bf 30}, 76-85,
+\url{tinyurl.com/mwd5uwc5}(2021)
+
+\bibitem{Shanker 2018b} O. Shanker, 
+``Symmetry properties of distribution of Riemann Zeta Function values on critical axis''
+ report,
+\url{tinyurl.com/47wj57b3}, 
+(2018). 
+
+\bibitem{Shanker 2022} O. Shanker, 
+``Value Distribution of Dirichlet L function on critical axis''
+ report,
+\url{http://dx.doi.org/10.13140/RG.2.2.25789.33766}, 
+(2022). 
+
+\bibitem{Shanker 2020} O. Shanker, 
+``Universality of Riemann Zeta Function value distribution on critical axis''
+ report,
+\url{tinyurl.com/yvbd2je6}, 
+(2020). 
+
+
+
+
+\end{thebibliography} 
+
+\end{document}
