@@ -1,0 +1,2087 @@
+%-----------------------------------------------------------------------
+% 
+%-----------------------------------------------------------------------
+%
+%     
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[twoside]{article}
+\usepackage{amsmath,amsthm,amssymb,verbatim}
+
+%     If your article includes graphics, uncomment this command.
+\usepackage{graphicx}
+
+%     If the article includes commutative diagrams, ...
+%\usepackage[cmtip,all]{xy}
+
+\usepackage{url}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
+
+	\addtolength{\oddsidemargin}{1cm}
+	\addtolength{\evensidemargin}{-1cm}
+
+\setcounter{page}{1}
+
+\begin{document}
+
+%     If you need symbols beyond the basic set, uncomment this command.
+%\usepackage{amssymb}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{xca}[theorem]{Exercise}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+
+\date{March 1981}
+\lhead[]{}
+\chead[\underline{Present Status of Muon Number}]{\it{O. Shanker}}
+\rhead[]{}
+
+% \title[short text for running head]{full title}
+\title{\bf{Present Status of Muon Number}}
+
+\maketitle
+
+
+%    author one information
+% \author[short version for running head]{name for top of paper}
+\author{\textbf{O. Shanker}},
+\thanks{ TRIUMF, 4004 Wesbrook Mall, Vancouver, B.C., Canada VET 243 }
+
+\thispagestyle{fancy}
+
+%    Abstract is required.
+\begin{abstract}
+(Note: Resurrected from an  old work of mine, using modern image processing technology.
+The work was done in 1981, so this is just for reference!)
+
+This work surveys the present experimental and theoretical status
+of muon number. The development of our ideas regarding flavour numbers
+is discussed using muon number as an example.
+The role of muon number
+in different models that are currently being studied is investigated.
+The phenomenological and experimental status of different muon number
+violating processes is reviewed. The predictions of different models
+for muon number violating processes is discussed.
+
+\end{abstract}
+{\textbf {Keywords}:} muon number violation
+
+
+\symbolfootnote[0]{TRIUMF Report TRI-PP-81-10 }
+
+
+
+\section*{Contents}
+
+Contents
+
+Introduction
+
+11. Leptonic processes
+
+
+A. $\mu$ -> ey
+
+B.  $\mu$ -> eee
+
+C. w-~>eyy
+
+D. Je + eu
+
+E. Neutrino processes
+
+III. Semi-leptonic processes
+
+A. yu~exxx conversion
+
+B. u~et conversion
+
+C. Kaon decays
+
+D. No-neutrino double beta decay
+
+IV. Model predictions
+
+A. Horizontal gauge models
+
+B. Hypercolour models
+
+C. Grand unified theories
+
+D. Neutrino mass
+
+E. Higgs models
+
+Conclusions
+
+Acknowledgments
+
+References
+
+End Matter
+
+Figures
+
+\section{Introduction}
+The weak interactions have shown a notorious disrespect for our
+ideas of what the symmetries of nature ought to be. The violation of
+parity and the even more startling violation of CP provide examples of
+this notoriety. In the field of flavour numbers the perversity of the
+weak interactions manifests itself from the opposite direction, namely,
+nature presents physicists with a lot of symmetries which have no good
+reason for existing. For example, since the time the muon was found to
+behave like a heavy electron physicists have been debating over the ques-
+tion of why it exists. The symmetries of nature which account for its
+existence and the existence of other flavour numbers lke electron
+number, strangeness, charm etc. are still not completely understood,
+and seem to be fortuitous symmetries. A number of papers dealing with
+possible small violations of muon number, baryon number, lepton number,
+etc. continue to appear in the literature. The motivation for possible
+violations of baryon number and lepton number is provided by Grand
+Unified theories, which are reviewed by Langacker (1980). In this paper
+I study the role of muon number in present ideas of particle physics.
+A pre-gauge theory review of muon number can be found In Frankel, 1974 and
+Pontecorvo, 1967. Cheng and Li (1977a) and Weinberg (1977a and 1978) give a
+large number of references to the early literature on muon number violation
+after the advent of spontaneously broken gauge theories. In the present work
+the development of our ideas regarding flavour numbers is briefly reviewed by
+looking at muon number as an example. | then look at the role of muon num-
+ber in different extensions of the Glashow-Weinberg-Salam model that are cur~
+rently of interest. After a review of the phenomenological and experimental
+status of different muon number violating processes, | conclude by dis-
+cussing which of these processes are favoured by different gauge models.
+
+
+The idea of flavour numbers is in essence a description of the ulti-
+mate building blocks of nature. There is a close similarity between the
+basic elements of the ancient Greeks and Indians or the immutable chem-
+ical elements of Dalton and flavour numbers. However, the latter term
+is used only in relation to the modern concepts regarding the ultimate
+structure of matter. The discoveries at the end of the nineteenth cen-
+tury (discoveries of the electron, of the transmutability of elements,
+etc.) indicated that the basic building blocks of nature were far fewer
+than the ninety or so elements discovered till then. In the early decades
+of this century two fundamental building blocks, the proton and electron,
+were believed to be the constituents of all matter. With the realisation
+that nuclear beta decay involved a new massless particle, the neutrino,
+a study of its nature was taken up. Racah (1937) and Pontecorvo (1950)
+suggested experiments to see if the neutrino and its antiparticle were
+identical. The radlochemical experiments of Davis (1955) established the
+separate existence of the neutrino and antineutrino. It now seemed as
+if al) interactions in nature conserved two quantities, baryon number
+and lepton number. This simple situation did not last long and the
+discovery of the neutron, muon, pion and strange particles in the first
+half of this century showed that nature was more complex. Two new fla~
+vours, strangeness (Gell-Mann, 1953; Nishijima, 1955) and muon number,
+were introduced within a short time of each other. The introduction of
+these new flavours was phenomenological, i.e., it merely served to ex-
+plain the absence of certain particle reactions and did not lead to any
+new insights into the details of weak interactions. Since that time our
+understanding of flavour numbers and their conservation schemes has devel-
+oped quite a lot, but we still do not understand why so many flavours
+-3-
+exist in nature (in fact, many new flavours have been discovered since
+then and we have no idea how many more flavours may exist). The brief
+historical sketch of the muon that | now present serves to illustrate
+the puzzlement that physicists felt, and still feel, about the existence
+of so many flavours.
+
+The muon was discovered in cosmic rays by Anderson and Neddermeyer
+(1938) and by Street and Stevenson (1937). At first it was confused with
+the particle predicted by Yukawa as mediating strong interactions. How-
+ever, its stability in nuclear environments showed that it did not have
+a strong interaction with nucleons and hence could not be the particle
+predicted by Yukawa. In the forties it was established that the muon was
+very similar to the electron and seemed to differ from it only in mass.
+Hence physicists expected it to decay into the electron without accompany-
+ing neutrinos, in addition to its decay modes involving final state neu-
+trinos. However, searches of increasing accuracy in the fifties and six-
+ties for processes like yu + ey, ut + ete”e~ and ne conversion failed to
+find them. The theoretical predictions for the rates of such processes
+were beset with problems of divergent integrals and artificial cutoffs
+because these decays proceeded in second order in the old non-renormalisable
+models of weak interactions [current X current model or the old Inter-
+mediate vector boson model with only one type of neutrino, reviewed in
+Frankel (1974)]. These problems made it difficult to decide if the experi-
+mental upper limits suggested modifications in the theory of weak inter-
+actions. There seemed to be growing evidence for the existence of two
+types of neutrinos and for a new quantum number, "muon number''. This
+idea gained support with the introduction of intermediate vector boson
+theories of the weak interaction (Feinberg, 1958; Schwinger, 1957).
+ -5- i
+Experimental tests for the new quantum number were discussed by only one neutrino which can exist in both negative and positive helicity ’
+Pontecorvo (1959), Schwartz (1960) and Lee and Yang (1960). The need for states and has L=1, and the antiparticles have L*=-1. The V-A charac~
+introducing a new flavour was definitely established by the experiments ter of the weak Interactions plays an important role in suppressing un-
+of Danby et al. (1962), who showed that when neutrinos produced from wanted reactions like p~et conversion and K* + pte
+when the mass of
+the decay of pions into muons Interacted with nuclei, they produced the neutrino is zero all reactions forbidden by the additive scheme are
+muons but not electrons. The rate for production of electrons and also forbidden in this scheme. The relation between the suppression of
+muons in these processes is unambiguously calculable even in the old unwanted processes and the V-A character of the weak currents is nicely
+models of weak interactions and a conflict between theory and experiment Illustrated by the work of Primakoff and Rosen (1972) who Introduce V+A
+clearly emerged. Thus, it became necessary to introduce a new type of flavour. currents and calculate the rates for anamolous processes. A third scheme
+The phenomenological nature of the old theories Is well illustrated is the multiplicative scheme introduced by Feinberg and Weinberg (1961a).
+by the many different types of lepton number schemes that were proposed. In this scheme there is an additively conserved lepton number L and a
+The only way of choosing among them was to look for processes that were multiplicatively conserved lepton number Lp. All reactions satisfy
+permitted in some schemes but not In others. The lepton number schemes EW nie1a1= ED final and (nlp) inteiar=(rtp) final - wT, eT, wy, and ve
+did not predict rates for the "exotic" processes. The need to probe
+have L=1 and their antiparticles have L=-1. et, e7, ve and Ve have Lp=1 and ut, y=, vy and vy have Lp=-1.
+the validity of the different schemes was one reason for the experimental interest in lepton number violating processes in the seventies.  This scheme is less restrictive than
+ the previous ones and allows reactions like $\mu^{+}+e^{-} -> \mu^{-}+e^{+}$ , ut -> 3e ov
+Three lepton number conservation schemes have become commonly known etc. The limits on the phenomenological coupling constants are comparable
+(Frankel, 1974; Pontecorvo, 1967). The additive lepton number scheme to the weak interaction coupling constant Gf If one uses phenomenological
+(Nishijima, 1957; Bludman, 1958; Schwinger, 1957) is the most widely known currents for these processes. It is not straightforward to extend the
+and also the most restrictive. In this scheme there are two lepton Konopinski-Mahmoud scheme or the Feinberg-Weinberg scheme to take into
+numbers, Le and L,, with e” and ve having Le=l and L,=0, and u~ and Vu account the t lepton discovered in 1975 (Perl et al., 1975).
+having Ly=1 and Le=0. The antiparticles have the opposite sign for The advent of spontaneously broken renormalisable gauge theories of
+these quantum numbers. These lepton numbers are additively conserved, weak and electromagnetic interactions (Abers and Lee, 1973; Taylor, 1976)
+i.e., Tie and Zu, do not change in any interaction. Another lepton led to constraints on the kinds of lepton number schemes allowed. |
+number scheme, actually the first lepton number scheme, is due to describe these theories now in some detail because of their importance
+Konopinski and Mahmoud (1953). In this scheme there is only one lepton and because they form the framework for the rest of the discussion.
+number L* which is additively conserved. y= and e* have L*=1, there is Readers familiar with these theories may want to skip this paragraph
+R -6 -
+and the next. Gauge theories belong to the Lagrangian approach to par-
+ticle physics. In this approach particles are described by local fields
+(wave functions) and particle interactions are derived according to cer-
+tain prescriptions from a Lagrangian which is a function of the particle
+fields. The prescriptions include an arbitrary subtraction of certain
+infinite quantities to give finite values, a procedure called renormal-
+isation. Field theories in which the renormalisation procedure is well
+defined are called renormalisable theories. Renormalisable theories are
+very important because they are the only type of theories which seem to
+be able to make non-trivial predictions for particle interactions. In
+Lagrangian field theories there is a close relation between conserved
+quantities and symmetries of the Lagrangian. For every conserved quan-
+tity there exists a continuous transformation which leaves the Lagrangian
+invariant. Conversely, for every continuous transformation which leaves
+the Lagrangian invariant one can find a conserved quantity. This is
+known as Noether's theorem and is reviewed in (Hill, 1957). In general
+the transformation is a global transformation, i.e., the wave functions
+in the Lagrangian mix among themselves in the same way at every point of
+space and time. In the gauge theories particles are assigned to repre-
+sentations of some gauge group. The Lagrangian remains unchanged when
+the wave functions of the particles transform among themselves under a
+gauge transformation according to the group representations to which the
+particles are assigned. To extend this symmetry to local gauge trans-
+formations (i.e., the gauge group parameters are functions of space-time
+coordinates) one has to introduce massless gauge bosons. These gauge
+bosons interact with the fermions in such a way as to make the Lagrangian
+invariant under local gauge transformations. Local gauge theories are
+
+appealing because particle interactions are not arbitrary but are fixed by the
+choice of the gauge group and the particle representations. In addition,
+when calculating S-matrix elements one can use the gauge symmetries to
+prove that these theories are renormalisable. At present local gauge
+theories seem to provide a correct description of particle interactions.
+Since the only massless gauge boson known to us is the photon one has
+to find a mechanism for giving masses to the other gauge bosons
+occurring in the theories. A mechanism must also exist to break the
+mass degeneracy between fermions belonging to the same representation
+of the gauge group. Both can be achieved by introducing scalar bosons
+(Higgs bosons) which interact in such a way that the theory is spontan-
+eously broken, i.e,, the ground state of the theory does not have the
+symmetry of the Lagrangian. An example of spontaneous symmetry break-
+ing in solid state physics is provided by a ferromagnetic crystal. In a
+ferromagnetic crystal the spins of the atoms have a tendency to align
+themselves in one direction. A priori, there are many equivalent direc-
+tions in which they can align themselves. However, if a few spins get
+aligned in one of these directions (due to thermal fluctuations, a magnetic
+field which is momentarily applied, or for any other reason), the other
+spins will follow suit very quickly and the crystal does not fully repre-
+sent the symmetry of the spin-spin interaction. It is this reduction in
+symmetry which sometimes inhibits phase transitions in ultra-pure systems.
+The system must choose one of several allowed configurations, and in conden-
+sed matter physics this choice is often made by the impurities (nuclea-
+tion centres for condensation, the magnetic field in the above example,
+and so on).
+For the sake of completeness | should mention that not all local
+gauge theories are renormalisable., In the proof of renormalisability
+-8 -
+one uses certain identities, called the Ward identities, which are de-~
+rived from gauge invariance. Sometimes the derivation of these identi-
+ties (and hence the proof of renormalisability) cannot be carried through
+if the Feynman diagrams of the theory have triangle anomalies (Bardeen,
+1974). (Feynman diagrams are diagrams which tel) us how to calculate
+physical cross sections, distributions, etc. from the Lagrangian. |
+know of no simple way to describe triangle anomalies.) Stated another
+way, triangle anomalies imply that the gauge invariance of the Lagran-
+gian is not maintained by the Feynman diagrams of the theory. This loss
+of symmetry comes about because the Feynman diagrams have to be renormal-
+ised, and no renormalisation procedure can be found which maintains gauge
+invariance. The triangle anomalies do not always spoil the renormalis-
+ability of the theory. If the reader will permit a non-serious digression
+| would like to mention another triangle anomaly discovered earlier by
+psychologists. The psychologists' triangle anomaly is illustrated in Fig. 1.
+A cursory examination shows that two shades of white have been used in the figure.
+However, a closer inspection reveals that the white triangle is actually
+the same shade as the background whitel Thus, unlike the particle
+physics triangle anomaly where a symmetry was lost in going from the
+Lagrangian to the Feynman diagrams, this triangle anomaly reveals a hid-
+den symmetry. A more serious (and technical) explanation of the particle
+physics triangle anomaly can be found in (Adler, 1970; Jackiw, 1970).
+In the spontaneously broken gauge theories there is a close connec-
+tion between the assignment of particles to group representations, and
+lepton number schemes. The gauge bosons induce transformations between
+particles belonging to the same group multiplet. Thus, one can introduce
+a "flavour number" to each multiplet and the gauge interactions will
+conserve this flavour number. For example, In the standard model (Glashow,
+
+1961; Weinberg, 1967; Salam and Ward, 1964) the electron and the muon belong to
+different SU(2),eak doublets and the additive lepton number conservation
+scheme is realised by the model. In a slightly different model proposed
+by Derman (1979) some new interactions exist In addition to the usual
+weak and electromagnetic interactions. These new interactions result in
+small violations of the usual additive muon number and other lepton
+numbers. However, one can still define multiplicatively conserved lepton
+numbers and the model realises a multiplicative lepton number conservation
+scheme. Weinberg (1972) studied a gauge model where the Konopinski-
+Mahmoud lepton number scheme is realised. Thus, in spontaneously broken
+gauge theories flavour numbers are not arbitrary but have to be explained
+in terms of particle representations. Assigning fermions to different
+group representations is necessary but not sufficient to ensure flavour con-
+servation, because eigenstates of the weak interactions are not eigenstates of
+the mass matrix. Due to spontaneous symmetry breaking, states with the same
+charge and helicity will mix and the weak Interactions will violate fla-
+vour number, with the order of magnitude of the flavour violation depen-
+ding on the mixing angles. An example is the Cabibbo angle and non-
+conservation of strangeness in weak interactions. Flavour violation is
+said to be suppressed naturally if the suppression is due to the repre-
+sentation content of the theory and not due to arbitrarily small para-
+meters. For example, flavour non-conservation is suppressed naturally
+in the standard model because the GIM mechanism {Glashow et al., 1976)
+explains the very small strength of the observed strangeness-changing
+neutral currents in terms of the gauge multiplet assignments of the
+quarks. Flavour number violation In gauge theories can occur due to
+lepton mixing and a non-diagonal mass matrix (Cheng and Li, 1977a;
+Kobayashi and Maskawa, 1973), due to flavour changing gauge bosons
+. - 10 ~
+(Deshpande, 1979; Mannheim, 1978; Maehara and Yanagida, 1979), and due
+to flavour number violating Higgs particle couplings (Bjorken and
+Weinberg, 1977; McWilliams and Li, 1980a). Flavour violation could also
+occur due to anomalies ('t Hooft, 1976). However, the effect is very
+small and has no practical consequences.
+Thus, we see that spontaneously broken gauge theories provide the
+best framework to discuss lepton number conservation schemes and poss-
+ible deviations from these schemes. It is very easy to incorporate a
+small amount of lepton number violation in gauge theories as shown by
+the avalanche of gauge theories which followed the rumour in 1975 that
+the p + ey process had been observed (the rumour turned out to be wrong).
+If muon number is to be conserved exactly in a gauge theory, then some
+restrictive conditions must be satisfied, namely, the muon and electron
+must occur in separate multiplets, some mechanism must be found for en-
+suring that the lepton mixing does not result in violation of muon num-
+ber, and the Higgs sector must also be chosen to conserve muon number.
+In the standard SU(2) x U(1) model with six quarks and six leptons all
+these conditions are satisfied. The muon and electron occur in different
+doublets, the absence of right handed neutrinos ensures their masslessness
+and hence all lepton mixing angles can be made zero by properly defining
+the muon and electron neutrino states (this can be done because of the de-
+generacy in their masses), and the presence of only one Higgs doublet en-
+sures that the Higgs-lepton interactions conserve muon number even after
+the lepton mass matrix is diagonalised. While the Glashow-Weinberg-Salam
+model predicts exact conservation of muon number, any modification of
+this model usually results in a small amount of muon number violation.
+The Glashow-Weinberg-Salam (GWS) model agrees very well with
+essentially all present experimental results. Hence one may ask if
+
+there Is any reason to expect muon number violation. The answer is that
+violation of muon number is not unreasonable, firstly, because the ex-
+perimental data do not severely constrain the Higgs sector in the GWS
+model and hence the violation of muon number through the Higgs sector is
+not ruled out, and secondly, because there are many questions that the
+GWS theory doesn't answer, for example: why are right-handed neutrinos
+absent? Why does nature repeat herself, with the electron family, the
+muon family, the t~lepton family and maybe more (Harari, 1979)? It
+would be nice to have a theory which explained such facts instead of
+taking them as assumptions, and one has to go beyond the GWS model for
+this. Any theory which attempts to answer these questions also generally
+predicts a small violation of muon number.
+One popular reason to consider modifications of the elementary GWS
+model is the attempt to calculate quark mixing angles in terms of their
+masses. In these attempts additional discrete or continuous symmetries
+involving transformations among the different fermion generations are
+imposed on the particles in the theory. The additional symmetries can
+be chosen so that natural flavour conservation (NFC) is imposed on the
+theory. However, general theorems exist (Kang and Rothman, 1980; Segre
+and Weldon, 1979) which show that if one wishes to have calculable quark
+mixing angles one must also accept flavour violation at some level. No
+compelling model exists which predicts mixing angle relations.
+Another reason to consider modification of the GWS model is to gen-
+erate CP violation spontaneously (Lee, 1973 and 1974). This possibility
+is interesting because it explains naturally why we can presently
+measure CP violation only in the Ko-KO system. G.C. Branco (1980) has
+shown that if NFC is imposed on the theory the Higgs exchanges provide
+the only source of CP violation. In this class of models the neutron
+ = 13 -
+electric dipole moment can be relatively large. The CP violating kaon hierarchy problem in grand unified theories (the gauge hierarchy pro-
+decay parameter e'/c may also be very large (Deshpande, 1981; Sanda, 1981). If blem is the problem of getting naturally two levels of spontaneous
+natural flavour conservation Is not imposed one can get spontaneous CP symmetry breaking at vastly different energies, one at the grand unifi-
+violation in the Weinberg-Salam model with two Higgs doublets. Lahanas cation energy of about 10!5 GeV and the other at present energies of a
+and Vayonakis (1979) have considered such a model and found that the few hundred GeV.) In dynamically broken theories only fermions and
+Higgs masses are of the order of a TeV. Their model has an interesting gauge bosons are introduced. All interactions are determined by the
+feature, namely, the Higgs contribution to the $K_{L}-K_{S}$ mass difference is local gauge principle. The role of the elementary Higgs particles of
+proportional to Higgs particle mass differences. the usual theories is now played by bound fermion-anti~fermion compo-
+SU(2) x SU(2)R x U(1) models have also been considered for gener- sites. These theories are potentially attractive because in principle
+ating spontaneous CP violation and to have a theory which is invariant
+they have very few arbitrary parameters. No successful theory has been
+)
+under parity at high energies (Pati and Salam, 1974; Mohapatra and Pati, constructed as yet, but much work is being done on the problem.’ These
+1975; Senjanovic and Mohapatra, 1975). In the left-right symmetric theories predict flavour changing neutral currents leading to flavour
+models it is possible to identify the U(1) generator with {(B-L), where violating rates at levels not far below present experimental upper lim-
+B is baryon number and L is lepton number (Marshak and Mohapatra, 1980a; its (Eichten and Lane, 1980; Ellis et al., 1980; Dimopoulos and Ellis, 1980).
+Mohapatra and Marshak, 1980a), and hence to study violation of (B-L). It Horizontal gauge models, in which neutral "horizontal' gauge bosons
+is also possible to relate the small mass of the neutrinos to the large * mediate transitions between members of different generations, have been
+masses picked by the gauge bosons of SU(2)g (Mohapatra and Senjanovic, considered by many authors (Maehara and Yanagida, 1979; Wilczek and Zee,
+1980b), and thus to the scale at which parity Is spontaneously broken. 1979a; Ramond, 1979; Davidson and Wali, 1980; Chikashige et al., 1980; Davidson
+These models have heavy right-handed Majorana neutrinos (with mass of et al., 19793, and 1979b; Barr and Zee, 1978; Kane and Thum, 1980; Cahn and
+order 100 GeV). Flavour violation is a very general feature of left- Harari, 1980; Shanker, 1980 and 1981; Sato, 1980; Ong, 1980; Ecker et al.,
+right symmetric models (Chaniowitz et al., 1977). This has been studied 1981; Chakrabarti et al., 1980, and references therein, and references in
+by Marshak and Mohapatra, 1980a, Mohapatra and Marshak, 1980a, and Langacker, 1980). In such models the repetition of generations is ex-
+Mohapatra and Senjanovic, 1980b. They study the neutrinoless double plained naturally, and the families are identified by the representations
+beta decay and the u + ey process, but do not make a complete study of of the horizontal gauge group to which they are assigned. The motivations
+muon-number violating (lepton number conserving) processes. for introducing horizontal gauge symmetries have been many and varied.
+It has also been suggested that elementary Higgs fields should be They include attempts to calculate the e-u mass ratio (Barr and Zee, 1978),
+discarded and a dynamical mechanism (Weinberg, 1976; Susskind, 1980) fermion mixing angles (Wilczek and Zee, 1979), to get CP violation with
+for spontaneous symmetry breaking must be sought to avoid the gauge only four quarks (Maehara and Yanagida, 1979; Davidson et al., 1979a),
+t. 
+etc. Horizontal gauge bosons also occur in the dynamically broken
+theories, and this has motivated their study (Cahn and Harari, 1980}.
+Horizontal symmetries have also been studied to avoid the strong CP
+problem (Davidson and Wali, 1980). The main motivation for considering
+horizontal symmetries seems to be the existence of the generation puzzle
+(Harari, 1979; Davidson et al., 1979b). Attempts to explain the repeating
+generation structure have also been made by assuming that quarks and
+leptons are composite objects and that generations represent excitations.
+The problems in constructing a satisfactory theory seem to be far from solved.
+Muon number is also violated in grand unified theories (in fact,
+both lepton number and baryon number are themselves violated in these
+theories). Grand unified theories (GUTs) seek to unify strong, weak
+and electromagnetic interactions by finding a simple group which contains
+the SU(3) x SU(2)y x U(1) group of strong, weak and electromagnetic in-
+teractions as a subgroup (Langacker, 1980; Goldhaber, 1977). A striking
+prediction of these theories is proton decay. Early experiments on pro-
+ton decay have been done by Gurr et al., 1967 and Reines and Crouch, 1974.
+Weinberg (1979) and Wilczek and Zee (1979b) have noted that if the only
+new masses (in addition to the masses in the usual SU(3) x SU(2) = u(1)
+phenomenology) are grand unification masses (the grand desert scenario)
+then baryon and lepton number violation is mediated by local four-fermion
+operators that respect the SU{3) x SU(2) x U(1) symmetry. This implies
+that (B-L) is conserved to leading order in the grand unification mass
+{where B is baryon number and L is lepton number). Lipkin (1980) has
+related this conservation of (B-L) to properties of the usual weak iso-
+spin assignments of the fermions in the Weinberg~Salam model and to pro-
+perties of four-fermion operators. If there is indeed no new physics
+between 100 GeV and 1015 GeV then the only interesting processes are
+
+proton decay and (possible) neutrino oscillations. It has also been noted
+(Marshak and Mohapatra, 1980b; Kuo and Love, 1980; Marshak et al., 1980)
+that if there are intermediate mass scales between present energies and
+grand unification energies then even In leading order in the grand unifi-
+cation mass (B-L) violating processes like neutron oscillations (n-n) and
+no-neutrino double beta decay could occur, Interesting new phenomenology,
+including muon number violation, could occur in the Pati-Salam GUTs,
+which have low mass unification at a scale of about 100 TeV, They are
+reviewed in Pati (1978 and 1979).
+In addition to the above motivations for modifications to the GWS
+model leading to muon number violation It has been argued by some
+physicists that the presence of any absolutely conserved quantity not
+related to local gauge invariance is not satisfactory (DeRejula, Georgi
+and Glashow, 1975; Mack, 1979). This Is because such conserved quan-
+tities (eg. baryon number, lepton number, etc.) predict global symme-
+tries in the Lagrangian. These global symmetries require gauge trans-
+formations Independent of the coordinates, i.e., they require the com-
+parison of directions in internal charge spaces at widely separated
+space points simultaneously. DeRejula, Georgi and Glashow (1975) also
+argue that a global gauge invariance (and the corresponding conserved
+quantity) is not satisfactory for the following reason: If an electri-
+cally charged particle falls into a black hole, its memory is preserved
+by the electric field outside the black hole. However, the absorption
+of a neutrino leaves no trace outside, and it doesn't seem possible to
+talk about a conservation law for lepton number in the space outside the
+black hole. The difference between the electric charge and lepton num~
+ber lies in the fact that the former is a local gauge symmetry, and the
+electric field which played a crucial role in the argument is the wave
+
+function of the gauge boson corresponding to this symmetry. The
+conservation of lepton number is related to a global gauge invariance
+and hence there is no gauge boson corresponding to this symmetry.
+In concluding the general discussion we can say that the usual
+SU(3) x SU(2) x U(1) phenomenology describes present experiments very
+well, and predicts muon number conservation. While there is no over-
+whelming reason to expect muon number violation, there are enough moti-
+vations to make muon number violation an intriguing possibility to con-
+sider. The repeating generation structure of the GWS model and the pro-
+liferation of flavours still remains an unanswered mystery and there are
+many open questions regarding flavours. The search for violations of
+established conserved quantum numbers is interesting for another reason:
+If a very weakly coupled force exists in nature, it may not be discovered
+for a long time because stronger interactions may mask it. However, if
+the weak force violates some conservation law valid for the stronger
+interactions, then it would be revealed in processes which violate the
+conservation law. This argument is due to Lincoln Wolfenstein. In a
+certain sense one may say that the weak interactions were discovered
+because they violated the law of immutability of elements.
+I will now discuss the phenomenology of different muon number vio-
+lating processes. Readers not Interested in details may wish to skim
+through these sections and read the conclusions. In most theories with
+muon number violation the cause is (a) lepton mixing which arises if
+the lepton mass matrix is not diagonal with respect to the gauge eigen-
+states {Cheng and Li, 1977; Kobayashi and Maskawa, 1973; Marciano, 1978),
+{b) existence of exotic gauge bosons with muon number violating couplings
+(Deshpande et al., 1979; Mannheim, 1978; Maehara and Yanagida, 1979) and
+
+(c) scalar Higgs couplings which violate muon number (Bjorken and Weinberg,
+1977; McWilliams and Li, 19803). The Feynman diagrams contributing to muon
+number violating processes belong typically to one of three classes:
+(a) tree diagrams resulting from the exchange of a heavy gauge boson or
+Higgs boson (eg. Fig. 2a. This diagram could contribute to K® + ue in
+a horizontal gauge model), (b) box diagrams as in Fig. 2b {this diagram
+contributes to the process KO + pe in the standard model with a
+massive vr), and (c) one loop diagrams like the one in Fig. 2c (this
+diagram contributes to the process yu + ey in the same model). These
+diagrams are usually suppressed by some heavy masses and reduce to local
+interactions to leading order in the heavy masses. Hence muon number
+violating processes can be described by local effective phenomenological
+currents in a way similar to the phenomenological current X current
+description of the usual weak interactions. This is the approach | use
+in the discussion. The phenomenological coupling constants described
+here will be calculable in different gauge theories. When a photon
+mediates muon number violating processes (eg. u + eyyjrtua) + eee) the
+effective Hamiltonian describing such processes (eg. processes like
+u + eee) will contain non-local terms involving the four-momentum trans-
+fer. Such terms can be discussed in terms of the effective coupling
+constants defined in the section on yu + ey. Muon number violating pro-
+cesses which have been discussed in the literature can be classified as
+follows: 1, Leptonic processes: (a) u + ey, (b) u + eee, (c) u + eyy,
+(d) We + ep, and (e) neutrino processes. 2. Semi-leptonic processes:
+(a) ve” conversion, (b) ue conversion, (c) kaon decays, and (d) no-
+neutrino double beta decay. The phenomenology and current experimental
+limits on these processes are discussed. below.
+
+
+\section{\label{sec2}II. Leptonic processes}
+
+The phenomenology of this process was first discussed by Weinberg
+and Feinberg (1959). The general form of the matrix element for
+the electromagnetic current operator between the states of an electron
+and a muon is determined by Lorentz invariance and electromagnetic
+current conservation to be of the form (Cheng and Li, 1977a; Weinberg and
+Feinberg, 1959; Lee and Shrock, 19773):
+Ta = <elpe) UY (0) Julpy)>
+Gp — R
+= = Te (pe) [fue (1+v5) im,02,a+ EL (14s) (rya-ayv-a) uy (py)
++ right-handed terms, (1)
+where q=p,-pe and my is the muon mass. The form factors fy, fg etc.
+could be functions of g? but the gq? dependence is generally suppressed
+by powers of some heavy masses occurring in the gauge theories. Also,
+in many gauge theories only electrons of a particular helicity are in-
+volved in this process (see, for example, Cheng and Li, 1977a;
+Bjorken and Weinberg, 1977). This means that only left- or right-handed
+coupling constants are non-zero in Eq. 1. When the photon is on its
+mass shell (i.e., 2=0) only fy and fMR contribute to the amplitude
+for uw + ey. The amplitude is of the form:
+Ge —
+mp + ey) = 7 ve (FHL (1+v5) +f (1-5) )im,o3 aval, (2)
+where * is the photon polarisation vector, €tqy=0. The rate for u > ey
+2
+Gem
+rut + ety) = gn (Im 12+) mr 12) : (3)
+
+A complete phenomenological analysis of this decay (including a study of
+CP violating correlations) was made by Tung (1977). Recent calculations
+are done by Cheng and Li (1980a), Inami and Lin (1980) and Ma and
+Pramudita (1980). If this process occurs then a measurement of the
+electron asymmetry using polarised muons would give information on the
+helicity structure of the lepton number violating current. A search for
+this process is quite useful. When electrons of a particular helicity
+are produced in the decay the amplitude contains only one term whose
+phase is unmeasurable and hence CP violating effects will be absent
+(Treiman et al., 1977). Also, in this case the angular distribution of
+the outgoing electron with respect to the initial muon polarisation is
+of the form [1 t cos(8)] where 8 is the angle between the electron
+three-momentum and the muon spin (+ for left-handed electrons and - for
+right-handed ones). The experimental upper limit on the rate for this
+process is normally quoted relative to the ordinary muon decay rate
+Tut > e*vev,) = GEm3/ (1923). The present upper limit on the branching
+ratio Rey is 2 x 10710 and this limit has been set at Los Alamos (Bowman
+et al., 1979). The experiment consists of looking for an e* and a y-ray
+in time coincidence with the three-momenta being collinear and of magni-
+tude 52.8 MeV. The main background for this experiment came from ran-
+dom coincidences between the et from normal muon decay and a y-ray from
+the bremsstrahlung process pt + etvevyy. The latter process also contri-
+buted to the background because in some of the events the electron and
+the photon were almost collinear and the magnitudes of the three-momenta
+were close to 52.8 MeV. There were about a hundred events which satis-
+fied the conditions on the momenta within experimental resolutions. All
+of them could be attributed to background. A new experiment is under
+- 20 ~
+way at Los Alamos to improve the limits on the branching ratio for
+u+ey, u~+eee and u + eyy, using the crystal box detector.
+B. p= + e eet
+w= + e"e”et occurs. in all models in which yu + ey occurs, because of
+pair production by the photon. In most models there are additional
+Feynman diagrams which contribute to this process, for example, box dia-
+grams similar to the one in Fig. 2. The pre-gauge theory discussions of
+this process were beset by difficulties because the additional diagrams
+often involved loop integrations and were calculable only in a renormal-
+fzable theory. Bander and Feinberg (1960) calculated the rate for
+p= + ete”e” including only the contribution from un + ey (they performed
+their calculations In terms of effective u ey couplings. Their effective
+couplings are essentially the same as those of Eq. 1). "This process was
+also studied by Marciano and Sanda (1977a; 1977b) among others. The
+advent of renormalizable gauge theories made it possible to calculate
+the contributions other than the photon exchange contribution to this
+process. Because of the non-photon exchange contributions the relation
+between the branching ratios for u + eee and u + ey becomes model depen-
+dent (Marciano, 1978). In general the amplitude for u + eee (excluding
+the photon exchange contribution) takes the form (Cheng and Li, 1977a;
+Altarelli et aql., 1977):
+mikiake) = 2 [Telk)) Oars, wpe] =
+[Reta fe + op OBA v6] @
+2
+where k; and k, are the four-momenta of the electrons, kj is the four-
+momentum of the final state positron and p is the four-momentum of the
+initial muon. For the sake of simplicity | haven't written down the
+
+
+terms involving a V+A pe current. In many theories the pe current is
+either V-A or V+A and tensor terms are also suppressed by heavy masses
+(Cheng and Li, 1977a). The rate for p -> eee has an interference term
+between the photonic and non-photonic amplitudes. In terms of the effec-
+tive couplings of Eq. } and Eq. 4 the partial width for this process is
+2 5
+T(u+3e) = ath 1670 (itn pay - 2 If] 2-48ra Re (fife) +
+12na| fg |2+|g | 2+2| gg | 2-2/kma Re [(Fg-2710)* (aL 4208) | . (5)
+The rate is normally compared to the ordinary muon decay rate. In many
+theories one expects g; and gg to be somewhat larger than efg and efy
+as the former couplings get contributions from box diagrams which are
+enhanced by logarithmic factors (Marciano, 1978). The p~e™ conversion
+process which is described later is likely to be a more sensitive probe
+of lepton number violation than nu + eee, unless mixing angles conspire
+to suppress it. The best upper limit for the branching ratio for
+u > eee has been set by Korenchenko et al. (1976).at Dubna. They quote
+an upper limit of 1.9 x 1079. The experiment involved stopping positive
+pions in a target and looking for two positrons and an electron in time
+conicidence using a magnetic spark chamber detector. The process was
+searched for using kinematic reconstruction of the event. All the events
+which remained after imposing various cuts could be attributed to back-
+ground. According to Korenchenko (1976) the possible sources of back-
+ground are events from the photonic muon decay followed by internal or
+external conversion of the photon, events from accidental coincidences
+of positrons emitted by two decaying muons where one of the positrons
+is later scattered by an electron of the target material and transfers
+an exceptionally large energy to it, and finally events from the
+. 
+accidental coincidence between emission of a positron by a muon and
+passage through the chamber and target of a charged particle from the
+region outside the chamber (the passage of the charged particle simu-
+lates the production of a positron and an electron).
+C. u~+eyy
+un + eyy has been studied by Bowman et al. (1978). They point out
+that the rate for yu + eyy may be larger than for yu + ey in some models,
+in particular for models in which the latter process is suppressed by a
+natural mechanism and in which charged exotic heavy leptons exist. They
+also point out that experiments setting limits on the branching ratio
+for u + ey can be used to set limits on pu +> eyy. In most of the exten=
+sions to the standard model that are presently studied the rate for this
+process would be of order a times the rate for yu + ey.
+D. ey + pe
+This process has been studied to test for the multiplicative lepton
+number scheme. It also occurs In various extensions of the GWS model.
+It has been studied by Feinberg and Weinberg (1961) and by Pontecorvo
+(1957). Present experiments can test for the effective coupling con-
+stant geff in the phenomenological Lagrangian:
+Gp fm am
+Leff = gefs 7 (I 0+rs)e) (Iv (4vs)e) 6)
+at the level geoff = 1 (Frankel, 1974). The rate for the conversion in
+solids and in gases Is quenched below the conversion rate in vacuum,
+The muonium-anti-muonium transition does not seem to be a sensitive
+test of lepton number violation.
+E. Neutrino processes
+These tests are difficult because the neutrinos are weakly inter-
+acting neutral particles and are difficult to detect and study. In
+- 23 ~
+addition to the experiment of Danby et al. (1962) and Davis (1955) which
+established the existence of two kinds of neutrinos, neutrino experi-
+ments have been carried out to test the nature of the neutrinos from
+muon decay (Willis et al., 1980) and to look for neutrino oscillations
+(Reines, Sobel and Pasierb, 1980; Blietschau et al., 1978). The neu-
+trinos from muon decay were studied by Willis et al. (1980) at Los
+Alamos. They stopped positive muons and fooked for electron-type anti-
+neutrinos from the muon decay. They also looked for electron-type
+neutrinos. The former process is allowed by the multiplicative lepton
+number conservation scheme while the latter process is allowed by both
+schemes. They looked for vg using the reaction vep + net and for vg
+using ved + ppe~ (both reactions are allowed by both lepton number
+schemes). They find that the branching ratio T(u* + e*vevy)/r (ut + all)
+is ~0.001 + 0.04, thus providing strong evidence against the multipli-
+cative scheme, They find good agreement with theory for the additive
+lepton number scheme.
+The possibility of neutrino oscillations (i.e., the nature of the
+neutrino changing with time) has been studied for a long time (Maki,
+Nakagawa and Sakata, 1962; Nakagawa, Okonogi, Sakata and Toyoda, 1963;
+Pontecorvo, 1967; Gribov and Pontecorvo, 1969; Wolfenstein, 1980a; Wolfenstein,
+1978; Cheng and Li, 1978; Marciano, 1980; Schechter and Valle, 1980; Bilenky and
+Pontecorvo, 1978, and other references in this section). Bilenky and Pontecorvo
+(1978) give a good review of neutrino oscillations. The recent litera-
+ture on this process is vast and growing, and requires a review of its
+own. We will content ourselves here with an explanation of the basic
+aspects, which are very simple. Three experimental results motivate
+the present surge of interest in neutrino processes. They are the solar
+24 -
+neutrino experiment (Davis Jr., Evans and Cleveland, 1978), the neutrino
+mass experiment {Lubimov et al., 1980), and one of the neutrino oscilla-
+tion experiments (Reines, Sobel and Paslierb, 1980). The solar neutrino
+experiment has been of interest for many years now. This is an experi-
+ment to measure the flux of neutrinos reaching the earth after they are
+produced in energy-releasing processes in the sun. The experiment de-
+tects a flux which Is a factor of 3 or 4 below the theoretical predic-
+tion. The discrepancy seems to require modifying our model of the sun,
+or of modifying the standard model of weak interactions. For example,
+the discrepancy could be due to neutrino oscillations. The neutrino
+mass experiment measures the shape of the electron spectrum in tritium
+beta decay 3H + He + e” + v,. The shape Is sensitive to the mass of
+the Ve and the experiment indicates that the mass lies between 14 eV
+and 45 eV. The neutrino oscillation experiment detects the nature of
+the neutrinos coming from a nuclear reactor. About half the neutrinos
+seem to change their type in traversing the 11.2 m from the reactor core
+(where they are produced) to the detector. These experiments seem to
+indicate the need for modifying the standard weak Interaction model,
+but they are difficult experiments and are not conclusive.
+The presence of neutrino oscillations implies that the neutrinos
+have mass and mix among themselves. Neutrino oscillations are very simi-
+lar to the K9-K° oscillations, the study of which led to the discovery of
+CP violation. They occur when the neutrino mass eigenstates are not
+eigenstates of the weak Interaction. In this case the weak interaction
+properties of a neutrino are periodic functions of time. The interesting
+information about neutrinos is the nature of their mass matrix (i.e.,
+masses, mixing angles and Dirac or Majorana nature). A discussion of this
+
+question is given by Cheng and Li (1980b). The mass of a particle can be
+either a Dirac mass or a Majorana mass. If the particle has a Dirac mass
+the particle and its antiparticle have a separate identity. If the particle
+has a Majorana mass then it is its own charge conjugate. [In general the
+Lagrangian will contain both Dirac and Majorana masses. The physical par-
+ticles are mass eigenstates and one has to diagonalise the mass matrix in
+the Lagrangian to see the nature of these particles. For one particle the
+general mass term in the Lagrangian takes the form (Cheng and Li, 1980b):
+Lass = 0b, bg + AST, + BURup + Hermitean conjugate Nn
+where L and R denote left and right hand components of the fields and
+the superscript c refers to the charge conjugate field. When the fields
+are mixed among themselves to diagonalise the mass matrix and get physical
+states, one finds that in general the physical particles are Majorana
+particles. One gets the familiar Dirac particles if A=B=0. Thus, the
+Dirac mass is a special case of a Majorana mass. When A or B Is not zero
+the Lagrangian describes two Majorana particles with different masses
+172 {(A+B) + [(A-8)2 + D2]1/2}, If the Lagrangian conserves some charge
+(say electric charge or lepton number) and if the particle has a non-
+zero eigenvalue for this charge then A and B are forced to be zero. This
+explains why Dirac particles are so ubiquitous though they form a partic-
+ular case of a more general situation. This also explains why most ex-
+tensions of the standard theory of weak interactions give Majorana neu-
+trinos if lepton number conservation is not imposed a priori in the
+Lagrangian (Cheng and Li, 1980b). Phenomenological implications of non-
+zero neutrino masses and mixings have been studied by, among others,
+(Ng, 1980 and 1981; Barger et al., 1980a, 1980b; Shrock, 1980;
+ve
+
+Kalyniak and Ng, 1981; see also the references in Cheng and Li, 1980b).
+Rosen and Kayser (1981) and Frere (1981) mention that neutrino
+oscillations affect the interpretation of the sin2e, measurement.
+Kalyniak and Ng (1981) discuss the electron and neutrino correlation in
+muon decay as a possible probe of the Majorana or Dirac nature of the
+neutrinos. Grand unification models provide a motivation for non-zero
+neutrino masses and this has been studied in (Gell-Mann, Ramond and
+Slansky, 1979; Georgi and Nanopoulos, 1979; Barbieri, Ellis and Gaillard,
+1980; Witten, 1980; Wolfenstein, 1980b.). Zee (1980) considers the
+possibility of the neutrinos picking up Majorana masses from a charged
+SU(2)y singlet in the Weinberg-Salam model. He mentions that such a
+Higgs particle could arise in some grand unified theories. Many of the
+grand unified models predict neutrino masses in the range 10°5 to 102 ev
+(Langacker, 1980).
+The experimental bounds on neutrino masses are usually given neglec-
+ting the possibility of neutrino mixing. The limits are then 14 eV <
+m{ve) < 46 eV (Lubimov et al., 1980), m(vy) < 0.52 MeV (Lu et al., 1980;
+Daum et al., 1979) and m{v;) < 250 MeV (Bacino et al., 1979). Simpson
+(1981) quotes a value for m(ve) of 20 eV, but with large errors. infor-
+mation on neutrino masses can also come from astrophysical arguments.
+For example, standard cosmological models predict that the universe is
+permeated by neutrinos. |f these neutrinos have non-zero masses, this
+would affect the expansion rate of the universe. From the measured ex-
+pansion rate one gets the limit that the sum of all stable light neutrino
+masses should be less than about 60 eV (Cowsik and McClelland, 1972;
+Lee and Weinberg, 1977b; Tremaine and Gunn, 1979). Also, the helium
+abundance of the universe constrains the number of distinct light stable
+
+neutrinos to be less than 4 (Shvartsman, 1969; Steigman et al., 1977).
+More model-dependent cosmological arguments give more constraints (Dolgov
+and Zeldovitch, 1981; Steigman, 1979). | quote as an example an upper
+limit on the v; mass of 35 eV calculated by Cowsik (1980). The experi-
+mental situation regarding neutrino oscillations is still ambiguous and
+many new experiments are being planned. A survey of some experiments is
+given by Mann (1981). Improving our experimental knowledge about neu-
+trinos is very important for indicating the direction in which particle
+physics theory should develop. Neutrino experiments also have important
+implications for astrophysics and cosmology.
+
+\section{\label{sec3}I1I. Semi-leptonic processes}
+
+
+A. u"e” conversion
+When negative muons are stopped in some material they are captured
+by atoms and form muonic atoms. {in a time short compared to their 1ife-
+time they cascade down to the ground state atomic orbit. From this state
+they are either captured by the nucleus with the emission of a neutrino
+or they decay into an electron and two neutrinos. !f muon number is not
+exactly conserved the ye conversion process u™+(A,Z) + e“+(A,Z) can occur
+some of the time. The phenomenological study of this process has a
+long history beginning with the work of Weinberg and Feinberg (1959).
+This process has some similarities to yu + eee, For example, the discus-
+sion of Marciano and Sanda (1978, 1977a, 1977b) on the relation between
+u~> ey and yu > eee is also relevant for this process. With a suitable
+choice of stopping material the rate for ye conversion becomes larger
+than the rate for p > ey or py + eee in most theories. This is because
+the process can take place coherently (i.e., the nucleus is not excited
+and remains in the ground state). The overlap integral of the muon
+
+wave function with the nuclear density occurring in the matrix element
+further enhances the rate. Finally, just as in the case of pu -> eee the
+nonphotonic contributions to the rate are enhanced over the photonic
+contribution because of logarithmic factors coming from box Feynman
+diagrams (Marciano, 1978). Thus, ue conversion seems theoretically to
+be a good place to look for muon number violation. This has also been
+emphasized by Altarelll et al. (1977). An interesting aspect of the pe
+conversion process is that a careful measurement of the branching ratio
+for different elements reveals the nature of the current mediating the
+process, and hence throws light on the flavour violating mechanism.
+For example, flavour violation due to gauge bosons, Higgs bosons or
+lepto-quark pseudoscalars (occurring in dynamically broken theories)
+leads to vector currents, scalar currents or a combination respectively,
+In all three cases the calculations of a recent phenomenological study
+(Shanker, 1979) can be used to get the coupling constants of the
+theory from the pe conversion branching ratios for a few elements.
+Experimentally also the pe conversion process has many advantages
+as a probe for muon number violation. The experimental signal for the
+coherent conversion process is very clear because it involves the detec-
+tion of a single monoenergetic electron of energy Ey (where Ey is the
+muon energy, i.e., muon mass minus the muon binding energy). The coher-
+ent process dominates the rate in general, and since it involves the
+detection of a single particle in contrast to p + ey or u > eee, the
+experimental search is facilitated. The background to the coherent
+process (from electrons coming from bound muon decay and from conversion
+of photons coming from radiative pion and muon capture) is negligible.
+
+All these features make the process an attractive probe for muon number
+violation,
+The ue conversion rate is normally compared to the ordinary muon
+capture rate. The present limits on the branching ratios are 7 x 10711
+for sulphur (Badertscher et al. quoted in Egger, 1979; see also
+Badertscher, 1977) and 1.6 x 1078 for copper (Bryman et al., 1972). An
+experiment to measure the branching ratios for different elements with
+greater accuracy is under way at TRIUMF in Vancouver. The TRIUMF group
+use a Time Projection Chamber to increase the solid angle acceptance and
+to improve the energy resolution over previous experiments.
+B. wu"e* conversion
+in y"et conversion the muon in a muonic atom gets converted into a
+positron while two of the protons in the nucleus become neutrons. It
+thus involves a double charge exchange between leptons and hadrons. It
+is allowed in the Konopinski-Mahmoud scheme of lepton numbers. In this
+scheme it is suppressed due to the helicity assignments of the neutrino
+and the V-A nature of the weak interaction (Frankel, 1974; Pontecorvo,
+1967). The process could also occur due to Majorana neutrinos (Kamal
+and Ng, 1979) or Higgs particles (Vergados, 1981). It was first studied
+in detail by Kamal and Ng (1979). The calculations of the nuclear matrix
+elements needed for the process are similar to those done for the no-
+neutrino double beta decay, which is reviewed in a later section. The
+similarity of the calculations stems from the fact that both processes
+involve double charge exchange. The experimental limit on the rate
+for u"e* conversion is normally quoted as a fraction of the ordinary
+muon capture rate. Experiments which set limits on u”e” conversion
+also set limits on the branching ratio for this process. Bryman et al.
+
+(1972) report a limit R(u~e*) < 2.6 x 108 for copper. A limit R{u~e*) <
+9 x 10"10 has been set by the Bern group (Badertscher et al., 1978) for
+sulphur. For experiments which detect the final state positron the back-
+ground comes from radiative muon capture followed by photon pair produc-
+tion. An interesting new way to observe this reaction is to look for
+the recoiling nucleus. Such an experiment was done by the Basel-
+Karlsruhe group at SIN (Abela et al., 1980). They searched for 127Sb
+from u~et conversion in 1271 using radiochemical techniques. They get
+the limit R(u"e*) < 3 x 10710 for iodine. The background for this ex-
+periment is production of !27Sb through picnic double-charge exchange.
+For the pion contamination of <5 x 10™% in the u~ beam this was found to
+be negligible.
+C. Muon number violating kaon decays
+The decays normally investigated are the decay of $K_L$ or Kg into ue
+or ye with or without a pion and the decays of charged kaons into pions
+and an electron and a muon. Experimental limits are available only for
+KL + ve or pe, K* + eurt and K* + rje. Muon number violating decays
+can be discussed in terms of the effective Lagrangian:
+A 1 =p! ' i
+Letr = =[er (F1(5)*F1 (5) Ys )udl gy eT (Fi a*f @ sya | +
++ Hermitian conjugate . (8)
+where
+Its) =5rld + rls,
+Sa = 5rd - Tris, (9)
+and Ti are I, Ys, vA, ys and gWV for i = S,P,V,A,T respectively.
+Herczeg (1979) pointed out in a phenomenological study that muon number
+violating kaon decays are likely to be small unless the flavour violating
+
+mechanism is suppressed for the Ko-Ko transition. Models are known in
+which the latter process is suppressed and in which muon number viola-
+ting kaon decay rates can be interesting (Maehara and Yanagida, 1979;
+Cahn and Harari, 1980; Shanker, 1980 and 1981).
+Let us consider the experimental constraints on the phenomenological
+coupling constants in Eq. 8 from the process Ki + u*e™. Only the axial
+vector and pseudoscalar ''symmetric' currents with coupling constants
+fa(s)xxx FA(s)s fp(s) and f(s) will contribute to the process. If we
+define the Ki to vacuum matrix elements
+<0] Rs) IKL(P)> = Pyman/ 2m
+<0 ss) KL (P)> = -mBap//Zmy, (10)
+the rate for $K_L$ + u*exxxxx can be written (Herczeg, 1979)
+rk + pte”) = mg {1-mZ/mg) 2 (|A]2+|8)2) / (8n) an
+where
+Am (h.2 x 1077) fp (sya = (2 x 1078) fp (gap,
+Bs (4.2 x 1077)F5 5yap + (2 x 1078) Fp (5) ap. (12)
+The branching ratio for K+ p*e” is
+$B(K_L + wexxxx)$ = T(K, + ptexxxx )/T(K + all)
+= (1.4 x 1015) (jA]2+|8B]2). (13)
+The experimental upper limit for the branching ratio (Clark et al., 1971)
+is 2 x 1072 and implies that the absolute value of A (or B) should be
+less than 1.2 x 10712, The form factor ap can be related to the leptonic
+kaon decay form factor fy using isospin symmetry:
+<0 4} (oy [KL (P)> = vZ<O[SyyysulK*> = VT FyPy/ VER xxxxx (14)
+which gives ap = v2 fy/mk. ap can be estimated from ay using the
+
+current algebra relation (Branco et al., 1976)
+As) = 1 (mg+mg) ofs) (15)
+which gives
+ap = ap mg/ (mg+mg) (16)
+The above relations give {(Herczeg, 1979)
+ap = 0.48
+ap = 1.5 (17)
+If we take fi = 1.23 my and ms = 150 MeV, mg = 7.5 MeV (Weinberg, 1977b).
+The decay could occur due to neutrino mixing, for example it could occur
+in the standard model with six leptons and six quarks if the t neu-
+trino were not massless and mixed with the other neutrinos. In the
+standard model all muon number violating effects depend on the parameter
+By where B and y measure the amount of v; mass eigenstate in the gauge
+group eigenstates vg and v) respectively (Lee and Shrock, 1977a; Cheng
+and Li, 1977b). The KL + ue rate in this model has been calculated by
+Lee and Shrock (1977a) and by Cheng and Li (1977b). Lee and Shrock find
+that the main contribution to the rate comes from the free quark diagram
+Fig. 2b and the contribution from the intermediate two photon decay
+KL + 2y + pe is small, This is in contrast to the situation for the decay
+KL + un where the dominant contribution comes from the 2y intermediate
+state. The ratio of the free quark contributions to $K_L $ + pe and to
+KL + up is of the order of (8y)2. Hence the ratio of the rate for
+KL + ve to the total rate for $K_L $ + uy is of the order of 1073(gy)2.
+Since the branching ratio for $K_L $ + up is very small it is clear that the
+rate for K, + ue is negligible in the standard model. With the experi-
+mental Vimits (By)? < 2 x 103 (Lee and Shrock, 1977a; Altarelli et al.,
+- 33 ~-
+1977; Cheng and Li, 1977b; Bleitschau et al., 1978) and my, < 250 MeV one
+obtains
+I (Kg > utexxxxx)
+r(Kk xxxxx all)
+<5 x 10716, (18)
+which is far below the present experimental limit. More interesting
+limits are obtained in horizontal gauge models and technicolour models.
+The only other muon number violating kaon decays for which signifi~
+cant limits exist are K + re and K* + nye. These processes could
+occur due to "'symmetric' and "antisymmetric" scalar, vector and tensor
+currents in the effective Lagrangian Eq. 8. Using isospin symmetry the
+K* to nt vector matrix element can be related to the K' to 70 matrix
+element which is known for vector currents from K* + moutyy and K+ +
+mOetye decays. For scalar currents the matrix element can be related to
+the vector matrix element using current algebra (Branco et al., 1976).
+The present limits on the branching ratios are (Diamant-Berger et al.,
+1976) :
++ + tT
+r{k* +xxxxx ety*rt) <7 x 109,
+r{k* ~ all)
+(Kt +xxxx gtyute)
+T{K+ = all)
+<5 x 1079, (19)
+For illustrative purposes | will describe the phenomenological cal-
+culation of Herczeg (1979) on the rate for Kt + n*ye mediated by a scalar
+(Higgs) particle. He assumes that a scalar particle  couples to fermion
+currents with coupling constants (g'ue + g"4%5) 0), where Hs) is defined
+by Eq. 9. With these couplings the effective muon number violating
+Lagrangian due to the exchange of the scalar particle is given by Eq. 8
+with Gpfg(s)/vZ = g'g"/m§. The branching ratio for K* + nye is then
+given by 8|fg (sy |2- One can get some constraints on fs (s) because the
+scalar particle exchange also contributes to the Ki -Kg mass difference.
+. 
+The effective AS = 2 Lagrangian due to the scalar particle exchange is
+of the form (g"/my) 2 (sd) (sd) and this contributes to the K -Kg mass
+difference an amount
+amg = 2(g"/my)? <K°|Sdsd|Kko> . (20)
+Herczeg had to estimate the K°-KC transition matrix element in Eq. 20.
+A study of the Ko-K° transition matrix elements for a general combination
+of the AS = 2 currents now exists (McWilliams and Shanker, 1980b), and
+| will use the results for the analysis.
+| will describe the calculation of the KO-K° transition matrix ele-
+ments briefly in view of their importance. Three methods have been
+used to calculate them. One method is to use the bag model (Shrock and
+Trieman, 1979). The remaining two methods are both called the vacuum
+insertion method. To avoid confusion | will use different names. The
+first evaluation of the K9-K° matrix element was done for the (V-A)
+AS = 2 current which occurs in the standard weak interaction model
+(Gaillard and Lee, 1974). They used what is called the vacuum inser-
+tion method, and | will call this method the Fierz transform method.
+In this method the kaon is treated as a two quark object (i.e., the
+effect of sea quarks and gluons are ignored). The four quark AS = 2
+operator is broken up into creation and annhilation components, and these
+are Fierz transformed such that the operators destroy the quark-anti-
+quark pair in the KO meson before creating those in the KO meson. If
+a complete set of states is now introduced between the operators, only
+the vacuum state will contribute provided the K° meson is really made
+up of only a quark and an anti-quark. That is why this method is called
+the vacuum insertion method. This method relates the KO-K° matrix
+
+element to the K° to vacuum matrix element which is experimentally deter-
+mined. The third approach is also called the vacuum insertion method
+because it is often confused with the method which | described above,
+the Fierz transform method. In this method a complete set of states is
+introduced without making the Fierz transformations. Since only the
+kaon to vacuum matrix element is known to reasonable accuracy, the sum
+over complete states is truncated with the vacuum contribution. Hence
+the third approach can be called a truncated complete states method. In
+the study of McWilliams and Shanker the Fierz transform method of calcu-
+lation and the bag model calculation are used for a general combination
+of AS = 2 currents, unlike the previous studies which were limited to
+a (V-A) combination of currents. This study finds that the bag model
+and Fierz transform methods are in reasonable agreement.! However, the
+truncated complete states method, which is commonly used, can give very
+misleading results due to the neglect of states other than the vacuum
+in the sum, - )
+I will use the Fierz transform value for the matrix element
+in Eg. 20. The Fierz transform calculation is sensitive to current
+algebra quark masses, and | use the values mg = 150 MeV, md =
+7.5 MeV (Weinberg, 1977b). The matrix element takes the value
+-0.01 GeV3. Assuming that the scalar particle contribution to the
+1The bag model matrix elements are approximately 0.7 times the Fierz
+transform matrix elements, and this is within the expected accuracy of
+the methods. Note that for the (V-A) case the bag model calculation is
+0.4 times the Fierz transform calculation. The agreement is poorer for
+the (V-A) case because a cancellation occurs between the vector and
+axial vector matrix elements, and hence the results are more sensitive
+to the bag model parameters.
+
+KL ~Ks mass difference is comparable to the experimental value of 3.5 x
+10715 GeV, we find that my > g"(2 x 106) GeV. Often the coupling of
+scalar (Higgs) particles to fermions is proportional to the fermion
+masses. Hence, if we assume that g'/g" = my/mg we find that the above
+result constrains the K* + ntye branching ratio to be less than 1.5 x
+10715. For g'/g" = my/mg the branching ratio is less than § x 10~1!3,
+These are well below the experimental value quoted in Eq. 19, illustra-
+ting the strong constraints provided by the Ki ~Kg mass difference on
+lepton number violation in some models. The branching ratios calculated
+above are two orders of magnitude larger than the results of Herczeg.
+This is because | used the result of a KO-K° matrix element calculation
+instead of an estimate. The large change reflects the fact that the
+Ki -Ks mass difference is proportional to the amplitude of the flavour-
+violating current and hence is inversely proportional to ms while the
+rate for K* + ntue is proportional to the square of the amplitude and
+hence Is inversely proportional to mg. Thus, an order of magnitude
+change in the value of the K°-K° transition matrix element that was
+used changed the estimate for the K* + nue rate by two orders of mag-
+nitude. The use of better K°-K® transition matrix elements does not
+change the results of the other cases considered by Herczeg so
+drastically.
+The search for muon number violating kaon decays is useful as a
+probe for horizontal gauge bosons or the leptoquark pseudoscalars of
+dynamically broken theories. Doubly charged muon number violating kaon
+currents have also been discussed in the context of the Konopinski-
+Mahmoud lepton number scheme. However, p~et conversion and no-neutrino
+double beta decays seem to provide more stringent tests of doubly charged
+muon number violating currents (Frankel, 1974; Diamant-Berger et al., 1976).
+
+Neutrinoless double beta decay
+The neutrinoless double beta decay process is the emission of two
+electrons by a nucleus, with no accompanying neutrinos. Two neutrons in
+the nucleus get converted into protons. This process violates lepton
+number. It could occur in gauge theories if the neutrinos pick up
+Majorana masses or it could occur due to Higgs particle Interactions.
+A recent review of the process is given in Rosen (1980). if the neutrino
+is a Majorana particle and has zero mass the process is not allowed
+because of the (V-A) nature of the weak interaction. This is because
+the process occurs in two steps, i.e., n + pte +yy followed by vy+n +
+pte”, and the neutrino emitted in the first step has the wrong helicity
+to participate in the second step. The process could occur |f the weak
+interaction had right-handed components, or if the neutrino had non-
+zero mass, since mass terms lead to violation of helicity. It is some-
+times stated that a Dirac particle and Majorana particle are equivalent
+in the zero mass limit. This is only true for the equation of motion,
+i.e., the Dirac and Majorana equations become equivalent for zero mass.
+As the above discussion shows, even In the zero mass limit the Dirac or
+Majorana nature of the neutrinos could affect thelr interactions.
+The weak interaction Hamiltonian for double beta decay with Major-
+ana neutrinos has been discussed by Pauli (1957), Pursey (1957), Liders
+(1958), Enz (1957). The effect of neutrino mass In overcoming the
+suppression due to the helicity of the weak current has been discussed
+by Enz (1957), Greuling and Whitten (1960) and Halprin et al. (1976).
+Calculations of the lifetimes for the process in terms of weak inter-
+action parameters were performed by Furry (1939), Touschek (1949),
+Primakoff (1952), Konopinski (1955) and Primakoff and Rosen (1959, 1965
+
+and 1969). There are very large uncertainties (about two orders of mag-
+nitude) in the calculations due to uncertainties in the knowledge of
+the nuclear matrix elements. Recent calculations of the matrix elements
+for the tellurium nucleus were performed by Haxton et al. (1979). All
+the above work assumed that no-neutrino double beta decay occurred due
+to a Majorana neutrino. The process must involve two nucleons because
+one nucleon cannot change its charge by two units (a nucleon has isospin
+1/2 and hence only two isospin components). Experimental limits con-
+strain the neutrino mass to be either very small or very large. In the
+former case the helicity of the weak interaction operates in suppressing
+the rate for the process and in the latter case the suppression is due to
+the Yukawa-type force generated by the exchange of the neutrino between
+two nucleons. If the nucleus contains nucleon resonances in addition
+to unexcited nucleons, the process could involve only one resonance of
+isospin greater than 1/2. This is because such a resonance would have
+more than two components and could change its charge by two units. The
+process is assumed to involve two quarks within the resonance (Primakoff
+and Rosen, 1969; Halprin et al., 1976). The lower limit on the neutrino
+Majorana mass for the heavy neutrino case becomes much more stringent
+if such a nucleon resonance is contained in the nucleus. This is be-
+cause the quarks participating in the process come closer together than
+in the case involving two nucleons. Also, unlike nucleons the quarks
+are expected to have no hard-core potential between them. Pontecorvo
+(1968) discussed a AL = 2 superweak interaction mediating the process,
+in analogy with the superweak CP violating interaction proposed by
+Wolfenstein (1964).
+
+The experimental search for the process involves both geo-chemical
+and direct detection methods. The lepton number conserving two neutrino
+double beta decay process does occur and has to be separated experimen-
+tally or subtracted theoretically. A review of the experiments is given
+in Bryman and Picciotto (1978). They find that phase space calculations
+do not account for the ratio of Tel30 and Tel2?® lifetimes, assuming
+that the nuclear matrix elements for Tel3C + Xel30 and Tel30  -> xxxxx xel28
+are equal and that the decays are due to lepton number conserving two
+neutrino double beta decay modes. They find that the existence of a
+small number of no-neutrino decay mode events could remove the discre-
+pancy. The uncertainties in the nuclear matrix elements are too large
+to draw any definite conclusions regarding lepton number violation
+(Haxton et al., 1979).
+
+
+\section{\label{sec4}Model predictions}
+
+Having seen the types of models which predict muon number violation
+and the different muon number violating processes that have been studied,
+it is natural to ask which of the processes are most sensitive to vio-
+lation of muon number. Unfortunately, the answer to this question is
+model-dependent. At present we cannot convincingly say whether muon
+number violation should occur at all, the scale at which possible vio-
+lations may be expected, or the process most sensitive to muon number
+violation. However, one can look at the different types of models and
+draw some conclusions,
+A. Horizontal gauge models
+Let us first look at horizontal gauge models. In these models the
+muon number violating rates will be uninterestingly small unless the
+contribution of the horizontal gauge bosons to the K -Kg mass differ
+ence is suppressed. This is because the K;-Kg mass difference is
+
+sensitive to the matrix element of the flavour violating current, unlike
+the rates which are sensitive to the square of the matrix element. A
+class of models is known (Maehara and Yanagida, 1979; Cahn and Harari,
+1980; Shanker, 1980 and 1981) In which the Kj -Kg mass difference is
+suppressed and in which the muon number violating rates could be close
+to the experimental upper limits. The suppression mechanism depends on
+the fact that the horizontal gauge bosons are almost degenerate in mass.
+Table | shows a representative calculation of the constraints imposed
+on the parameters of this class of theories by muon number violating
+processes. The cases referred to in the table are described in Shanker
+(1981) and correspond to different choices of a discrete symmetry in
+the model. The muon number violating processes constrain two parameters
+in the theory, which are essentially the horizontal gauge boson mass M
+and the gauge boson degeneracy breaking, 6 = AM/M. § is expected to be
+of order MG/m2 If all gauge coupling constants are comparable (My Is the
+mass of the ordinary W boson mediating weak interaction processes). In
+reading the table it should be kept in mind that all mixing angles are
+assumed to be of order one and possible suppressions due to mixing
+angles can change some of the conclusions. For comparison with the table
+we note that the imaginary part of the Ki -Ks mass difference constrains
+6 to be less than 4 x 10713(M/My)2. Since § Is expected to be of order
+M3IMZ, we see that p~e” conversion provides the most stringent constraint
+on the theory, i.e., M > 3000 My, unless mixing angles suppress the
+rate for this process. The pattern in the table can be understood quite
+simply: the mechanism which suppresses the K -Kg mass difference also
+suppresses muon number violating rates involving only two flavours, i.e.
+u + ey and p + eee. However, the mechanism works only when certain
+
+restrictions are satisfied by the fermion mixing angles, and hence
+pu + ey and p + eee are not suppressed in some cases. In these cases
+they give strong constraints on the horizontal gauge boson mass M. In
+all cases pe conversion provides one of the best limits on M. This is
+a general property of ye conversion and is not limited to the class of
+horizontal gauge models we are considering. The enhancement of ue con-
+version rates in many models reflects the fact that the quarks in the
+nucleus contribute coherently to the pe conversion amplitude. It is
+possible that the coupling constants conspire to reduce the rate for pe
+conversion.? This means that all the processes in the table must be
+investigated to look for muon number violation.
+Hypercolour models
+| now consider hypercolour models, In which the symmetry is dynam-
+ically broken. In these models muon number violation can occur due to
+light scalar particles (called pseudo-Goldstone bosons. They are actu-
+ally bound states of hyperfermions. However, they behave like spin zero
+particles at low energies.) Muon number violation could also occur due
+to horizontal guage bosons which have to be introduced to give masses
+to the ordinary fermions. In hypercolour models the masses of the par-
+ticles mediating flavour changing processes cannot be made arbitrarily
+large. They are constrained by the {ordinary) fermion masses and mixing
+angles. This causes some difficulty for hypercolour models, and they
+tend to predict too large a value for the Ki-Kg mass difference. A
+2In general this is unlikely, but one can adjust parameters to build a
+model where this happens. Since the process involves both up and down
+quarks, It Is difficult to adjust parameters such that the process is
+completely suppressed.
+. 
+suppression mechanism for this process seems to be required. In the
+case of the flavour changing scalar particles Ellis et al. (1980)
+achieve this by what they call "monophagy', namely, each charge sector
+of ordinary fermions gets its mass from a unique effective scalar (hyper-
+fermion condensate). This is similar to the standard model of weak
+interactions with two or more ordinary Higgs doublets and natural fla-
+vour conservation. Ellis et al. note that even in monophagous models
+coloured leptoquark scalars exist which mediate the Ki > ue process.
+Because of fermion mixing one would expect other processes like pe con-
+version to also occur, and this Is now being studied (Ng and Shanker,
+work in progress). The leptoquark nature of the intermediate boson
+implies that the flavour violating current has both scatar and vector
+components, and this is a distinctive signal. The nature of the current
+would reveal itself in the variation of the ue conversion rate for differ-
+ent elements, for example.
+For the horizontal gauge bosons in hypercolour models no suppression
+mechanism is known for the K -Kg mass difference, but such a mechanism
+seems to be needed. One would then expect the phenomenology of flavour
+violation due to the gauge bosons to resemble the phenomenology of the
+horizontal gauge models considered above. Dimopoulos and Ellis (1980)
+have made a useful study of flavour violation in hypercolour models.
+They arrive at different conclusions. They argue that in the absence
+of fermion mixing the mass of the horizontal gauge boson which gives mass
+to a particular quark is inversely proportional to the square root of
+the quark mass. Because of the large hierarchies in quark masses this
+leads to gauge bosons with very different masses. They then assume that
+flavour violating processes are mediated by gauge bosons with masses of
+
+the same order as those which give masses to the quarks participating
+in the process. Because fermions do mix, it may be too restrictive to
+use flavour changing gauge bosons with very different masses for differ-
+ent flavour changing processes, as is done by Dimopoulos and Ellis. The
+lighter horizontal gauge bosons, which give masses to. the heavier quarks
+(say to the bottom quark), may contribute to flavour changing processes
+involving light quarks only (say to ue conversion with a current coupling
+to the down quark), because of fermion mixing. in fact, a mechanism
+which generates both quark masses and quark mixing angles may not even
+have a large hierarchy of horizontal gauge boson masses. The work of
+Dimopoulos and Ellis seems to indicate that $K_L $ + pe Is the most sensitive
+muon number violating process in hypercolour theories. However, as !
+have just argued, a more detailed understanding of the mechanism gener-
+ating fermion masses and mixing angles seems to be required before re-
+liable conclusions can be drawn. Normally quark mixing angles do not
+change the phenomenology by many orders of magnitude. In the work of
+Dimopoulos and Ellis, however, the hierarchy of gauge boson masses makes
+the phenomenology sensitive to the mixing angles. The mixing angles
+which occur in the phenomenology are not necessarily the ones which
+occur in the ordinary weak interaction (the Kobayashi-Maskawa or gener-
+alised Cabibbo angles).
+C. Grand unified theories
+An interesting question is the implication of grand unified theories
+(GUTs) for muon number violation. The superfluous proliferation of fam-
+ilies is as much of a mystery in these theories as it is in the low energy
+standard model. {In GUTs also horizontal gauge symmetries have been con-
+sidered to deal with the generation problem, and these attempts are
+
+reviewed in Langacker (1980). These attempts include the use of large
+simple groups or products of simple groups with discrete symmetries im-
+posed to get one coupling constant. The Implications of these models
+for the processes considered here depend on whether the horizontal gauge
+bosons get masses of the order of GUT masses, or whether they get masses
+low enough to give measurable rates for muon number violating processes.
+No satisfactory model which accounts for the repetition of generations
+exists. Many GUTs do predict non-zero mass for the neutrinos, and hence
+have implications for neutrino experiments. The discovery of muon num-
+ber violation in other processes would have implications for GUTs, since
+the models would have to account for the new phenomena. A class of GUTs,
+the Pati-Salam models, have light (10*-106 GeV) leptogquarks which could
+mediate muon number violating semileptonic processes like K+ ue and
+ue conversion. While no detailed studies of this aspect have been made,
+the quark coherence effect in ue conversion should make it a favoured
+process. Because of possible mixing angle suppression in pe conversion
+muon number violating kaon decays could also be interesting processes.
+D. Neutrino mass
+Non-zero neutrino masses also imply the existence of flavour viola-
+ting processes other than neutrino oscillations. However, the rates will be far
+below present experimental limits (Petkov, 1977). Cheng and Li (1980b)
+have studied the relation between y + ey and neutrino mass terms in
+models with three generations of fermions, which reduce to the standard
+model at low energies. They find that in some cases these models can
+have detectable yu + ey rates if the model parameters are fine-tuned.
+The presence of new mass scales for the neutrinos (in the left-right
+symmetric models, or in a model with more than three generations, for
+
+example) could lead to detectable flavour violating rates. Even in the
+left-right symmetric models, which have been thoroughly studied, no com-
+plete calculation of muon number violating (lepton-number conserving)
+rates have been made.
+E. Higgs models
+Let us finally look at extensions of the standard low energy model
+which introduce new scalar (Higgs) particles. The new particles have
+been most often introduced to get spontaneous CP violation, or are moti-
+vated because GUTs may reduce at low energies to theories which have
+these new particles, In theories which introduce new Higgs su(2)y
+doublets one can impose a discrete symmetry which enforces natural flavour
+conservation. Even when natural flavour conservation is not Imposed
+the stringent limit on the K -Kg mass difference is likely to constrain
+the Higgs particle masses so strongly that muon number violation is very
+small. However, if the contribution of the Higgs particles to the Ki -Kg
+mass difference is suppressed for some reason the muon number violating
+rates could be close to present experimental limits. For example, in
+the model of Lahanas and Vayonakis (1979) the Higgs particle contribution
+to the K -Kg mass difference is proportional to the Higgs particle mass
+differences. Hence muon number violating processes could have detectable
+rates if the Higgs scalars have almost degenerate masses. Bjorken and
+Weinberg (1977) have pointed out that in a model with Higgs-particle-
+mediated flavour violation two-loop diagrams may make a larger contri-
+bution to u + ey than one-loop diagrams. In the model of Lahanas and
+Vayonakis p + ey could be suppressed by Higgs particle mass differences
+since it involves only two kinds of flavours, like the KO-KO transition.
+Processes like ye conversion, on the other hand, may have detectable
+4 
+rates. The model of Lahanas and Vayonakis makes some assumptions regar-
+ding mixing angles (eg. that mixing angles in the left and right-hand
+sectors are equal, up to a diagonal phase matrix). The role of these assump-
+tions in the suppression of the Ki-Ks mass difference has to be studied..
+After the detailed discussion of flavour violation In different models
+that has been presented we are in a position to make a general summary.
+
+\section{\label{sec5}Conclusions}
+
+Vv. Conclusions
+Many extensions of the standard model that are presently being
+studied have non-zero rates for muon number violating processes. A com-
+plete study of muon number violation has been made for only some of the
+models, On general grounds one finds that neutrino oscillations and pe
+conversion are sensitive probes of muon number violation. Neutrino oscil-
+lations are sensitive because the experiments measure the flavour viola-
+ting amplitudes directly, while the experiments for the other processes
+measure the square of the amplitude. pe conversion is interesting be-
+cause muon number violation could occur while the neutrinos remain mass-
+less. It Is a sensitive process because the quarks in the nucleus con-
+tribute coherently to the amplitude. Since mixing angles may suppress
+ue conversion one should also investigate the other processes listed in
+Table I. For models where both muon number and total lepton number are
+violated (models with Majorana neutrinos, which have been investigated
+extensively, belong to this class) neutrino-anti-neutrino oscillations
+seem to be very sensitive tests. The pe’ conversion and neutrinoless
+double beta decay processes should also be investigated because they may
+be sensitive to regions of the model parameters which have not been
+probed by neutrino oscillation experiments.
+
+\section*{Acknowledgments}
+The author thanks Lincoln Wolfenstein for getting him interested in
+the topic, and for his ungrudging help and his willingness to share with
+the author his vast knowledge of and insight into weak interactions.
+Many very useful discussions with him went a long way in making this
+work possible, His encouragement during the course of the work is grate-
+fully acknowledged. The author also thanks Ling-Fong Li and John Ng
+for several helpful discussions, Ling-Fong Li's clear and simple explan-
+ations on many difficult aspects of gauge theories were very useful in
+addition to being a pleasure to listen to. John Ng's comments on neutrino
+processes, p~et conversion and neutrino-less double beta decay were very
+helpful. The author thanks Lorraine Gray for her excellent typing.
+A major portion of the work was done at Carnegie-Mellon University
+for the author's doctoral thesis. The author thanks Lincoln Wolfenstein
+and the High Energy Theory group of the Physics department at Carnegie-
+Mellon for support during the course of the work. The work was finished
+at TRIUMF and the author thanks the theory group at TRIUMF for support
+while the work was being completed. .
+
+
+Table I. Typical constraints on horizontal gauge models from muon num-
+ber violating processes. M and My are the horizontal gauge boson mass
+and weak gauge boson mass respectively. 6 is the horizontal gauge
+boson mass degeneracy breaking parameter, AM/M. 6 is expected to be of
+order MG/M2. See text for further details.
+Limits on M
+Cases |, 11, v, vi Experimental
+Lases 1, 1, v, vi
+Process Parameter Limit for cases Hi upper limit
+5 <4 x 1077 (M/Ny)2 1500 My 2 x 10-10
+§  <1076 (H/My)2 1000 My 2 x 10-9
+M >3000 My ha 3000 My 7 x to-11
+. (sulphur)
+r($K_L$ + eu or je)
+-9
+CET M >100 My 100 My 2 x10
+M2300 My 300 My 5 x 10-9
+ub >300 Hy 300 My 7 x 107xxx
+8These processes require axial vector quark currents. For the cases
+listed in the table such axial vector currents arise only at the one-
+loop level! and hence the processes are suppressed by factors of coupling
+constants. When axial vector currents arise due to tree diagrams the
+limit on M is much more stringent, M > 1000 My. For example, this
+would be the limit for the case in Shanker (1981) where the left and
+right mixing angles for the d type quarks differ by complex phase
+factors.
+bEor cases (i) and (v) some mixing angle relations result in a suppres-
+sion of this process. The relevant bound In these cases is on §,
+6 < 1075(M/m,) 2,
+
+Addenda
+In the section on pe conversion I should mention that Lincoln
+Wolfenstein [1977, in Proo. of 7th Int. Conf. on High Energy Phyeica and
+Nuclear Structure, edited by M.P. Locher (Birkhduser Verlag, Basel), P—
+p. 363] emphasized the reliability with which information on gauge theory
+parameters can be deduced from experimental limits on the ue conversion
+rate, He played an important role in the nuclear physics calculations
+(a)
+which are required for u€ conversion. In the section on neutrino pro-
+cesses | should mention that Douglas R.0. Morrison (1980, CERN Report
+CERN/EP 80-190) gives a critical discussion of the experimental evidence
+for neutrino oscillations and mentions that explanations not Involving
+neutrino oscillations seem to exist for all the experimental results.
+He also discusses anomalous results in the CERN beam dump experiments
+and mentions that explanations involving neutrino oscillations are un-
+likely for these results.
+Epilogue
+We began the discussion with the five elements of the ancients, pro-
+gressed to ninety-two and beyond, went back to two, we are progressing
+again, and the end is not in sight, The riddle we have discussed Is old,
+older still than the sphinx's riddle: what creature, with only one voice,
+has four legs in the morning, two at midday, and three In the evening,
+and yet is weakest when it has the most? Many weary travellers have
+attempted to answer the former riddle, and yet we walt for the Oedipus
+who will make the sphinx cast herself from her rock and cease to
+torment us!
+Representative Feynman diagrams contri-
+Fig. 2.
+A triangle anomaly,
+Fig. 1.
+buting to muon number violation in different models.
+
+
+
+
+\bibliographystyle{amsplain}
+\begin{thebibliography}{10}
+
+\bibitem{Abela}Abela, R. et al., 1980, Phys. Lett. 958, 318.
+
+\bibitem{Abers}
+Abers, E.S. and B.W. Lee, 1973, Phys. Rep. 3, 1.
+
+
+\bibitem{}
+Adler, S.L., 1970, Lectures on Elementary Particles and Quantum Field
+Theory, edited by S. Deser, M. Grisaru and H. Pendleton (MIT Press,
+Cambridge).
+
+\bibitem{}
+Altarelli, G. et al., 1977, Nucl. Phys, B125, 285,
+
+\bibitem{}
+Anderson, C.D. and S. Neddermeyer, 1938, Phys. Rev. 54, 88.
+
+\bibitem{}
+Bacino, W. et al., 1979, Phys. Rev. Lett, 42, 749.
+
+\bibitem{}
+Badertscher, A. et al., 1977, Phys. Rev, Lett. 39, 1385.
+
+\bibitem{}
+Badertscher, A. et al., 1978, Phys. Lett. 798, 371.
+
+\bibitem{}
+Bander, M. and G. Feinberg, 1960, Phys. Rev. 119, 1427.
+
+\bibitem{}
+Barbierl, R., J. Ellis and M.K. Gaillard, 1980, Phys. Lett. 908, 249,
+
+\bibitem{}
+Bardeen, W.A., 1974, Nucl. Phys. B75, 246.
+
+\bibitem{}
+Barger, V. et al., 1980a, Phys. Rev. Lett. 45, 2084.
+
+\bibitem{}
+Barger, V. et al., 1980b, Phys. Rev. D22, 1636.
+
+\bibitem{}
+Barr, S. and A. Zee, 1978, Phys. Rev. D17, 1854.
+
+\bibitem{}
+Bilenky, S.M. and B. Pontecorvo, 1978, Phys. Rep. Mic, 225.
+
+\bibitem{}
+Bjorken, J.D. and S. Weinberg, 1977, Phys. Rev. Lett. 38, 622.
+
+\bibitem{}
+Blietschau, J. et al., 1978, Nucl. Phys. BI33, 205.
+
+\bibitem{}
+Bludman, S., 1958, Nuovo Cimento 9, 433.
+
+\bibitem{}
+Bowman, J.D., T.P. Cheng, L.F. Li and H.S. Matis, 1978, Phys. Rev. Lett. 41, baz.
+
+\bibitem{}
+Bowman, J.D. et al., 1979, Phys. Rev. Lett. L2, 566.
+
+\bibitem{}
+Branco, G.C., T. Hagiwara and R.N. Mohapatra, 1976, Phys. Rev. D13, 104,
+
+\bibitem{}
+Branco, G.C., 1980, Phys. Rev. Lett. 44, 504.
+
+\bibitem{}
+Bryman, D.A. et al., 1972, Phys. Rev. lett. 28, 1469.
+
+\bibitem{}
+Bryman, D.A. and C. Picciotto, 1978, Rev. Mod. Phys. 50, 11.
+
+\bibitem{}
+Cahn, R.N. and H. Harari, 1980, Nucl. Phys. B176, 135.
+
+\bibitem{}
+Chakrabarti, J., M. Popovic and R.N. Mohapatra, 1980, Phys. Rev. b21, 3212.
+
+\bibitem{}
+Chaniowitz, M.S., J. Ellis and M.K. Gaillard, 1977, Nucl. Phys. B128, 506.
+
+\bibitem{}
+Chikashige, Y., G. Gelmini, R.D. Peccei and M. Roncadelli, 1980, Phys. Lett. 94B, 499.
+
+\bibitem{}
+Cheng, T.P. and L.F. Li, 1977a, Phys. Rev. Di6, 1425.
+
+\bibitem{}
+Cheng, T.P. and L.F, Li, 1977b, Phys. Rev. DI6, 1565.
+
+\bibitem{}
+Cheng, T.P. and L.F. Li, 1978, Phys. Rev. DI7, 2375.
+
+\bibitem{}
+Cheng, T.P. and L.F. Li, 1980a, Phys. Rev. Lett. 45, 1908.
+
+\bibitem{}
+Cheng, T.P. and L.F. Li, 1980b, Phys. Rev. D22, 2860.
+
+\bibitem{}
+Clark, A.R. et al., 1971, Phys. Rev. Lett. 26, 1667.
+
+\bibitem{}
+Cowsik, R. and J. McClelland, 1972, Phys. Rev. Lett. 29, 669.
+
+\bibitem{}
+Cowsik, R., 1980, Bartol Report BA-80-41.
+
+\bibitem{}
+Danby, G. et al., 1962, Phys. Rev. Lett. 9, 36.
+
+\bibitem{}
+Daum, M. et al., 1979, Phys. Rev. D20, 2692.
+
+\bibitem{}
+Davidson, A., M. Koca and K.C. Wali, 1979a, Phys. Lett. 86B, 47.
+
+\bibitem{}
+Davidson, A., M. Koca and K.C. Wall, 1979b, Phys. Rev. Lett. 43, 92.
+
+\bibitem{}
+Davidson, A. and K.C. Wali, 1980, Weizman Report WIxxxx80/42/Nov-ph.
+
+\bibitem{}
+Davis, R., Jr., 1955, Phys. Rev. 97, 766.
+
+\bibitem{}
+Davis, R., Jr., J. Evans and B. Cleveland, 1978, in Proc of "Neutrino 78" Conference, edited by E. Fowler.
+
+\bibitem{}
+DeRejula, A., H. Georgl and S.L. Glashow, 1975, Phys. Rev. D12, 147.
+
+\bibitem{}
+Derman, E., 1979, Phys. Rev. DI9, 317.
+
+\bibitem{}
+Deshpande, N.G., R.C. Hwa and P.D. Mannheim, 1979, Phys. Rev. D139, 2686.
+
+\bibitem{}
+Deshpande, N.G., 1981, Eugene Report 0ITS-160.
+
+\bibitem{}
+Diamant-Berger, A.M. et al., 1976, Phys. Lett. 628, 485.
+
+\bibitem{}
+Dimopoulos, S. and J. Ellis, 1980, CERN Report TH.2949-CERN.
+
+\bibitem{}
+Dolgov, A.D. and Ya.B. Zeldovich, 1981, Rev. Mod. Phys. 53, 1.
+
+\bibitem{}
+Ecker, G., W. Grimms and W. Konetschny, 1981, Nucl. Phys. 8177, 489.
+
+\bibitem{}
+Egger, J., 1980, Nucl. Phys. A335, 87.
+
+\bibitem{}
+Eichten, E. and K. Lane, 1980, Phys. Lett. 90B, 125.
+
+\bibitem{}
+Ellis, J., M.K. Gaillard, D.V. Nanopoulos and P. Sikivie, 1980, CERN Report TH.2938-CERN/LAPP TH.23.
+
+\bibitem{}
+Enz, C.D., 1957, Nuovo Cimento 6, 250.
+
+\bibitem{}
+Feinberg, G., 1958, Phys. Rev. 110, 1482.
+
+\bibitem{}
+Feinberg, G. and S. Weinberg, 1961a, Phys. Rev. Lett. 6, 381.
+
+\bibitem{}
+Feinberg, G. and S. Weinberg, 1961b, Phys. Rev. 123, 1439.
+
+\bibitem{}
+Frankel, S., 1974, in Muon Physics, edited by V.W. Huges and C.S. Wu (Academic, New York), vol, II.
+
+\bibitem{}
+Frere, J.-M., 1981, Nucl. Phys. B177, 389.
+
+\bibitem{}
+Furry, W.H., 1939, Phys. Rev. 56, 1184,
+
+\bibitem{}
+Gaillard, M.K. and B.W. Lee, 1974, Phys. Rev. bio, 897.
+
+\bibitem{}
+Gell-Mann, M., 1953, Phys. Rev. 92, 833.
+
+\bibitem{}
+Gell-Mann, M., P. Ramond and R. Slansky, 1979, in Supergravity, edited by D.Z. Freedman (North-Holland, Amsterdam).
+
+\bibitem{}
+Georgi, H. and D.V. Nanopoulos, 1979, Nucl. Phys. B155, 52.
+
+\bibitem{}
+Glashow, S., 1961, Nucl. Phys. 22, 579.
+
+\bibitem{}
+Glashow, S.L., J. tliopoulos and L. Maiani, 1970, Phys. Rev. D2, 1285.
+
+\bibitem{}
+Goldhaber, M. 1977, in Unification of Elementary Forces and Gauge Theories, edited by D. Cline and F. Mills (Academic, New York).
+
+\bibitem{}
+Greuling, E. and R.C. Whitten, 1960, Apn. Phys. 11, 510.- 51 ~
+
+\bibitem{}
+Gribov, V. and B. Pontecorvo, 1969, Phys. Lett. 28B, 495.
+
+\bibitem{}
+Gurr, H.S., W.R. Kropp, F. Reines and B. Meyer, 1967, Phys. Rev. 158, 1321,
+
+\bibitem{}
+Halprin, A., P. Minkowski, H. Primakoff and S.P. Rosen, 1976, Phys. Rev. D13, 2567.
+
+\bibitem{}
+Harari, H., 1979, SLAC Report SLAC-PUB-2363.
+
+\bibitem{}
+Haxton, W.C., G.J. Stephenson, Jr., and D. Strottman, 1979, in Abstracts of 8th Int. Conf. on High Energy Physics and Nuclear Structure, (TRIUMF, Vancouver) p. 137.
+
+\bibitem{}
+Herczeg, P., 1979, In Proc. of Kaon Factory Workshop, edited by M.K, Craddock (TRIUMF, Vancouver), p. 20.
+
+\bibitem{}
+Hill, E.L., 1957, Rev. Mod. Phys. 23 253.
+
+\bibitem{}
+Inami, T. and C.S. Lim, 1980, Univ. of Tokyo-Komba Report.
+
+\bibitem{}
+Jackiw, R., 1970, Lectures on Current Algebra and its Applications (Princeton Univ., Princeton).
+
+\bibitem{}
+Kalyniak, P. and J.N. Ng, 1981, TRIUMF Report TRI-PP-81-8.
+
+\bibitem{}
+Kamal, A.N. and J.N. Ng, 1979, Phys. Rev. D20, 2269.
+
+\bibitem{}
+Kane, G.L. and R. Thun, 1980, Michigan Report UM HE 80-8, to be published
+in Phys. Lett.
+
+\bibitem{}
+Kang, K. and A.C. Rothman, 1980, Brown Univ. Report IPNO/TH 80-02.
+
+\bibitem{}
+Kobayashi, M. and T. Maskawa, 1973, Prog. Theor. Phys. bo, 652.
+
+\bibitem{}
+Konopinski, E.J. and H.M. Mahmoud, 1953, Phys, Rev. 32, 1045.
+
+\bibitem{}
+Konopinski, E.J., 1955, Los Alamos Report LAMS-1949,
+
+\bibitem{}
+Korenchenko, S.M. et al., 1975, Zh. Eksp. Teor. Fiz. 70, 3 
+
+[Sov. Phys. JETP 43, 1 (1976)].
+
+\bibitem{}
+Kuo, T.K. and S.T. Love, 1980, Purdue Report.
+
+\bibitem{}
+Lahanas, A.B. and C.E. Vayonakis, 1979, Phys. Rev. DI19, 2158.
+
+\bibitem{}
+Langacker, P., 1980, SLAC Report SLAC-PUB-254l.
+
+
+\bibitem{}
+Lee, B.W. and R.E. Shrock, 1977a, Phys. Rev. D16, hh.
+
+\bibitem{}
+Lee, B.W. and S. Weinberg, 1977b, Phys. Rev. Lett. 39, 165.
+
+\bibitem{}
+Lee, T.D., 1973, Phys. Rev. D8, 1226.
+
+\bibitem{}
+Lee, T.D., 1974, Phys. Rep. SC, 143.
+
+\bibitem{}
+Lee, T.D. and C.N. Yang, 1960, Phys. Rev. Lett. 4, 307.
+
+\bibitem{}
+Lipkin, H.J., 1980, Argonne National Lab Report ANL-HEP-CP-80-65.
+
+\bibitem{}
+Lu, D.C. et al., 1980, Phys. Rev. Lett. 45, 1066.
+
+\bibitem{}
+Lubimov, V.A. et al., 1980, Phys. Lett. 94B, 266.
+
+\bibitem{}
+Luders, G., 1958, Nuovo Cimento 7, 171.
+
+\bibitem{}
+Ma, E. and A. Pramudita, 1980, Hawaii Report UH-511-420-80.
+
+\bibitem{}
+Mack, G., 1979, Munich Report MPI-PAE/PTh 41/79.
+
+\bibitem{}
+Maehara, T. and T. Yanagida, 1979, Prog. Theor. Phys. 61, 1434,
+
+\bibitem{}
+Maki, Z., M. Nakagawa and 5. Sakata, 1962, Prog. Theor. Phys. 28, 870.
+
+\bibitem{}
+Mann, A.K., 1981, Philadelphia Report.
+
+\bibitem{}
+Mannheim, P.D., 1978, Oregon Report OTIS-98.
+
+\bibitem{}
+Marciano, W.J. and A. Sanda, 1977a, Phys. Rev. Lett. 38, 1512.
+
+\bibitem{}
+Marciano, W.J. and A. Sanda, 1977b, Phys. Lett. 678, 303.
+
+\bibitem{}
+Marciano, W.J., 1978, in New Frontiers in High Energy Physics, edited by
+
+A. Perlmutter and L.F. Scott (Plenum, New York).
+
+\bibitem{}
+Marciano, W.J., 1980, Rockefeller Report DoE/EY/2232B-207.
+
+\bibitem{}
+Marshak, R.E. and R.N. Mohapatra, 1980a, Phys. Lett. 91B, 222.
+
+\bibitem{}
+Marshak, R.E. and R.N. Mohapatra, 1980b, in Proc. of Orbis Scientiae, 1980, (Coral Gables, Florida).
+
+\bibitem{}
+Marshak, R.E., Riazuddin, and R.N. Mohapatra, 1980, in Proc. of Muon Physics/Facility Workshop, edited by J.A. Macdonald, J.N. Ng and A.S. Strathdee (TRIUMF, Vancouver).
+
+\bibitem{}
+McWilliams, B. and L.F. Li, 1980a, Carnegie-Mellon Report CO0-3066-146.
+
+\bibitem{}
+McWilliams, B. and 0. Shanker, 1980b, Phys. Rev. D22, 2853.
+
+\bibitem{}
+Mohapatra, R.N. and J.C. Patl, 1975, Phys. Rev. D11, 566.
+
+\bibitem{}
+Mohapatra, R.N. and R.E. Marshak, 1980a, Phys. Rev. Lett. 44, 1316.
+
+\bibitem{}
+Mohapatra, R.N. and G. Senjanovic, 1980b, Fermilab Report Pub-80/61-THY.
+
+\bibitem{}
+Nakagawa, M., H. Okonogi, S. Sakata and A. Toyoda, 1963, Prog. Theor.
+
+\bibitem{}
+Phys. 30, 727.
+
+\bibitem{}
+Ng, J.N., 1980, TRIUMF Report TRI-PP-80-34.
+
+\bibitem{}
+Ng, J.N., 1981, Phys. Lett. 998, 53.
+
+\bibitem{}
+Nishijima, K., 1955, Prog. Theor. Phys. 13, 285.
+
+\bibitem{}
+Nishijima, K., 1957, Phys. Rev. 108, 907.
+
+\bibitem{}
+Ong, C.L., 1980, Phys. Rev. D22, 2886.
+
+\bibitem{}
+Pati, J.C. and A. Salam, 1974, Phys. Rev. D10, 275.
+
+\bibitem{}
+Pati, J.C., 1978, Wisconsin Report 79-078.
+
+\bibitem{}
+Pati, J.C., 1979, Maryland Report 80-003.
+
+\bibitem{}
+Pauli, W., 1957, Nuovo Cimento 6, 204.
+
+\bibitem{}
+Perl, M.L. et al., 1975, Phys. Rev. Lett. 35, 1489.
+
+\bibitem{}
+Petkov, S.T., 1977, Yad. Fiz. 25, 641 (Sov. J. Nucl. Phys. 25, 340).
+
+\bibitem{}
+Pontecorvo, B., 1950, Helv. Phys. Acta. Suppl. 3, 97.
+
+\bibitem{}
+Pontecorve, B., 1957, Zh. Eksp. Teor. Fiz. 33, 549.
+
+\bibitem{}
+Pontecorvo, B., 1959, JETP 37, 1751.
+
+\bibitem{}
+Pontecorvo, B., 1967, Zh. Eksp. Teor. Fiz. 53, 17117 [soviet Physics
+
+JETP 26, 984 (1968)1.
+
+\bibitem{}
+Pontecorvo, B., 1968, Phys. Lett. 268, 630.
+
+\bibitem{}
+Primakoff, H., 1952, Phys. Rev. 85, 888.
+
+\bibitem{}
+Primakoff, H. and S.P. Rosen, 1959, Rept. Prog. Phys. 22, 121.
+
+\bibitem{}
+Primakoff, H. and S.P. Rosen, 1969, Phys. Rev. 184, 1925.
+
+\bibitem{}
+Primakoff, H. and S.P. Rosen, 1972, Phys. Rev. D5, 1784,
+
+
+\bibitem{}
+Racah, G., 1937, Nuovo Cimento 14, 322.
+
+\bibitem{}
+Ramond, P., 1979, Caltech Report CALT-68-709.
+
+\bibitem{}
+Reines, F. and M.F, Crouch, 1974, Phys. Rev. Lett. 32, 493.
+
+\bibitem{}
+Reines, F., H.W. Sobel and E. Pasierb, 1980, Phys. Rev. Lett. 45, 1307.
+
+\bibitem{}
+Rosen, S.P. and H. Primakoff, 1965, In Alpha-, Beta-, and Gamma-Ray
+
+\bibitem{}
+Spectroscopy, edited by K. Siegbahn (North-Holland, Amsterdam).
+
+\bibitem{}
+Rosen, S.P., 1980, Purdue University Report.
+
+\bibitem{}
+Rosen, S.P. and B. Kayser, 1981, Phys. Rev, D23, 669.
+
+\bibitem{}
+Salam, A. and J. Ward, 1964, Phys. Lett. 13, 168.
+
+\bibitem{}
+Sanda, A.l., 1981, Rockefeller Report DoE/EY/2232B-217.
+
+\bibitem{}
+Sato, H., 1980, Phys. Rev. Lett. 45, 1997.
+
+\bibitem{}
+Schechter, J. and J.W.F. Valle, 1980, Phys. Rev. D22, 1227.
+
+\bibitem{}
+Schwartz, M., 1960, Phys. Rev. Lett. 4, 306.
+
+\bibitem{}
+Schwinger, J., 1957, Ann. Phys. 2, 407.
+
+\bibitem{}
+Segre, G. and H.A. Weldon, 1979, Univ. of Pennsylvania Report UPR-0125T.
+
+\bibitem{}
+Senjanovic, G. and R.N. Mohapatra, 1975, Phys. Rev. D12, 1502.
+
+\bibitem{}
+Shanker, O., 1979, Phys. Rev. D20, 1608.
+
+\bibitem{}
+Shanker, O., 1980, TRIUMF Report TRI-PP-80-32, to be published in Phys. Rev. D.
+
+\bibitem{}
+Shanker, O., 1981, TRIUMF Report TRI-PP-81-3, to be published in Nucl. Phys. 8,
+
+\bibitem{}
+Shrock, R.E. and S.B. Treiman, 1979, Phys. Rev. D19, 2148.
+
+\bibitem{}
+Shrock. R.E., 1980, Stony Brook Report ITP-SP-80-56.
+
+\bibitem{}
+Shvartsman, V., 1969, JETP Lett. 9, 184,
+
+\bibitem{}
+Simpson, J.J., 1981, Phys. Rev. D23, 649.
+
+\bibitem{}
+Steigman, G., D. Schramm and J. Gunn, 1977, Phys. Lett. 66B, 202.
+
+\bibitem{}
+Steigman, G., 1979, Ann. Rev. Nucl. Part. Sci. 23, 313.
+
+\bibitem{}
+Street, J.C. and E.C. Stevenson, 1937, Phys. Rev. 52, 1003.
+
+\bibitem{}
+Susskind, L., 1980. Phys. Rev. D20, 2619.
+
+\bibitem{}
+Taylor, J.C., 1976, Gauge Theories of Weak Interactions, 
+
+(Cambridge Univ. Press, Cambridge).
+
+\bibitem{}
+t'Hooft, G., 1976, Phys. Rev. Lett. 37, 8.
+
+\bibitem{}
+Tonschek, B., 1949, Zeit. fur Physik, 125, 108.
+
+\bibitem{}
+Treiman, S.B., F. Wilczek and A. Zee, 1977, Phys. Rev. bis, 152.
+
+\bibitem{}
+Tremaine, S. and J. Gunn, 1979, Phys. Rev. Lett. 42, 407.
+
+\bibitem{}
+Tung, W.K., 1977, Phys. Lett. 67B, 52.
+
+\bibitem{}
+Vergados, J.D., 1981, Phys. Rev. D23, 703.
+
+\bibitem{}
+Weinberg, S. and G. Feinberg, 1959, Phys. Rev. Lett. 3, 111, erratum,
+
+\bibitem{}
+ibid 244,
+
+\bibitem{}
+Weinberg, S., 1967, Phys. Rev. Lett, 19, 1264.
+
+\bibitem{}
+Weinberg, S., 1972, Phys. Rev. D5, 1962.
+
+\bibitem{}
+Weinberg, S., 1976, Phys. Rev. D13, 974.
+
+\bibitem{}
+Weinberg, S., 1977a, Proc. of the 7th International Conference on High
+
+\bibitem{}
+Energy Phyeics and Nuclear Structure, (Zurich) p. 339.
+
+\bibitem{}
+Weinberg, S5., 1977b, Trans. of the New York Academy of Sciences, 38, 185.
+
+\bibitem{}
+Weinberg, S., 1978, Proce. of 19th International Conference on High Energy
+
+\bibitem{}
+Physics, Tokyo, edited by S. Homma, M. Kawaguchi and H. Miyazawa (Phys. Soc. of Japan, Tokyo, 1979).
+
+\bibitem{}
+Weinberg, S., 1979, Phys. Rev. Lett. 43, 1566.
+
+\bibitem{}
+Wilczek, F. and A. Zee, 1979a, Phys. Rev, Lett, 42, 421,
+
+\bibitem{}
+Wilczek, F. and A. Zee, 1979b, Phys. Rev. Lett. 43, 1566.
+
+\bibitem{}
+Willis, S.E. et al., 1980, Phys. Rev. Lett. 4h, 522.
+
+\bibitem{}
+Witten, E., 1980, Phys. Lett. 31B, 81.
+
+\bibitem{}
+Wolfenstein, L., 1964, Phys. Rev. Lett. 13, 562.
+
+\bibitem{}
+Wolfenstein, L., 1978, Phys. Rev. D18, 958.
+
+\bibitem{}
+Wolfenstein, L., 1980a, Nucl. Phys. B175, 98.
+
+\bibitem{}
+Wolfenstein, L., 1980b, Lawrence Berkeley Lab Report C00-3066-160.
+
+\bibitem{}
+Zee, A., 1980, Phys. Lett. 93B, 389.
+
+
+\end{thebibliography} 
+
+\end{document}
+
+
