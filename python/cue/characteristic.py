@@ -131,7 +131,7 @@ def test4():
     
     data = []
     zdf = []
-    for zindex in range(xaxis_zero - 20, xaxis_zero + 22, 5):
+    for zindex in range(xaxis_zero - 20, xaxis_zero + 22):
         row = []
         for j in range(0, len(sums)):
             row.append(grams[j][zindex])
@@ -150,7 +150,7 @@ def test4():
     df.to_csv(file_name, sep=' ')
 
     testfit = []
-    for j in range(0, len(data)):
+    for j in range(0, len(data), 5):
         out = fit(df.iloc[j].values, phi_values)
         testfit.append(out)
     np.savetxt('../out/fitcue.txt', 
