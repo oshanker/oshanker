@@ -61,7 +61,7 @@ def test4():
     
     xaxis_zero = 31
     print('index', xaxis[xaxis_zero])
-    sample_size = 20000
+    sample_size = 30000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
