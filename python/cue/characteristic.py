@@ -16,12 +16,14 @@ import cmath
 import matplotlib.pyplot as plt
 import my_functions
 
-q = my_functions.sampleQ()
-w = np.linalg.eigvals(q)
-eigenlist = []
-for e in w:
-    eigenlist.append( cmath.phase(e))
-eigen = np.array(eigenlist)
+def used():
+    q = my_functions.sampleQ()
+    w = np.linalg.eigvals(q)
+    eigenlist = []
+    for e in w:
+        eigenlist.append( cmath.phase(e))
+    eigen = np.array(eigenlist)
+    return eigen
 
 epsilon = 0.000001
 conv=180/math.pi
@@ -44,9 +46,18 @@ def sampleeigvals(n):
 
 
 def test4():
+    """
+    The real enchilada. RMT distribution.
+
+    Returns
+    -------
+    None.
+
+    """
     print("-------")
-    n = 63
-    np.random.seed(2020)
+    n = 95
+    start = time.time_ns()
+    np.random.seed(start)
     
     cos_incr = math.cos(-2*math.pi/n)
     sin_incr = math.sin(-2*math.pi/n)
@@ -61,7 +72,7 @@ def test4():
     
     xaxis_zero = 31
     print('index', xaxis[xaxis_zero])
-    sample_size = 30000
+    sample_size = 15000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -77,7 +88,6 @@ def test4():
     offsets = np.arange(0, len(sums))*phi_incr
     #horz_rad = horz*2*math.pi/n - math.pi 
     
-    start = time.time()
     for i in range(0, sample_size):
         angles = sampleeigvals(n)
         sum1n = np.sum(angles)/n
@@ -149,8 +159,11 @@ def test4():
     file_name =  '../out/cue.txt'
     df.to_csv(file_name, sep=' ')
     
+    header = "n " + str(n) + " sample " + str(sample_size)
+    
     np.savetxt('../out/rawcue.txt', 
-               np.asarray(data) )
+               np.asarray(data),
+               header=header)
     
 
     testfit = []
@@ -159,9 +172,9 @@ def test4():
         testfit.append(out)
     np.savetxt('../out/fitcue.txt', 
                np.asarray(testfit), 
-               fmt='%7.3f&%7.3f&%8.4f&%7.3f\\\\', 
+               fmt='%7.3f %7.3f %8.4f %7.3f', 
                delimiter=',')
-    elapsed = time.time()-start
+    elapsed = (time.time_ns()-start)/1.0E9
     print('elapsed', elapsed)
 
 def fit(values, phi_values):
@@ -198,6 +211,7 @@ def plotValues(horz, y1, horz1, y2):
     
 
 def test3():
+    eigen = used()
     sum1 = np.sum(eigen)
     x = np.array([0, 1, 2])*2*math.pi/3 + sum1/3-math.pi
     print(x*conv)
@@ -208,6 +222,7 @@ def test3():
        print('z', z)
     
 def test2():
+    eigen = used()
     theta =  1.5* 2*math.pi/6
     f = my_functions.eval_direct(theta, eigen)
     print(f)
@@ -222,6 +237,7 @@ def test1():
     y1list = []
     y2list = []
     y3list = []
+    eigen = used()
     for theta in x:
         # print("eval at", math.degrees(theta))
         # print(eval(theta, eigen))
