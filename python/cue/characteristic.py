@@ -148,6 +148,10 @@ def test4():
     df = pd.DataFrame(data,columns=phi_values,index=zdf)
     file_name =  '../out/cue.txt'
     df.to_csv(file_name, sep=' ')
+    
+    np.savetxt('../out/rawcue.txt', 
+               np.asarray(data) )
+    
 
     testfit = []
     for j in range(0, len(data), 5):
