@@ -12,6 +12,11 @@ import cmath
 from sklearn.linear_model import LinearRegression
 
 def sample(n):
+    """
+    sorted eigenvalues.
+    
+    uses qr factorization 
+    """
     z = (np.random.randn(n,n) + 1j*np.random.randn(n,n))/ np.lib.scimath.sqrt(2.0)
     q,r = qr(z)
     #print(z)
