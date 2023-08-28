@@ -6,7 +6,7 @@ Created on Sat Aug 26 10:24:20 2023
 @author: uorugant
 """
 
-import pandas as pd
+
 import my_functions
 import numpy as np
 
@@ -14,7 +14,7 @@ def main():
    file_name =  '../out/rawcue.txt'
    data = np.loadtxt(file_name)
    #-2.0 to 2.0, values only
-   data = data[0:-2,:]
+   data = data[0:-1,:]
    col0 = np.copy(data[:,0:1])
    
    smooth = True
