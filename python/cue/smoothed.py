@@ -41,7 +41,7 @@ def main():
         testfit.append(out)
    np.savetxt('../out/smoothedfitcue.txt', 
                np.asarray(testfit), 
-               fmt='%7.3f&%7.3f&%8.4f&%7.3f\\\\', 
+               fmt='%7.3f %7.3f %8.4f 7.3f', 
                delimiter=',')
 
 main()

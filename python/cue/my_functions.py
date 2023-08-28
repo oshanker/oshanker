@@ -40,6 +40,22 @@ def sample(n):
     return angles
 
 def fit(values, phi_values):
+    """
+    fit A B C
+
+    Parameters
+    ----------
+    values : array
+        DESCRIPTION.
+    phi_values : array
+        angles phi.
+
+    Returns
+    -------
+    list
+        DESCRIPTION.
+
+    """
     x = []
     for phi in phi_values:
         x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])

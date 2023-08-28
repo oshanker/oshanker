@@ -57,22 +57,23 @@ def test4():
     print("-------")
     n = 95
     start = time.time_ns()
-    np.random.seed(start)
+    np.random.seed(int(start/1.0E9)-1693197846)
     
     cos_incr = math.cos(-2*math.pi/n)
     sin_incr = math.sin(-2*math.pi/n)
     
 
     bins_in = []
-    for i in np.arange(-3.15, 3.5, 0.1):
+    for i in np.arange(-3.125, 3.5, 0.05):
         bins_in.append(i)
     xaxis = []
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
     
-    xaxis_zero = 31
+    
+    xaxis_zero = 62
     print('index', xaxis[xaxis_zero])
-    sample_size = 15000
+    sample_size = 1000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -141,12 +142,12 @@ def test4():
     
     data = []
     zdf = []
-    for zindex in range(xaxis_zero - 20, xaxis_zero + 22):
+    for zindex in range(xaxis_zero - 20, xaxis_zero + 21):
         row = []
         for j in range(0, len(sums)):
             row.append(grams[j][zindex])
         data.append(row)
-        zdf.append(np.around(xaxis[zindex], decimals=1))
+        zdf.append(np.around(xaxis[zindex], decimals=2))
 
     data.append(means)
     zdf.append(-100)
@@ -168,7 +169,7 @@ def test4():
 
     testfit = []
     for j in range(0, len(data), 5):
-        out = fit(df.iloc[j].values, phi_values)
+        out = my_functions.fit(df.iloc[j].values, phi_values)
         testfit.append(out)
     np.savetxt('../out/fitcue.txt', 
                np.asarray(testfit), 
@@ -177,23 +178,7 @@ def test4():
     elapsed = (time.time_ns()-start)/1.0E9
     print('elapsed', elapsed)
 
-def fit(values, phi_values):
-    x = []
-    for phi in phi_values:
-        x.append([math.cos(math.pi*phi/180), math.cos(math.pi*phi/90)])
-        #x.append([math.cos(math.pi*phi/180)])
-    x = np.array(x)
-    reg = LinearRegression().fit(x, values)
-    r2 = reg.score(x, values)
-    #
-    coeff = reg.coef_
-    intercept = reg.intercept_
-    return [intercept, coeff[0], coeff[1], r2]
     
-    
-    # sum_hist = grams[0]+grams[2]
-    # print(sum_hist)
-    # print(sum_hist[15], sum_hist[16])
     
 def plotValues(horz, y1, horz1, y2):
     
