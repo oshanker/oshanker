@@ -45,9 +45,9 @@ def sampleeigvals(n):
 
 
 
-def test4():
+def generate_cue_distribution():
     """
-    The real enchilada. RMT distribution.
+    The real enchilada. RMT eigenfunction value distribution.
 
     Returns
     -------
@@ -61,7 +61,6 @@ def test4():
     
     cos_incr = math.cos(-2*math.pi/n)
     sin_incr = math.sin(-2*math.pi/n)
-    
 
     bins_in = []
     for i in np.arange(-3.125, 3.5, 0.05):
@@ -69,7 +68,6 @@ def test4():
     xaxis = []
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
-    
     
     xaxis_zero = 62
     print('index', xaxis[xaxis_zero])
@@ -160,13 +158,6 @@ def test4():
     file_name =  '../out/cue.txt'
     df.to_csv(file_name, sep=' ')
     
-    header = "n " + str(n) + " sample " + str(sample_size)
-    
-    np.savetxt('../out/rawcue.txt', 
-               np.asarray(data),
-               header=header)
-    
-
     testfit = []
     for j in range(0, len(data), 5):
         out = my_functions.fit(zdf[j], df.iloc[j].values, phi_values)
@@ -175,6 +166,15 @@ def test4():
                np.asarray(testfit), 
                fmt='%.2f %7.3f %7.3f %8.4f %7.3f', 
                delimiter=',')
+    # changing data, put at very end
+    data[-1][0] = n
+    data[-1][1] = sample_size
+    header = "n " + str(n) + " sample " + str(sample_size)    
+
+    np.savetxt('../out/rawcue.txt', 
+               np.asarray(data),
+               header=header)
+    
     elapsed = (time.time_ns()-start)/1.0E9
     print('elapsed', elapsed)
 
@@ -253,5 +253,5 @@ def test1():
     print(x*conv)
     print(y3*conv)
     
-test4()
+generate_cue_distribution()
 

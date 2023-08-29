@@ -13,6 +13,8 @@ import numpy as np
 def main():
    file_name =  '../out/rawcue.txt'
    data = np.loadtxt(file_name)
+   n = int(data[-1][0]) 
+   sample_size = int(data[-1][1]) 
    #-2.0 to 2.0, values only
    data = data[0:-1,:]
    rows = data.shape[0]
@@ -38,13 +40,16 @@ def main():
         
    print(phi_values, len(phi_values))
 
-   
+   file_name = '../out/smoothedfitcue'+ str(n) + '.txt'
+   header = "n " + str(n) + " sample " + str(sample_size)    
+
    for j in range(0, rows):
         out = my_functions.fit(zdf[j], data[j], phi_values)
         testfit.append(out)
-   np.savetxt('../out/smoothedfitcue.txt', 
+   np.savetxt( file_name, 
                np.asarray(testfit), 
                fmt='%4.2f %7.3f %7.3f %8.4f %7.3f', 
+               header=header,
                delimiter=',')
 
 main()

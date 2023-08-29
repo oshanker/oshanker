@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 
 def sample(n):
     """
-    sorted eigenvalues.
+    sorted eigenvalues of cue sample matrix.
     
     uses qr factorization 
     """
