@@ -169,11 +169,11 @@ def test4():
 
     testfit = []
     for j in range(0, len(data), 5):
-        out = my_functions.fit(df.iloc[j].values, phi_values)
+        out = my_functions.fit(zdf[j], df.iloc[j].values, phi_values)
         testfit.append(out)
     np.savetxt('../out/fitcue.txt', 
                np.asarray(testfit), 
-               fmt='%7.3f %7.3f %8.4f %7.3f', 
+               fmt='%.2f %7.3f %7.3f %8.4f %7.3f', 
                delimiter=',')
     elapsed = (time.time_ns()-start)/1.0E9
     print('elapsed', elapsed)

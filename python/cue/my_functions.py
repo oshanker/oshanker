@@ -39,7 +39,7 @@ def sample(n):
     angles = np.sort( angles)
     return angles
 
-def fit(values, phi_values):
+def fit(z, values, phi_values):
     """
     fit A B C
 
@@ -66,7 +66,7 @@ def fit(values, phi_values):
     #
     coeff = reg.coef_
     intercept = reg.intercept_
-    return [intercept, coeff[0], coeff[1], r2]
+    return [z, intercept, coeff[0], coeff[1], r2]
 
 
 def eval_direct(theta, root_angles):

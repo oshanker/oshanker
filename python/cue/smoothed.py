@@ -15,7 +15,12 @@ def main():
    data = np.loadtxt(file_name)
    #-2.0 to 2.0, values only
    data = data[0:-1,:]
+   rows = data.shape[0]
+   cols = data.shape[1]
    col0 = np.copy(data[:,0:1])
+   zdf = []
+   for i in np.arange(-1.0, 1.05, 0.05):
+        zdf.append(np.around(i, decimals=2))
    
    smooth = True
    if smooth:
@@ -27,21 +32,19 @@ def main():
    
    print(data.shape) 
    testfit = []
-   rows = data.shape[0]
-   cols = data.shape[1]
    phi_values = []
-   for j in range(0, cols):
-        phi_values.append(int(j*360/(cols-1)))
+   for j in range(0, cols+1):
+        phi_values.append(int(j*360/(cols)))
         
-   print(phi_values)
+   print(phi_values, len(phi_values))
 
    
    for j in range(0, rows):
-        out = my_functions.fit(data[j], phi_values)
+        out = my_functions.fit(zdf[j], data[j], phi_values)
         testfit.append(out)
    np.savetxt('../out/smoothedfitcue.txt', 
                np.asarray(testfit), 
-               fmt='%7.3f %7.3f %8.4f 7.3f', 
+               fmt='%4.2f %7.3f %7.3f %8.4f %7.3f', 
                delimiter=',')
 
 main()
