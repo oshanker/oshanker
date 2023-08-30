@@ -10,6 +10,32 @@ Created on Sat Aug 26 10:24:20 2023
 import flip_and_switch
 import my_functions
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+
+def exp_pdf(x, lam):
+    xx = np.copy(x)
+    for i in range(0, xx.shape[0]):
+        if(xx[i] < 0):
+            xx[i] = -xx[i]
+    return  np.exp(-lam * xx) * lam/2
+    
+def do_exp_fit(xdata, ydata):
+    print(np.sum(ydata))
+    popt, pcov = curve_fit(exp_pdf, xdata, ydata, bounds=([1], [3]))
+    print(popt)
+    cond = np.linalg.cond(pcov)
+    print(cond)
+    print(np.diag(pcov))
+    plt.plot(xdata, ydata, 'b-', label='data')
+    plt.plot(xdata, exp_pdf(xdata, *popt), 'g--',
+         label='fit: lam=%5.3f' % tuple(popt))
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend()
+    plt.show()
+
 
 def main():
    file_name =  '../out/rawcue.txt'
@@ -48,10 +74,13 @@ def main():
    for j in range(0, rows):
         out = my_functions.fit(zdf[j], data[j], phi_values)
         testfit.append(out)
+   output_array = np.asarray(testfit) 
    np.savetxt( file_name, 
-               np.asarray(testfit), 
+               output_array, 
                fmt='%4.2f %7.3f %7.3f %8.4f %7.3f', 
                header=header,
                delimiter=',')
+   do_exp_fit(zdf, output_array[:,1]) 
+
 
 main()

@@ -9,6 +9,17 @@ import numpy as np
 
 
 def flip_and_switch(arr):
+    """
+    use anti-symmetry to improve statistics
+
+    Parameters
+    ----------
+    arr : distribution
+    Returns
+    -------
+    updated sistribution based on anti-symmetry
+
+    """
     shape = arr.shape
     #col90_idx = int((arr.shape[1]-1)/4)
     #col270_idx = int(3*(arr.shape[1]-1)/4)
