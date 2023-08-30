@@ -51,4 +51,3 @@ def test_flip_and_switch():
         i+=1
     print((flipped-arr))
 
-test_flip_and_switch()
