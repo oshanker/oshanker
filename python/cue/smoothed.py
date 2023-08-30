@@ -7,6 +7,7 @@ Created on Sat Aug 26 10:24:20 2023
 """
 
 
+import flip_and_switch
 import my_functions
 import numpy as np
 
@@ -31,6 +32,7 @@ def main():
        print(data[0,:])
        print(rev[0,:])
        data = (data+rev)/2
+       data = flip_and_switch.flip_and_switch(data)
    
    print(data.shape) 
    testfit = []
