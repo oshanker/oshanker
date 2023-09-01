@@ -21,15 +21,15 @@ def exp_pdf(x, lam):
             xx[i] = -xx[i]
     return  np.exp(-lam * xx) * lam/2
     
-def do_exp_fit(xdata, ydata):
+def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(exp_pdf, xdata, ydata, bounds=([1], [3]))
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1], [3]))
     print(popt)
     cond = np.linalg.cond(pcov)
-    print(cond)
-    print(np.diag(pcov))
+    print("cond", cond)
+    print("diag cov", np.diag(pcov))
     plt.plot(xdata, ydata, 'b-', label='data')
-    plt.plot(xdata, exp_pdf(xdata, *popt), 'g--',
+    plt.plot(xdata, func(xdata, *popt), 'g--',
          label='fit: lam=%5.3f' % tuple(popt))
     plt.xlabel('x')
     plt.ylabel('y')
@@ -80,7 +80,7 @@ def main():
                fmt='%4.2f %7.3f %7.3f %8.4f %7.3f', 
                header=header,
                delimiter=',')
-   do_exp_fit(zdf, output_array[:,1]) 
+   do_fit(exp_pdf, zdf, output_array[:,1]) 
 
 
 main()
