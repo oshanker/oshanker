@@ -12,25 +12,27 @@ import my_functions
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+import math
 
+gauss_norm = 1/(math.sqrt(2*math.pi))
+def gauss(x, sigma ):
+    A = gauss_norm/(sigma)
+    return A*np.exp(-(x)**2/(2*sigma**2))
 
 def exp_pdf(x, lam):
-    xx = np.copy(x)
-    for i in range(0, xx.shape[0]):
-        if(xx[i] < 0):
-            xx[i] = -xx[i]
+    xx = np.abs(np.copy(x))
     return  np.exp(-lam * xx) * lam/2
     
 def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1], [3]))
-    print(popt)
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.01], [2.5]))
+    print('param', popt)
     cond = np.linalg.cond(pcov)
     print("cond", cond)
     print("diag cov", np.diag(pcov))
     plt.plot(xdata, ydata, 'b-', label='data')
     plt.plot(xdata, func(xdata, *popt), 'g--',
-         label='fit: lam=%5.3f' % tuple(popt))
+         label='fit: param=%5.3f' % tuple(popt))
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -80,7 +82,7 @@ def main():
                fmt='%4.2f %7.3f %7.3f %8.4f %7.3f', 
                header=header,
                delimiter=',')
-   do_fit(exp_pdf, zdf, output_array[:,1]) 
+   do_fit(exp_pdf, np.asarray(zdf), output_array[:,1]) 
 
 
 main()

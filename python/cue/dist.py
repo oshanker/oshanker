@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import math
 from scipy.optimize import curve_fit
 
+gauss_norm = 1/(math.sqrt(2*math.pi))
 def gauss(x, sigma ):
-    A = 1/(math.sqrt(2*math.pi)*sigma)
+    A = gauss_norm/(sigma)
     return A*np.exp(-(x)**2/(2*sigma**2))
     
 def do_fit(func, xdata, ydata):

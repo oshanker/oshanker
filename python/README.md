@@ -5,7 +5,8 @@
 [fit-mixture-of-two-gaussian](https://stackoverflow.com/questions/35990467/fit-mixture-of-two-gaussian-normal-distributions-to-a-histogram-from-one-set-of)
 
 [scipy.optimize.curve_fit](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html)
- 
+
+[area under normal curve](https://discovery.cs.illinois.edu/learn/Simulation-and-Distributions/Normal-Distribution/)
 
 curl 'https://bootstrap.pypa.io/get-pip.py' -o get-pip.py
 
