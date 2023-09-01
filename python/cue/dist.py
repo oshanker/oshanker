@@ -14,6 +14,10 @@ gauss_norm = 1/(math.sqrt(2*math.pi))
 def gauss(x, sigma ):
     A = gauss_norm/(sigma)
     return A*np.exp(-(x)**2/(2*sigma**2))
+
+def der_gauss(x, sigma ):
+    A = gauss_norm/(sigma**3)
+    return -A*x*np.exp(-(x)**2/(2*sigma**2))
     
 def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
@@ -29,6 +33,17 @@ def do_fit(func, xdata, ydata):
     plt.ylabel('y')
     plt.legend()
     plt.show()
+    return popt
+
+def do_plot_func(func, popt, xdata, label):
+    plt.plot(xdata, func(xdata, *popt), 'g--',
+         label=label )
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid()
+    plt.legend()
+    plt.show()
+    return popt
 
 def main():
     bins_in = []
@@ -41,7 +56,8 @@ def main():
     data = np.random.normal(loc=0.0, scale=2.0, size=size)
     hist, bins_range = np.histogram(data, bins=bins_in, density=True)
     x = np.array(xaxis)
-    do_fit(gauss, x, hist)
+    popt = do_fit(gauss, x, hist)
+    do_plot_func(der_gauss, popt, x, 'der')
     
     # simul = gauss(x, 2.0)
     # plt.plot(xaxis, simul, 'b-', label='data')
