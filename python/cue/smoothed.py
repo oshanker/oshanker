@@ -23,20 +23,32 @@ def exp_pdf(x, lam):
     xx = np.abs(np.copy(x))
     return  np.exp(-lam * xx) * lam/2
     
+def exp_gauss(x, p, lam, sigma):
+    ret = p * exp_pdf(x, lam) + (1-p) * gauss(x, sigma )
+    return ret
+
 def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.01], [2.5]))
+    #popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.01], [2.5]))
+    
+    #p, lam, sigma
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.28, 3.6, 1.5], [0.31, 3.7, 1.52]))
+    # [0.3        3.55578876 1.52809399]
+    # [0.29117862 3.64662775 1.50870849]
+    # [0.29117866 3.64662728 1.50870858]
+    
     print('param', popt)
     cond = np.linalg.cond(pcov)
     print("cond", cond)
     print("diag cov", np.diag(pcov))
     plt.plot(xdata, ydata, 'b-', label='data')
     plt.plot(xdata, func(xdata, *popt), 'g--',
-         label='fit: param=%5.3f' % tuple(popt))
+         label='fit: ' )
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
     plt.show()
+    return popt
 
 
 def main():
@@ -82,7 +94,11 @@ def main():
                fmt='%4.2f %7.3f %7.3f %8.4f %7.3f', 
                header=header,
                delimiter=',')
-   do_fit(exp_pdf, np.asarray(zdf), output_array[:,1]) 
+   ydata = output_array[:,1] 
+   #do_fit(exp_pdf, np.asarray(zdf), ydata) 1.17
+   #do_fit(gauss, np.asarray(zdf), ydata) #0.9
+   popt = do_fit(exp_gauss, np.asarray(zdf), ydata) #0.9
+   print('param', popt)
 
 
 main()
