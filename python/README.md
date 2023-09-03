@@ -3,6 +3,10 @@
 We present here the value distribution for the Riemann zeta function and for RMT. We present the distribution for Generalized Gram point with $\phi$ = 90 or 270 degrees. More precisely, we are talking about the function $A$ discussed in [Random Matrix Theory explanation for Riemann Zeta Value Distribution Symmetry
 ](https://www.researchgate.net/publication/373331662_Random_Matrix_Theory_explanation_for_Riemann_Zeta_Value_Distribution_Symmetry). But they are close enough to each other. The distribution is the sum of a gaussian normal distribution and an exponential distribution (exp(-$lambda$|x|)). The definitions, in detail, are
 
+
+   A = gauss_norm/(sigma)
+
+
 def gauss(x, sigma ):
 
     A = gauss_norm/(sigma)
