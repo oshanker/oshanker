@@ -10,6 +10,105 @@ import numpy as np
 from numpy.linalg import qr
 import cmath
 from sklearn.linear_model import LinearRegression
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+gauss_norm = 1/(math.sqrt(2*math.pi))
+def gauss(x, sigma ):
+    """
+
+    Parameters
+    ----------
+    x : arg
+    
+    sigma : std dev
+
+    Returns
+    -------
+    normal distribution
+
+    """
+    A = gauss_norm/(sigma)
+    return A*np.exp(-(x)**2/(2*sigma**2))
+
+def exp_pdf(x, lam):
+    """
+    
+
+    Parameters
+    ----------
+    x : arg
+    
+    lam : constant for exponential distribution
+
+    Returns
+    -------
+    exponential distribution
+
+    """
+    xx = np.abs(np.copy(x))
+    return  np.exp(-lam * xx) * lam/2
+    
+def exp_gauss(x, p, lam, sigma):
+    """    
+
+    Parameters
+    ----------
+    x : arg
+    
+    p : coefficient for exponential distribution
+    
+    lam : constant for exponential distribution
+    
+    sigma :  std dev
+
+    Returns
+    -------
+    ret : linear combination of exponential distribution and normal distribution.
+
+    """
+    ret = p * exp_pdf(x, lam) + (1-p) * gauss(x, sigma )
+    return ret
+
+def do_fit(func, xdata, ydata, bounds=([0.28, 3.6, 1.5], [0.31, 3.7, 1.52])):
+    """
+    fit function to data
+
+    Parameters
+    ----------
+    func : function to fit
+    
+    xdata : independent variables
+    
+    ydata : dependent variable (distribution to be fitted)
+
+    Returns
+    -------
+    popt : fitted parameters 
+
+    """
+    print(np.sum(ydata))
+    #popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.01], [2.5]))
+    
+    #p, lam, sigma
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=bounds)
+    # [0.3        3.55578876 1.52809399]
+    # [0.29117862 3.64662775 1.50870849]
+    # [0.29117866 3.64662728 1.50870858]
+    
+    print('param', popt)
+    cond = np.linalg.cond(pcov)
+    print("cond", cond)
+    print("diag cov", np.diag(pcov))
+    plt.plot(xdata, ydata, 'b-', label='data')
+    plt.plot(xdata, func(xdata, *popt), 'g--',
+         label='fit: ' )
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend()
+    plt.show()
+    return popt
+
 
 def sample(n):
     """
