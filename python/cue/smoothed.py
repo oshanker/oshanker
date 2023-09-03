@@ -3,6 +3,9 @@
 """
 Created on Sat Aug 26 10:24:20 2023
 
+    The simulation output from characteristic.py ('../out/fitcue.txt') is processed 
+    by smoothed.py to extract the distribution parameters p, lambda and sigma.
+
 @author: uorugant
 """
 
@@ -16,18 +19,78 @@ import math
 
 gauss_norm = 1/(math.sqrt(2*math.pi))
 def gauss(x, sigma ):
+    """
+
+    Parameters
+    ----------
+    x : arg
+    
+    sigma : std dev
+
+    Returns
+    -------
+    normal distribution
+
+    """
     A = gauss_norm/(sigma)
     return A*np.exp(-(x)**2/(2*sigma**2))
 
 def exp_pdf(x, lam):
+    """
+    
+
+    Parameters
+    ----------
+    x : arg
+    
+    lam : constant for exponential distribution
+
+    Returns
+    -------
+    exponential distribution
+
+    """
     xx = np.abs(np.copy(x))
     return  np.exp(-lam * xx) * lam/2
     
 def exp_gauss(x, p, lam, sigma):
+    """    
+
+    Parameters
+    ----------
+    x : arg
+    
+    p : coefficient for exponential distribution
+    
+    lam : constant for exponential distribution
+    
+    sigma :  std dev
+
+    Returns
+    -------
+    ret : linear combination of exponential distribution and normal distribution.
+
+    """
     ret = p * exp_pdf(x, lam) + (1-p) * gauss(x, sigma )
     return ret
 
 def do_fit(func, xdata, ydata):
+    """
+    fit function to data
+
+    Parameters
+    ----------
+    func : function to fit
+    
+    xdata : independent variables
+    
+    ydata : dependent variable (distribution to be fitted)
+
+    Returns
+    -------
+    popt : fitted parameters 
+
+    """
     print(np.sum(ydata))
     #popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.01], [2.5]))
     
@@ -52,6 +115,15 @@ def do_fit(func, xdata, ydata):
 
 
 def main():
+   """
+    The simulation output from characteristic.py ('../out/fitcue.txt') is processed 
+    by smoothed.py to extract the distribution parameters p, lambda and sigma.
+
+    Returns
+    -------
+    None.
+
+   """
    file_name =  '../out/rawcue.txt'
    data = np.loadtxt(file_name)
    n = int(data[-1][0]) 

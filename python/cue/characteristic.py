@@ -50,6 +50,8 @@ def sampleeigvals(n):
 def generate_cue_distribution():
     """
     The real enchilada. RMT eigenfunction value distribution.
+    The simulation output ('../out/fitcue.txt') is processed by smoothed.py
+    to extract the distribution parameters p, lambda and sigma.
 
     Returns
     -------
