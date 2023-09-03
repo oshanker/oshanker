@@ -31,7 +31,7 @@ See [characteristic.py](https://github.com/oshanker/oshanker/blob/master/python/
 
 N  | T      | p    | $lambda$ | $sigma$ | source | 
 ---| ---    | ---  | ---      |---      |--- |
-   | 1.0E12 | 0.66 | 0.946    | 6.09    | Riemann | 
+-  | 1.0E12 | 0.66 | 0.946    | 6.09    | Riemann | 
 95 | 1.1E42 | 0.29 | 3.65     | 1.51    | CUE | 
 
 [fit-a-gaussian-curve](https://stackoverflow.com/questions/44480137/how-can-i-fit-a-gaussian-curve-in-python)
