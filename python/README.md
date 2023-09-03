@@ -31,6 +31,7 @@ See [characteristic.py](https://github.com/oshanker/oshanker/blob/master/python/
 
 N  | T      | p    | $lambda$ | $sigma$ | source | 
 ---| ---    | ---  | ---      |---      |--- |
+NA | 1.6E9  | 0.70 | 0.87     | 5.96    | Dirichlet | 
 NA | 1.0E12 | 0.66 | 0.946    | 6.09    | Riemann | 
 95 | 1.1E42 | 0.29 | 3.65     | 1.51    | CUE | 
 
