@@ -59,7 +59,7 @@ def generate_cue_distribution():
 
     """
     print("-------")
-    n = 150
+    n = 26
     start = time.time_ns()
     np.random.seed(int(start/1.0E9)-1693197846)
     
@@ -75,7 +75,7 @@ def generate_cue_distribution():
     
     xaxis_zero = 62
     print('index', xaxis[xaxis_zero])
-    sample_size = 10000
+    sample_size = 70000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
