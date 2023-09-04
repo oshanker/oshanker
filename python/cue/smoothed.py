@@ -69,7 +69,8 @@ def main():
    ydata = output_array[:,1] 
    #do_fit(exp_pdf, np.asarray(zdf), ydata) 1.17
    #do_fit(gauss, np.asarray(zdf), ydata) #0.9
-   popt = my_functions.do_fit(my_functions.exp_gauss, np.asarray(zdf), ydata) #0.9
+   bounds=([0.28, 4.1, 1.4], [0.29, 4.3, 1.5])
+   popt = my_functions.do_fit(my_functions.exp_gauss, np.asarray(zdf), ydata, bounds=bounds) #0.9
    print('param', popt)
 
 

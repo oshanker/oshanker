@@ -59,7 +59,7 @@ def generate_cue_distribution():
 
     """
     print("-------")
-    n = 95
+    n = 150
     start = time.time_ns()
     np.random.seed(int(start/1.0E9)-1693197846)
     
