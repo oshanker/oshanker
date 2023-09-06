@@ -75,13 +75,14 @@ def generate_cue_distribution():
     
     xaxis_zero = 62
     print('index', xaxis[xaxis_zero])
-    sample_size = 70000
+    sample_size = 10000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0
             ]
+    vars = np.zeros(len(sums))
     print("-- cue --")
     grams = []
     for j in range(0, len(sums)):
@@ -124,6 +125,7 @@ def generate_cue_distribution():
             hist, bins_range = np.histogram(y_1, bins=bins_in)
             grams[j] = grams[j] + hist
             sums[j] = sums[j] + np.mean(y_1)
+            vars[j] = vars[j] + np.var(y_1)
         
         
     for i in range(0, len(sums)):
@@ -136,6 +138,8 @@ def generate_cue_distribution():
         # plt.clf()    
     
     means = np.array(sums)/sample_size
+    vars = vars/sample_size
+    print('vars', vars)
     index90 = int(len(sums)/4)
     print(grams[index90][xaxis_zero - 1], grams[index90][xaxis_zero], 
           grams[index90][xaxis_zero + 1])
