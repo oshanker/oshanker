@@ -11,9 +11,9 @@ import math
 from scipy.optimize import curve_fit
 
 gauss_norm = 1/(math.sqrt(2*math.pi))
-def gauss(x, sigma ):
+def gauss(x, sigma, corr ):
     A = gauss_norm/(sigma)
-    return A*np.exp(-(x)**2/(2*sigma**2))
+    return corr*A*np.exp(-(x*x)/(2*sigma**2))
 
 def der_gauss(x, sigma ):
     A = gauss_norm/(sigma**3)
@@ -21,14 +21,14 @@ def der_gauss(x, sigma ):
     
 def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1.5], [2.5]))
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1.7, 0.8], [3.3, 2.0]))
     print('param', popt)
     cond = np.linalg.cond(pcov)
     print("cond", cond)
     print("diag cov", np.diag(pcov))
     plt.plot(xdata, ydata, 'b-', label='data')
     plt.plot(xdata, func(xdata, *popt), 'g--',
-         label='fit: lam=%5.3f' % tuple(popt))
+         label='fit' )
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -52,12 +52,16 @@ def main():
     xaxis = []
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
-    size = 50000
-    data = np.random.normal(loc=0.0, scale=2.0, size=size)
+    size = 300000
+    data = np.random.normal(loc=0.0, scale=3.0, size=size)
     hist, bins_range = np.histogram(data, bins=bins_in, density=True)
-    x = np.array(xaxis)
-    popt = do_fit(gauss, x, hist)
-    do_plot_func(der_gauss, popt, x, 'der')
+    histnorm = np.sum(hist)
+    print('np.sum(hist)',  histnorm)
+    print('np.var(data)',  np.var(data))
+    xdata = np.array(xaxis)
+    print('np.var(from hist)??',  np.sum(hist*xdata*xdata)/histnorm)
+    popt = do_fit(gauss, xdata, hist)
+    #do_plot_func(der_gauss, popt, x, 'der')
     
     # simul = gauss(x, 2.0)
     # plt.plot(xaxis, simul, 'b-', label='data')
