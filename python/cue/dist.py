@@ -13,7 +13,7 @@ from scipy.optimize import curve_fit
 gauss_norm = 1/(math.sqrt(2*math.pi))
 def gauss(x, sigma, corr ):
     A = gauss_norm/(sigma)
-    return corr*A*np.exp(-(x*x)/(2*sigma**2))
+    return corr*A*np.exp(-(x*x)/(2*sigma*sigma))
 
 def der_gauss(x, sigma ):
     A = gauss_norm/(sigma**3)
@@ -21,7 +21,7 @@ def der_gauss(x, sigma ):
     
 def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1.7, 0.8], [3.3, 2.0]))
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1.7, 0.8], [8.0, 5.0]))
     print('param', popt)
     cond = np.linalg.cond(pcov)
     print("cond", cond)
@@ -53,13 +53,16 @@ def main():
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
     size = 300000
-    data = np.random.normal(loc=0.0, scale=3.0, size=size)
+    sigma = 3.0
+    data = np.random.normal(loc=0.0, scale=sigma, size=size)
     hist, bins_range = np.histogram(data, bins=bins_in, density=True)
     histnorm = np.sum(hist)
     print('np.sum(hist)',  histnorm)
     print('np.var(data)',  np.var(data))
+    print('abs(sigma - np.std(s, ddof=1))', abs(sigma - np.std(data, ddof=1)))
     xdata = np.array(xaxis)
-    print('np.var(from hist)??',  np.sum(hist*xdata*xdata)/histnorm)
+    x2 = xdata*xdata
+    print('np.var(from hist)??',  np.sum(hist*x2)/histnorm)
     popt = do_fit(gauss, xdata, hist)
     #do_plot_func(der_gauss, popt, x, 'der')
     
