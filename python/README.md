@@ -36,6 +36,12 @@ NA | 1.0E12 | 0.66 | 0.946    | 6.09    | Riemann |
 95 | 1.1E42 | 0.29 | 3.65     | 1.51    | CUE | 
 150 | 8.75E65 | 0.285 | 4.23     | 1.46    | CUE | 
 
+[Exponential distribution - Wikipedia](https://en.wikipedia.org/wiki/Exponential_distribution)
+
+[algorithm - Exponential Distribution](https://stackoverflow.com/questions/2106503/pseudorandom-number-generator-exponential-distribution)
+
+[Generate random numbers according to distributions](https://stackoverflow.com/questions/3510475/generate-random-numbers-according-to-distributions)
+
 [fit-a-gaussian-curve](https://stackoverflow.com/questions/44480137/how-can-i-fit-a-gaussian-curve-in-python)
 
 [fit-mixture-of-two-gaussian](https://stackoverflow.com/questions/35990467/fit-mixture-of-two-gaussian-normal-distributions-to-a-histogram-from-one-set-of)
