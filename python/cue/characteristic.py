@@ -59,7 +59,7 @@ def generate_cue_distribution():
 
     """
     print("-------")
-    n = 26
+    n = 150
     start = time.time_ns()
     np.random.seed(int(start/1.0E9)-1693197846)
     
@@ -67,14 +67,14 @@ def generate_cue_distribution():
     sin_incr = math.sin(-2*math.pi/n)
 
     bins_in = []
-    for i in np.arange(-3.125, 3.5, 0.05):
+    for i in np.arange(-16.125, 16.5, 0.05):
         bins_in.append(i)
     xaxis = []
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
     
-    xaxis_zero = 62
-    print('index', xaxis[xaxis_zero])
+    xaxis_zero = 322
+    print('xaxis[', xaxis_zero , '] = ', xaxis[xaxis_zero])
     sample_size = 10000
     
     sums = [
@@ -146,28 +146,28 @@ def generate_cue_distribution():
     # plt.plot(xaxis, grams[0], '-x', color = 'black')
     # plt.grid()
     
-    data = []
+    data_symm = []
     zdf = []
     for zindex in range(xaxis_zero - 20, xaxis_zero + 21):
         row = []
         for j in range(0, len(sums)):
             row.append(grams[j][zindex])
-        data.append(row)
+        data_symm.append(row)
         zdf.append(np.around(xaxis[zindex], decimals=2))
 
-    data.append(means)
+    data_symm.append(means)
     zdf.append(-100)
     
     phi_values = []
     for j in range(0, len(sums)):
         phi_values.append(int(j*360/len(sums)))
         
-    df = pd.DataFrame(data,columns=phi_values,index=zdf)
+    df = pd.DataFrame(data_symm,columns=phi_values,index=zdf)
     file_name =  '../out/cue.txt'
     df.to_csv(file_name, sep=' ')
     
     testfit = []
-    for j in range(0, len(data), 5):
+    for j in range(0, len(data_symm), 5):
         out = my_functions.fit(zdf[j], df.iloc[j].values, phi_values)
         testfit.append(out)
     np.savetxt('../out/fitcue.txt', 
@@ -175,12 +175,13 @@ def generate_cue_distribution():
                fmt='%.2f %7.3f %7.3f %8.4f %7.3f', 
                delimiter=',')
     # changing data, put at very end
-    data[-1][0] = n
-    data[-1][1] = sample_size
+    data_symm[-1][0] = n
+    data_symm[-1][1] = sample_size
+    data_symm[-1][2] = zdf[0]
     header = "n " + str(n) + " sample " + str(sample_size)    
 
     np.savetxt('../out/rawcue.txt', 
-               np.asarray(data),
+               np.asarray(data_symm),
                header=header)
     
     elapsed = (time.time_ns()-start)/1.0E9

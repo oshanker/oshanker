@@ -28,13 +28,14 @@ def main():
    data = np.loadtxt(file_name)
    n = int(data[-1][0]) 
    sample_size = int(data[-1][1]) 
+   zdf0 = data[-1][2] 
    #-2.0 to 2.0, values only
    data = data[0:-1,:]
    rows = data.shape[0]
    cols = data.shape[1]
    col0 = np.copy(data[:,0:1])
    zdf = []
-   for i in np.arange(-1.0, 1.05, 0.05):
+   for i in np.arange(zdf0, -zdf0+0.04, 0.05):
         zdf.append(np.around(i, decimals=2))
    
    smooth = True
@@ -69,7 +70,7 @@ def main():
    ydata = output_array[:,1] 
    #do_fit(exp_pdf, np.asarray(zdf), ydata) 1.17
    #do_fit(gauss, np.asarray(zdf), ydata) #0.9
-   bounds=([0.3, 2.0, 1.5], [0.4, 2.5, 1.8])
+   bounds=([0.1, 2.0, 1.3], [0.4, 4.7, 3.0])
    popt = my_functions.do_fit(my_functions.exp_gauss, np.asarray(zdf), ydata, bounds=bounds) #0.9
    print('param', popt)
 
