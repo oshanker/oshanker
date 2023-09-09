@@ -10,6 +10,66 @@ import matplotlib.pyplot as plt
 import math
 from scipy.optimize import curve_fit
 
+
+gauss_norm = 1/(math.sqrt(2*math.pi))
+def gauss(x, sigma ):
+    """
+
+    Parameters
+    ----------
+    x : arg
+    
+    sigma : std dev
+
+    Returns
+    -------
+    normal distribution
+
+    """
+    A = gauss_norm/(sigma)
+    return A*np.exp(-(x)**2/(2*sigma**2))
+
+def exp_pdf_raw(x, lam):
+    """
+    
+
+    Parameters
+    ----------
+    x : arg
+    
+    lam : constant for exponential distribution
+
+    Returns
+    -------
+    exponential distribution
+
+    """
+    xx = np.abs(np.copy(x))
+    return  np.exp(-lam * xx) * lam/2
+    
+def exp_gauss(x, p, lam, sigma):
+    """    
+
+    Parameters
+    ----------
+    x : arg
+    
+    p : coefficient for exponential distribution
+    
+    lam : constant for exponential distribution
+    
+    sigma :  std dev
+
+    Returns
+    -------
+    ret : linear combination of exponential distribution and normal distribution.
+
+    """
+    ret = p * exp_pdf_raw(x, lam) + (1-p) * gauss(x, sigma )
+    return ret
+
+
+
 def exp_pdf(x, lam, corr):
     """
     
@@ -28,9 +88,9 @@ def exp_pdf(x, lam, corr):
     xx = np.abs(np.copy(x))
     return  corr*np.exp(-lam * xx) * lam/2
 
-def do_fit(func, xdata, ydata):
+def do_fit(func, xdata, ydata, bounds=([0.7, 0.8], [3.3, 2.0])):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(func, xdata, ydata, bounds=([1.7, 0.8], [3.3, 2.0]))
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=bounds)
     print('param', popt)
     cond = np.linalg.cond(pcov)
     print("cond", cond)
@@ -66,17 +126,22 @@ def main():
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
     print(len(xaxis))
     size = 300000
-    lam = 3.0
+    lam = 1.0
     data1 = np.random.exponential(scale=1.0/lam, size=size)
     data2 = np.random.exponential(scale=1.0/lam, size=size)
-    data = np.concatenate([data1, -data2])
+    sigma = 2.0
+    data3 = np.random.normal(loc=0.0, scale=sigma, size=size)
+    data = np.concatenate([data1, -data2, data3])
+    #data = np.concatenate([data1, -data2])
     hist, bins_range = np.histogram(data, bins=bins_in, density=True)
     histnorm = np.sum(hist)
     print('np.sum(hist)',  histnorm)
-    print('np.var(data)',  np.var(data))
+    print('np.var(data, ddof=0)',  np.var(data, ddof=0))
     xdata = np.array(xaxis)
     print('np.var(from hist)?? 2/lam**2',  np.sum(hist*xdata*xdata)/histnorm)
-    popt = do_fit(exp_pdf, xdata, hist)
+    #popt = do_fit(exp_pdf, xdata, hist)
+    bounds=([0.5, 0.5, 1.3], [1.0, 4.7, 3.0])
+    popt = do_fit(exp_gauss, xdata, hist, bounds=bounds) #0.9
     #do_plot_func(der_gauss, popt, x, 'der')
     
     # simul = gauss(x, 2.0)

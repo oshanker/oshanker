@@ -67,7 +67,7 @@ def main():
     print('sigma*hist[', xaxis_zero+halfmax , '] = ', sigma*hist[xaxis_zero+halfmax ])
     print('sigma*hist[', xaxis_zero-halfmax , '] = ', sigma*hist[xaxis_zero-halfmax ])
     print('np.sum(hist)',  histnorm)
-    print('np.var(data)',  np.var(data))
+    print('np.var(data)',  np.var(data, ddof=0))
     print('abs(sigma - np.std(s, ddof=1))', abs(sigma - np.std(data, ddof=1)))
     xdata = np.array(xaxis)
     x2 = xdata*xdata
