@@ -21,7 +21,7 @@ def der_gauss(x, sigma ):
     
 def do_fit(func, xdata, ydata):
     print(np.sum(ydata))
-    popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.5, 0.8], [2.5, 5.0]))
+    popt, pcov = curve_fit(func, xdata, ydata, bounds=([0.5, 0.8], [2.5, 2.0]))
     print('param', popt)
     cond = np.linalg.cond(pcov)
     print("cond", cond)
@@ -48,12 +48,14 @@ def do_plot_func(func, popt, xdata, label):
 
 def main():
     bins_in = []
-    for i in np.arange(-3.125, 3.5, 0.05):
+    for i in np.arange(-16.125, 16.5, 0.05):
         bins_in.append(i)
     xaxis = []
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
-    xaxis_zero = 62
+    
+    print(len(xaxis))
+    xaxis_zero = 322
     print('xaxis[', xaxis_zero , '] = ', xaxis[xaxis_zero])
     size = 300000
     sigma = 2.0

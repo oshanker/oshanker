@@ -57,11 +57,14 @@ def do_plot_func(func, popt, xdata, label):
 
 def main():
     bins_in = []
-    for i in np.arange(-3.125, 3.5, 0.05):
+    for i in np.arange(-16.125, 16.5, 0.05):
         bins_in.append(i)
+    
+    xaxis_zero = 322
     xaxis = []
     for i in range(0, len(bins_in)-1):
         xaxis.append((bins_in[i]+bins_in[i+1])/2)
+    print(len(xaxis))
     size = 300000
     lam = 3.0
     data1 = np.random.exponential(scale=1.0/lam, size=size)
