@@ -59,7 +59,7 @@ def generate_cue_distribution():
 
     """
     print("-------")
-    n = 150
+    n = 80
     start = time.time_ns()
     np.random.seed(int(start/1.0E9)-1693197846)
     
@@ -75,7 +75,7 @@ def generate_cue_distribution():
     
     xaxis_zero = 322
     print('xaxis[', xaxis_zero , '] = ', xaxis[xaxis_zero])
-    sample_size = 10000
+    sample_size = 100
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -122,15 +122,14 @@ def generate_cue_distribution():
                 
             y_1 = np.array(y1list)
             
-            hist, bins_range = np.histogram(y_1, bins=bins_in)
+            hist, bins_range = np.histogram(y_1, bins=bins_in, density=True)
             grams[j] = grams[j] + hist
             sums[j] = sums[j] + np.mean(y_1)
             vars[j] = vars[j] + np.var(y_1)
         
         
     for i in range(0, len(sums)):
-        converted = grams[i].sum()*(xaxis[1]-xaxis[0])
-        grams[i] = grams[i]/converted
+        grams[i] = grams[i]/sample_size
         # plt.plot(xaxis, grams[i], '-x', color = 'black')
         # plt.grid()
         # plt.show()
@@ -148,7 +147,7 @@ def generate_cue_distribution():
     
     data_symm = []
     zdf = []
-    for zindex in range(xaxis_zero - 20, xaxis_zero + 21):
+    for zindex in range(xaxis_zero - 80, xaxis_zero + 81):
         row = []
         for j in range(0, len(sums)):
             row.append(grams[j][zindex])
