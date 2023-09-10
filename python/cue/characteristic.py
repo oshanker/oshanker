@@ -125,7 +125,7 @@ def generate_cue_distribution():
             hist, bins_range = np.histogram(y_1, bins=bins_in, density=True)
             grams[j] = grams[j] + hist
             sums[j] = sums[j] + np.mean(y_1)
-            vars[j] = vars[j] + np.var(y_1)
+            vars[j] = vars[j] + np.var(y_1, ddof=0)
         
         
     for i in range(0, len(sums)):
@@ -139,6 +139,12 @@ def generate_cue_distribution():
     means = np.array(sums)/sample_size
     vars = vars/sample_size
     print('vars', vars)
+    hist = grams[0]
+    histnorm = np.sum(hist)
+    print('np.sum(hist)',  histnorm)
+    xdata = np.array(xaxis)
+    print('np.var(from hist)?? ',  np.sum(hist*xdata*xdata)/histnorm)
+    
     index90 = int(len(sums)/4)
     print(grams[index90][xaxis_zero - 1], grams[index90][xaxis_zero], 
           grams[index90][xaxis_zero + 1])
@@ -147,7 +153,7 @@ def generate_cue_distribution():
     
     data_symm = []
     zdf = []
-    for zindex in range(xaxis_zero - 80, xaxis_zero + 81):
+    for zindex in range(xaxis_zero - 160, xaxis_zero + 161):
         row = []
         for j in range(0, len(sums)):
             row.append(grams[j][zindex])
@@ -161,7 +167,7 @@ def generate_cue_distribution():
     for j in range(0, len(sums)):
         phi_values.append(int(j*360/len(sums)))
         
-    df = pd.DataFrame(data_symm,columns=phi_values,index=zdf)
+    df = pd.DataFrame(data_symm, columns=phi_values, index=zdf)
     file_name =  '../out/cue.txt'
     df.to_csv(file_name, sep=' ')
     
