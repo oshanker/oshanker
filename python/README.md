@@ -36,6 +36,13 @@ NA | 1.0E12 | 0.66 | 0.946    | 6.09    | Riemann |
 95 | 1.1E42 | 0.29 | 3.65     | 1.51    | CUE | 
 150 | 8.75E65 | 0.285 | 4.23     | 1.46    | CUE | 
 
+
+param [0.43206767, 2.04694732, 3.56966437]
+vars [77.52212123 77.42877897 77.27782274 77.07953997 76.84744331 76.59734974
+ 76.34630274 76.11141075 75.90868126 75.75192995 75.65183918 75.61522995
+ 75.64459713 75.73793939 75.88889562 76.08717839 76.31927505 76.56936862
+ 76.82041562 77.05530761 77.2580371  77.41478841 77.51487918 77.55148841]
+
 [Exponential distribution - Wikipedia](https://en.wikipedia.org/wiki/Exponential_distribution)
 
 [algorithm - Exponential Distribution](https://stackoverflow.com/questions/2106503/pseudorandom-number-generator-exponential-distribution)

@@ -75,7 +75,7 @@ def generate_cue_distribution():
     
     xaxis_zero = 322
     print('xaxis[', xaxis_zero , '] = ', xaxis[xaxis_zero])
-    sample_size = 100
+    sample_size = 20000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
