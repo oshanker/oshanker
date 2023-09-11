@@ -84,6 +84,7 @@ def generate_cue_distribution():
             ]
     vars = np.zeros(len(sums))
     print("-- cue --")
+    abs_sum = 0
     grams = []
     for j in range(0, len(sums)):
         grams.append(np.zeros((len(bins_in)-1,), dtype=int))
@@ -120,12 +121,14 @@ def generate_cue_distribution():
                
                 y1list.append(z)
                 
-            y_1 = np.array(y1list)
+            values_array = np.array(y1list)
             
-            hist, bins_range = np.histogram(y_1, bins=bins_in, density=True)
-            grams[j] = grams[j] + hist
-            sums[j] = sums[j] + np.mean(y_1)
-            vars[j] = vars[j] + np.var(y_1, ddof=0)
+            hist_incr, bins_range = np.histogram(values_array, bins=bins_in, density=True)
+            grams[j] = grams[j] + hist_incr
+            sums[j] = sums[j] + np.mean(values_array)
+            vars[j] = vars[j] + np.var(values_array, ddof=0)
+            if (j == 0):
+                abs_sum = abs_sum + np.mean(np.abs(values_array))
         
         
     for i in range(0, len(sums)):
@@ -138,12 +141,16 @@ def generate_cue_distribution():
     
     means = np.array(sums)/sample_size
     vars = vars/sample_size
+    abs_sum = abs_sum/sample_size
     print('vars', vars)
     hist = grams[0]
     histnorm = np.sum(hist)
     print('np.sum(hist)',  histnorm)
     xdata = np.array(xaxis)
     print('np.var(from hist)?? ',  np.sum(hist*xdata*xdata)/histnorm)
+    print('abs_sum ',  abs_sum)
+    temp = np.sum(hist* np.abs(xdata))
+    print('np abssum ',  temp/histnorm)
     
     index90 = int(len(sums)/4)
     print(grams[index90][xaxis_zero - 1], grams[index90][xaxis_zero], 
