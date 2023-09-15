@@ -70,6 +70,25 @@ def exp_gauss(x, p, lam, sigma):
     ret = p * exp_pdf(x, lam) + (1-p) * gauss(x, sigma )
     return ret
 
+def der_gauss(x, sigma ):
+    A = gauss_norm/(sigma**3)
+    return -A*x*np.exp(-(x)**2/(2*sigma**2))
+
+def der_exp_pdf(x, lam):
+    ret = []
+    for arg in x:
+        if arg == 0:
+            ret.append(0)
+        elif arg > 0:
+            ret.append(-math.exp(-lam * arg) * lam*lam/2)
+        else:
+            ret.append(math.exp(lam * arg) * lam*lam/2)
+    return  np.asarray(ret)
+    
+def der_exp_gauss(x, p, lam, sigma):
+    ret = p * der_exp_pdf(x, lam) + (1-p) * der_gauss(x, sigma )
+    return ret
+
 def do_fit(func, xdata, ydata, bounds=([0.28, 3.6, 1.5], [0.31, 3.7, 1.52])):
     """
     fit function to data
