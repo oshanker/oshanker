@@ -61,8 +61,15 @@ def main():
     
     #popt = [0.83159422, 2.05637868, 0.56744309]
     #do_plot_with_data(my_functions.der_exp_gauss, popt, xdata, -13.0*b_data, 'ydata')
-    popt = [-0.076923076923077, 0.83159422, 2.05637868, 0.56744309]
-    do_plot_with_data(b_der_exp_gauss, popt, xdata, b_data, 'ydata')
-    #param [0.43159422, 2.05637868, 3.56744309]
+    
+    # popt = [-0.076923076923077, 0.83159422, 2.05637868, 0.56744309]
+    # do_plot_with_data(b_der_exp_gauss, popt, xdata, b_data, 'ydata')
+    
+    bounds=([-1.5, 0.3, 0.6, 3.5], [0.0, 0.5, 0.9, 4.5])
+    popt = my_functions.do_fit(b_der_exp_gauss, xdata, b_data, bounds=bounds) #0.9
+    print('param', popt)
+
+    #param [       0.43159422, 2.05637868, 3.56744309]
+    #[-0.91021778  0.40631653, 0.7862342,  4.00855784]
     
 main()
