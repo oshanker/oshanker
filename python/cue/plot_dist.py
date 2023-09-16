@@ -8,10 +8,10 @@ Created on Fri Sep  1 10:09:04 2023
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
-import math
 import my_functions
 
+b_fit = False
+a_fit = True
     
 def b_der_exp_gauss(x, b, p, lam, sigma):
     ret = b*my_functions.der_exp_gauss(x, p, lam, sigma)
@@ -65,11 +65,16 @@ def main():
     # popt = [-0.076923076923077, 0.83159422, 2.05637868, 0.56744309]
     # do_plot_with_data(b_der_exp_gauss, popt, xdata, b_data, 'ydata')
     
-    bounds=([-2.005, 0.2, 0.6, 7.5], [-1.999, 0.3, 0.8, 8.5])
-    popt = my_functions.do_fit(b_der_exp_gauss, xdata, b_data, bounds=bounds) #0.9
-    print('param', popt)
-
-    #param [       0.43159422, 2.05637868, 3.56744309]
+    if b_fit:
+     bounds=([-2.005, 0.2, 0.6, 7.5], [-1.999, 0.3, 0.8, 8.5])
+     popt = my_functions.do_fit(b_der_exp_gauss, xdata, b_data, bounds=bounds) #0.9
+     print('param', popt)
+     
+    if a_fit:
+       bounds=([0.4, 0.1, 9.4], [0.7, 1.5, 9.5])
+       popt = my_functions.do_fit(my_functions.exp_gauss, xdata, ydata, bounds=bounds) #0.9
+       print('param', popt)
+    #param [             0.61859396  1.42590918  9.4       ]
     #param [-1.997       0.22968019  0.69744049  7.73814023]
     
 main()
