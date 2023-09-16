@@ -138,7 +138,10 @@ def main():
     print('np.sum(hist)',  histnorm)
     print('np.var(data, ddof=0)',  np.var(data, ddof=0))
     xdata = np.array(xaxis)
-    print('np.var(from hist)?? 2/lam**2',  np.sum(hist*xdata*xdata)/histnorm)
+    p = 2/3;
+    print('p*2/(lam*lam) ', p*2/(lam*lam) , " + (1-p)*sigma*sigma ", (1-p)*sigma*sigma
+          , ' = ', p*2/(lam*lam) + (1-p)*sigma*sigma)
+    print('<x**2> (from hist)',  np.sum(hist*xdata*xdata)/histnorm)
     #popt = do_fit(exp_pdf, xdata, hist)
     bounds=([0.5, 0.5, 1.3], [1.0, 4.7, 3.0])
     popt = do_fit(exp_gauss, xdata, hist, bounds=bounds) #0.9
