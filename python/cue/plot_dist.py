@@ -65,11 +65,11 @@ def main():
     # popt = [-0.076923076923077, 0.83159422, 2.05637868, 0.56744309]
     # do_plot_with_data(b_der_exp_gauss, popt, xdata, b_data, 'ydata')
     
-    bounds=([-1.5, 0.3, 0.6, 3.5], [0.0, 0.5, 0.9, 4.5])
+    bounds=([-2.005, 0.2, 0.6, 7.5], [-1.999, 0.3, 0.8, 8.5])
     popt = my_functions.do_fit(b_der_exp_gauss, xdata, b_data, bounds=bounds) #0.9
     print('param', popt)
 
     #param [       0.43159422, 2.05637868, 3.56744309]
-    #[-0.91021778  0.40631653, 0.7862342,  4.00855784]
+    #param [-1.997       0.22968019  0.69744049  7.73814023]
     
 main()
