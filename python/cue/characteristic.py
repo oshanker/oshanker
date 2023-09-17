@@ -67,7 +67,7 @@ def generate_cue_distribution():
     sin_incr = math.sin(-2*math.pi/n)
 
     bins_in = []
-    for i in np.arange(-16.125, 16.5, 0.05):
+    for i in np.arange(-16.125, 16.15, 0.05):
         bins_in.append(i)
     xaxis = []
     for i in range(0, len(bins_in)-1):
@@ -76,6 +76,7 @@ def generate_cue_distribution():
     xaxis_zero = 322
     print('xaxis[', xaxis_zero , '] = ', xaxis[xaxis_zero])
     sample_size = 40000
+    print(len(bins_in), len(xaxis), xaxis[0], xaxis[-1])
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -154,6 +155,16 @@ def generate_cue_distribution():
           grams[index90][xaxis_zero + 1])
     # plt.plot(xaxis, grams[0], '-x', color = 'black')
     # plt.grid()
+    
+    all_data = np.asarray(grams).T
+    print('all_data.shape', all_data.shape)
+    header = "n " + str(n) + " sample " + str(sample_size) + \
+        " " + str(xaxis[0]) + " " + str(xaxis[-1])
+
+    np.savetxt('../out/all_data' + str(n) + '.gz', 
+               all_data,
+               header=header)
+
     
     data_symm = []
     zdf = []
