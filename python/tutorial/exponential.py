@@ -105,14 +105,14 @@ def do_fit(func, xdata, ydata, bounds=([0.7, 0.8], [3.3, 2.0])):
     plt.show()
     return popt
 
-def do_plot_func(func, popt, xdata, label):
-    plt.plot(xdata, func(xdata, *popt), 'g--',
+def do_plot_func(func, popt, xdata, label='func', style='g--'):
+    plt.plot(xdata, func(xdata, *popt), style,
          label=label )
     plt.xlabel('x')
     plt.ylabel('y')
     plt.grid()
     plt.legend()
-    plt.show()
+    #plt.show()
     return popt
 
 def main():
@@ -143,10 +143,18 @@ def main():
           , ' = ', p*2/(lam*lam) + (1-p)*sigma*sigma)
     print('<x**2> (from hist)',  np.sum(hist*xdata*xdata)/histnorm)
     #popt = do_fit(exp_pdf, xdata, hist)
-    bounds=([0.5, 0.5, 1.3], [1.0, 4.7, 3.0])
-    popt = do_fit(exp_gauss, xdata, hist, bounds=bounds) #0.9
+    # bounds=([0.5, 0.5, 1.3], [1.0, 4.7, 3.0])
+    # popt = do_fit(exp_gauss, xdata, hist, bounds=bounds) #0.9
     #do_plot_func(der_gauss, popt, x, 'der')
-    
+    xx = []
+    for i in range(-5, 6):
+        xx.append(i)
+    xx_array = np.array(xx)
+    popt = [0.66345065, 1.00132733, 2.00282841]
+    do_plot_func(exp_gauss, popt, xx_array)
+    popt_exp = [1.00132733, 0.666666667]
+    do_plot_func(exp_pdf, popt_exp, xx_array, label='exp_pdf',style='r--')
+    plt.show()
     # simul = gauss(x, 2.0)
     # plt.plot(xaxis, simul, 'b-', label='data')
     # plt.xlabel('x')
