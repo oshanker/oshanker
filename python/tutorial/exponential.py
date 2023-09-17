@@ -106,24 +106,20 @@ def do_fit(func, xdata, ydata, bounds=([0.7, 0.8], [3.3, 2.0])):
     return popt
 
 def do_plot_func(func, popt, xdata, label='func', style='g--'):
-    plt.plot(xdata, func(xdata, *popt), style,
-         label=label )
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.grid()
-    plt.legend()
-    #plt.show()
+    plot_xy( xdata, func(xdata, *popt), label, style)
     return popt
 
 def do_plot_func_with_coeff(func, coeff, popt, xdata, label='func', style='g--'):
-    plt.plot(xdata, coeff*func(xdata, *popt), style,
+    plot_xy( xdata, coeff*func(xdata, *popt), label, style)
+    return popt
+
+def plot_xy( xdata, ydata, label='func', style='g--'):
+    plt.plot(xdata, ydata, style,
          label=label )
     plt.xlabel('x')
     plt.ylabel('y')
     plt.grid()
     plt.legend()
-    #plt.show()
-    return popt
 
 def main():
     bins_in = []
@@ -163,8 +159,6 @@ def main():
     
     # popt = [0.22968019,  0.69744049,  7.73814023]
     # do_plot_func(exp_gauss, popt, xx_array, label='exp_gauss')
-    # # popt_exp = [1.00132733, 0.666666667]
-    # # do_plot_func(exp_pdf, popt_exp, xx_array, label='exp_pdf',style='r--')
     # popt_exp = [0.69744049 ]
     # do_plot_func_with_coeff(exp_pdf_raw, 0.22968019, popt_exp, xx_array, label='exp_pdf_with_coeff',style='r--')
     # popt_exp = [7.73814023 ]
