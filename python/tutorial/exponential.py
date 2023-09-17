@@ -115,6 +115,16 @@ def do_plot_func(func, popt, xdata, label='func', style='g--'):
     #plt.show()
     return popt
 
+def do_plot_func_with_coeff(func, coeff, popt, xdata, label='func', style='g--'):
+    plt.plot(xdata, coeff*func(xdata, *popt), style,
+         label=label )
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid()
+    plt.legend()
+    #plt.show()
+    return popt
+
 def main():
     bins_in = []
     for i in np.arange(-16.125, 16.5, 0.05):
@@ -147,13 +157,26 @@ def main():
     # popt = do_fit(exp_gauss, xdata, hist, bounds=bounds) #0.9
     #do_plot_func(der_gauss, popt, x, 'der')
     xx = []
-    for i in range(-5, 6):
+    for i in range(-8, 9):
         xx.append(i)
     xx_array = np.array(xx)
-    popt = [0.66345065, 1.00132733, 2.00282841]
-    do_plot_func(exp_gauss, popt, xx_array)
-    popt_exp = [1.00132733, 0.666666667]
-    do_plot_func(exp_pdf, popt_exp, xx_array, label='exp_pdf',style='r--')
+    
+    # popt = [0.22968019,  0.69744049,  7.73814023]
+    # do_plot_func(exp_gauss, popt, xx_array, label='exp_gauss')
+    # # popt_exp = [1.00132733, 0.666666667]
+    # # do_plot_func(exp_pdf, popt_exp, xx_array, label='exp_pdf',style='r--')
+    # popt_exp = [0.69744049 ]
+    # do_plot_func_with_coeff(exp_pdf_raw, 0.22968019, popt_exp, xx_array, label='exp_pdf_with_coeff',style='r--')
+    # popt_exp = [7.73814023 ]
+    # do_plot_func_with_coeff(gauss, 1-0.22968019, popt_exp, xx_array, label='gauss_with_coeff',style='b--')
+
+    popt = [0.61859396,  1.42590918,  9.4 ]
+    do_plot_func(exp_gauss, popt, xx_array, label='exp_gauss')
+    popt_exp = [1.42590918 ]
+    do_plot_func_with_coeff(exp_pdf_raw, 0.61859396, popt_exp, xx_array, label='exp_pdf_with_coeff',style='r--')
+    popt_exp = [9.4 ]
+    do_plot_func_with_coeff(gauss, 1-0.61859396, popt_exp, xx_array, label='gauss_with_coeff',style='b--')
+    
     plt.show()
     # simul = gauss(x, 2.0)
     # plt.plot(xaxis, simul, 'b-', label='data')
