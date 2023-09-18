@@ -10,10 +10,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import my_functions
 
-b_fit = True
-#b_fit = False
-#a_fit = True
-a_fit = False
+#b_fit = True
+b_fit = False
+a_fit = True
+#a_fit = False
     
 def b_der_exp_gauss(x, b, p, lam, sigma):
     ret = b*my_functions.der_exp_gauss(x, p, lam, sigma)
@@ -68,7 +68,7 @@ def main():
     # do_plot_with_data(b_der_exp_gauss, popt, xdata, b_data, 'ydata')
     
     if b_fit:
-     bounds=([-2.005, 0.1, 0.1, 8.5], [-1.999, 0.5, 0.7, 10.5])
+     bounds=([-2.005, 0.1, 0.1, 10.3], [-1.999, 0.5, 0.7, 10.8])
      popt = my_functions.do_fit(b_der_exp_gauss, xdata, b_data, bounds=bounds) #0.9
      p = popt[1]
      lam = popt[2]
@@ -78,7 +78,7 @@ def main():
           , ' = ', p*2/(lam*lam) + (1-p)*sigma*sigma)
      
     if a_fit:
-       bounds=([0.1, 0.1, 9.0], [0.7, 1.5, 9.5])
+       bounds=([0.25, 0.6, 10.0], [0.3, 2.5, 10.4])
        popt = my_functions.do_fit(my_functions.exp_gauss, xdata, ydata, bounds=bounds) #0.9
        p = popt[0]
        lam = popt[1]
