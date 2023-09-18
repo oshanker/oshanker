@@ -75,8 +75,8 @@ def generate_cue_distribution():
     
     xaxis_zero = 322
     print('xaxis[', xaxis_zero , '] = ', xaxis[xaxis_zero])
-    sample_size = 40000
-    print(len(bins_in), len(xaxis), xaxis[0], xaxis[-1])
+    
+    sample_size = 60000
     
     sums = [
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -181,6 +181,13 @@ def generate_cue_distribution():
     phi_values = []
     for j in range(0, len(sums)):
         phi_values.append(int(j*360/len(sums)))
+        
+    x2array = np.zeros((3,len(phi_values)))
+    x2array[0] = phi_values
+    x2array[1] = abs_sum
+    x2array[2] = means
+    np.savetxt('../out/x2_' + str(n) + '.txt', 
+               x2array, fmt='%3.15f')
         
     df = pd.DataFrame(data_symm, columns=phi_values, index=zdf)
     file_name =  '../out/cue.txt'
