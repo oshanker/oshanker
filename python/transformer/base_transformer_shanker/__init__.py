@@ -5,3 +5,4 @@ __all__ = ('add_numbers', )
 
 from base_transformer_shanker.add import (add_numbers,  )
 from base_transformer_shanker.subtract import ( calculate_difference, )
+from base_transformer_shanker.person import ( Person, runperson)
