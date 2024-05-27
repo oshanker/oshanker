@@ -15,6 +15,13 @@ from constants import args
 # Code is based on
 # https://towardsdatascience.com/a-complete-guide-to-write-your-own-transformers-29e23f371ddd 
 # https://pytorch.org/tutorials/beginner/introyt/trainingyt.html
+"""
+model.train() tells your model that you are training the model. This helps inform layers such as Dropout and BatchNorm, which are designed to behave differently during training and evaluation. For instance, in training mode, BatchNorm updates a moving average on each new batch; whereas, for evaluation mode, these updates are frozen.
+
+More details: model.train() sets the mode to train (see source code). You can call either model.eval() or model.train(mode=False) to tell that you are testing. It is somewhat intuitive to expect train function to train model but it does not do that. It just sets the mode.
+
+https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
+"""
 
 PAD_IDX = GD.PAD_IDX
 SOS_IDX = GD.SOS_IDX
