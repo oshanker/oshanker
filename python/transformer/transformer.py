@@ -133,6 +133,9 @@ def runperson():
 	# Define model here
 	p1 = Transformer(**args)
 	print("class", p1)
-	
+	for param_tensor in p1.state_dict():
+		print(param_tensor, "\t", p1.state_dict()[param_tensor].size())
+
+# https://pytorch.org/tutorials/beginner/saving_loading_models.html	
 if __name__ == "__main__":
     runperson()
