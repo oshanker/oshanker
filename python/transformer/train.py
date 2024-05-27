@@ -10,6 +10,7 @@ from torch.nn.utils.rnn import pad_sequence
 from mpl_toolkits.axes_grid1 import ImageGrid
 from base_transformer_shanker.data import GenerateDataset as GD
 from transformer import Transformer
+from constants import args
 
 PAD_IDX = GD.PAD_IDX
 SOS_IDX = GD.SOS_IDX
@@ -81,15 +82,6 @@ def evaluate(model, loader, loss_fn):
 
     return losses / len(list(loader)), acc / len(list(loader)), history_loss, history_acc
 
-# Model hyperparameters
-args = {
-    'vocab_size': 128,
-    'model_dim': 128,
-    'dropout': 0.1,
-    'n_encoder_layers': 1,
-    'n_decoder_layers': 1,
-    'n_heads': 4
-}
 
 # Define model here
 model = Transformer(**args)
@@ -134,3 +126,5 @@ for epoch in range(1, 4):
     history['eval_loss'] += hist_loss
     history['eval_acc'] += hist_acc
     print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+
+torch.save(model.state_dict(), "../out/transformer.pt")
