@@ -12,6 +12,10 @@ SOS_IDX = GD.SOS_IDX
 EOS_IDX = GD.EOS_IDX
 
 class Translator(nn.Module):
+"""
+https://pytorch.org/tutorials/beginner/saving_loading_models.html
+"""
+
     def __init__(self, transformer):
         super(Translator, self).__init__()
         self.transformer = transformer
