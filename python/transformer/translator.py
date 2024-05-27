@@ -40,7 +40,8 @@ class Translator(nn.Module):
             y = outputs[:, :step]
             probs = self.transformer.decode(y, encoder_output)
             output = torch.argmax(probs, dim=-1)
-            print(f"Knowing {y} we output {output[:, -1]}")
+            currentString = Translator.tokens_to_str(y[0])
+            print(f"Knowing {currentString} we output {output[:, -1]}")
             if output[:, -1].detach().numpy() in (EOS_IDX, SOS_IDX):
                 break
             outputs[:, step] = output[:, -1]
@@ -51,10 +52,10 @@ class Translator(nn.Module):
 def runperson():
 	# Define model here
 	model = Transformer(**args)
-	model.load_state_dict(torch.load("../out/transformer.pt"))
+	path = "../out/forward.pt"
+	model.load_state_dict(torch.load(path))
 	model.eval()
 	translator = Translator(model)
-	print("class", model)
 	sentence = "helloworld"
 	print(sentence)
 	out = translator(sentence)
