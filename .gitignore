@@ -5,6 +5,7 @@ target
 .project
 .recommenders
 .DS_Store
+.spyproject
 .Rapp.history
 .RData
 .Rhistory
