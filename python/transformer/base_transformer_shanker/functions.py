@@ -21,11 +21,41 @@ def plot_list(data, xlabel='Index', ylabel='Value'):
     plt.title('Plot of List')
     plt.grid(True)
     plt.show()
+    
+def plot_multiple_lists(*lists, xlabel='Index', ylabel='Value', labels=None):
+    """
+    Plot multiple lists on the same graph.
+
+    Parameters:
+        *lists (list): Variable length list of lists to be plotted.
+        labels (list): Optional list of labels for each list.
+    """
+    for i, data in enumerate(lists):
+        if labels:
+            label = labels[i]
+        else:
+            label = f'Data {i+1}'
+        plt.plot(data, label=label)
+    
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title('Plot of Multiple Lists')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+#
 
 def runperson():
 # Example usage:
-    my_list = [1, 4, 3, 4, 1]
-    plot_list(my_list)
+    # my_list = [1, 4, 3, 4, 1]
+    # plot_list(my_list)
+    list1 = [1, 2, 3, 4, 5]
+    list2 = [2, 3, 4, 5, 6]
+    list3 = [3, 4, 5, 6, 7]
+    
+    plot_multiple_lists(list1, list2, list3, labels=['List 1', 'List 2', 'List 3'])
+
 	
 if __name__ == "__main__":
     runperson()
