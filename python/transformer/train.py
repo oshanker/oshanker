@@ -11,6 +11,7 @@ from mpl_toolkits.axes_grid1 import ImageGrid
 from base_transformer_shanker.data import GenerateDataset as GD
 from transformer import Transformer
 from constants import args
+import base_transformer_shanker.functions as functions
 from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset 
 
 # Code is based on
@@ -149,6 +150,7 @@ def runTrain(train_iter, eval_iter, path):
     # history of loss and accuracy for each batch.
     for key in history:
         print(key, len(history[key]))
+    functions.plot_list(history['train_acc'][75:],ylabel='train_acc')
 #     torch.save(model.state_dict(), path)
 
 
