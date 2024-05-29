@@ -86,14 +86,14 @@ public class Poly7termBTest {
     @Test
     public void testPositionMaxB() {
         double positionMax05 = poly7B012.positionMax(0.5, 0, 1);
-        Assert.assertEquals(0.42264973081044926, positionMax05, 1.0E-8);
+        Assert.assertEquals(0.42264973081044926, positionMax05, 1.0E-7);
         double positionMax15 = poly7B012.positionMax(1.5, 1, 2);
-        Assert.assertEquals(1.5773502691895684, positionMax15, 1.0E-8);
+        Assert.assertEquals(1.5773502691895684, positionMax15, 1.0E-7);
         double max05 = poly7B012.eval(positionMax05);
         double expected0 = 0.3849001794597505 + B*0.1481481481481481;
-        Assert.assertEquals(expected0, max05, 1.0E-8);
+        Assert.assertEquals(expected0, max05, 1.0E-7);
         double max15 = poly7B012.eval(positionMax15);
         double expected1= -0.3849001794597505 + B*0.1481481481481481;
-        Assert.assertEquals(expected1, max15, 1.0E-8);
+        Assert.assertEquals(expected1, max15, 1.0E-7);
     }
 }

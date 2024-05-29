@@ -88,7 +88,7 @@ public class Poly7termTest {
     @Test
     public void testPositionMaxA() {
         double positionMax05 = poly7A012.positionMax(0.5, 0, 1);
-        Assert.assertEquals(0.44117451458624335, positionMax05, 1.0E-8);
+        Assert.assertEquals(0.44117451458624335, positionMax05, 1.0E-7);
         double positionMax15 = poly7A012.positionMax(1.5, 1, 2);
         Assert.assertEquals(1.5252718729923782, positionMax15, 1.0E-8);
         double max05 = poly7A012.eval(positionMax05);

@@ -186,7 +186,8 @@ public class GSeriesTest {
         out.close();
     }
 
-    @Test //@Ignore  
+    @Test @Ignore
+    // need  out/gzetaE12/calcHist12.csv (No such file or directory)
     public void testSplineFit() throws Exception{
         //needs fixing
         int k = 12;

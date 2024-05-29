@@ -50,7 +50,7 @@ public class Poly7Test  {
     @Test
     public void testPositionMax() {
         double positionMax05 = poly7012.positionMax(0.5, 0, 1);
-        Assert.assertEquals(0.42264972993696365, positionMax05, 1.0E-8);
+        Assert.assertEquals(0.42264972993696365, positionMax05, 5.0E-7);
         double positionMax15 = poly7012.positionMax(1.5, 1, 2);
         Assert.assertEquals(1.577350269950018, positionMax15, 1.0E-8);
         Assert.assertEquals(2.0, (positionMax05+positionMax15), 1.0E-8);

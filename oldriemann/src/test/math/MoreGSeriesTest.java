@@ -218,7 +218,8 @@ public class MoreGSeriesTest {
     }
     
     @SuppressWarnings("unused")
-	@Test //@Ignore  
+	@Test @Ignore
+    // need out/gzetaE28/calcHist_fine12.csv (No such file or directory)
     public void testInterpolate() throws Exception{
     	//input can come from riemann.Interpolate.consolidatedF()
     	//That method stores the output G series from riemann.Interpolate.readItems()
