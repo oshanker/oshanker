@@ -7,3 +7,7 @@ args = {
     'n_decoder_layers': 1,
     'n_heads': 4
 }
+
+PAD_IDX = 0
+SOS_IDX = 1
+EOS_IDX = 2

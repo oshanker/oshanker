@@ -8,9 +8,9 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
 from mpl_toolkits.axes_grid1 import ImageGrid
-from base_transformer_shanker.data import GenerateDataset as GD
+#from base_transformer_shanker.data import GenerateDataset as GD
 from transformer import Transformer
-from constants import args
+from base_transformer_shanker.constants import args, PAD_IDX, SOS_IDX, EOS_IDX
 import base_transformer_shanker.functions as functions
 from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset 
 
@@ -25,9 +25,6 @@ More details: model.train() sets the mode to train (see source code). You can ca
 https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
 """
 
-PAD_IDX = GD.PAD_IDX
-SOS_IDX = GD.SOS_IDX
-EOS_IDX = GD.EOS_IDX
 
 def collate_fn(batch):
     """ 

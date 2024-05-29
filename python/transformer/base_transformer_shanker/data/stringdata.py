@@ -1,7 +1,11 @@
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-
+from base_transformer_shanker.constants import PAD_IDX, SOS_IDX, EOS_IDX
+from base_transformer_shanker.functions import gd_collate_fn
+#import base_transformer_shanker.constants 
+from torch.utils.data import DataLoader
+from base_transformer_shanker.functions import gd_collate_fn, tokens_to_str
 
 np.random.seed(0)
 
@@ -11,10 +15,6 @@ def generate_random_string():
     return "".join([chr(x) for x in np.random.randint(97, 97+26, len)])
 
 class GenerateDataset(Dataset):
-
-    PAD_IDX = 0
-    SOS_IDX = 1
-    EOS_IDX = 2
     
     def __init__(self, n_samples, pad_idx=PAD_IDX, sos_idx=SOS_IDX, eos_idx=EOS_IDX, reverseString=True):
         super(GenerateDataset, self).__init__()
@@ -33,3 +33,19 @@ class GenerateDataset(Dataset):
         
     def text_transform(self, x):
         return torch.tensor([self.sos_idx] + [ord(z)-97+3 for z in x] + [self.eos_idx])
+
+def runpersonMain():
+	train_iter = GenerateDataset(6, pad_idx=PAD_IDX, sos_idx=SOS_IDX, eos_idx=EOS_IDX)
+	dataloader_train = DataLoader(train_iter, batch_size=3, collate_fn=gd_collate_fn)
+	s, t = next(iter(dataloader_train))
+	print(s[:, ...])
+	print(t[:, ...])
+	print("s.size", s.size())
+	print("?", tokens_to_str(s[0, :]))
+	print("?", tokens_to_str(t[0, :]))
+	
+	for s, t in iter(dataloader_train):
+	     print(s.size())
+
+runpersonMain()
+

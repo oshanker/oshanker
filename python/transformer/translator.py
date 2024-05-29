@@ -3,18 +3,15 @@ import time
 import torch.nn as nn
 import numpy as np
 from transformer import Transformer
-from constants import args
+from base_transformer_shanker.constants import args, PAD_IDX, SOS_IDX, EOS_IDX
 
-from base_transformer_shanker.data import GenerateDataset as GD
+#from base_transformer_shanker.data import GenerateDataset as GD
 
-PAD_IDX = GD.PAD_IDX
-SOS_IDX = GD.SOS_IDX
-EOS_IDX = GD.EOS_IDX
 
 class Translator(nn.Module):
-"""
-https://pytorch.org/tutorials/beginner/saving_loading_models.html
-"""
+    """
+    https://pytorch.org/tutorials/beginner/saving_loading_models.html
+    """
 
     def __init__(self, transformer):
         super(Translator, self).__init__()
@@ -54,16 +51,16 @@ https://pytorch.org/tutorials/beginner/saving_loading_models.html
         return self.tokens_to_str(outputs[0])
 
 def runperson():
-	# Define model here
-	model = Transformer(**args)
-	path = "../out/forward.pt"
-	model.load_state_dict(torch.load(path))
-	model.eval()
-	translator = Translator(model)
-	sentence = "helloworld"
-	print(sentence)
-	out = translator(sentence)
-	print(out)
-	
+    # Define model here
+    model = Transformer(**args)
+    path = "../out/forward.pt"
+    model.load_state_dict(torch.load(path))
+    model.eval()
+    translator = Translator(model)
+    sentence = "helloworld"
+    print(sentence)
+    out = translator(sentence)
+    print(out)
+    
 if __name__ == "__main__":
     runperson()
