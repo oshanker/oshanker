@@ -1,6 +1,5 @@
 package math;
 
-import javafx.util.Pair;
 import riemann.CopyZeroInformation;
 import riemann.Interpolate;
 import riemann.Rosser;

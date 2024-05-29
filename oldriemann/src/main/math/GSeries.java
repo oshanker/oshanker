@@ -1,12 +1,10 @@
 package math;
 
+import riemann.Gram;
+import riemann.Riemann;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
-
-import javafx.util.Pair;
-import riemann.Gram;
-import riemann.Interpolate;
-import riemann.Riemann;
 
 /**
  * Calculates the G-series useful in the study of Riemann zeta
