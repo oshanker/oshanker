@@ -1,18 +1,15 @@
 import torch
 import time
 import torch.nn as nn
-import numpy as np
-import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
-from mpl_toolkits.axes_grid1 import ImageGrid
 #from base_transformer_shanker.data import GenerateDataset as GD
 from transformer import Transformer
-from base_transformer_shanker.constants import args, PAD_IDX, SOS_IDX, EOS_IDX
 import base_transformer_shanker.functions as functions
 from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset 
+from base_transformer_shanker.constants import args, PAD_IDX
 
 # Code is based on
 # https://towardsdatascience.com/a-complete-guide-to-write-your-own-transformers-29e23f371ddd 
@@ -30,6 +27,9 @@ def collate_fn(batch):
     """ 
     This function pads inputs with PAD_IDX to have batches of equal length
     """
+# =============================================================================
+# https://stackoverflow.com/questions/56831366/removeerror-pyopenssl-is-a-dependency-of-conda-and-cannot-be-removed-from-con
+# =============================================================================
     src_batch, tgt_batch = [], []
     for src_sample, tgt_sample in batch:
         src_batch.append(src_sample)

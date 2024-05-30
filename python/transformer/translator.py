@@ -1,9 +1,7 @@
 import torch
-import time
 import torch.nn as nn
-import numpy as np
 from transformer import Transformer
-from base_transformer_shanker.constants import args, PAD_IDX, SOS_IDX, EOS_IDX
+from base_transformer_shanker.constants import args, SOS_IDX, EOS_IDX
 
 #from base_transformer_shanker.data import GenerateDataset as GD
 

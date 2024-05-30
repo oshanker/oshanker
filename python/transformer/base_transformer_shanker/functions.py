@@ -9,7 +9,7 @@ Created on Tue May 28 13:26:02 2024
 import matplotlib.pyplot as plt
 import random
 from torch.nn.utils.rnn import pad_sequence
-from base_transformer_shanker.constants import PAD_IDX, SOS_IDX, EOS_IDX
+from base_transformer_shanker.constants import PAD_IDX
 
 
 def plot_list(data, xlabel='Index', ylabel='Value'):

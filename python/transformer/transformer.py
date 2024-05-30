@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import math
 
 from pe import Encoder, Decoder
 #from .decoder import Decoder
