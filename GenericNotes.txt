@@ -1,0 +1,6 @@
+13:59 $ conda info --envs
+# conda environments:
+#
+base                  *  /Users/uorugant/opt/anaconda3
+
+conda list
