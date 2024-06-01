@@ -57,16 +57,16 @@ def train(model, optimizer, dataloader, loss_fn, epoch):
         # same should be done for train and evaluate.
         # damn the markers!
 # =============================================================================
-            logits = model(x, y[:, :-1])
+            logits = model(x, y)
             loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
-                           y[:, 1:].contiguous().view(-1))
+                           y.contiguous().view(-1))
             loss.backward()
             optimizer.step()
             losses += loss.item()
             
             preds = logits.argmax(dim=-1)
-            masked_pred = preds * (y[:, 1:]!=PAD_IDX)
-            accuracy = (masked_pred == y[:, 1:]).float().mean()
+            masked_pred = preds * (y !=PAD_IDX)
+            accuracy = (masked_pred == y).float().mean()
             acc += accuracy.item()
             
             history_loss.append(loss.item())
@@ -96,14 +96,14 @@ def evaluate(model, dataloader, loss_fn):
         # same should be done for train and evaluate.
         # damn the markers!
 # =============================================================================
-        logits = model(x, y[:, :-1])
+        logits = model(x, y)
         loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
-                       y[:, 1:].contiguous().view(-1))
+                       y.contiguous().view(-1))
         losses += loss.item()
         
         preds = logits.argmax(dim=-1)
-        masked_pred = preds * (y[:, 1:]!=PAD_IDX)
-        accuracy = (masked_pred == y[:, 1:]).float().mean()
+        masked_pred = preds * (y !=PAD_IDX)
+        accuracy = (masked_pred == y).float().mean()
         acc += accuracy.item()
         
         history_loss.append(loss.item())
@@ -136,9 +136,9 @@ def evaluate1(model, dataloader, loss_fn):
         # damn the markers!
 # =============================================================================
         
-        logits = model(x, y[:, :-1])
+        logits = model(x, y)
         loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
-                       y[:, 1:].contiguous().view(-1))
+                       y.contiguous().view(-1))
         losses += loss.item()
         
         preds = logits.argmax(dim=-1)
@@ -147,12 +147,13 @@ def evaluate1(model, dataloader, loss_fn):
 #    masked_pred -->  torch.Size([3, 9])
 #    here are we seeing the implicit EOS/SOS remnant? 
 # =============================================================================
-        masked_pred = preds * (y[:, 1:]!=PAD_IDX)
-        accuracy = (masked_pred == y[:, 1:]).float().mean()
+        masked_pred = preds * (y !=PAD_IDX)
+        accuracy = (masked_pred == y).float().mean()
         print("masked_pred --> ", masked_pred.size())
         for row in functions.iterate_rows(masked_pred):
             print(functions.tokens_to_str(row))
         acc += accuracy.item()
+        print("accuracy --> ", accuracy)
         
     
     length = len(list(dataloader)) 
@@ -162,6 +163,23 @@ def evaluate1(model, dataloader, loss_fn):
 
 
 def runTrain(train_iter, eval_iter, path):
+    """
+    B = Batch size
+    S = Source sequence length
+    L = Target sequence length
+    E = Model dimension
+
+    encode Input
+        x: (B, S) with elements in (0, C) where C is num_classes
+    encode Output
+        (B, S, E) embedding
+    
+    decode Input
+        encoded_x: (B, S, E)
+        y: (B, L) with elements in (0, C) where C is num_classes
+    decode Output
+        (B, L, C) logits
+    """
     # Define model here
     model = Transformer(**args)
 
@@ -213,7 +231,7 @@ def runperson():
     # train_iter = GD(50000, reverseString=False)
     # eval_iter = GD(20000, reverseString=False)
     reverseString=True
-    train_iter = GenerateNoMarkerDataset(12000, reverseString=reverseString)
+    train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
     eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
     path = "../out/reverse.pt" if reverseString else "../out/forward.pt"
     runTrain(train_iter, eval_iter, path)

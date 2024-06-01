@@ -18,7 +18,7 @@ class Transformer(nn.Module):
         self.n_encoder_layers = kwargs.get('n_encoder_layers')
         self.n_decoder_layers = kwargs.get('n_decoder_layers')
         self.n_heads = kwargs.get('n_heads')
-        self.batch_size = kwargs.get('batch_size')
+        # self.batch_size = kwargs.get('batch_size')
         self.PAD_IDX = kwargs.get('pad_idx', 0)
 
         self.encoder = Encoder(
