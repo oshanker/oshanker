@@ -52,8 +52,14 @@ def train(model, optimizer, dataloader, loss_fn, epoch):
             tepoch.set_description(f"Epoch {epoch}")
 
             optimizer.zero_grad()
+# =============================================================================
+        # the marker disease needs to unravel from here.
+        # same should be done for train and evaluate.
+        # damn the markers!
+# =============================================================================
             logits = model(x, y[:, :-1])
-            loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), y[:, 1:].contiguous().view(-1))
+            loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
+                           y[:, 1:].contiguous().view(-1))
             loss.backward()
             optimizer.step()
             losses += loss.item()
@@ -85,8 +91,14 @@ def evaluate(model, dataloader, loss_fn):
 
     for x, y in tqdm(dataloader, position=0, leave=True):
 
+# =============================================================================
+        # the marker disease needs to unravel from here.
+        # same should be done for train and evaluate.
+        # damn the markers!
+# =============================================================================
         logits = model(x, y[:, :-1])
-        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), y[:, 1:].contiguous().view(-1))
+        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
+                       y[:, 1:].contiguous().view(-1))
         losses += loss.item()
         
         preds = logits.argmax(dim=-1)
@@ -201,7 +213,7 @@ def runperson():
     # train_iter = GD(50000, reverseString=False)
     # eval_iter = GD(20000, reverseString=False)
     reverseString=True
-    train_iter = GenerateNoMarkerDataset(20000, reverseString=reverseString)
+    train_iter = GenerateNoMarkerDataset(12000, reverseString=reverseString)
     eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
     path = "../out/reverse.pt" if reverseString else "../out/forward.pt"
     runTrain(train_iter, eval_iter, path)
