@@ -32,29 +32,36 @@ public class RosserTest {
             System.out.printf("next zero %f \n", zero);
         }
         int count = 1; //244.158907
+        int cumulative = 0;
         double nextGram = beginGram + gramIncr;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 25; i++) {
             while (zero < nextGram) {
                 input = zeroIn[0].readLine();
                 zero = Double.parseDouble(input);
-                System.out.printf("next zero %f \n", zero);
+                System.out.printf("next zero %f ", zero);
                 if(zero >= nextGram) {
                     break;
                 }
                 count++;
             }
-            System.out.printf("i %d beginGram %f nextGram %f count %d next zero %f\n",
+            System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f\n",
                     i, beginGram, nextGram, count, zero );
             // handle empty
             beginGram = nextGram;
             nextGram = beginGram + gramIncr;
-            if (zero >= nextGram) {
+            cumulative += count;
+            count = 0;
+            while (zero >= nextGram) {
                 //while
-                System.out.println("zero count!!!!");
+                System.out.printf("i %d beginGram %f nextGram %f count %d next zero %f\n",
+                        ++i, beginGram, nextGram, count, zero );
+                beginGram = nextGram;
+                nextGram = beginGram + gramIncr;
             }
-            count = 1; //more logic needed
+            count = 1;
         }
 
+        System.out.printf("cumulative %d", cumulative);
 
     }
 
