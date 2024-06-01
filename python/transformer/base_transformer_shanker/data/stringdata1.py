@@ -10,7 +10,7 @@ def tokens_to_str(tokens):
 
 def generate_random_string1():
     #len = np.random.randint(10, 20)
-    len = 12
+    len = 10
     return "".join([chr(x) for x in np.random.randint(97, 97+26, len)])
 
 class GenerateNoMarkerDataset(Dataset):
@@ -46,5 +46,6 @@ def runpersonMain():
 	for s, t in iter(dataloader_train):
 	     print(s.size())
 
-runpersonMain()
+if __name__ == "__main__":
+    runpersonMain()
 

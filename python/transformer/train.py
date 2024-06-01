@@ -8,7 +8,8 @@ from torch.nn.utils.rnn import pad_sequence
 #from base_transformer_shanker.data import GenerateDataset as GD
 from transformer import Transformer
 import base_transformer_shanker.functions as functions
-from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset 
+from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset
+from base_transformer_shanker.data.fixedData import  FixedDataset 
 from base_transformer_shanker.constants import args, PAD_IDX
 
 # Code is based on
@@ -113,16 +114,32 @@ def evaluate1(model, dataloader, loss_fn):
         print("x --> ", x.size())
         for row in functions.iterate_rows(x):
             print(functions.tokens_to_str(row))
-        print("y --> ", y.size())
+        print("y (expected) --> ", y.size())
         for row in functions.iterate_rows(y):
             print(functions.tokens_to_str(row))
+            
+# =============================================================================
+        # the marker disease needs to unravel from here.
+        # same should be done for train and evaluate.
+        # damn the markers!
+# =============================================================================
+        
         logits = model(x, y[:, :-1])
-        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), y[:, 1:].contiguous().view(-1))
+        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
+                       y[:, 1:].contiguous().view(-1))
         losses += loss.item()
         
         preds = logits.argmax(dim=-1)
+# =============================================================================
+#    y -->  torch.Size([3, 10])
+#    masked_pred -->  torch.Size([3, 9])
+#    here are we seeing the implicit EOS/SOS remnant? 
+# =============================================================================
         masked_pred = preds * (y[:, 1:]!=PAD_IDX)
         accuracy = (masked_pred == y[:, 1:]).float().mean()
+        print("masked_pred --> ", masked_pred.size())
+        for row in functions.iterate_rows(masked_pred):
+            print(functions.tokens_to_str(row))
         acc += accuracy.item()
         
     
@@ -176,18 +193,17 @@ def runTrain(train_iter, eval_iter, path):
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
     
     # history of loss and accuracy for each batch.
-    for key in history:
-        print(key, len(history[key]))
-    functions.plot_list(history['train_acc'][75:],ylabel='train_acc')
+    functions.plot_list(history['train_acc'][5:],ylabel='train_acc')
 #     torch.save(model.state_dict(), path)
 
 
 def runperson():
     # train_iter = GD(50000, reverseString=False)
     # eval_iter = GD(20000, reverseString=False)
-    train_iter = GenerateNoMarkerDataset(10000, reverseString=True)
-    eval_iter = GenerateNoMarkerDataset(3, reverseString=True)
-    path = "../out/forward.pt"
+    reverseString=True
+    train_iter = GenerateNoMarkerDataset(20000, reverseString=reverseString)
+    eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
+    path = "../out/reverse.pt" if reverseString else "../out/forward.pt"
     runTrain(train_iter, eval_iter, path)
     
 if __name__ == "__main__":

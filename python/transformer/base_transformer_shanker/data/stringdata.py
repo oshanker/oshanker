@@ -2,7 +2,6 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from base_transformer_shanker.constants import PAD_IDX, SOS_IDX, EOS_IDX
-from base_transformer_shanker.functions import gd_collate_fn
 #import base_transformer_shanker.constants 
 from torch.utils.data import DataLoader
 from base_transformer_shanker.functions import gd_collate_fn, tokens_to_str
@@ -47,5 +46,6 @@ def runpersonMain():
 	for s, t in iter(dataloader_train):
 	     print(s.size())
 
-runpersonMain()
+if __name__ == "__main__":
+    runpersonMain()
 
