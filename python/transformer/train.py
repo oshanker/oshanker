@@ -4,13 +4,11 @@ import torch.nn as nn
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-from torch.nn.utils.rnn import pad_sequence
-#from base_transformer_shanker.data import GenerateDataset as GD
 from transformer import Transformer
 import base_transformer_shanker.functions as functions
 from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset
 from base_transformer_shanker.data.fixedData import  FixedDataset 
-from base_transformer_shanker.constants import args, PAD_IDX
+from base_transformer_shanker.constants import args 
 
 # Code is based on
 # https://towardsdatascience.com/a-complete-guide-to-write-your-own-transformers-29e23f371ddd 
@@ -24,23 +22,8 @@ https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
 """
 
 
-def collate_fn(batch):
-    """ 
-    This function pads inputs with PAD_IDX to have batches of equal length
-    """
-# =============================================================================
-# https://stackoverflow.com/questions/56831366/removeerror-pyopenssl-is-a-dependency-of-conda-and-cannot-be-removed-from-con
-# =============================================================================
-    src_batch, tgt_batch = [], []
-    for src_sample, tgt_sample in batch:
-        src_batch.append(src_sample)
-        tgt_batch.append(tgt_sample)
 
-    src_batch = pad_sequence(src_batch, padding_value=PAD_IDX, batch_first=True)
-    tgt_batch = pad_sequence(tgt_batch, padding_value=PAD_IDX, batch_first=True)
-    return src_batch, tgt_batch
-
-def train(model, optimizer, dataloader, loss_fn, epoch):
+def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
     model.train()
     losses = 0
     acc = 0
@@ -55,7 +38,7 @@ def train(model, optimizer, dataloader, loss_fn, epoch):
 # =============================================================================
         # the marker disease needs to unravel from here.
         # same should be done for train and evaluate.
-        # damn the markers!
+# Epoch: 1, Train loss: 2.016, Train acc: 0.475,  Epoch time = 4.564s
 # =============================================================================
             logits = model(x, y)
             loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
@@ -65,7 +48,7 @@ def train(model, optimizer, dataloader, loss_fn, epoch):
             losses += loss.item()
             
             preds = logits.argmax(dim=-1)
-            masked_pred = preds * (y !=PAD_IDX)
+            masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
             accuracy = (masked_pred == y).float().mean()
             acc += accuracy.item()
             
@@ -82,7 +65,7 @@ def train(model, optimizer, dataloader, loss_fn, epoch):
     return losses / length, acc / length, history_loss, history_acc
 
 
-def evaluate(model, dataloader, loss_fn):
+def evaluate(model, dataloader, loss_fn, ignore_index):
     model.eval()
     losses = 0
     acc = 0
@@ -102,7 +85,7 @@ def evaluate(model, dataloader, loss_fn):
         losses += loss.item()
         
         preds = logits.argmax(dim=-1)
-        masked_pred = preds * (y !=PAD_IDX)
+        masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
         accuracy = (masked_pred == y).float().mean()
         acc += accuracy.item()
         
@@ -117,7 +100,7 @@ def evaluate(model, dataloader, loss_fn):
 
     return losses / length, acc / length, history_loss, history_acc
 
-def evaluate1(model, dataloader, loss_fn):
+def evaluate1(model, dataloader, loss_fn, ignore_index):
     model.eval()
     losses = 0
     acc = 0
@@ -147,7 +130,7 @@ def evaluate1(model, dataloader, loss_fn):
 #    masked_pred -->  torch.Size([3, 9])
 #    here are we seeing the implicit EOS/SOS remnant? 
 # =============================================================================
-        masked_pred = preds * (y !=PAD_IDX)
+        masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
         accuracy = (masked_pred == y).float().mean()
         print("masked_pred --> ", masked_pred.size())
         for row in functions.iterate_rows(masked_pred):
@@ -162,7 +145,7 @@ def evaluate1(model, dataloader, loss_fn):
     return losses / length, acc / length
 
 
-def runTrain(train_iter, eval_iter, path):
+def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
     """
     B = Batch size
     S = Source sequence length
@@ -184,6 +167,7 @@ def runTrain(train_iter, eval_iter, path):
     model = Transformer(**args)
 
     # Instantiate datasets
+    collate_fn=functions.gd_collate_fn if ignore_index > -50 else None
     dataloader_train = DataLoader(train_iter, batch_size=256, collate_fn=collate_fn)
     dataloader_val = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
 
@@ -194,7 +178,7 @@ def runTrain(train_iter, eval_iter, path):
             nn.init.xavier_uniform_(p)
 
     # Define loss function : we ignore logits which are padding tokens
-    loss_fn = torch.nn.CrossEntropyLoss(ignore_index=PAD_IDX)
+    loss_fn = torch.nn.CrossEntropyLoss(ignore_index=ignore_index)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
     
     # Save history to dictionnary
@@ -209,17 +193,18 @@ def runTrain(train_iter, eval_iter, path):
     epochsToRun = 2
     for epoch in range(1, epochsToRun):
         start_time = time.time()
-        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, dataloader_train, loss_fn, epoch)
+        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
+                                dataloader_train, loss_fn, epoch, ignore_index)
         history['train_loss'] += hist_loss
         history['train_acc'] += hist_acc
         end_time = time.time()
         
-        # val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn)
+        # val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn, ignore_index)
         # history['eval_loss'] += hist_loss
         # history['eval_acc'] += hist_acc
         # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
-        evaluate1(model, dataloader_val, loss_fn)
+        evaluate1(model, dataloader_val, loss_fn, ignore_index)
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
     
     # history of loss and accuracy for each batch.
