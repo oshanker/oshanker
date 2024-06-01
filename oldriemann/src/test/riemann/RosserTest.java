@@ -4,14 +4,33 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class RosserTest {
 
     @Test @Ignore
-    public void testGetZerosFile() {
-        System.out.println("Not yet implemented");
+    public void testGetZerosFile() throws IOException {
+        //System.out.println("Not yet implemented");
+        Rosser.readConfig("data/RosserConfig.txt");
+        BufferedReader[] zeroIn = Rosser.getZerosFile();
+        String input = zeroIn[0].readLine();
+        double zero = Double.parseDouble(input);
+        System.out.printf("first zero %f ", zero);
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        System.out.printf("gram %f \n", (baseLimit -zero)/gramIncr);
+        int gramOffset = (int) Math.floor((baseLimit - zero) / gramIncr);
+        double beginGram = baseLimit - gramOffset*gramIncr;
+        System.out.printf("beginGram %f, check  %f\n", beginGram, beginGram + gramOffset*gramIncr);
+        while (zero < beginGram) {
+            input = zeroIn[0].readLine();
+            zero = Double.parseDouble(input);
+            System.out.printf("next zero %f \n", zero);
+        }
     }
 
     @Test
