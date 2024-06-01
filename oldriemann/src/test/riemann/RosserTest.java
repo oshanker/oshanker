@@ -31,6 +31,31 @@ public class RosserTest {
             zero = Double.parseDouble(input);
             System.out.printf("next zero %f \n", zero);
         }
+        int count = 1; //244.158907
+        double nextGram = beginGram + gramIncr;
+        for (int i = 0; i < 2; i++) {
+            while (zero < nextGram) {
+                input = zeroIn[0].readLine();
+                zero = Double.parseDouble(input);
+                System.out.printf("next zero %f \n", zero);
+                if(zero >= nextGram) {
+                    break;
+                }
+                count++;
+            }
+            System.out.printf("i %d beginGram %f nextGram %f count %d next zero %f\n",
+                    i, beginGram, nextGram, count, zero );
+            // handle empty
+            beginGram = nextGram;
+            nextGram = beginGram + gramIncr;
+            if (zero >= nextGram) {
+                //while
+                System.out.println("zero count!!!!");
+            }
+            count = 1; //more logic needed
+        }
+
+
     }
 
     @Test
