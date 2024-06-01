@@ -3,6 +3,7 @@
 """
 Created on Tue May 28 13:26:02 2024
 
+
 @author: uorugant
 """
 
@@ -11,6 +12,19 @@ import random
 from torch.nn.utils.rnn import pad_sequence
 from base_transformer_shanker.constants import PAD_IDX
 
+
+def iterate_rows(tensor):
+    """
+    Iterate over the rows of a PyTorch tensor.
+
+    Args:
+    - tensor (torch.Tensor): The input tensor
+
+    Yields:
+    - torch.Tensor: Each row of the input tensor
+    """
+    for row in tensor:
+        yield row
 
 def plot_list(data, xlabel='Index', ylabel='Value'):
     """

@@ -104,6 +104,33 @@ def evaluate(model, dataloader, loss_fn):
 
     return losses / length, acc / length, history_loss, history_acc
 
+def evaluate1(model, dataloader, loss_fn):
+    model.eval()
+    losses = 0
+    acc = 0
+
+    for x, y in tqdm(dataloader, position=0, leave=True):
+        print("x --> ", x.size())
+        for row in functions.iterate_rows(x):
+            print(functions.tokens_to_str(row))
+        print("y --> ", y.size())
+        for row in functions.iterate_rows(y):
+            print(functions.tokens_to_str(row))
+        logits = model(x, y[:, :-1])
+        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), y[:, 1:].contiguous().view(-1))
+        losses += loss.item()
+        
+        preds = logits.argmax(dim=-1)
+        masked_pred = preds * (y[:, 1:]!=PAD_IDX)
+        accuracy = (masked_pred == y[:, 1:]).float().mean()
+        acc += accuracy.item()
+        
+    
+    length = len(list(dataloader)) 
+    
+
+    return losses / length, acc / length
+
 
 def runTrain(train_iter, eval_iter, path):
     # Define model here
@@ -139,10 +166,14 @@ def runTrain(train_iter, eval_iter, path):
         history['train_loss'] += hist_loss
         history['train_acc'] += hist_acc
         end_time = time.time()
-        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn)
-        history['eval_loss'] += hist_loss
-        history['eval_acc'] += hist_acc
-        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+        
+        # val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn)
+        # history['eval_loss'] += hist_loss
+        # history['eval_acc'] += hist_acc
+        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+        
+        evaluate1(model, dataloader_val, loss_fn)
+        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
     
     # history of loss and accuracy for each batch.
     for key in history:
@@ -154,8 +185,8 @@ def runTrain(train_iter, eval_iter, path):
 def runperson():
     # train_iter = GD(50000, reverseString=False)
     # eval_iter = GD(20000, reverseString=False)
-    train_iter = GenerateNoMarkerDataset(50000, reverseString=False)
-    eval_iter = GenerateNoMarkerDataset(20000, reverseString=False)
+    train_iter = GenerateNoMarkerDataset(10000, reverseString=True)
+    eval_iter = GenerateNoMarkerDataset(3, reverseString=True)
     path = "../out/forward.pt"
     runTrain(train_iter, eval_iter, path)
     
