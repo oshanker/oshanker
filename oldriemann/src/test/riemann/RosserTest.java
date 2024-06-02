@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,6 +36,8 @@ public class RosserTest {
         int count = 1; //244.158907
         int cumulative = 0;
         double nextGram = beginGram + gramIncr;
+        List<Double> zeros = new ArrayList<>();
+        zeros.add(zero);
         for (int i = 0; i < 25; i++) {
             while (zero < nextGram) {
                 input = zeroIn[0].readLine();
@@ -43,9 +47,12 @@ public class RosserTest {
                     break;
                 }
                 count++;
+                zeros.add(zero);
             }
-            System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f\n",
+            System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f",
                     i, beginGram, nextGram, count, zero );
+            System.out.println(" zeros " + zeros);
+            zeros.clear();
             // handle empty
             beginGram = nextGram;
             nextGram = beginGram + gramIncr;
@@ -53,12 +60,13 @@ public class RosserTest {
             count = 0;
             while (zero >= nextGram) {
                 //while
-                System.out.printf("i %d beginGram %f nextGram %f count %d next zero %f\n",
-                        ++i, beginGram, nextGram, count, zero );
+                System.out.printf("i %d beginGram %f nextGram %f count %d \n",
+                        ++i, beginGram, nextGram, count );
                 beginGram = nextGram;
                 nextGram = beginGram + gramIncr;
             }
             count = 1;
+            zeros.add(zero);
         }
 
         System.out.printf("cumulative %d", cumulative);
