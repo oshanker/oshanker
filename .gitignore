@@ -11,6 +11,7 @@ target
 .Rhistory
 gramratio.pdf
 template.pdf
+genAI.pdf
 oldriemann/bin
 oldriemann/out/
 oldriemann/.idea/**

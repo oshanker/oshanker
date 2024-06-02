@@ -165,8 +165,10 @@ def evaluate2(model, dataloader, loss_fn, ignore_index):
         #     print((row))
         
         for step in range(0, y.size()[0]):
-            print("y          ", y[step, :])
-            print("masked_pred", masked_pred[step, :])
+            actual = y[step, :].detach().numpy()-1
+            mypred = masked_pred[step, :].detach().numpy() - 1
+            print("actual    ", actual)
+            print("prediction", mypred)
 
         acc += accuracy.item()
         print("accuracy --> ", accuracy)
@@ -323,7 +325,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
         history['eval_acc'] += hist_acc
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
-        # evaluate2(model, dataloader_val, loss_fn, ignore_index)
+        evaluate2(model, dataloader_val, loss_fn, ignore_index)
         # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
 
     functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
@@ -340,7 +342,8 @@ def runperson():
     path = "../out/intervals.csv"
     train_iter = IntervalsDataset(6400, path, 0)
     train_iter_1 = IntervalsDataset(8400, path, 6400)
-    eval_iter = IntervalsDataset(10006, path, 14800+100)
+    #eval_iter = IntervalsDataset(10006, path, 14800+100)
+    eval_iter = IntervalsDataset(5, path, 14800+105)
     
     path = "../out/intervals.pt" 
     runIntervalTrain(train_iter, train_iter_1, eval_iter, path)

@@ -1,0 +1,305 @@
+%-----------------------------------------------------------------------
+% 
+%-----------------------------------------------------------------------
+%
+%     
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[twoside]{article}
+\usepackage{amsmath,amsthm,amssymb,verbatim}
+
+%     If your article includes graphics, uncomment this command.
+\usepackage{graphicx}
+
+%     If the article includes commutative diagrams, ...
+%\usepackage[cmtip,all]{xy}
+
+\usepackage{url}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext} 
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup} 
+
+	\addtolength{\oddsidemargin}{1cm}
+	\addtolength{\evensidemargin}{-1cm}
+
+\setcounter{page}{1}
+
+\begin{document}
+
+%     If you need symbols beyond the basic set, uncomment this command.
+%\usepackage{amssymb}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{xca}[theorem]{Exercise}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+
+\date{}
+\lhead[]{}
+\chead[\underline{Generative AI}]{\it{O. Shanker}}
+\rhead[]{}
+
+% \title[short text for running head]{full title}
+\title{\bf{Can Generative AI understand the Riemann zeta zero distribution?}}
+
+\maketitle
+
+
+%    author one information
+% \author[short version for running head]{name for top of paper}
+\author{{\textbf{O. Shanker}},}
+\thanks{ Mountain View, CA 94041, U. S. A. email: oshanker@gmail.com}
+
+\thispagestyle{fancy}
+
+%    Abstract is required.
+\begin{abstract}
+Abstract. 
+The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. We get accuracies of 0.998
+in predicting a sequence of ten consecutive zero counts. This shows that applying the technique to more complex problems has great promise. We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
+
+\end{abstract}
+{\textbf {Keywords}:} Generative AI, Riemann zeta, Zero Distribution,  Transformer Architecture 
+{\textbf {Mathematics Subject Classification (MSC)}:} 11M06, 11-04.
+
+
+\symbolfootnote[0]{*}
+
+
+\section{Introduction}
+
+ Machine Learning applications have been used in the literature in the study of the Riemann zeta zeros \cite{osneural,Shanker 2018a,osentropy}.
+Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals.
+
+
+\section{\label{sec2}Materials and Methods}
+Section Intro
+
+\subsection{\label{seckaratsuba}Riemann zeta zero counts on Gram Intervals}
+
+In this section we consider the distribution of Gram intervals that contain a given number of zeros. 
+\begin{table}
+\centering \(\begin{array}{ccccccccccccccc}
+\hline
+2& 0& 1& 2& 0& 1& 1& 1& 0& 2& 1& 0& 1& 2& 1 \\
+2& 0& 1& 1& 1& 2& 0& 1& 1& 1& 0& 2& 1& 1& 1 \\
+0& 2& 1& 2& 1& 0& 1& 1& 1& 1& 1& 1& 1& 1& 1 \\
+1& 1& 1& 1& 1& 1& 1& 0& 1& 2& 1& 1& 1& 1& 0 \\
+2& 1& 1& 0& 3& 1& 0& 2& 1& 1& 0& 1& 1& 1& 1 \\
+\hline
+\end{array}\)
+\caption{Count of zeros on consecutive Gram intervals (shown on multiple lines for convenience).} 
+\label{tab:sequence}
+\end{table}
+
+ Odlyzko~\cite{Odlyzko 1992} made a conjecture regarding the distribution of Gram intervals that contain a given number of zeros. The conjecture is that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
+The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices form the Gauss unitary ensemble (GUE). Under the assumptions of Odlyzko the distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. 
+
+Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for a sample at heights  $t=10^{28}$. The table also shows the  expected values for the counts from Odlyzko's prediction. Further discussion about the topic can be found in Ref~\cite{Shanker 2018a}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
+
+
+\begin{table}
+\centering \(\begin{array}{lllll}\\
+\hline
+ &count = 0&count = 1&count = 2&count = 3\\
+\hline
+t = 10^{12}&0.14880&0.70440&0.14482&0.00199\\
+Odlyzko&0.17022&0.66143&0.16640&0.00186\\
+\hline
+\end{array}\)
+\caption{Distribution of Gram intervals that contain $m$ zeros at  $t=10^{12}$.} 
+\label{tab:intervalzeros}
+\end{table}
+
+
+
+Move meFigure reference Figure~\ref{fig:round1}.
+
+\subsection{\label{secwhy}Why Machine Learning?}
+
+At large heights evaluating the Riemann zeta function  is a non-trivial task, requiring much computer time 
+and knowledge of special techniques.  It would be useful to apply
+machine learning~\cite{osneural,Shanker 2018a}
+as a guide to identify the T values where we can expect to see behaviour of interest.
+
+We use PyTorch~\cite{pytorch} as the python framework to perform the machine learning 
+task. We use the Transformer Architecture~\cite{vaswani} which is widely used in Generative AI.
+Regarding the feature set, 
+Ref~\cite{osneural,Shanker 2018a} found that the behavior of the zeta function at Gram points 
+is a good starting point to extract features for use in prediction. 
+Related  results can be found in Ref.~\cite{oscue, os6, Shanker 2018b,Shanker 2020}. We therefore
+use as our feature set for prediction the distribution of zero counts on Gram Intervals.
+
+
+
+\begin{figure*}
+\includegraphics[width=1.0\textwidth]{Round1.png}
+\caption[]{ 
+ Round 1.
+ }
+\vspace{1mm}, 
+\label{fig:round1}
+\end{figure*}
+
+
+\begin{figure*}
+\includegraphics[width=1.0\textwidth]{Round2.png}
+\caption[]{ 
+ Round 2.
+ }
+\vspace{1mm}, 
+\label{fig:round2}
+\end{figure*}
+
+
+
+\subsection{\label{sec3.1} Choosing the Model}
+Implementation of Ref~\cite{BenjaminEtienne}.
+
+\subsection{\label{relation}Training,  Model predictions}
+
+shows the model prediction versus the actual value for some points.
+
+\begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+\hline
+Training  & Training &Validation  \\
+set     &accuracy&accuracy\\
+\hline
+1  & 0.675 & 0.716 \\
+
+2  & 0.914 & 0.998 \\
+\hline
+\end{array}\)
+\caption{Training and validation accuracies}
+\label{tab:accuracies}
+\end{table}
+
+\begin{table}
+\centering \(\begin{array}{ccccccccccc}
+\hline
+Counts& \\
+\hline
+actual     &1&1&1&1&1&1&1&1&0&1\\
+prediction &1&1&1&1&1&1&1&1&0&1\\
+\hline
+actual     &1&1&1&1&1&1&1&0&1&1\\
+prediction &1&1&1&1&1&1&1&0&1&1\\
+\hline
+actual     &1&1&1&1&1&1&0&1&1&2\\
+prediction &1&1&1&1&1&1&0&1&1&2\\
+\hline
+actual     &1&1&1&1&1&0&1&1&2&1\\
+prediction &1&1&1&1&1&0&1&1&2&1\\
+\hline
+actual     &1&1&1&1&0&1&1&2&1&0\\
+prediction &1&1&1&1&0&1&1&2&1&0\\
+\hline
+\end{array}\)
+\caption{Comparison of model prediction for zero counts with actuals, for different sequences of $10$ Gram intervals} 
+\label{tab:perf}
+\end{table}
+
+\section{\label{conclusions}Conclusions}
+The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. We get accuracies of 0.998
+in predicting a sequence of ten consecutive zero counts. This shows that applying the technique to more complex problems has great promise. We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
+
+\section*{Acknowledgments and Funding Statement}
+
+ The study was done as an independent researcher. There was no
+external funding.
+
+
+
+\bibliographystyle{amsplain}
+\begin{thebibliography}{10}
+
+\bibitem{osneural} O. Shanker, ``Neural Network prediction of Riemann zeta zeros''
+{\it Advanced Modeling and Optimization}, {\bf 14}, 717-728, (2012), \url{tinyurl.com/4scve3nj}.
+
+
+\bibitem{Shanker 2018a} O. Shanker, 
+``Good to Bad Gram Point Ratio For Riemann Zeta Function",
+{\it Experimental Mathematics} {\bf 30}, 76-85,
+\url{tinyurl.com/mwd5uwc5}(2021)
+
+\bibitem{osentropy} O. Shanker, ``Entropy of Riemann zeta zero sequence''
+{\it Advanced Modeling and Optimization}, {\bf 13}, 449-456, (2013). 
+
+\bibitem{Odlyzko 1992}  A. Odlyzko,
+``The $10^{20}$-th Zero of the Riemann Zeta
+Function and 175 Million of its Neighbors", report,
+\url{http://www.dtc.umn.edu/~odlyzko/unpublished/zeta.10to20.1992.pdf}, (1992)
+
+\bibitem{hiary 2010} G. A. Hiary,
+``An amortized-complexity method to compute the Riemann zeta function", 
+{\it Mathematics of Computation} {\bf80}(2011), 1785-1796
+
+
+\bibitem{pytorch} Paszke, Adam and Gross, Sam and Chintala, Soumith and Chanan, Gregory and Yang, Edward and DeVito, Zachary and Lin, Zeming and Desmaison, Alban and Antiga, Luca and Lerer, Adam, 
+``Automatic differentiation in PyTorch'',
+ NIPS 2017 Workshop Autodiff Proceedings,
+\url{https://openreview.net/pdf?id=BJJsrmfCZ}, 
+(2017). 
+
+\bibitem{vaswani} Vaswani, A., Shazeer, N., Parmar, N., et al. 
+``Attention is All you Need.'', 
+Advances in Neural Information Processing Systems 30: Annual Conference                    on Neural Information Processing Systems 2017, December 4-9, 2017,  Long Beach, CA, USA, 5998--6008.
+
+\bibitem{oscue} O. Shanker, 
+``Random Matrix Theory explanation for Riemann Zeta Value Distribution Symmetry'',
+ Researchgate report DOI 10.13140/RG.2.2.20155.39209,
+\url{https://tinyurl.com/ywhy4jsy}, 
+(2022). 
+
+
+\bibitem{os6} O. Shanker, 
+``Generalised Zeta Functions and Self-Similarity of Zero Distributions",
+{\it J.  Phys. A} {\bf39}(2006), 13983-13997
+
+\bibitem{Shanker 2018b} O. Shanker, 
+``Symmetry properties of distribution of Riemann Zeta Function values on critical axis'',
+ Researchgate report DOI 10.13140/RG.2.2.34433.35687,
+\url{tinyurl.com/47wj57b3}, 
+(2018). 
+
+\bibitem{Shanker 2020} O. Shanker, 
+``Universality of Riemann Zeta Function value distribution on critical axis'',
+ Researchgate report DOI 10.13140/RG.2.2.18693.29927,
+\url{tinyurl.com/yvbd2je6}, 
+(2020). 
+
+\bibitem{BenjaminEtienne} Benjamin Etienne, 
+``A Complete Guide to Write your own Transformers'',
+ Towards Data Science,
+\url{https://tinyurl.com/3wur9tux}, 
+(2024). 
+
+\bibitem{shankergit} O. Shanker, 
+Source code on github,
+\url{https://tinyurl.com/9yura82b}, 
+(2024). 
+
+
+
+\end{thebibliography} 
+
+\end{document}
