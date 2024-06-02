@@ -6,8 +6,13 @@ def runpersonMain():
                  delimiter=",", dtype=np.int32)
     print(arr)    
     tensor = torch.tensor(arr, dtype=torch.int32)
-    print(tensor)
-    print(torch.sum(tensor))
+    print('size', tensor.size(), 'sum', torch.sum(tensor))
+    idx = 0
+    tensor = torch.tensor(arr[idx :idx+10], dtype=torch.int32)
+    print('size', tensor.size(), 'sum', torch.sum(tensor))
+    tensor = torch.tensor(arr[idx+10 :idx+15], dtype=torch.int32)
+    print('size', tensor.size(), 'sum', torch.sum(tensor))
+    
 
 
 

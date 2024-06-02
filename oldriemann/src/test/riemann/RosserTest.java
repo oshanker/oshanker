@@ -54,25 +54,31 @@ public class RosserTest {
         double nextGram = beginGram + gramIncr;
         List<Double> zeros = new ArrayList<>();
         zeros.add(zero);
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 25615; i++) {
             while (zero < nextGram) {
                 input = zeroIn[0].readLine();
                 zero = Double.parseDouble(input);
-                System.out.printf("next zero %f ", zero);
-                if(zero >= nextGram) {
+                if (i<25) {
+                    System.out.printf("next zero %f ", zero);
+                }
+                if (zero >= nextGram) {
                     break;
                 }
                 count++;
                 zeros.add(zero);
             }
-            System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f",
-                    i, beginGram, nextGram, count, zero );
+            if (i<25) {
+                System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f",
+                        i, beginGram, nextGram, count, zero);
+            }
             if (i==0) {
                 out.print(count );
             } else {
                 out.print("," + count);
             }
-            System.out.println(" zeros " + zeros);
+            if (i<25) {
+                System.out.println(" zeros " + zeros);
+            }
             zeros.clear();
             // handle empty
             beginGram = nextGram;
@@ -81,8 +87,11 @@ public class RosserTest {
             count = 0;
             while (zero >= nextGram) {
                 //while
-                System.out.printf("i %d beginGram %f nextGram %f count %d \n",
-                        ++i, beginGram, nextGram, count );
+                ++i;
+                if (i<25) {
+                    System.out.printf("i %d beginGram %f nextGram %f count %d \n",
+                            i, beginGram, nextGram, count );
+                }
                 out.print("," + count);
                 beginGram = nextGram;
                 nextGram = beginGram + gramIncr;

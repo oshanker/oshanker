@@ -8,6 +8,7 @@ from transformer import Transformer
 import base_transformer_shanker.functions as functions
 from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset
 from base_transformer_shanker.data.fixedData import  FixedDataset 
+from base_transformer_shanker.data.intervalsData import  IntervalsDataset 
 from base_transformer_shanker.constants import args 
 
 # Code is based on
@@ -113,11 +114,6 @@ def evaluate1(model, dataloader, loss_fn, ignore_index):
         for row in functions.iterate_rows(y):
             print(functions.tokens_to_str(row))
             
-# =============================================================================
-        # the marker disease needs to unravel from here.
-        # same should be done for train and evaluate.
-        # damn the markers!
-# =============================================================================
         
         logits = model(x, y)
         loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
@@ -125,16 +121,53 @@ def evaluate1(model, dataloader, loss_fn, ignore_index):
         losses += loss.item()
         
         preds = logits.argmax(dim=-1)
-# =============================================================================
-#    y -->  torch.Size([3, 10])
-#    masked_pred -->  torch.Size([3, 9])
-#    here are we seeing the implicit EOS/SOS remnant? 
-# =============================================================================
         masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
         accuracy = (masked_pred == y).float().mean()
         print("masked_pred --> ", masked_pred.size())
         for row in functions.iterate_rows(masked_pred):
             print(functions.tokens_to_str(row))
+        acc += accuracy.item()
+        print("accuracy --> ", accuracy)
+        
+    
+    length = len(list(dataloader)) 
+    
+
+    return losses / length, acc / length
+
+def evaluate2(model, dataloader, loss_fn, ignore_index):
+    model.eval()
+    losses = 0
+    acc = 0
+
+    for x, y in tqdm(dataloader, position=0, leave=True):
+        print("x --> ", x.size())
+        for row in functions.iterate_rows(x):
+            print((row))
+        print("y (expected) --> ", y.size())
+            
+        
+        logits = model(x, y)
+        functions.plot_list(logits[0,0,:].detach().numpy())
+        #print(logits[0,0,:].detach().numpy())
+        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
+                       y.contiguous().view(-1))
+        losses += loss.item()
+        
+        preds = logits.argmax(dim=-1)
+        masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
+        accuracy = (masked_pred == y).float().mean()
+        print("masked_pred size --> ", masked_pred.size())
+        
+        # for row in functions.iterate_rows(y):
+        #     print((row))
+        # for row in functions.iterate_rows(masked_pred):
+        #     print((row))
+        
+        for step in range(0, y.size()[0]):
+            print("y          ", y[step, :])
+            print("masked_pred", masked_pred[step, :])
+
         acc += accuracy.item()
         print("accuracy --> ", accuracy)
         
@@ -178,7 +211,7 @@ def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
             nn.init.xavier_uniform_(p)
 
     # Define loss function : we ignore logits which are padding tokens
-    loss_fn = torch.nn.CrossEntropyLoss(ignore_index=ignore_index)
+    loss_fn = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
     
     # Save history to dictionnary
@@ -199,26 +232,33 @@ def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
         history['train_acc'] += hist_acc
         end_time = time.time()
         
-        # val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn, ignore_index)
-        # history['eval_loss'] += hist_loss
-        # history['eval_acc'] += hist_acc
-        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn, ignore_index)
+        history['eval_loss'] += hist_loss
+        history['eval_acc'] += hist_acc
+        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
-        evaluate1(model, dataloader_val, loss_fn, ignore_index)
-        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
+        # evaluate2(model, dataloader_val, loss_fn, ignore_index)
+        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
     
     # history of loss and accuracy for each batch.
-    functions.plot_list(history['train_acc'][5:],ylabel='train_acc')
+    # functions.plot_list(history['train_acc'][5:],ylabel='train_acc')
+    # functions.plot_list(history['eval_acc'][5:],ylabel='eval_acc')
+
+    functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
+                                labels=['train_acc','eval_acc'])
 #     torch.save(model.state_dict(), path)
 
 
 def runperson():
-    # train_iter = GD(50000, reverseString=False)
-    # eval_iter = GD(20000, reverseString=False)
-    reverseString=True
-    train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
-    eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
-    path = "../out/reverse.pt" if reverseString else "../out/forward.pt"
+    # reverseString=True
+    # train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
+    # eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
+    
+    path = "../out/intervals.csv"
+    train_iter = IntervalsDataset(12800, path, 0)
+    eval_iter = IntervalsDataset(10006, path, 12800+100)
+    
+    path = "../out/intervals.pt" 
     runTrain(train_iter, eval_iter, path)
     
 if __name__ == "__main__":
