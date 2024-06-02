@@ -86,7 +86,7 @@ in predicting a sequence of ten consecutive zero counts. This shows that applyin
 \section{Introduction}
 
  Machine Learning applications have been used in the literature in the study of the Riemann zeta zeros \cite{osneural,Shanker 2018a,osentropy}.
-Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals. The problem we are solving is, given a set of ten consecutive zero counts on Gram intervals, predict the next set of ten consecutive zero counts. 
+Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals. The problem we are solving is, given a set of ten consecutive zero counts on Gram intervals, predict the next set of ten consecutive zero counts. This is a simple problem. If we can model this well, it open up the possibilities for attacking more complex problems. In Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. This is a precursor to further applications. For those who are not too familiar with GenAI and transformers, take this as a call to ask your AI friends to give some attention (pun unintended) to mathematical applications.
 
 
 \section{\label{sec2}Materials and Methods}
@@ -129,9 +129,6 @@ Odlyzko&0.17022&0.66143&0.16640&0.00186\\
 \end{table}
 
 
-
-Move meFigure reference Figure~\ref{fig:round1}.
-
 \subsection{\label{secwhy}Why Machine Learning?}
 
 At large heights evaluating the Riemann zeta function  is a non-trivial task, requiring much computer time 
@@ -140,7 +137,12 @@ machine learning~\cite{osneural,Shanker 2018a}
 as a guide to identify the T values where we can expect to see behaviour of interest.
 
 We use PyTorch~\cite{pytorch} as the python framework to perform the machine learning 
-task. We use the Transformer Architecture~\cite{vaswani} which is widely used in Generative AI.
+task. We use the Transformer Architecture~\cite{vaswani} which is widely used in Generative AI. 
+
+The key concept underlying the advances in Natural Language Processing (NLP) is Attention. In Attention when the model is predicting the next word it searches for a set of positions in the source sentence where the most relevant information is concentrated. 
+Consider the sentence "Amidst the cacophony of bustling city streets, where the relentless symphony of car horns blares incessantly, echoing through the labyrinthine alleyways adorned with vibrant graffiti, there lies a quaint cafe nestled in a quiet corner, its cozy interior exuding an inviting warmth that beckons weary souls seeking solace from the frenetic pace of urban life". The "cacophony" and "quaint cafe" are separated in position, however, they are closely related and the relation is important to understand the sentence. The Attention concept brings out this interacton.
+
+Earlier models in NLP used for sequence-to-sequence learning relied on Recurrent Neural Networks which are computationnally expensive. They had to process sequences step by step, whereas Transformers only need to look once at the whole sequence, moving the time complexity from O(n) to O(1). The Transformer lends itself to parallelization. 
 Regarding the feature set, 
 Ref~\cite{osneural,Shanker 2018a} found that the behavior of the zeta function at Gram points 
 is a good starting point to extract features for use in prediction. 
@@ -152,7 +154,7 @@ use as our feature set for prediction the distribution of zero counts on Gram In
 \begin{figure*}
 \includegraphics[width=1.0\textwidth]{Round1.png}
 \caption[]{ 
- Round 1.
+ Training and validation accuracies during Round 1.
  }
 \vspace{1mm}, 
 \label{fig:round1}
@@ -162,7 +164,7 @@ use as our feature set for prediction the distribution of zero counts on Gram In
 \begin{figure*}
 \includegraphics[width=1.0\textwidth]{Round2.png}
 \caption[]{ 
- Round 2.
+ Training and validation accuracies during Round 2.
  }
 \vspace{1mm}, 
 \label{fig:round2}
@@ -171,10 +173,16 @@ use as our feature set for prediction the distribution of zero counts on Gram In
 
 
 \subsection{\label{sec3.1} Choosing the Model}
-Implementation of Ref~\cite{BenjaminEtienne}.
+Typical applications of Transformers involve use of huge amounts of computing resources and data to learn, for example, Natural Language processing. Here, we extend the application to a mathematical domain, the Riemann Zeta function. Since this is a new domain of application, we build a very simple model to study how well the simple model performs. For the Transformer model we build upon the presentation in  Ref~\cite{BenjaminEtienne}. The code for our implementation is available at 
+ Ref~\cite{shankergit}.
+
+We use the Transformer implementation of Ref~\cite{shankergit} to do two rounds of training and validation. In the first round we use $6400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round1} shows the training and validation accuracies, after each batch of 256 samples is used for training. Thus, with $6400$ samples we have 25 batches. In the figure we don't show the first 5 batches, since the initial training runs obviously will be noisy (until the model learns the pattern at least roughly). We validated with $10000$ samples. The average training and validation accuracies are $0.675$ and $0.716$ respectively.
+
+In the second round we use $8400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round2} shows the training and validation accuracies, after each batch of 256 samples is used for training.  We validated with $10000$ samples. The average training and validation accuracies are $0.914$ and $0.998$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher.
 
 \subsection{\label{relation}Training,  Model predictions}
 
+Table~\ref{tab:accuracies} shows the model accuracy during training and validation phases, for two rounds of training. Since the second round of training uses the model trained on the first round, the accuracy is higher. The final validation accuracy is 0.998 for a validation sample size of $10000$.
 Table~\ref{tab:perf} shows the prediction for the next set of ten consecutive zero counts, given a set of ten consecutive zero counts on Gram intervals.  
 
 \begin{table}
