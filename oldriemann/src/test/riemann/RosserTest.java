@@ -3,6 +3,8 @@ package riemann;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -33,6 +35,20 @@ public class RosserTest {
             zero = Double.parseDouble(input);
             System.out.printf("next zero %f \n", zero);
         }
+        PrintStream out = null;
+        File file = new File("../python/out/intervals.csv");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            out = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         int count = 1; //244.158907
         int cumulative = 0;
         double nextGram = beginGram + gramIncr;
@@ -51,6 +67,11 @@ public class RosserTest {
             }
             System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f",
                     i, beginGram, nextGram, count, zero );
+            if (i==0) {
+                out.print(count );
+            } else {
+                out.print("," + count);
+            }
             System.out.println(" zeros " + zeros);
             zeros.clear();
             // handle empty
@@ -62,6 +83,7 @@ public class RosserTest {
                 //while
                 System.out.printf("i %d beginGram %f nextGram %f count %d \n",
                         ++i, beginGram, nextGram, count );
+                out.print("," + count);
                 beginGram = nextGram;
                 nextGram = beginGram + gramIncr;
             }
@@ -70,6 +92,7 @@ public class RosserTest {
         }
 
         System.out.printf("cumulative %d", cumulative);
+        out.close();
 
     }
 
