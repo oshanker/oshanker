@@ -20,6 +20,23 @@ def generate_random_string1(x):
 
 
 class IntervalsDataset(Dataset):
+    """
+    B = Batch size
+    S = Source sequence length
+    L = Target sequence length
+    E = Model dimension
+
+    encode Input
+        x: (B, S) with elements in (0, C) where C is num_classes
+    encode Output
+        (B, S, E) embedding
+    
+    decode Input
+        encoded_x: (B, S, E)
+        y: (B, L) with elements in (0, C) where C is num_classes
+    decode Output
+        (B, L, C) logits
+    """
 # =============================================================================
 # generate data for model    
 # =============================================================================

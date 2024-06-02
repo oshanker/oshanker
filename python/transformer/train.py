@@ -249,17 +249,101 @@ def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
 #     torch.save(model.state_dict(), path)
 
 
+def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: int = -100):
+    # Define model here
+    model = Transformer(**args)
+
+    # Instantiate datasets
+    dataloader_train = DataLoader(train_iter, batch_size=256)
+    dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
+    dataloader_val = DataLoader(eval_iter, batch_size=256)
+
+
+    # Initialize model parameters
+    for p in model.parameters():
+        if p.dim() > 1:
+            nn.init.xavier_uniform_(p)
+
+    # Define loss function : we ignore logits which are padding tokens
+    loss_fn = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
+    
+    # Save history to dictionnary
+    history = {
+        'train_loss': [],
+        'eval_loss': [],
+        'train_acc': [],
+        'eval_acc': []
+    }
+
+    # Main loop
+    epochsToRun = 2
+    for epoch in range(1, epochsToRun):
+        start_time = time.time()
+        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
+                                dataloader_train, loss_fn, epoch, ignore_index)
+        history['train_loss'] += hist_loss
+        history['train_acc'] += hist_acc
+        end_time = time.time()
+        
+        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, 
+                                                          loss_fn, ignore_index)
+        history['eval_loss'] += hist_loss
+        history['eval_acc'] += hist_acc
+        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+        
+        # evaluate2(model, dataloader_val, loss_fn, ignore_index)
+        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
+
+    functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
+                                  xlabel='Batch Iteration', ylabel='Accuracy', 
+                                labels=['train_acc','eval_acc'], title='First round of training')
+
+    # Save history to dictionnary
+    history = {
+        'train_loss': [],
+        'eval_loss': [],
+        'train_acc': [],
+        'eval_acc': []
+    }
+
+    # Main loop
+    epochsToRun = 2
+    for epoch in range(1, epochsToRun):
+        start_time = time.time()
+        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
+                                dataloader_train_1, loss_fn, epoch, ignore_index)
+        history['train_loss'] += hist_loss
+        history['train_acc'] += hist_acc
+        end_time = time.time()
+        
+        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, 
+                                                          loss_fn, ignore_index)
+        history['eval_loss'] += hist_loss
+        history['eval_acc'] += hist_acc
+        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+        
+        # evaluate2(model, dataloader_val, loss_fn, ignore_index)
+        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
+
+    functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
+                                  xlabel='Batch Iteration', ylabel='Accuracy', 
+                                labels=['train_acc','eval_acc'], title='Second round of training')
+#     torch.save(model.state_dict(), path)
+
+
 def runperson():
     # reverseString=True
     # train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
     # eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
     
     path = "../out/intervals.csv"
-    train_iter = IntervalsDataset(12800, path, 0)
-    eval_iter = IntervalsDataset(10006, path, 12800+100)
+    train_iter = IntervalsDataset(6400, path, 0)
+    train_iter_1 = IntervalsDataset(8400, path, 6400)
+    eval_iter = IntervalsDataset(10006, path, 14800+100)
     
     path = "../out/intervals.pt" 
-    runTrain(train_iter, eval_iter, path)
+    runIntervalTrain(train_iter, train_iter_1, eval_iter, path)
     
 if __name__ == "__main__":
     runperson()

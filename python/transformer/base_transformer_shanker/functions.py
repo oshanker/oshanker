@@ -40,7 +40,8 @@ def plot_list(data, xlabel='Index', ylabel='Value'):
     plt.grid(True)
     plt.show()
     
-def plot_multiple_lists(*lists, xlabel='Index', ylabel='Value', labels=None):
+def plot_multiple_lists(*lists, xlabel='Index', ylabel='Value', 
+                        labels=None, title='Plot of Multiple Lists'):
     """
     Plot multiple lists on the same graph.
 
@@ -57,7 +58,7 @@ def plot_multiple_lists(*lists, xlabel='Index', ylabel='Value', labels=None):
     
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.title('Plot of Multiple Lists')
+    plt.title(title)
     plt.legend()
     plt.grid(True)
     plt.show()
