@@ -86,11 +86,11 @@ in predicting a sequence of ten consecutive zero counts. This shows that applyin
 \section{Introduction}
 
  Machine Learning applications have been used in the literature in the study of the Riemann zeta zeros \cite{osneural,Shanker 2018a,osentropy}.
-Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals.
+Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals. The problem we are solving is, given a set of ten consecutive zero counts on Gram intervals, predict the next set of ten consecutive zero counts. 
 
 
 \section{\label{sec2}Materials and Methods}
-Section Intro
+We describe the problem domain and our model.
 
 \subsection{\label{seckaratsuba}Riemann zeta zero counts on Gram Intervals}
 
@@ -112,7 +112,7 @@ In this section we consider the distribution of Gram intervals that contain a gi
  Odlyzko~\cite{Odlyzko 1992} made a conjecture regarding the distribution of Gram intervals that contain a given number of zeros. The conjecture is that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
 The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices form the Gauss unitary ensemble (GUE). Under the assumptions of Odlyzko the distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. 
 
-Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for a sample at heights  $t=10^{28}$. The table also shows the  expected values for the counts from Odlyzko's prediction. Further discussion about the topic can be found in Ref~\cite{Shanker 2018a}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
+Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for a sample at heights  $t=10^{12}$. The table also shows the  expected values for the counts from Odlyzko's prediction. Further discussion about the topic can be found in Ref~\cite{Shanker 2018a}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
 
 
 \begin{table}
@@ -175,7 +175,7 @@ Implementation of Ref~\cite{BenjaminEtienne}.
 
 \subsection{\label{relation}Training,  Model predictions}
 
-shows the model prediction versus the actual value for some points.
+Table~\ref{tab:perf} shows the prediction for the next set of ten consecutive zero counts, given a set of ten consecutive zero counts on Gram intervals.  
 
 \begin{table}
 \centering \(\begin{array}{ccc}
