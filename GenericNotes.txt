@@ -4,3 +4,8 @@
 base                  *  /Users/uorugant/opt/anaconda3
 
 conda list
+------------------
+MikTex Console
+TeXworks
+
+pdflatex template.tex 

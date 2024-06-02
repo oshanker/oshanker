@@ -10,6 +10,7 @@ target
 .RData
 .Rhistory
 gramratio.pdf
+template.pdf
 oldriemann/bin
 oldriemann/out/
 oldriemann/.idea/**
