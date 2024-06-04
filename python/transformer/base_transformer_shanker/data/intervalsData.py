@@ -67,9 +67,11 @@ def runpersonMain():
     print (train_iter)
     i = 1
     for s, t in iter(dataloader_train):
+        print(f"=== {i} ===")
+        i = i + 1
         for step in range(0, s.size()[0]):
-            print("in", s[step, :])
-            print("out", t[step, :])
+            print("in", s[step, :].detach().numpy() - 1)
+            print("out", t[step, :].detach().numpy() - 1)
 
 if __name__ == "__main__":
     runpersonMain()

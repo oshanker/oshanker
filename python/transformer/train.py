@@ -306,6 +306,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
         history['eval_acc'] += hist_acc
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
+    print("dataloader_val dataset", dataloader_val.dataset)
     print("=== DONE ===")
     #evaluate2(model, dataloader_val, loss_fn, ignore_index)
 
