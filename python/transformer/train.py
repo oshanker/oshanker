@@ -6,8 +6,6 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from transformer import Transformer
 import base_transformer_shanker.functions as functions
-from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset
-from base_transformer_shanker.data.fixedData import  FixedDataset 
 from base_transformer_shanker.data.intervalsData import  IntervalsDataset 
 from base_transformer_shanker.constants import args 
 
@@ -36,11 +34,6 @@ def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
             tepoch.set_description(f"Epoch {epoch}")
 
             optimizer.zero_grad()
-# =============================================================================
-        # the marker disease needs to unravel from here.
-        # same should be done for train and evaluate.
-# Epoch: 1, Train loss: 2.016, Train acc: 0.475,  Epoch time = 4.564s
-# =============================================================================
             logits = model(x, y)
             loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
                            y.contiguous().view(-1))
@@ -59,8 +52,6 @@ def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
 
     length = len(list(dataloader)) 
     
-    print("train history_loss",  len(history_loss))
-#     print("history_acc", history_acc)
      
 
     return losses / length, acc / length, history_loss, history_acc
@@ -95,8 +86,6 @@ def evaluate(model, dataloader, loss_fn, ignore_index):
     
     length = len(list(dataloader)) 
     
-    print("eval history_loss",  len(history_loss))
-#     print("history_acc", history_acc)
      
 
     return losses / length, acc / length, history_loss, history_acc
@@ -127,7 +116,7 @@ def evaluate1(model, dataloader, loss_fn, ignore_index):
         for row in functions.iterate_rows(masked_pred):
             print(functions.tokens_to_str(row))
         acc += accuracy.item()
-        print("accuracy --> ", accuracy)
+        print("accuracy --> ", accuracy.detach().numpy())
         
     
     length = len(list(dataloader)) 
@@ -157,12 +146,6 @@ def evaluate2(model, dataloader, loss_fn, ignore_index):
         preds = logits.argmax(dim=-1)
         masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
         accuracy = (masked_pred == y).float().mean()
-        print("masked_pred size --> ", masked_pred.size())
-        
-        # for row in functions.iterate_rows(y):
-        #     print((row))
-        # for row in functions.iterate_rows(masked_pred):
-        #     print((row))
         
         for step in range(0, y.size()[0]):
             actual = y[step, :].detach().numpy()-1
@@ -171,8 +154,6 @@ def evaluate2(model, dataloader, loss_fn, ignore_index):
             print("prediction", mypred)
 
         acc += accuracy.item()
-        print("accuracy --> ", accuracy)
-        
     
     length = len(list(dataloader)) 
     
@@ -279,6 +260,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
     }
 
     # Main loop
+    print("=== ROUND 1 ===")
     epochsToRun = 2
     for epoch in range(1, epochsToRun):
         start_time = time.time()
@@ -294,8 +276,6 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
         history['eval_acc'] += hist_acc
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
-        # evaluate2(model, dataloader_val, loss_fn, ignore_index)
-        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
 
     functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
                                   xlabel='Batch Iteration', ylabel='Accuracy', 
@@ -309,7 +289,8 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
         'eval_acc': []
     }
 
-    # Main loop
+    # ROUND 2
+    print("=== ROUND 2 ===")
     epochsToRun = 2
     for epoch in range(1, epochsToRun):
         start_time = time.time()
@@ -325,8 +306,8 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
         history['eval_acc'] += hist_acc
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
-        evaluate2(model, dataloader_val, loss_fn, ignore_index)
-        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
+    print("=== DONE ===")
+    #evaluate2(model, dataloader_val, loss_fn, ignore_index)
 
     functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
                                   xlabel='Batch Iteration', ylabel='Accuracy', 
@@ -338,15 +319,19 @@ def runperson():
     # reverseString=True
     # train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
     # eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
-    
+    S=30
+    L = 20
     path = "../out/intervals.csv"
-    train_iter = IntervalsDataset(6400, path, 0)
-    train_iter_1 = IntervalsDataset(8400, path, 6400)
-    #eval_iter = IntervalsDataset(10006, path, 14800+100)
-    eval_iter = IntervalsDataset(5, path, 14800+105)
+    train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
+    train_iter_1 = IntervalsDataset(8400, path, 6400, S = S, L = L)
+    eval_iter = IntervalsDataset(10006, path, 14800+100, S = S, L = L)
+    #eval_iter = IntervalsDataset(5, path, 14800+105, S = S, L = 15)
     
     path = "../out/intervals.pt" 
     runIntervalTrain(train_iter, train_iter_1, eval_iter, path)
+    print('train_iter', train_iter)
+    print('train_iter_1', train_iter_1)
+    print('eval_iter', eval_iter)
     
 if __name__ == "__main__":
     runperson()
