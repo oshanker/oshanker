@@ -6,7 +6,9 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from transformer import Transformer
 import base_transformer_shanker.functions as functions
-from base_transformer_shanker.data.intervalsData import  IntervalsDataset 
+#from base_transformer_shanker.data.intervalsData import  IntervalsDataset 
+from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset
+from base_transformer_shanker.data.fixedData import  FixedDataset 
 from base_transformer_shanker.constants import args 
 
 # Code is based on
@@ -223,10 +225,6 @@ def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
         # evaluate2(model, dataloader_val, loss_fn, ignore_index)
         # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
     
-    # history of loss and accuracy for each batch.
-    # functions.plot_list(history['train_acc'][5:],ylabel='train_acc')
-    # functions.plot_list(history['eval_acc'][5:],ylabel='eval_acc')
-
     functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
                                 labels=['train_acc','eval_acc'])
 #     torch.save(model.state_dict(), path)
@@ -317,22 +315,26 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
 
 
 def runperson():
-    # reverseString=True
-    # train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
-    # eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
-    S=30
-    L = 20
-    path = "../out/intervals.csv"
-    train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
-    train_iter_1 = IntervalsDataset(8400, path, 6400, S = S, L = L)
-    eval_iter = IntervalsDataset(10006, path, 14800+100, S = S, L = L)
-    #eval_iter = IntervalsDataset(5, path, 14800+105, S = S, L = 15)
+    reverseString=True
+    path = "../out/stringreverse" + str(reverseString) + ".pt" 
+    #train_iter = GenerateNoMarkerDataset(6400, reverseString=reverseString)
+    train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
+    eval_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
+    #eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
+    runTrain(train_iter, eval_iter, path)    
     
-    path = "../out/intervals.pt" 
-    runIntervalTrain(train_iter, train_iter_1, eval_iter, path)
-    print('train_iter', train_iter)
-    print('train_iter_1', train_iter_1)
-    print('eval_iter', eval_iter)
+    # S=30
+    # L = 20
+    # path = "../out/intervals.csv"
+    # train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
+    # train_iter_1 = IntervalsDataset(8400, path, 6400, S = S, L = L)
+    # eval_iter = IntervalsDataset(10006, path, 14800+100, S = S, L = L)
+    
+    # path = "../out/intervals.pt" 
+    # runIntervalTrain(train_iter, train_iter_1, eval_iter, path)
+    # print('train_iter', train_iter)
+    # print('train_iter_1', train_iter_1)
+    # print('eval_iter', eval_iter)
     
 if __name__ == "__main__":
     runperson()
