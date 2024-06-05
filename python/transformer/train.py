@@ -68,11 +68,6 @@ def evaluate(model, dataloader, loss_fn, ignore_index):
 
     for x, y in tqdm(dataloader, position=0, leave=True):
 
-# =============================================================================
-        # the marker disease needs to unravel from here.
-        # same should be done for train and evaluate.
-        # damn the markers!
-# =============================================================================
         logits = model(x, y)
         loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
                        y.contiguous().view(-1))
@@ -92,10 +87,12 @@ def evaluate(model, dataloader, loss_fn, ignore_index):
 
     return losses / length, acc / length, history_loss, history_acc
 
-def evaluate1(model, dataloader, loss_fn, ignore_index):
+def evaluate1(model, eval_iter, ignore_index, collate_fn):
     model.eval()
+    loss_fn = torch.nn.CrossEntropyLoss()
     losses = 0
     acc = 0
+    dataloader = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
 
     for x, y in tqdm(dataloader, position=0, leave=True):
         print("x --> ", x.size())
@@ -113,6 +110,7 @@ def evaluate1(model, dataloader, loss_fn, ignore_index):
         
         preds = logits.argmax(dim=-1)
         masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
+        print("validate ", (masked_pred == y).float())
         accuracy = (masked_pred == y).float().mean()
         print("masked_pred --> ", masked_pred.size())
         for row in functions.iterate_rows(masked_pred):
@@ -162,8 +160,37 @@ def evaluate2(model, dataloader, loss_fn, ignore_index):
 
     return losses / length, acc / length
 
+def run(model, optimizer, dataloader_train, dataloader_val, ignore_index, title):
+    loss_fn = torch.nn.CrossEntropyLoss()
+    # Save history to dictionnary
+    history = {
+        'train_loss': [],
+        'eval_loss': [],
+        'train_acc': [],
+        'eval_acc': []
+    }
 
-def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
+    # Main loop
+    epochsToRun = 2
+    for epoch in range(1, epochsToRun):
+        start_time = time.time()
+        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
+                                dataloader_train, loss_fn, epoch, ignore_index)
+        history['train_loss'] += hist_loss
+        history['train_acc'] += hist_acc
+        end_time = time.time()
+        
+        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn, ignore_index)
+        history['eval_loss'] += hist_loss
+        history['eval_acc'] += hist_acc
+        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+    
+    functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
+                                  xlabel='Batch Iteration', ylabel='Accuracy', 
+                                labels=['train_acc','eval_acc'], title=title)
+
+def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
+             path, ignore_index: int = -100):
     """
     B = Batch size
     S = Source sequence length
@@ -187,6 +214,7 @@ def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
     # Instantiate datasets
     collate_fn=functions.gd_collate_fn if ignore_index > -50 else None
     dataloader_train = DataLoader(train_iter, batch_size=256, collate_fn=collate_fn)
+    dataloader_train_1 = DataLoader(train_iter_1, batch_size=256, collate_fn=collate_fn)
     dataloader_val = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
 
 
@@ -195,38 +223,17 @@ def runTrain(train_iter, eval_iter, path, ignore_index: int = -100):
         if p.dim() > 1:
             nn.init.xavier_uniform_(p)
 
-    # Define loss function : we ignore logits which are padding tokens
-    loss_fn = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
-    
-    # Save history to dictionnary
-    history = {
-        'train_loss': [],
-        'eval_loss': [],
-        'train_acc': [],
-        'eval_acc': []
-    }
-
-    # Main loop
-    epochsToRun = 2
-    for epoch in range(1, epochsToRun):
-        start_time = time.time()
-        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
-                                dataloader_train, loss_fn, epoch, ignore_index)
-        history['train_loss'] += hist_loss
-        history['train_acc'] += hist_acc
-        end_time = time.time()
-        
-        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn, ignore_index)
-        history['eval_loss'] += hist_loss
-        history['eval_acc'] += hist_acc
-        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
-        
-        # evaluate2(model, dataloader_val, loss_fn, ignore_index)
-        # print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f},  "f"Epoch time = {(end_time - start_time):.3f}s"))
-    
-    functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
-                                labels=['train_acc','eval_acc'])
+    print("=== ROUND 1 ===")
+    run(model, optimizer, dataloader_train, dataloader_val, ignore_index,
+        title='First round of training')
+    print("=== TEST 1 ===")
+    evaluate1(model, eval_iter_1, ignore_index, collate_fn)
+    print("=== ROUND 2 ===")
+    run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
+        title='Second round of training')
+    print("=== TEST ===")
+    evaluate1(model, eval_iter_1, ignore_index, collate_fn)
 #     torch.save(model.state_dict(), path)
 
 
@@ -317,11 +324,11 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, path, ignore_index: in
 def runperson():
     reverseString=True
     path = "../out/stringreverse" + str(reverseString) + ".pt" 
-    #train_iter = GenerateNoMarkerDataset(6400, reverseString=reverseString)
-    train_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
+    train_iter = GenerateNoMarkerDataset(6400, reverseString=reverseString)
+    train_iter_1 = GenerateNoMarkerDataset(6400, reverseString=reverseString)
     eval_iter = GenerateNoMarkerDataset(12800, reverseString=reverseString)
-    #eval_iter = FixedDataset(3, reverseString=reverseString, drop = 0)
-    runTrain(train_iter, eval_iter, path)    
+    eval_iter_1 = FixedDataset(3, reverseString=reverseString, drop = 0)
+    runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, path)    
     
     # S=30
     # L = 20
