@@ -124,7 +124,7 @@ def evaluate1(model, eval_iter, ignore_index, collate_fn):
 
     return losses / length, acc / length
 
-def evaluate2(model, dataloader):
+def evaluate2(model, dataloader, filename=None):
     model.eval()
 
     for x, y in dataloader:
@@ -132,7 +132,12 @@ def evaluate2(model, dataloader):
         #print(logits[0,0,:].detach().numpy())
         preds = logits.argmax(dim=-1)
         masked_pred = preds  
-        accuracy = (masked_pred == y).float().mean()
+        accuracy = (masked_pred == y)
+        if filename is not None:
+            print(accuracy.size())
+            functions.write_integers_to_file(accuracy.int().detach().numpy(), 
+                                             filename)
+        accuracy = accuracy.float().mean()
         print('accuracy', accuracy.detach().numpy() )
         for step in range(0, y.size()[0]):
             actual = y[step, :].detach().numpy()-1
@@ -246,7 +251,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
         title='Second round of training')
     print("=== TEST ===")
-    evaluate2(model, dataloader_val_1)
+    evaluate2(model, dataloader_val_1, filename = '../out/accuracy.csv')
 #     torch.save(model.state_dict(), path)
 
 
@@ -264,9 +269,9 @@ def runperson():
     L = 20
     path = "../out/intervals.csv"
     train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
-    train_iter_1 = IntervalsDataset(8400, path, 6400, S = S, L = L)
-    eval_iter = IntervalsDataset(10006, path, 14800+100, S = S, L = L)
-    eval_iter_1 = IntervalsDataset(3, path, 14800+100, S = S, L = L)
+    train_iter_1 = IntervalsDataset(8000, path, 6400, S = S, L = L)
+    eval_iter = IntervalsDataset(10000, path, 14400+75, S = S, L = L)
+    eval_iter_1 = IntervalsDataset(3, path, 14400+75, S = S, L = L)
     
     path = "../out/intervals.pt" 
     runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, path)

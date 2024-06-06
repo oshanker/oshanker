@@ -13,6 +13,17 @@ from torch.nn.utils.rnn import pad_sequence
 from base_transformer_shanker.constants import PAD_IDX
 
 
+def write_integers_to_file(integer_lists, filename=None):
+    if filename is None:
+        print("The filename has a None value.")
+        return
+
+    with open(filename, 'w') as file:
+        for integers in integer_lists:
+            for integer in integers:
+                file.write(str(integer) + ',')
+            file.write("\n")
+
 def iterate_rows(tensor):
     """
     Iterate over the rows of a PyTorch tensor.
@@ -73,7 +84,8 @@ def runplots():
     list1 = [1, 2, 3, 4, 5]
     list2 = [2, 3, 4, 5, 6]
     list3 = [3, 4, 5, 6, 7]
-    plot_multiple_lists(list1, list2, list3, labels=['List 1', 'List 2', 'List 3'])
+    plot_multiple_lists(list1, list2, list3, 
+                        labels=['List 1', 'List 2', 'List 3'])
     
 def choose_symbol(symbols, probabilities):
     """

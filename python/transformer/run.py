@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import base_transformer_shanker.functions as functions
 
 def runpersonMain():
     arr = np.loadtxt("../out/intervals.csv",
@@ -15,10 +16,15 @@ def runpersonMain():
     
 
 
-
 if __name__ == "__main__":
-    runpersonMain()
-
+    #runpersonMain()
+    integer_lists = [
+           [1, 2, 3, 4, 5],
+           [ 2, 3, 4, 5, 6]
+        ]
+    #functions.write_integers_to_file(integer_lists, '../out/integers.csv')
+    functions.write_integers_to_file(integer_lists)
+    print("Integers have been written to 'integers.csv'")
 
 # export PYTHONPATH="$PWD"
 # python3 run.py
