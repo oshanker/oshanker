@@ -59,7 +59,7 @@ def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
     return losses / length, acc / length, history_loss, history_acc
 
 
-def evaluate(model, dataloader, loss_fn, ignore_index):
+def evaluate(model, dataloader, loss_fn, ignore_index, filename=None):
     model.eval()
     losses = 0
     acc = 0
@@ -133,10 +133,19 @@ def evaluate2(model, dataloader, filename=None):
         preds = logits.argmax(dim=-1)
         masked_pred = preds  
         accuracy = (masked_pred == y)
+        
+        L = y.size()[1]
+        
         if filename is not None:
-            print(accuracy.size())
-            functions.write_integers_to_file(accuracy.int().detach().numpy(), 
-                                             filename)
+            empty_tensor = torch.empty(0, L)  # Assuming each row has L columns
+    
+            for rowidx in range(0, y.size()[0]):
+                print("--", rowidx, accuracy[rowidx,:].int().detach().numpy().sum())
+                if rowidx < 2:
+                    tocat = torch.unsqueeze(y[rowidx,:], dim=0)
+                    empty_tensor = torch.cat((empty_tensor, tocat), dim=0)
+            functions.write_integers_to_file(empty_tensor.int().detach().numpy(), 
+                                              filename)
         accuracy = accuracy.float().mean()
         print('accuracy', accuracy.detach().numpy() )
         for step in range(0, y.size()[0]):
@@ -145,7 +154,8 @@ def evaluate2(model, dataloader, filename=None):
             print("actual    ", actual)
             print("prediction", mypred)
 
-def run(model, optimizer, dataloader_train, dataloader_val, ignore_index, title):
+def run(model, optimizer, dataloader_train, dataloader_val, 
+        ignore_index, title, filename=None):
     loss_fn = torch.nn.CrossEntropyLoss()
     # Save history to dictionnary
     history = {
@@ -165,7 +175,8 @@ def run(model, optimizer, dataloader_train, dataloader_val, ignore_index, title)
         history['train_acc'] += hist_acc
         end_time = time.time()
         
-        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, loss_fn, ignore_index)
+        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, 
+                                loss_fn, ignore_index, filename)
         history['eval_loss'] += hist_loss
         history['eval_acc'] += hist_acc
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
@@ -227,7 +238,6 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     # Define model here
     model = Transformer(**args)
 
-    # Instantiate datasets
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
     dataloader_val = DataLoader(eval_iter, batch_size=256)
@@ -242,12 +252,10 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
     
     print("=== ROUND 1 ===")
-    # Save history to dictionnary
     run(model, optimizer, dataloader_train, dataloader_val, ignore_index,
         title='First round of training')
     
     print("=== ROUND 2 ===")
-    # Save history to dictionnary
     run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
         title='Second round of training')
     print("=== TEST ===")
@@ -265,8 +273,8 @@ def runstring():
     runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, path)    
     
 def runperson():
-    S=30
-    L = 20
+    S=10
+    L = 10
     path = "../out/intervals.csv"
     train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
     train_iter_1 = IntervalsDataset(8000, path, 6400, S = S, L = L)
