@@ -37,7 +37,7 @@ class IntervalsDataset(Dataset):
     def __init__(self, n_samples, path, offset, S =20, L = 10):
         super(IntervalsDataset, self).__init__()
         self.arr = np.loadtxt(path,
-                     delimiter=",", dtype=np.int_) + 1
+                     delimiter=",", dtype=np.int_) 
         self.n_samples = n_samples
         self.offset = offset
         self.S = S
@@ -70,8 +70,8 @@ def runpersonMain():
         print(f"=== {i} ===")
         i = i + 1
         for step in range(0, s.size()[0]):
-            print("in", s[step, :].detach().numpy() - 1)
-            print("out", t[step, :].detach().numpy() - 1)
+            print("in", s[step, :].detach().numpy() )
+            print("out", t[step, :].detach().numpy() )
 
 if __name__ == "__main__":
     runpersonMain()

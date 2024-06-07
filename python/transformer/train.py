@@ -1,6 +1,7 @@
 import torch
 import time
 import torch.nn as nn
+import numpy as np
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader
@@ -53,9 +54,6 @@ def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
             tepoch.set_postfix(loss=loss.item(), accuracy=100. * accuracy.item())
 
     length = len(list(dataloader)) 
-    
-     
-
     return losses / length, acc / length, history_loss, history_acc
 
 
@@ -82,9 +80,6 @@ def evaluate(model, dataloader, loss_fn, ignore_index, filename=None):
         history_acc.append(accuracy.item())
     
     length = len(list(dataloader)) 
-    
-     
-
     return losses / length, acc / length, history_loss, history_acc
 
 def evaluate1(model, eval_iter, ignore_index, collate_fn):
@@ -120,8 +115,6 @@ def evaluate1(model, eval_iter, ignore_index, collate_fn):
         
     
     length = len(list(dataloader)) 
-    
-
     return losses / length, acc / length
 
 def evaluate2(model, dataloader, filename=None):
@@ -137,21 +130,26 @@ def evaluate2(model, dataloader, filename=None):
         L = y.size()[1]
         
         if filename is not None:
-            empty_tensor = torch.empty(0, L+2)  # Assuming each row has L columns
+            empty_tensor = np.empty([0, L+2], dtype=int) 
     
             for rowidx in range(0, y.size()[0]):
                 print("--", rowidx, accuracy[rowidx,:].int().detach().numpy().sum())
                 if rowidx < 2:
-                    yy = torch.cat((y[rowidx,:],torch.tensor([100, rowidx*100])))
-                    tocat = torch.unsqueeze(yy, dim=0)
-                    empty_tensor = torch.cat((empty_tensor, tocat,tocat+1000), dim=0)
-            functions.write_integers_to_file(empty_tensor.int().detach().numpy(), 
+                    yy = np.concatenate((y[rowidx,:].int().detach().numpy(),
+                                         np.array([100, rowidx*100])))
+                    tocat = [yy]
+                    zz = np.concatenate((masked_pred[rowidx,:].int().detach().numpy(),
+                                         np.array([200, rowidx*200])))
+                    tocat_1 = [zz]
+                    empty_tensor = np.concatenate((empty_tensor, tocat,tocat_1), 
+                                                  axis=0)
+            functions.write_integers_to_file(empty_tensor, 
                                               filename)
         accuracy = accuracy.float().mean()
         print('accuracy', accuracy.detach().numpy() )
         for step in range(0, y.size()[0]):
-            actual = y[step, :].detach().numpy()-1
-            mypred = masked_pred[step, :].detach().numpy() - 1
+            actual = y[step, :].detach().numpy()
+            mypred = masked_pred[step, :].detach().numpy() 
             print("actual    ", actual)
             print("prediction", mypred)
 
@@ -258,7 +256,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     
     print("=== ROUND 2 ===")
     run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
-        title='Second round of training')
+        title='Second round of training', filename = '../out/errors.csv')
     print("=== TEST ===")
     evaluate2(model, dataloader_val_1, filename = '../out/accuracy.csv')
 #     torch.save(model.state_dict(), path)
