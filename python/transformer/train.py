@@ -137,13 +137,14 @@ def evaluate2(model, dataloader, filename=None):
         L = y.size()[1]
         
         if filename is not None:
-            empty_tensor = torch.empty(0, L)  # Assuming each row has L columns
+            empty_tensor = torch.empty(0, L+2)  # Assuming each row has L columns
     
             for rowidx in range(0, y.size()[0]):
                 print("--", rowidx, accuracy[rowidx,:].int().detach().numpy().sum())
                 if rowidx < 2:
-                    tocat = torch.unsqueeze(y[rowidx,:], dim=0)
-                    empty_tensor = torch.cat((empty_tensor, tocat), dim=0)
+                    yy = torch.cat((y[rowidx,:],torch.tensor([100, rowidx*100])))
+                    tocat = torch.unsqueeze(yy, dim=0)
+                    empty_tensor = torch.cat((empty_tensor, tocat,tocat+1000), dim=0)
             functions.write_integers_to_file(empty_tensor.int().detach().numpy(), 
                                               filename)
         accuracy = accuracy.float().mean()
