@@ -24,6 +24,12 @@ def write_integers_to_file(integer_lists, filename=None):
                 file.write(str(integer) + ',')
             file.write("\n")
 
+def write_integers_to_open_file(integer_lists, file):
+    for integers in integer_lists:
+        for integer in integers:
+            file.write(str(integer) + ',')
+        file.write("\n")
+
 def iterate_rows(tensor):
     """
     Iterate over the rows of a PyTorch tensor.

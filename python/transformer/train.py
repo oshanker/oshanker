@@ -63,7 +63,9 @@ def evaluate(model, dataloader, loss_fn, ignore_index, filename=None):
     acc = 0
     history_loss = []
     history_acc = [] 
-
+    rowcount = 0
+    error_count = 0
+    file = None if filename is None else open(filename, 'w')
     for x, y in tqdm(dataloader, position=0, leave=True):
 
         logits = model(x, y)
@@ -73,12 +75,37 @@ def evaluate(model, dataloader, loss_fn, ignore_index, filename=None):
         
         preds = logits.argmax(dim=-1)
         masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
-        accuracy = (masked_pred == y).float().mean()
+        accuracy = (masked_pred == y)
+        
+        L = y.size()[1]
+        
+        if filename is not None:
+            empty_tensor = np.empty([0, L+2], dtype=int) 
+    
+            for rowidx in range(0, y.size()[0]):
+                rowcount = rowcount + 1
+                row_error_count = L - accuracy[rowidx,:].int().detach().numpy().sum()
+                if row_error_count > 0:
+                    error_count = error_count + row_error_count
+                    yy = np.concatenate(
+                        (y[rowidx,:].int().detach().numpy(),
+                                         np.array([100, row_error_count]) ) )
+                    tocat = [yy]
+                    zz = np.concatenate((masked_pred[rowidx,:].int().detach().numpy(),
+                                         np.array([200, 0]) ))
+                    tocat_1 = [zz]
+                    empty_tensor = np.concatenate((empty_tensor, tocat,tocat_1), 
+                                                  axis=0)
+            functions.write_integers_to_open_file(empty_tensor, file)
+        accuracy = accuracy.float().mean()
         acc += accuracy.item()
         
         history_loss.append(loss.item())
         history_acc.append(accuracy.item())
     
+    if filename is not None:
+        print("error_count, rowcount", error_count, rowcount)
+        file.close()
     length = len(list(dataloader)) 
     return losses / length, acc / length, history_loss, history_acc
 
@@ -242,13 +269,13 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     dataloader_val = DataLoader(eval_iter, batch_size=256)
     dataloader_val_1 = DataLoader(eval_iter_1, batch_size=256)
 
-
     # Initialize model parameters
     for p in model.parameters():
         if p.dim() > 1:
             nn.init.xavier_uniform_(p)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98),
+                                 eps=1e-9)
     
     print("=== ROUND 1 ===")
     run(model, optimizer, dataloader_train, dataloader_val, ignore_index,
@@ -258,7 +285,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
         title='Second round of training', filename = '../out/errors.csv')
     print("=== TEST ===")
-    evaluate2(model, dataloader_val_1, filename = '../out/accuracy.csv')
+    evaluate2(model, dataloader_val_1)
 #     torch.save(model.state_dict(), path)
 
 
