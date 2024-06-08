@@ -20,8 +20,13 @@ def write_integers_to_file(integer_lists, filename=None):
 
     with open(filename, 'w') as file:
         for integers in integer_lists:
+            col = 0
             for integer in integers:
-                file.write(str(integer) + ',')
+                if col == 0:
+                    file.write(str(integer) )
+                else:
+                    file.write( ',' + str(integer) )
+                col = col + 1
             file.write("\n")
 
 def write_integers_to_open_file(integer_lists, file):
