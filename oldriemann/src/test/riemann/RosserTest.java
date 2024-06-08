@@ -18,7 +18,6 @@ public class RosserTest {
 
     @Test @Ignore
     public void testGetZerosFile() throws IOException {
-        //System.out.println("Not yet implemented");
         Rosser.readConfig("data/RosserConfig.txt");
         BufferedReader[] zeroIn = Rosser.getZerosFile();
         String input = zeroIn[0].readLine();
@@ -35,8 +34,48 @@ public class RosserTest {
             zero = Double.parseDouble(input);
             System.out.printf("next zero %f \n", zero);
         }
+        PrintStream out = getOutputPrintStream();
+
+        int count = 1; //244.158907
+        int cumulative = 0;
+        double nextGram = beginGram + gramIncr;
+        for (int i = 0; i < 25615; i++) {
+            while (zero < nextGram) {
+                input = zeroIn[0].readLine();
+                zero = Double.parseDouble(input);
+                if (zero >= nextGram) {
+                    break;
+                }
+                count++;
+            }
+            if (i==0) {
+                out.print(count );
+            } else {
+                out.print("," + count);
+            }
+            // handle empty
+            beginGram = nextGram;
+            nextGram = beginGram + gramIncr;
+            cumulative += count;
+            count = 0;
+            while (zero >= nextGram) {
+                //while
+                ++i;
+                out.print("," + count);
+                beginGram = nextGram;
+                nextGram = beginGram + gramIncr;
+            }
+            count = 1;
+        }
+
+        System.out.printf("cumulative %d", cumulative);
+        out.close();
+
+    }
+
+    private PrintStream getOutputPrintStream() {
         PrintStream out = null;
-        File file = new File("../python/out/intervals.csv");
+        File file = new File("../python/out/intervalsTest.csv");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -49,60 +88,7 @@ public class RosserTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        int count = 1; //244.158907
-        int cumulative = 0;
-        double nextGram = beginGram + gramIncr;
-        List<Double> zeros = new ArrayList<>();
-        zeros.add(zero);
-        for (int i = 0; i < 25615; i++) {
-            while (zero < nextGram) {
-                input = zeroIn[0].readLine();
-                zero = Double.parseDouble(input);
-                if (i<25) {
-                    System.out.printf("next zero %f ", zero);
-                }
-                if (zero >= nextGram) {
-                    break;
-                }
-                count++;
-                zeros.add(zero);
-            }
-            if (i<25) {
-                System.out.printf("\ni %d beginGram %f nextGram %f count %d next zero %f",
-                        i, beginGram, nextGram, count, zero);
-            }
-            if (i==0) {
-                out.print(count );
-            } else {
-                out.print("," + count);
-            }
-            if (i<25) {
-                System.out.println(" zeros " + zeros);
-            }
-            zeros.clear();
-            // handle empty
-            beginGram = nextGram;
-            nextGram = beginGram + gramIncr;
-            cumulative += count;
-            count = 0;
-            while (zero >= nextGram) {
-                //while
-                ++i;
-                if (i<25) {
-                    System.out.printf("i %d beginGram %f nextGram %f count %d \n",
-                            i, beginGram, nextGram, count );
-                }
-                out.print("," + count);
-                beginGram = nextGram;
-                nextGram = beginGram + gramIncr;
-            }
-            count = 1;
-            zeros.add(zero);
-        }
-
-        System.out.printf("cumulative %d", cumulative);
-        out.close();
-
+        return out;
     }
 
     @Test
