@@ -38,10 +38,15 @@ class IntervalsDataset(Dataset):
         super(IntervalsDataset, self).__init__()
         self.arr = np.loadtxt(path,
                      delimiter=",", dtype=np.int_) 
+        max_index = len(self.arr) - S - L
+        
+        if n_samples > max_index:
+            raise IndexError(f"Size out of bounds: Max {max_index}")
         self.n_samples = n_samples
         self.offset = offset
         self.S = S
         self.L = L
+        
 
     def __len__(self):
         #return len(self.arr)-(self.S+self.L)  # number of samples in the dataset
@@ -50,15 +55,18 @@ class IntervalsDataset(Dataset):
     def __getitem__(self, index):
         #return torch.zeros(self.S, dtype=torch.int64),  torch.ones(self.L, dtype=torch.int64)
         my_index = index + self.offset
+        max_index = my_index+self.S+self.L
+        if max_index >= len(self.arr):
+            raise IndexError(f"Index out of bounds: {index}")
         return torch.tensor(self.arr[my_index :my_index+self.S], dtype=torch.int64), \
-            torch.tensor(self.arr[my_index+self.S :my_index+self.S+self.L], dtype=torch.int64)
+            torch.tensor(self.arr[my_index+self.S :max_index], dtype=torch.int64)
 
     def __str__(self):
         return f"IntervalsDataset:[ S: {self.S}, L: {self.L}, length: {self.n_samples}, offset: {self.offset}] "
 
 def runpersonMain():
-    path = "../../../out/intervals.csv"
-    train_iter = IntervalsDataset(6, path, 0, S = 3, L =5 )
+    path = "../../../out/test.csv"
+    train_iter = IntervalsDataset(4, path, 0, S = 3, L =5 )
     dataloader_train = DataLoader(train_iter, batch_size=3)
     # s, t = next(iter(dataloader_train))
     # print(s[:, ...])
