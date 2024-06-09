@@ -25,7 +25,7 @@ https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
 """
 
 # Define model here
-model = Transformer(**args)
+my_model = Transformer(**args)
 
 class Train():
     def __init__(self, model):
@@ -52,7 +52,7 @@ class Train():
     
         for epoch in range(1, epochsToRun):
             start_time = time.time()
-            train_loss, train_acc, hist_loss, hist_acc = self.train(self.model, self.optimizer, 
+            train_loss, train_acc, hist_loss, hist_acc = self.train( self.optimizer, 
                                     dataloader_train, loss_fn, epoch, ignore_index)
             history['train_loss'] += hist_loss
             history['train_acc'] += hist_acc
@@ -69,8 +69,8 @@ class Train():
                                     labels=['train_acc','eval_acc'], title=title)
     
 
-    def train(self, model, optimizer, dataloader, loss_fn, epoch, ignore_index):
-        model.train()
+    def train(self, optimizer, dataloader, loss_fn, epoch, ignore_index):
+        self.model.train()
         losses = 0
         acc = 0
         history_loss = []
@@ -81,8 +81,8 @@ class Train():
                 tepoch.set_description(f"Epoch {epoch}")
     
                 optimizer.zero_grad()
-                logits = model(x, y)
-                loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
+                logits = self.model(x, y)
+                loss = loss_fn(logits.contiguous().view(-1, self.model.vocab_size), 
                                y.contiguous().view(-1))
                 loss.backward()
                 optimizer.step()
@@ -153,76 +153,76 @@ class Train():
         length = len(list(dataloader)) 
         return losses / length, acc / length, history_loss, history_acc
     
-def evaluate1(model, eval_iter, ignore_index, collate_fn):
-    model.eval()
-    loss_fn = torch.nn.CrossEntropyLoss()
-    losses = 0
-    acc = 0
-    dataloader = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
-
-    for x, y in tqdm(dataloader, position=0, leave=True):
-        print("x --> ", x.size())
-        for row in functions.iterate_rows(x):
-            print(functions.tokens_to_str(row))
-        print("y (expected) --> ", y.size())
-        for row in functions.iterate_rows(y):
-            print(functions.tokens_to_str(row))
+    def evaluate1(self, eval_iter, ignore_index, collate_fn):
+        self.model.eval()
+        loss_fn = torch.nn.CrossEntropyLoss()
+        losses = 0
+        acc = 0
+        dataloader = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
+    
+        for x, y in tqdm(dataloader, position=0, leave=True):
+            print("x --> ", x.size())
+            for row in functions.iterate_rows(x):
+                print(functions.tokens_to_str(row))
+            print("y (expected) --> ", y.size())
+            for row in functions.iterate_rows(y):
+                print(functions.tokens_to_str(row))
+                
+            
+            logits = self.model(x, y)
+            loss = loss_fn(logits.contiguous().view(-1, self.model.vocab_size), 
+                           y.contiguous().view(-1))
+            losses += loss.item()
+            
+            preds = logits.argmax(dim=-1)
+            masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
+            print("validate ", (masked_pred == y).float())
+            accuracy = (masked_pred == y).float().mean()
+            print("masked_pred --> ", masked_pred.size())
+            for row in functions.iterate_rows(masked_pred):
+                print(functions.tokens_to_str(row))
+            acc += accuracy.item()
+            print("accuracy --> ", accuracy.detach().numpy())
             
         
-        logits = model(x, y)
-        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
-                       y.contiguous().view(-1))
-        losses += loss.item()
-        
-        preds = logits.argmax(dim=-1)
-        masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
-        print("validate ", (masked_pred == y).float())
-        accuracy = (masked_pred == y).float().mean()
-        print("masked_pred --> ", masked_pred.size())
-        for row in functions.iterate_rows(masked_pred):
-            print(functions.tokens_to_str(row))
-        acc += accuracy.item()
-        print("accuracy --> ", accuracy.detach().numpy())
-        
+        length = len(list(dataloader)) 
+        return losses / length, acc / length
     
-    length = len(list(dataloader)) 
-    return losses / length, acc / length
-
-def evaluate2(model, dataloader, filename=None):
-    model.eval()
-
-    for x, y in dataloader:
-        logits = model(x, y)
-        #print(logits[0,0,:].detach().numpy())
-        preds = logits.argmax(dim=-1)
-        masked_pred = preds  
-        accuracy = (masked_pred == y)
-        
-        L = y.size()[1]
-        
-        if filename is not None:
-            empty_tensor = np.empty([0, L+2], dtype=int) 
+    def evaluate2(self, dataloader, filename=None):
+        self.model.eval()
     
-            for rowidx in range(0, y.size()[0]):
-                print("--", rowidx, accuracy[rowidx,:].int().detach().numpy().sum())
-                if rowidx < 2:
-                    yy = np.concatenate((y[rowidx,:].int().detach().numpy(),
-                                         np.array([100, rowidx*100])))
-                    tocat = [yy]
-                    zz = np.concatenate((masked_pred[rowidx,:].int().detach().numpy(),
-                                         np.array([200, rowidx*200])))
-                    tocat_1 = [zz]
-                    empty_tensor = np.concatenate((empty_tensor, tocat,tocat_1), 
-                                                  axis=0)
-            functions.write_integers_to_file(empty_tensor, 
-                                              filename)
-        accuracy = accuracy.float().mean()
-        print('accuracy', accuracy.detach().numpy() )
-        for step in range(0, y.size()[0]):
-            actual = y[step, :].detach().numpy()
-            mypred = masked_pred[step, :].detach().numpy() 
-            print("actual    ", actual)
-            print("prediction", mypred)
+        for x, y in dataloader:
+            logits = self.model(x, y)
+            #print(logits[0,0,:].detach().numpy())
+            preds = logits.argmax(dim=-1)
+            masked_pred = preds  
+            accuracy = (masked_pred == y)
+            
+            L = y.size()[1]
+            
+            if filename is not None:
+                empty_tensor = np.empty([0, L+2], dtype=int) 
+        
+                for rowidx in range(0, y.size()[0]):
+                    print("--", rowidx, accuracy[rowidx,:].int().detach().numpy().sum())
+                    if rowidx < 2:
+                        yy = np.concatenate((y[rowidx,:].int().detach().numpy(),
+                                             np.array([100, rowidx*100])))
+                        tocat = [yy]
+                        zz = np.concatenate((masked_pred[rowidx,:].int().detach().numpy(),
+                                             np.array([200, rowidx*200])))
+                        tocat_1 = [zz]
+                        empty_tensor = np.concatenate((empty_tensor, tocat,tocat_1), 
+                                                      axis=0)
+                functions.write_integers_to_file(empty_tensor, 
+                                                  filename)
+            accuracy = accuracy.float().mean()
+            print('accuracy', accuracy.detach().numpy() )
+            for step in range(0, y.size()[0]):
+                actual = y[step, :].detach().numpy()
+                mypred = masked_pred[step, :].detach().numpy() 
+                print("actual    ", actual)
+                print("prediction", mypred)
 
 def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
              path, ignore_index: int = -100):
@@ -243,7 +243,7 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     decode Output
         (B, L, C) logits
     """
-    train = Train(model)
+    train = Train(my_model)
 
     # Instantiate datasets
     collate_fn=functions.gd_collate_fn if ignore_index > -50 else None
@@ -255,18 +255,18 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     train.run( dataloader_train, dataloader_val, ignore_index=ignore_index,
         title='First round of training')
     print("=== TEST 1 ===")
-    evaluate1(model, eval_iter_1, ignore_index, collate_fn)
+    train.evaluate1( eval_iter_1, ignore_index, collate_fn)
     print("=== ROUND 2 ===")
     train.run( dataloader_train_1, dataloader_val, ignore_index=ignore_index,
         title='Second round of training')
     print("=== TEST ===")
-    evaluate1(model, eval_iter_1, ignore_index, collate_fn)
+    train.evaluate1( eval_iter_1, ignore_index, collate_fn)
 #     torch.save(model.state_dict(), path)
 
 
 def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, 
                      path, ignore_index: int = -100, epochsToRun = 2):
-    train = Train(model)
+    train = Train(my_model)
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
     dataloader_val = DataLoader(eval_iter, batch_size=256)
@@ -284,7 +284,7 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
         epochsToRun = 2)
     
     print("=== TEST ===")
-    evaluate2(model, dataloader_val_1)
+    train.evaluate2( dataloader_val_1)
 #     torch.save(model.state_dict(), path)
 
 
