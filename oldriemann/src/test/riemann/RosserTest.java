@@ -9,12 +9,92 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class RosserTest {
+
+    @Test @Ignore
+    public void testThreeZeros() throws IOException {
+        Rosser.readConfig("data/RosserConfig.txt");
+        BufferedReader[] zeroIn = Rosser.getZerosFile();
+        String input = zeroIn[0].readLine();
+        double zero = Double.parseDouble(input);
+        System.out.printf("first zero %f ", zero);
+        double baseLimit = Rosser.getParamDouble("baseLimit");
+        double gramIncr = Rosser.getParamDouble("gramIncr");
+        System.out.printf("gram %f \n", (baseLimit -zero)/gramIncr);
+        int gramOffset = (int) Math.floor((baseLimit - zero) / gramIncr);
+        double beginGram = baseLimit - gramOffset*gramIncr;
+        System.out.printf("beginGram %f, check  %f\n", beginGram, beginGram + gramOffset*gramIncr);
+        while (zero < beginGram) {
+            input = zeroIn[0].readLine();
+            zero = Double.parseDouble(input);
+            System.out.printf("next zero %f \n", zero);
+        }
+        PrintStream out = getOutputPrintStream();
+        Deque<Integer> buffer = new LinkedList<>();
+
+        int count = 1; //244.158907
+        double nextGram = beginGram + gramIncr;
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < 59; i++) {
+                while (zero < nextGram) {
+                    String input1 = zeroIn[0].readLine();
+                    zero = Double.parseDouble(input1);
+                    if (zero >= nextGram) {
+                        break;
+                    }
+                    count++;
+                }
+                addAndResize(buffer, count);
+                //((LinkedList<Integer>) buffer).get(19);
+                if(buffer.size() == 29) {
+                    dumpBufferAndClear(out, (LinkedList<Integer>) buffer);
+                }
+                // handle empty
+                beginGram = nextGram;
+                nextGram = beginGram + gramIncr;
+                count = 0;
+                while (zero >= nextGram) {
+                    //while
+                    ++i;
+                    addAndResize(buffer, count);
+                    if(buffer.size() == 29) {
+                        dumpBufferAndClear(out, buffer);
+                    }
+                    beginGram = nextGram;
+                    nextGram = beginGram + gramIncr;
+                }
+                count = 1;
+            }
+
+        }
+        out.close();
+    }
+
+    private void addAndResize(Deque<Integer> buffer, int count) {
+        buffer.addLast(count);
+        //if buffer size > 29, remove first
+    }
+
+    private void dumpBufferAndClear(PrintStream out, Deque<Integer> buffer) {
+        dumpBuffer(out, (LinkedList<Integer>) buffer);
+        buffer.clear();
+    }
+
+    private void dumpBuffer(PrintStream out, LinkedList<Integer> buffer) {
+        int i = 0;
+        out.print(buffer.get(i) );
+        for (i = 1; i < buffer.size(); i++) {
+            out.print("," + buffer.get(i) );
+        }
+        out.println();
+    }
 
     @Test @Ignore
     public void testGetZerosFile() throws IOException {
