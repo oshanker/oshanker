@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from transformer import Transformer
 import base_transformer_shanker.functions as functions
 from base_transformer_shanker.data.intervalsData import  IntervalsDataset 
+from base_transformer_shanker.data.multipleIntervalsData import  MultipleIntervalsDataset 
 from base_transformer_shanker.data.stringdata1 import GenerateNoMarkerDataset
 from base_transformer_shanker.data.fixedData import  FixedDataset 
 from base_transformer_shanker.constants import args 
@@ -181,7 +182,7 @@ def evaluate2(model, dataloader, filename=None):
             print("prediction", mypred)
 
 def run(model, optimizer, dataloader_train, dataloader_val, 
-        ignore_index, title, filename=None):
+        ignore_index, title, filename=None, epochsToRun = 2):
     loss_fn = torch.nn.CrossEntropyLoss()
     # Save history to dictionnary
     history = {
@@ -192,7 +193,7 @@ def run(model, optimizer, dataloader_train, dataloader_val,
     }
 
     # Main loop
-    epochsToRun = 2
+    
     for epoch in range(1, epochsToRun):
         start_time = time.time()
         train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
@@ -207,7 +208,7 @@ def run(model, optimizer, dataloader_train, dataloader_val,
         history['eval_acc'] += hist_acc
         print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
     
-    functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
+    functions.plot_multiple_lists(history['train_acc'], history['eval_acc'],
                                   xlabel='Batch Iteration', ylabel='Accuracy', 
                                 labels=['train_acc','eval_acc'], title=title)
 
@@ -260,10 +261,10 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
 
 
 def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, 
-                     path, ignore_index: int = -100):
+                     path, ignore_index: int = -100, epochsToRun = 2):
     # Define model here
     model = Transformer(**args)
-
+    print(type(train_iter))
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
     dataloader_val = DataLoader(eval_iter, batch_size=256)
@@ -279,11 +280,11 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     
     print("=== ROUND 1 ===")
     run(model, optimizer, dataloader_train, dataloader_val, ignore_index,
-        title='First round of training')
+        title='First round of training', epochsToRun = 2)
     
     print("=== ROUND 2 ===")
     run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
-        title='Second round of training', filename = '../out/errors.csv')
+        title='Second round of training', filename = '../out/errors.csv', epochsToRun = epochsToRun)
     print("=== TEST ===")
     evaluate2(model, dataloader_val_1)
 #     torch.save(model.state_dict(), path)
@@ -310,5 +311,19 @@ def runperson():
     path = "../out/intervals.pt" 
     runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, path)
     
+def runThrees():
+    S=10
+    L = 10
+    path = "../out/intervalsTest.csv"
+    train_iter = MultipleIntervalsDataset(1133, path, 0,  S = S, L = L)
+    train_iter_1 = MultipleIntervalsDataset(333, path, 733, S = S, L = L)
+    eval_iter = MultipleIntervalsDataset(500, path, 1466, S = S, L = L)
+    eval_iter_1 = MultipleIntervalsDataset(3, path, 1470, S = S, L = L)
+    
+    path = "../out/intervals.pt" 
+    runIntervalTrain(train_iter, train_iter_1, eval_iter, 
+                     eval_iter_1, path, epochsToRun = 4)
+    
 if __name__ == "__main__":
-    runperson()
+    #runperson()
+    runThrees()
