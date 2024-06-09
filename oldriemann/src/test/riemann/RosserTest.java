@@ -1,17 +1,13 @@
 package riemann;
 
-import static org.junit.Assert.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,9 +36,9 @@ public class RosserTest {
         Deque<Integer> buffer = new LinkedList<>();
 
         int count = 1; //244.158907
+        int indexOfThree = 1000;
         double nextGram = beginGram + gramIncr;
-        for (int j = 0; j < 4; j++) {
-            for (int i = 0; i < 59; i++) {
+            for (int i = 0; i < 1000000; i++) {
                 while (zero < nextGram) {
                     String input1 = zeroIn[0].readLine();
                     zero = Double.parseDouble(input1);
@@ -51,10 +47,11 @@ public class RosserTest {
                     }
                     count++;
                 }
-                addAndResize(buffer, count);
+                indexOfThree = addAndResize(buffer, count, indexOfThree);
                 //((LinkedList<Integer>) buffer).get(19);
-                if(buffer.size() == 29) {
+                if(buffer.size() == 29 && indexOfThree <= 19) {
                     dumpBufferAndClear(out, (LinkedList<Integer>) buffer);
+                    indexOfThree = 1000;
                 }
                 // handle empty
                 beginGram = nextGram;
@@ -63,9 +60,10 @@ public class RosserTest {
                 while (zero >= nextGram) {
                     //while
                     ++i;
-                    addAndResize(buffer, count);
-                    if(buffer.size() == 29) {
+                    indexOfThree = addAndResize(buffer, count, indexOfThree);
+                    if(buffer.size() == 29 && indexOfThree <= 19) {
                         dumpBufferAndClear(out, buffer);
+                        indexOfThree = 1000;
                     }
                     beginGram = nextGram;
                     nextGram = beginGram + gramIncr;
@@ -73,18 +71,32 @@ public class RosserTest {
                 count = 1;
             }
 
-        }
         out.close();
     }
 
-    private void addAndResize(Deque<Integer> buffer, int count) {
+    private int addAndResize(Deque<Integer> buffer, int count, int indexOfThree) {
         buffer.addLast(count);
         //if buffer size > 29, remove first
+        if (buffer.size() > 29) {
+            buffer.removeFirst();
+            if(indexOfThree == 0){
+                indexOfThree = 1000;
+            }
+            if(indexOfThree<1000){
+                indexOfThree--;
+            }
+        }
+        if (count >= 3 && (indexOfThree==1000)) {
+            indexOfThree = buffer.size()-1;
+        }
+        return indexOfThree;
     }
 
     private void dumpBufferAndClear(PrintStream out, Deque<Integer> buffer) {
         dumpBuffer(out, (LinkedList<Integer>) buffer);
-        buffer.clear();
+        while(buffer.size() > 10) {
+            buffer.removeFirst();
+        }
     }
 
     private void dumpBuffer(PrintStream out, LinkedList<Integer> buffer) {
