@@ -27,91 +27,132 @@ https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
 # Define model here
 model = Transformer(**args)
 
+class Train():
+    def __init__(self, model):
+        self.model = model
 
-def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
-    model.train()
-    losses = 0
-    acc = 0
-    history_loss = []
-    history_acc = [] 
+        # Initialize model parameters
+        for p in self.model.parameters():
+            if p.dim() > 1:
+                nn.init.xavier_uniform_(p)
+    
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, 
+                                          betas=(0.9, 0.98), eps=1e-9)
 
-    with tqdm(dataloader, position=0, leave=True) as tepoch:
-        for x, y in tepoch:
-            tepoch.set_description(f"Epoch {epoch}")
+    def run(self, dataloader_train, dataloader_val, 
+            ignore_index, title, filename=None, epochsToRun = 2):
+        loss_fn = torch.nn.CrossEntropyLoss()
+        # Save history to dictionnary
+        history = {
+            'train_loss': [],
+            'eval_loss': [],
+            'train_acc': [],
+            'eval_acc': []
+        }
+    
+        for epoch in range(1, epochsToRun):
+            start_time = time.time()
+            train_loss, train_acc, hist_loss, hist_acc = self.train(self.model, self.optimizer, 
+                                    dataloader_train, loss_fn, epoch, ignore_index)
+            history['train_loss'] += hist_loss
+            history['train_acc'] += hist_acc
+            end_time = time.time()
+            
+            val_loss, val_acc, hist_loss, hist_acc = self.evaluate(self.model, dataloader_val, 
+                                    loss_fn, ignore_index, filename)
+            history['eval_loss'] += hist_loss
+            history['eval_acc'] += hist_acc
+            print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+        
+        functions.plot_multiple_lists(history['train_acc'], history['eval_acc'],
+                                      xlabel='Batch Iteration', ylabel='Accuracy', 
+                                    labels=['train_acc','eval_acc'], title=title)
+    
 
-            optimizer.zero_grad()
+    def train(self, model, optimizer, dataloader, loss_fn, epoch, ignore_index):
+        model.train()
+        losses = 0
+        acc = 0
+        history_loss = []
+        history_acc = [] 
+    
+        with tqdm(dataloader, position=0, leave=True) as tepoch:
+            for x, y in tepoch:
+                tepoch.set_description(f"Epoch {epoch}")
+    
+                optimizer.zero_grad()
+                logits = model(x, y)
+                loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
+                               y.contiguous().view(-1))
+                loss.backward()
+                optimizer.step()
+                losses += loss.item()
+                
+                preds = logits.argmax(dim=-1)
+                masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
+                accuracy = (masked_pred == y).float().mean()
+                acc += accuracy.item()
+                
+                history_loss.append(loss.item())
+                history_acc.append(accuracy.item())
+                tepoch.set_postfix(loss=loss.item(), accuracy=100. * accuracy.item())
+    
+        length = len(list(dataloader)) 
+        return losses / length, acc / length, history_loss, history_acc
+    
+    
+    def evaluate(self, model, dataloader, loss_fn, ignore_index, filename=None):
+        model.eval()
+        losses = 0
+        acc = 0
+        history_loss = []
+        history_acc = [] 
+        rowcount = 0
+        error_count = 0
+        file = None if filename is None else open(filename, 'w')
+        for x, y in tqdm(dataloader, position=0, leave=True):
+    
             logits = model(x, y)
             loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
                            y.contiguous().view(-1))
-            loss.backward()
-            optimizer.step()
             losses += loss.item()
             
             preds = logits.argmax(dim=-1)
             masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
-            accuracy = (masked_pred == y).float().mean()
+            accuracy = (masked_pred == y)
+            
+            L = y.size()[1]
+            
+            if filename is not None:
+                empty_tensor = np.empty([0, L+2], dtype=int) 
+        
+                for rowidx in range(0, y.size()[0]):
+                    rowcount = rowcount + 1
+                    row_error_count = L - accuracy[rowidx,:].int().detach().numpy().sum()
+                    if row_error_count > 0:
+                        error_count = error_count + row_error_count
+                        yy = np.concatenate(
+                            (y[rowidx,:].int().detach().numpy(),
+                                             np.array([100, row_error_count]) ) )
+                        tocat = [yy]
+                        zz = np.concatenate((masked_pred[rowidx,:].int().detach().numpy(),
+                                             np.array([200, 0]) ))
+                        tocat_1 = [zz]
+                        empty_tensor = np.concatenate((empty_tensor, tocat,tocat_1), 
+                                                      axis=0)
+                functions.write_integers_to_open_file(empty_tensor, file)
+            accuracy = accuracy.float().mean()
             acc += accuracy.item()
             
             history_loss.append(loss.item())
             history_acc.append(accuracy.item())
-            tepoch.set_postfix(loss=loss.item(), accuracy=100. * accuracy.item())
-
-    length = len(list(dataloader)) 
-    return losses / length, acc / length, history_loss, history_acc
-
-
-def evaluate(model, dataloader, loss_fn, ignore_index, filename=None):
-    model.eval()
-    losses = 0
-    acc = 0
-    history_loss = []
-    history_acc = [] 
-    rowcount = 0
-    error_count = 0
-    file = None if filename is None else open(filename, 'w')
-    for x, y in tqdm(dataloader, position=0, leave=True):
-
-        logits = model(x, y)
-        loss = loss_fn(logits.contiguous().view(-1, model.vocab_size), 
-                       y.contiguous().view(-1))
-        losses += loss.item()
-        
-        preds = logits.argmax(dim=-1)
-        masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
-        accuracy = (masked_pred == y)
-        
-        L = y.size()[1]
         
         if filename is not None:
-            empty_tensor = np.empty([0, L+2], dtype=int) 
+            print("error_count, rowcount", error_count, rowcount)
+            file.close()
+        length = len(list(dataloader)) 
+        return losses / length, acc / length, history_loss, history_acc
     
-            for rowidx in range(0, y.size()[0]):
-                rowcount = rowcount + 1
-                row_error_count = L - accuracy[rowidx,:].int().detach().numpy().sum()
-                if row_error_count > 0:
-                    error_count = error_count + row_error_count
-                    yy = np.concatenate(
-                        (y[rowidx,:].int().detach().numpy(),
-                                         np.array([100, row_error_count]) ) )
-                    tocat = [yy]
-                    zz = np.concatenate((masked_pred[rowidx,:].int().detach().numpy(),
-                                         np.array([200, 0]) ))
-                    tocat_1 = [zz]
-                    empty_tensor = np.concatenate((empty_tensor, tocat,tocat_1), 
-                                                  axis=0)
-            functions.write_integers_to_open_file(empty_tensor, file)
-        accuracy = accuracy.float().mean()
-        acc += accuracy.item()
-        
-        history_loss.append(loss.item())
-        history_acc.append(accuracy.item())
-    
-    if filename is not None:
-        print("error_count, rowcount", error_count, rowcount)
-        file.close()
-    length = len(list(dataloader)) 
-    return losses / length, acc / length, history_loss, history_acc
-
 def evaluate1(model, eval_iter, ignore_index, collate_fn):
     model.eval()
     loss_fn = torch.nn.CrossEntropyLoss()
@@ -183,37 +224,6 @@ def evaluate2(model, dataloader, filename=None):
             print("actual    ", actual)
             print("prediction", mypred)
 
-def run(model, optimizer, dataloader_train, dataloader_val, 
-        ignore_index, title, filename=None, epochsToRun = 2):
-    loss_fn = torch.nn.CrossEntropyLoss()
-    # Save history to dictionnary
-    history = {
-        'train_loss': [],
-        'eval_loss': [],
-        'train_acc': [],
-        'eval_acc': []
-    }
-
-    # Main loop
-    
-    for epoch in range(1, epochsToRun):
-        start_time = time.time()
-        train_loss, train_acc, hist_loss, hist_acc = train(model, optimizer, 
-                                dataloader_train, loss_fn, epoch, ignore_index)
-        history['train_loss'] += hist_loss
-        history['train_acc'] += hist_acc
-        end_time = time.time()
-        
-        val_loss, val_acc, hist_loss, hist_acc = evaluate(model, dataloader_val, 
-                                loss_fn, ignore_index, filename)
-        history['eval_loss'] += hist_loss
-        history['eval_acc'] += hist_acc
-        print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
-    
-    functions.plot_multiple_lists(history['train_acc'], history['eval_acc'],
-                                  xlabel='Batch Iteration', ylabel='Accuracy', 
-                                labels=['train_acc','eval_acc'], title=title)
-
 def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
              path, ignore_index: int = -100):
     """
@@ -233,6 +243,7 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     decode Output
         (B, L, C) logits
     """
+    train = Train(model)
 
     # Instantiate datasets
     collate_fn=functions.gd_collate_fn if ignore_index > -50 else None
@@ -240,20 +251,13 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256, collate_fn=collate_fn)
     dataloader_val = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
 
-
-    # Initialize model parameters
-    for p in model.parameters():
-        if p.dim() > 1:
-            nn.init.xavier_uniform_(p)
-
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9)
     print("=== ROUND 1 ===")
-    run(model, optimizer, dataloader_train, dataloader_val, ignore_index,
+    train.run( dataloader_train, dataloader_val, ignore_index=ignore_index,
         title='First round of training')
     print("=== TEST 1 ===")
     evaluate1(model, eval_iter_1, ignore_index, collate_fn)
     print("=== ROUND 2 ===")
-    run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
+    train.run( dataloader_train_1, dataloader_val, ignore_index=ignore_index,
         title='Second round of training')
     print("=== TEST ===")
     evaluate1(model, eval_iter_1, ignore_index, collate_fn)
@@ -262,27 +266,22 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
 
 def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, 
                      path, ignore_index: int = -100, epochsToRun = 2):
-    print(type(train_iter))
+    train = Train(model)
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
     dataloader_val = DataLoader(eval_iter, batch_size=256)
     dataloader_val_1 = DataLoader(eval_iter_1, batch_size=256)
 
-    # Initialize model parameters
-    for p in model.parameters():
-        if p.dim() > 1:
-            nn.init.xavier_uniform_(p)
-
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98),
-                                 eps=1e-9)
-    
     print("=== ROUND 1 ===")
-    run(model, optimizer, dataloader_train, dataloader_val, ignore_index,
+    train.run( dataloader_train, dataloader_val, 
+              ignore_index=ignore_index,
         title='First round of training', epochsToRun = 2)
     
     print("=== ROUND 2 ===")
-    run(model, optimizer, dataloader_train_1, dataloader_val, ignore_index,
-        title='Second round of training', filename = '../out/errors.csv', epochsToRun = epochsToRun)
+    train.run( dataloader_train_1, dataloader_val, 
+              ignore_index=ignore_index,
+        title='Second round of training', filename = '../out/errors.csv', 
+        epochsToRun = epochsToRun)
     print("=== TEST ===")
     evaluate2(model, dataloader_val_1)
 #     torch.save(model.state_dict(), path)
