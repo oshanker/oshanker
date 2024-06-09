@@ -24,6 +24,8 @@ More details: model.train() sets the mode to train (see source code). You can ca
 https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
 """
 
+# Define model here
+model = Transformer(**args)
 
 
 def train(model, optimizer, dataloader, loss_fn, epoch, ignore_index):
@@ -231,8 +233,6 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     decode Output
         (B, L, C) logits
     """
-    # Define model here
-    model = Transformer(**args)
 
     # Instantiate datasets
     collate_fn=functions.gd_collate_fn if ignore_index > -50 else None
@@ -262,8 +262,6 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
 
 def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, 
                      path, ignore_index: int = -100, epochsToRun = 2):
-    # Define model here
-    model = Transformer(**args)
     print(type(train_iter))
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
@@ -327,3 +325,4 @@ def runThrees():
 if __name__ == "__main__":
     #runperson()
     runThrees()
+    runperson()
