@@ -275,13 +275,14 @@ def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     print("=== ROUND 1 ===")
     train.run( dataloader_train, dataloader_val, 
               ignore_index=ignore_index,
-        title='First round of training', epochsToRun = 2)
+        title='First round of training', epochsToRun = epochsToRun)
     
     print("=== ROUND 2 ===")
     train.run( dataloader_train_1, dataloader_val, 
               ignore_index=ignore_index,
         title='Second round of training', filename = '../out/errors.csv', 
-        epochsToRun = epochsToRun)
+        epochsToRun = 2)
+    
     print("=== TEST ===")
     evaluate2(model, dataloader_val_1)
 #     torch.save(model.state_dict(), path)
@@ -324,4 +325,4 @@ def runThrees():
 if __name__ == "__main__":
     #runperson()
     runThrees()
-    runperson()
+    #runperson()
