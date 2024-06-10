@@ -172,6 +172,35 @@ use as our feature set for prediction the distribution of zero counts on Gram In
 
 
 
+
+\subsection{\label{sec3.1} Choosing the Model}
+Typical applications of Transformers involve use of huge amounts of computing resources and data to learn, for example, Natural Language processing. Here, we extend the application to a mathematical domain, the Riemann Zeta function. Since this is a new domain of application, we build a very simple model to study how well the simple model performs. For the Transformer model we build upon the presentation in  Ref~\cite{BenjaminEtienne}. The code for our implementation is available at 
+ Ref~\cite{shankergit}.
+
+
+\begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+\hline
+Training  & Training &Validation  \\
+set     &accuracy&accuracy\\
+\hline
+1  & 0.675 & 0.716 \\
+
+2  & 0.914 & 0.998 \\
+\hline
+\end{array}\)
+\caption{Training and validation accuracies $t=10^{12}$}
+\label{tab:accuracies12}
+\end{table}
+
+\subsubsection{\label{10E12} $t=10^{12}$}
+We use the Transformer implementation of Ref~\cite{shankergit} to do two rounds of training and validation. In the first round we use $6400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round1} shows the training and validation accuracies, after each batch of 256 samples is used for training. Thus, with $6400$ samples we have 25 batches. In the figure we don't show the first 5 batches, since the initial training runs obviously will be noisy (until the model learns the pattern at least roughly). We validated with $10000$ samples. The average training and validation accuracies are $0.675$ and $0.716$ respectively (Table~\ref{tab:accuracies12}).
+
+In the second round we use $8400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round2} shows the training and validation accuracies, after each batch of 256 samples is used for training.  We validated with $10000$ samples. The average training and validation accuracies are $0.914$ and $0.998$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher.
+
+
+
 \begin{figure*}
 \includegraphics[width=1.0\textwidth]{Round1_28.png}
 \caption[]{ 
@@ -191,36 +220,10 @@ use as our feature set for prediction the distribution of zero counts on Gram In
 \label{fig:round2_28}
 \end{figure*}
 
+\subsubsection{\label{10E28} $t=10^{28}$}
 
-
-\subsection{\label{sec3.1} Choosing the Model}
-Typical applications of Transformers involve use of huge amounts of computing resources and data to learn, for example, Natural Language processing. Here, we extend the application to a mathematical domain, the Riemann Zeta function. Since this is a new domain of application, we build a very simple model to study how well the simple model performs. For the Transformer model we build upon the presentation in  Ref~\cite{BenjaminEtienne}. The code for our implementation is available at 
- Ref~\cite{shankergit}.
-
-We use the Transformer implementation of Ref~\cite{shankergit} to do two rounds of training and validation. In the first round we use $6400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round1} shows the training and validation accuracies, after each batch of 256 samples is used for training. Thus, with $6400$ samples we have 25 batches. In the figure we don't show the first 5 batches, since the initial training runs obviously will be noisy (until the model learns the pattern at least roughly). We validated with $10000$ samples. The average training and validation accuracies are $0.675$ and $0.716$ respectively.
-
-In the second round we use $8400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round2} shows the training and validation accuracies, after each batch of 256 samples is used for training.  We validated with $10000$ samples. The average training and validation accuracies are $0.914$ and $0.998$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher.
-
-\subsection{\label{relation}Training,  Model predictions}
-
-Table~\ref{tab:accuracies12} and Table~\ref{tab:accuracies28} shows the model accuracy during training and validation phases, for two rounds of training. Since the second round of training uses the model trained on the first round, the accuracy is higher. The final validation accuracy is 0.998 for a validation sample size of $10000$.
-Table~\ref{tab:perf} shows the prediction for the next set of ten consecutive zero counts, given a set of ten consecutive zero counts on Gram intervals.  
-
-\begin{table}
-\centering \(\begin{array}{ccc}
-\hline
-\hline
-Training  & Training &Validation  \\
-set     &accuracy&accuracy\\
-\hline
-1  & 0.675 & 0.716 \\
-
-2  & 0.914 & 0.998 \\
-\hline
-\end{array}\)
-\caption{Training and validation accuracies $t=10^{12}$}
-\label{tab:accuracies12}
-\end{table}
+Results for $t=10^{28}$. Figure~\ref{fig:round1_28} and Figure~\ref{fig:round2_28} .
+(Table~\ref{tab:accuracies28})
 
 \begin{table}
 \centering \(\begin{array}{ccc}
@@ -237,6 +240,14 @@ set     &accuracy&accuracy\\
 \caption{Training and validation accuracies $t=10^{28}$}
 \label{tab:accuracies28}
 \end{table}
+
+\subsection{\label{rarefix}Fixing the model for rare events}
+Accuracy of $0.998$ due to .
+
+\subsection{\label{relation}Training,  Model predictions}
+
+Table~\ref{tab:accuracies12} and Table~\ref{tab:accuracies28} show the model accuracy during training and validation phases, for two rounds of training, for $t=10^{12}$ and $t=10^{28}$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher. The final validation accuracy is 0.998 for a validation sample size of $10000$.
+Table~\ref{tab:perf} shows the prediction for the next set of ten consecutive zero counts, given a set of ten consecutive zero counts on Gram intervals.  
 
 \begin{table}
 \centering \(\begin{array}{ccccccccccc}
@@ -264,8 +275,12 @@ prediction &1&1&1&1&0&1&1&2&1&0\\
 \end{table}
 
 \section{\label{conclusions}Conclusions}
-The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. We get accuracies of $0.998$
-in predicting a sequence of ten consecutive zero counts. This shows that applying the technique to more complex problems has great promise. The $0.998$ probably comes from the fact that the counts of Gram intervals that contain $3$ zeros or more zeros is rare (Table~\ref{tab:intervalzeros}). The model will not learn the patterns with large zero counts very well. We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
+The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. Without special treatment we get accuracies of $0.998$
+in predicting a sequence of ten consecutive zero counts. This shows that applying the technique to more complex problems has great promise. The $0.998$ probably comes from the fact that the counts of Gram intervals that contain $3$ zeros or more zeros is rare (Table~\ref{tab:intervalzeros}). The model will not learn the patterns with large zero counts very well. 
+
+How we fix.
+
+We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
 
 \section*{Acknowledgments and Funding Statement}
 
