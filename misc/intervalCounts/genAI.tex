@@ -57,7 +57,7 @@
 \rhead[]{}
 
 % \title[short text for running head]{full title}
-\title{\bf{Can Generative AI understand the Riemann zeta zero distribution?}}
+\title{\bf{Generative AI predicts the Riemann zeta zero distribution}}
 
 \maketitle
 
@@ -72,12 +72,11 @@
 %    Abstract is required.
 \begin{abstract}
 Abstract. 
-The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. We get accuracies of 0.998
-in predicting a sequence of ten consecutive zero counts. This shows that applying the technique to more complex problems has great promise. We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
+The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. We get accuracies of $0.998$
+in predicting a sequence of ten consecutive zero counts. We tested with two ranges of Riemann zeta zeros, $t=10^{12}$ and $t=10^{28}$. With special training for rare events, we can get essentially full prediction. This shows that applying the technique to more complex problems has great promise. We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
 
 \end{abstract}
-{\textbf {Keywords}:} Generative AI, Riemann zeta, Zero Distribution,  Transformer Architecture 
-{\textbf {Mathematics Subject Classification (MSC)}:} 11M06, 11-04.
+{\textbf {Keywords}:} COMPUTING AND PROCESSING, Generative AI, Riemann zeta, Zero Distribution,  Transformer Architecture 
 
 
 \symbolfootnote[0]{Generative AI has more applications than you imagine!}
@@ -86,7 +85,7 @@ in predicting a sequence of ten consecutive zero counts. This shows that applyin
 \section{Introduction}
 
  Machine Learning applications have been used in the literature in the study of the Riemann zeta zeros \cite{osneural,Shanker 2018a,osentropy}.
-Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals. The problem we are solving is, given a set of ten consecutive zero counts on Gram intervals, predict the next set of ten consecutive zero counts. This is a simple problem. If we can model this well, it open up the possibilities for attacking more complex problems. In Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. This is a precursor to further applications. For those who are not too familiar with GenAI and transformers, take this as a call to ask your AI friends to give some attention (pun unintended) to mathematical applications.
+Why use machine learning  as a tool to the study of the behaviour of the Riemann zeta function?  Machine Learning is a great tool which can extract patterns when one has a huge amount of data and one does not have a complete human understanding of the patterns underlying the phenomenon being studied. With tens of trillions of the Riemann zeta function having been evaluated, one has the huge data set which would enable the application of machine learning techniques. Another indication that machine learning will be useful is a study of the entropy of the Riemann zeta zeros~\cite{osentropy}, which shows that the pattern of zeros shows a good amount of order. In this study we apply Generative AI to predict the sequence of zero counts on Gram intervals. The problem we are solving is, given a set of ten consecutive zero counts on Gram intervals, predict the next set of ten consecutive zero counts. This is a simple problem. If we can model this well, it open up the possibilities for attacking more complex problems. In Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. This is a precursor to further applications. This is a continuation of preliminary work reported in Ref.~\cite{osgenai}.
 
 
 \section{\label{sec2}Materials and Methods}
@@ -110,9 +109,9 @@ In this section we consider the distribution of Gram intervals that contain a gi
 \end{table}
 
  Odlyzko~\cite{Odlyzko 1992} made a conjecture regarding the distribution of Gram intervals that contain a given number of zeros. The conjecture is that at large heights a Gram interval does not differ from any other interval of that length. Odlyzko used this conjecture, and the GUE hypothesis, to derive the distribution of Gram intervals that contain a given number of zeros.  
-The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. Such random hermitian matrices form the Gauss unitary ensemble (GUE). Under the assumptions of Odlyzko the distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. 
+The GUE hypothesis  is the hypothesis that the distribution of the normalized spacing between zeros of the Zeta function is asymptotically equal to the distribution of the eigenvalues of random hermitian matrices with independent normal distribution of its coefficients. With these assumptions the distribution of Gram intervals that contain a given number of zeros is given by the probability that an interval of length equal to the Gram interval contains exactly $m$ zeros. 
 
-Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for a sample at heights  $t=10^{12}$. The table also shows the  expected values for the counts from Odlyzko's prediction. Further discussion about the topic can be found in Ref~\cite{Shanker 2018a}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
+Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for a sample at heights  $t=10^{12}$ and $t=10^{28}$, and the  expected values for the counts from Odlyzko's prediction. Further discussion about the topic can be found in Ref~\cite{Shanker 2018a}. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
 
 
 \begin{table}
@@ -121,6 +120,7 @@ Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m
  &count = 0&count = 1&count = 2&count = 3\\
 \hline
 t = 10^{12}&0.14880&0.70440&0.14482&0.00199\\
+t = 10^{28}&0.16192&0.67815&0.15795&0.00199\\
 Odlyzko&0.17022&0.66143&0.16640&0.00186\\
 \hline
 \end{array}\)
@@ -222,8 +222,10 @@ In the second round we use $8400$ samples for training, and $10000$ samples for 
 
 \subsubsection{\label{10E28} $t=10^{28}$}
 
-Results for $t=10^{28}$. Figure~\ref{fig:round1_28} and Figure~\ref{fig:round2_28} .
-(Table~\ref{tab:accuracies28})
+We also studied the range of zeros at $t=10^{28}$ and get similar results. We  do two rounds of training and validation. In the first round we use $6400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round1_28} shows the training and validation accuracies, after each batch of 256 samples is used for training.  We validated with $10000$ samples. The average training and validation accuracies are $0.648$ and $0.669$ respectively (Table~\ref{tab:accuracies28}).
+
+In the second round we use $8400$ samples for training, and $10000$ samples for validation. Figure~\ref{fig:round2_28} shows the training and validation accuracies, after each batch of 256 samples is used for training.  We validated with $10000$ samples. The average training and validation accuracies are $0.902$ and $0.999$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher.
+
 
 \begin{table}
 \centering \(\begin{array}{ccc}
@@ -241,12 +243,9 @@ set     &accuracy&accuracy\\
 \label{tab:accuracies28}
 \end{table}
 
-\subsection{\label{rarefix}Fixing the model for rare events}
-Accuracy of $0.998$ due to .
-
 \subsection{\label{relation}Training,  Model predictions}
 
-Table~\ref{tab:accuracies12} and Table~\ref{tab:accuracies28} show the model accuracy during training and validation phases, for two rounds of training, for $t=10^{12}$ and $t=10^{28}$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher. The final validation accuracy is 0.998 for a validation sample size of $10000$.
+Table~\ref{tab:accuracies12} and Table~\ref{tab:accuracies28} show the model accuracy during training and validation phases, for two rounds of training, for $t=10^{12}$ and $t=10^{28}$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher. The final validation accuracy is 0.998 for a validation sample size of $10000$. The $0.998$ comes from the fact that the counts of Gram intervals that contain $3$ zeros or more zeros is rare (Table~\ref{tab:intervalzeros}). The model will not learn the patterns with large zero counts very well. 
 Table~\ref{tab:perf} shows the prediction for the next set of ten consecutive zero counts, given a set of ten consecutive zero counts on Gram intervals.  
 
 \begin{table}
@@ -274,11 +273,14 @@ prediction &1&1&1&1&0&1&1&2&1&0\\
 \label{tab:perf}
 \end{table}
 
+\subsection{\label{rarefix}Fixing the model for rare events}
+The accuracy of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions.
+
+
 \section{\label{conclusions}Conclusions}
 The Transformer architecture of Generative AI is very successful in predicting the distribution of Riemann zeta zero counts on consecutive Gram intervals. Without special treatment we get accuracies of $0.998$
-in predicting a sequence of ten consecutive zero counts. This shows that applying the technique to more complex problems has great promise. The $0.998$ probably comes from the fact that the counts of Gram intervals that contain $3$ zeros or more zeros is rare (Table~\ref{tab:intervalzeros}). The model will not learn the patterns with large zero counts very well. 
-
-How we fix.
+in predicting a sequence of ten consecutive zero counts. When we pre-train the model with a set of rare events, and then train the model on the given dataset, we get essentially completely accurate predictions.
+ This shows that applying the technique to more complex problems has great promise. 
 
 We have used very minimal computer resources compared to typical models in language applications. With access to better resources, we can attack much more important problems.
 
@@ -303,6 +305,12 @@ external funding.
 
 \bibitem{osentropy} O. Shanker, ``Entropy of Riemann zeta zero sequence''
 {\it Advanced Modeling and Optimization}, {\bf 13}, 449-456, (2013). 
+
+\bibitem{osgenai} O. Shanker, 
+``Can Generative AI understand the Riemann zeta zero distribution?'',
+ Researchgate report DOI: 10.13140/RG.2.2.34678.00323/1,
+\url{https://tinyurl.com/3vx5uvte}, 
+(2024). 
 
 \bibitem{Odlyzko 1992}  A. Odlyzko,
 ``The $10^{20}$-th Zero of the Riemann Zeta
