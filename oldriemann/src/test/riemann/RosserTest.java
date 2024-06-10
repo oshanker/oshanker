@@ -38,10 +38,14 @@ public class RosserTest {
         int count = 1; //244.158907
         int indexOfThree = 1000;
         double nextGram = beginGram + gramIncr;
-            for (int i = 0; i < 1000000; i++) {
+            for (int i = 0; i < 10000000; i++) {
                 while (zero < nextGram) {
                     String input1 = zeroIn[0].readLine();
+
                     zero = getZeroFromFile(input1);
+                    if(zero==-1){
+                        break;
+                    }
                     if (zero >= nextGram) {
                         break;
                     }
@@ -179,7 +183,7 @@ public class RosserTest {
 
     private PrintStream getOutputPrintStream() {
         PrintStream out = null;
-        File file = new File("../python/out/intervalsTestE28.csv");
+        File file = new File("../python/out/intervalsTestE28Threes.csv");
         if (!file.exists()) {
             try {
                 file.createNewFile();
