@@ -5,7 +5,11 @@
 
 #zerosFile ="/Users/shankero/Documents/tmp/1e12.zeros.1001_10001002"
 #get 10 lines der max
+#beginComment
+######################################################################
 zerosFile ="data/zerosE12.csv"
+######################################################################
+#endComment
 
 #beginComment ##################
 noffset = 2
@@ -25,6 +29,8 @@ baseLimit = 245.969951538796412
 initialZero = 245.91655065008993
 #endComment ##################
 
+#beginComment
+######################################################################
 noffset = 12
 correction = 10
 signumGram = 1
@@ -38,6 +44,8 @@ bdoffset = "1.0E12"
 N = 1000003
 displacementCount = 1
 conjecturesOutFile="out/statsE12.csv"
+######################################################################
+#endComment
 
 #beginComment
 ######################################################################
@@ -71,6 +79,8 @@ baseLimit = 100.36777243017612
 
 #beginComment
 ######################################################################
+######################################################################
+#endComment
 noffset = 2
 signumGram = 1
 baseLimit = 100.36777243017612
@@ -79,9 +89,8 @@ zerosFile ="out/1e28.zeros.1000_10001001"
 header = "n-98094362213058141112271182436L,good, S"
 gramIncr = 0.10031507797926817
 bdoffset = "1.0E28"
-N = 10000000
+N = 100
+#N = 10000000
 conjecturesOutFile="out/statsE28.csv"
 displacementCount = 1
-######################################################################
-#endComment
 

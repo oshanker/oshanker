@@ -64,7 +64,7 @@ class Train():
             history['eval_acc'] += hist_acc
             print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
-        functions.plot_multiple_lists(history['train_acc'], history['eval_acc'],
+        functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
                                       xlabel='Batch Iteration', ylabel='Accuracy', 
                                     labels=['train_acc','eval_acc'], title=title)
     

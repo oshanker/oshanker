@@ -5,10 +5,11 @@ Created on Sun Jun  9 14:13:24 2024
 
 @author: uorugant
 """
-from train import Train
+from train import Train, runIntervalTrain
 from base_transformer_shanker.data.multipleIntervalsData import  MultipleIntervalsDataset 
 from base_transformer_shanker.constants import args 
 from transformer import Transformer
+from base_transformer_shanker.data.intervalsData import  IntervalsDataset 
 from torch.utils.data import DataLoader
 
 
@@ -43,12 +44,24 @@ def runThreesIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
     train.evaluate2( dataloader_val_1)
 #     torch.save(model.state_dict(), path)
 
+    
+def runperson():
+    S=10
+    L = 10
+    path = "../out/intervalsTestE28.csv"
+    train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
+    train_iter_1 = IntervalsDataset(8000, path, 6400, S = S, L = L)
+    eval_iter = IntervalsDataset(10000, path, 14400+75, S = S, L = L)
+    eval_iter_1 = IntervalsDataset(3, path, 14400+75, S = S, L = L)
+    
+    path = "../out/intervals.pt" 
+    runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, path)
         
     
 def runThrees():
     S=10
     L = 10
-    path = "../out/intervalsTest.csv"
+    path = "../out/intervalsTestE28Threes.csv"
     train_iter = MultipleIntervalsDataset(1133, path, 0,  S = S, L = L)
     train_iter_1 = MultipleIntervalsDataset(333, path, 733, S = S, L = L)
     eval_iter = MultipleIntervalsDataset(500, path, 1466, S = S, L = L)
@@ -60,5 +73,5 @@ def runThrees():
     
 if __name__ == "__main__":
     #runperson()
-    runThrees()
-    #runperson()
+    #runThrees()
+    runperson()

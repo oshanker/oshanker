@@ -19,7 +19,7 @@ public class RosserTest {
         Rosser.readConfig("data/RosserConfig.txt");
         BufferedReader[] zeroIn = Rosser.getZerosFile();
         String input = zeroIn[0].readLine();
-        double zero = Double.parseDouble(input);
+        double zero = getZeroFromFile(input);
         System.out.printf("first zero %f ", zero);
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
@@ -29,7 +29,7 @@ public class RosserTest {
         System.out.printf("beginGram %f, check  %f\n", beginGram, beginGram + gramOffset*gramIncr);
         while (zero < beginGram) {
             input = zeroIn[0].readLine();
-            zero = Double.parseDouble(input);
+            zero =getZeroFromFile(input);
             System.out.printf("next zero %f \n", zero);
         }
         PrintStream out = getOutputPrintStream();
@@ -41,7 +41,7 @@ public class RosserTest {
             for (int i = 0; i < 1000000; i++) {
                 while (zero < nextGram) {
                     String input1 = zeroIn[0].readLine();
-                    zero = Double.parseDouble(input1);
+                    zero = getZeroFromFile(input1);
                     if (zero >= nextGram) {
                         break;
                     }
@@ -72,6 +72,18 @@ public class RosserTest {
             }
 
         out.close();
+    }
+
+    private double getZeroFromFile(String input) {
+        String[] parsed = input.trim().split("\\s+");
+        double zero = Double.parseDouble(parsed[0]);
+        if (zero < 0) {
+            return zero;
+        }
+        if (parsed.length > 1) {
+            zero += Double.parseDouble(parsed[1]);
+        }
+        return zero;
     }
 
     private int addAndResize(Deque<Integer> buffer, int count, int indexOfThree) {
@@ -113,7 +125,7 @@ public class RosserTest {
         Rosser.readConfig("data/RosserConfig.txt");
         BufferedReader[] zeroIn = Rosser.getZerosFile();
         String input = zeroIn[0].readLine();
-        double zero = Double.parseDouble(input);
+        double zero =getZeroFromFile(input);
         System.out.printf("first zero %f ", zero);
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
@@ -123,7 +135,7 @@ public class RosserTest {
         System.out.printf("beginGram %f, check  %f\n", beginGram, beginGram + gramOffset*gramIncr);
         while (zero < beginGram) {
             input = zeroIn[0].readLine();
-            zero = Double.parseDouble(input);
+            zero = getZeroFromFile(input);
             System.out.printf("next zero %f \n", zero);
         }
         PrintStream out = getOutputPrintStream();
@@ -134,7 +146,7 @@ public class RosserTest {
         for (int i = 0; i < 25615; i++) {
             while (zero < nextGram) {
                 input = zeroIn[0].readLine();
-                zero = Double.parseDouble(input);
+                zero = getZeroFromFile(input);
                 if (zero >= nextGram) {
                     break;
                 }
@@ -167,7 +179,7 @@ public class RosserTest {
 
     private PrintStream getOutputPrintStream() {
         PrintStream out = null;
-        File file = new File("../python/out/intervalsTest.csv");
+        File file = new File("../python/out/intervalsTestE28.csv");
         if (!file.exists()) {
             try {
                 file.createNewFile();
