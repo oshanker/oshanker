@@ -70,7 +70,7 @@ def my_runIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter_1,
 def runperson(train):
     S=10
     L = 10
-    path = "../out/intervalsTestE28.csv"
+    path = "../data/intervalsTestE28.csv"
     train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
     train_iter_1 = IntervalsDataset(8000, path, 6400, S = S, L = L)
     eval_iter = IntervalsDataset(10000, path, 14400+75, S = S, L = L)
@@ -83,7 +83,7 @@ def runperson(train):
 def runThrees(train):
     S=10
     L = 10
-    path = "../out/intervalsTestE28Threes.csv"
+    path = "../data/intervalsTestE28Threes.csv"
     train_iter = MultipleIntervalsDataset(6400, path, 0,  S = S, L = L)
     train_iter_1 = MultipleIntervalsDataset(3600, path, 6400, S = S, L = L)
     eval_iter = MultipleIntervalsDataset(9500, path, 10000, S = S, L = L)
