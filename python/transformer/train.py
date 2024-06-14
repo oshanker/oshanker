@@ -325,4 +325,5 @@ def runThrees():
 if __name__ == "__main__":
     #runperson()
     runThrees()
-    #runperson()
+    runperson()
+    print("- train was run!")

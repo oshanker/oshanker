@@ -98,4 +98,5 @@ if __name__ == "__main__":
     train = RunTrain(my_model)
     #runperson()
     runThrees(train)
-    runperson(train)
+    #runperson(train)
+    print("runtrain was run!")
