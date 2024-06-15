@@ -148,7 +148,9 @@ class Train():
             history_acc.append(accuracy.item())
         
         if filename is not None:
+            print("=====================================")
             print("error_count, rowcount", error_count, rowcount)
+            print("=====================================")
             file.close()
         length = len(list(dataloader)) 
         return losses / length, acc / length, history_loss, history_acc

@@ -76,8 +76,11 @@ def runperson(train):
     eval_iter = IntervalsDataset(10000, path, 14400+75, S = S, L = L)
     eval_iter_1 = IntervalsDataset(3, path, 14400+75, S = S, L = L)
     
-    path = "../out/intervals.pt" 
-    my_runIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter_1, path)
+    model_path = "../out/intervals.pt" 
+    my_runIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter_1, model_path)
+    print("=====================================")
+    print(path)
+    print("=====================================")
         
     
 def runThrees(train):
@@ -89,9 +92,12 @@ def runThrees(train):
     eval_iter = MultipleIntervalsDataset(9500, path, 10000, S = S, L = L)
     eval_iter_1 = MultipleIntervalsDataset(3, path, 10000, S = S, L = L)
     
-    path = "../out/intervals.pt" 
+    model_path = "../out/intervals.pt" 
     runThreesIntervalTrain(train, train_iter, train_iter_1, eval_iter, 
-                     eval_iter_1, path, epochsToRun = 4)
+                     eval_iter_1, model_path, epochsToRun = 4)
+    print("=====================================")
+    print(path)
+    print("=====================================")
     
 if __name__ == "__main__":
     my_model = Transformer(**args)

@@ -17,6 +17,7 @@ class MultipleIntervalsDataset(Dataset):
         self.n_samples = n_samples
         self.offset = offset
         self.S = S
+        self.name = path
         self.L = L
         self.row_len = len(self.arr[0,:])
         self.col_len = len(self.arr[:,0])
@@ -51,7 +52,7 @@ class MultipleIntervalsDataset(Dataset):
             torch.tensor(self.arr[my_row_index, my_col_index+self.S:my_col_index+self.S+self.L], dtype=torch.int64)
 
     def __str__(self):
-        return f"MultipleIntervalsDataset:[ S: {self.S}, L: {self.L}, \
+        return f"MultipleIntervalsDataset {self.name}:[ S: {self.S}, L: {self.L}, \
               length: {self.n_samples}, offset: {self.offset}] "
 
 def runpersonMain():
