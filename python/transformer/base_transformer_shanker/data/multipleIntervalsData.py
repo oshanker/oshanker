@@ -57,8 +57,7 @@ class MultipleIntervalsDataset(Dataset):
 
 def runpersonMain():
     path = "../../../out/integers.csv"
-    train_iter = MultipleIntervalsDataset(6, path, 0, S = 3, L =5 )
-    dataloader_train = DataLoader(train_iter, batch_size=3)
+    train_iter = MultipleIntervalsDataset(6, path, offset = 0, S = 3, L =5 )
     print("train_iter.size", len(train_iter))
     print (train_iter)
     for index in range(0,6):
@@ -66,13 +65,6 @@ def runpersonMain():
         ret = train_iter.getRowCol(index)
         print (ret)
         print(train_iter[index])
-    # i = 1
-    # for s, t in iter(dataloader_train):
-    #     print(f"=== {i} ===")
-    #     i = i + 1
-    #     for step in range(0, s.size()[0]):
-    #         print("in", s[step, :].detach().numpy() )
-    #         print("out", t[step, :].detach().numpy() )
 
 if __name__ == "__main__":
     runpersonMain()

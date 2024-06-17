@@ -147,7 +147,7 @@ public class RosserTest {
         int count = 1; //244.158907
         int cumulative = 0;
         double nextGram = beginGram + gramIncr;
-        for (int i = 0; i < 51230; i++) {
+        for (int i = 0; i < 220000; i++) {
             while (zero < nextGram) {
                 input = zeroIn[0].readLine();
                 zero = getZeroFromFile(input);

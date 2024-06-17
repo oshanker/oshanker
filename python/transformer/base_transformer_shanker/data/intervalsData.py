@@ -65,20 +65,17 @@ class IntervalsDataset(Dataset):
         return f"IntervalsDataset:[ S: {self.S}, L: {self.L}, length: {self.n_samples}, offset: {self.offset}] "
 
 def runpersonMain():
-    path = "../../../out/test.csv"
-    train_iter = IntervalsDataset(4, path, 0, S = 3, L =5 )
-    dataloader_train = DataLoader(train_iter, batch_size=3)
-    # s, t = next(iter(dataloader_train))
-    # print(s[:, ...])
-    # print(t[:, ...])
+    path = "../../../data/intervalsTestE28.csv"
+    train_iter = IntervalsDataset(4, path, offset = 585, S = 10, L =10 )
     print("train_iter.size", len(train_iter))
     print (train_iter)
+    dataloader_train = DataLoader(train_iter, batch_size=256)
     i = 1
     for s, t in iter(dataloader_train):
         print(f"=== {i} ===")
         i = i + 1
         for step in range(0, s.size()[0]):
-            print("in", s[step, :].detach().numpy() )
+            print("in ", s[step, :].detach().numpy() )
             print("out", t[step, :].detach().numpy() )
 
 if __name__ == "__main__":
