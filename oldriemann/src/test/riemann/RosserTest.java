@@ -147,7 +147,7 @@ public class RosserTest {
         int count = 1; //244.158907
         int cumulative = 0;
         double nextGram = beginGram + gramIncr;
-        for (int i = 0; i < 25615; i++) {
+        for (int i = 0; i < 51230; i++) {
             while (zero < nextGram) {
                 input = zeroIn[0].readLine();
                 zero = getZeroFromFile(input);
@@ -183,7 +183,7 @@ public class RosserTest {
 
     private PrintStream getOutputPrintStream() {
         PrintStream out = null;
-        File file = new File("../python/out/intervalsTestE28Threes.csv");
+        File file = new File("../python/data/intervalsTestE28.csv");
         if (!file.exists()) {
             try {
                 file.createNewFile();
