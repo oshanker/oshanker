@@ -62,7 +62,7 @@ class Train():
                                     loss_fn, ignore_index, filename)
             history['eval_loss'] += hist_loss
             history['eval_acc'] += hist_acc
-            print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.3f} "f"Epoch time = {(end_time - start_time):.3f}s"))
+            print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "f"Epoch time = {(end_time - start_time):.3f}s"))
         
         functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
                                       xlabel='Batch Iteration', ylabel='Accuracy', 
@@ -98,10 +98,12 @@ class Train():
                 tepoch.set_postfix(loss=loss.item(), accuracy=100. * accuracy.item())
     
         length = len(list(dataloader)) 
+        if ( length == 0): length = 1
         return losses / length, acc / length, history_loss, history_acc
     
     
-    def evaluate(self, model, dataloader, loss_fn, ignore_index, filename=None):
+    def evaluate(self, model, dataloader, loss_fn, ignore_index, 
+                 filename=None, printerrors=False):
         model.eval()
         losses = 0
         acc = 0
