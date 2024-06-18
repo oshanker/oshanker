@@ -80,7 +80,8 @@ def runperson(train):
     eval_iter_1 = IntervalsDataset(4, path, 585, S = S, L = L)
     
     model_path = "../out/intervalsE28.pt" 
-    my_runIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter_1, model_path)
+    my_runIntervalTrain(train, train_iter, train_iter_1, eval_iter, 
+                        eval_iter_1, model_path)
     print("=====================================")
     print(path)
     print("=====================================")
@@ -108,5 +109,5 @@ if __name__ == "__main__":
     train = RunTrain(my_model)
     #runperson()
     runThrees(train)
-    #runperson(train)
+    runperson(train)
     print("runtrain was run!")

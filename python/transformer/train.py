@@ -2,6 +2,7 @@ import torch
 import time
 import torch.nn as nn
 import numpy as np
+import os
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader
@@ -57,9 +58,13 @@ class Train():
             history['train_loss'] += hist_loss
             history['train_acc'] += hist_acc
             end_time = time.time()
-            
+            filename1 = filename
+            if filename is not None:
+                directory = os.path.dirname(filename)
+                basefilename = os.path.basename(filename)
+                filename1 = directory + '/' + str(epoch) + basefilename
             val_loss, val_acc, hist_loss, hist_acc = self.evaluate(self.model, dataloader_val, 
-                                    loss_fn, ignore_index, filename)
+                                    loss_fn, ignore_index, filename1)
             history['eval_loss'] += hist_loss
             history['eval_acc'] += hist_acc
             print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Train acc: {train_acc:.3f}, Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "f"Epoch time = {(end_time - start_time):.3f}s"))
