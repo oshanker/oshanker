@@ -29,13 +29,14 @@ https://stackoverflow.com/questions/51433378/what-does-model-train-do-in-pytorch
 my_model = Transformer(**args)
 
 class Train():
-    def __init__(self, model):
+    def __init__(self, model, model_loaded = False):
         self.model = model
 
         # Initialize model parameters
-        for p in self.model.parameters():
-            if p.dim() > 1:
-                nn.init.xavier_uniform_(p)
+        if not model_loaded:
+            for p in self.model.parameters():
+                if p.dim() > 1:
+                    nn.init.xavier_uniform_(p)
     
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, 
                                           betas=(0.9, 0.98), eps=1e-9)

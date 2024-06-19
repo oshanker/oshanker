@@ -114,7 +114,7 @@ def runperson():
     # Define model here
     np.random.seed(0)
     model = Transformer(**args)
-    model_path = "../out/intervalsThree.pt" 
+    model_path = "../data/intervalsThree.pt" 
     model.load_state_dict(torch.load(model_path))
     model.eval()
     S=10

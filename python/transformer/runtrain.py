@@ -18,8 +18,8 @@ import numpy as np
 
 
 class RunTrain(Train):
-    def __init__(self, model):
-        super(RunTrain, self).__init__(model)
+    def __init__(self, model, model_loaded = False):
+        super(RunTrain, self).__init__(model, model_loaded)
         print("init RunTrain")
 
 
@@ -106,8 +106,14 @@ def runThrees(train):
 if __name__ == "__main__":
     np.random.seed(0)
     my_model = Transformer(**args)
-    train = RunTrain(my_model)
+    model_loaded = False
+    if model_loaded:
+        # we are saying model loaded, so load model!
+        # this actually overtrains
+        model_path = "../data/intervalsThree.pt" 
+        my_model.load_state_dict(torch.load(model_path))
     #runperson()
+    train = RunTrain(my_model, model_loaded)
     runThrees(train)
     #runperson(train)
     print("runtrain was run!")
