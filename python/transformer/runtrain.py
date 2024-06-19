@@ -24,7 +24,7 @@ class RunTrain(Train):
 
 
 def runThreesIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter_1, 
-                     path, ignore_index: int = -100, epochsToRun = 2):
+                     model_path, ignore_index: int = -100, epochsToRun = 2):
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
     dataloader_val = DataLoader(eval_iter, batch_size=256)
@@ -43,7 +43,7 @@ def runThreesIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter
     
     print("=== TEST ===")
     train.evaluate2( dataloader_val_1)
-#     torch.save(model.state_dict(), path)
+    torch.save(train.model.state_dict(), model_path)
 
 
 def my_runIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter_1, 
@@ -96,7 +96,7 @@ def runThrees(train):
     eval_iter = MultipleIntervalsDataset(10000, path, 9600, S = S, L = L)
     eval_iter_1 = MultipleIntervalsDataset(4, path, 466, S = S, L = L)
     
-    model_path = "../out/intervals.pt" 
+    model_path = "../out/intervalsThree.pt" 
     runThreesIntervalTrain(train, train_iter, train_iter_1, eval_iter, 
                      eval_iter_1, model_path, epochsToRun = 4)
     print("=====================================")
@@ -109,5 +109,5 @@ if __name__ == "__main__":
     train = RunTrain(my_model)
     #runperson()
     runThrees(train)
-    runperson(train)
+    #runperson(train)
     print("runtrain was run!")
