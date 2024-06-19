@@ -131,6 +131,18 @@ def runperson():
     val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
                                         filename = '../out/errorsthree.csv')
     print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
+    
+    print("=====================================")
+    print("regular intervals")
+    print("=====================================")
+    path = "../data/intervalsTestE28.csv"
+    eval_iter = IntervalsDataset(100000, path, 1000, S = S, L = L)
+    eval_iter_1 = IntervalsDataset(4, path, 585, S = S, L = L)
+    dataloader_val = DataLoader(eval_iter, batch_size=256)
+    val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
+                                        filename = '../out/errorsthree.csv')
+    print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
+
         
     
     
