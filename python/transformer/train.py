@@ -275,7 +275,7 @@ def runTrain(train_iter, train_iter_1, eval_iter, eval_iter_1,
 
 
 def runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, 
-                     path, ignore_index: int = -100, epochsToRun = 2):
+                     model_path, ignore_index: int = -100, epochsToRun = 2):
     train = Train(my_model)
     dataloader_train = DataLoader(train_iter, batch_size=256)
     dataloader_train_1 = DataLoader(train_iter_1, batch_size=256)
@@ -310,14 +310,15 @@ def runstring():
 def runperson():
     S=10
     L = 10
-    path = "../out/intervals.csv"
+    path = "../data/intervalsE12.csv"
     train_iter = IntervalsDataset(6400, path, 0,  S = S, L = L)
     train_iter_1 = IntervalsDataset(8000, path, 6400, S = S, L = L)
     eval_iter = IntervalsDataset(10000, path, 14400+75, S = S, L = L)
     eval_iter_1 = IntervalsDataset(3, path, 14400+75, S = S, L = L)
     
-    path = "../out/intervals.pt" 
-    runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, path)
+    #path = "../out/intervals.pt" 
+    model_path = None 
+    runIntervalTrain(train_iter, train_iter_1, eval_iter, eval_iter_1, model_path)
     
 def runThrees():
     S=10
@@ -328,12 +329,13 @@ def runThrees():
     eval_iter = MultipleIntervalsDataset(500, path, 1466, S = S, L = L)
     eval_iter_1 = MultipleIntervalsDataset(3, path, 1470, S = S, L = L)
     
-    path = "../out/intervals.pt" 
+    #path = "../out/intervals.pt" 
+    model_path = None 
     runIntervalTrain(train_iter, train_iter_1, eval_iter, 
-                     eval_iter_1, path, epochsToRun = 4)
+                     eval_iter_1, model_path, epochsToRun = 4)
     
 if __name__ == "__main__":
     #runperson()
-    runThrees()
+    #runThrees()
     runperson()
     print("- train was run!")
