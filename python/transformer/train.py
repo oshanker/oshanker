@@ -323,7 +323,7 @@ def runperson():
 def runThrees():
     S=10
     L = 10
-    path = "../out/intervalsTest.csv"
+    path = "../data/intervalsThreeE12.csv"
     train_iter = MultipleIntervalsDataset(1133, path, 0,  S = S, L = L)
     train_iter_1 = MultipleIntervalsDataset(333, path, 733, S = S, L = L)
     eval_iter = MultipleIntervalsDataset(500, path, 1466, S = S, L = L)
