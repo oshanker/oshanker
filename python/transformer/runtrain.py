@@ -91,8 +91,8 @@ def runThrees(train):
     S=10
     L = 10
     path = "../data/intervalsTestE28Threes.csv"
-    train_iter = MultipleIntervalsDataset(3800, path, 0,  S = S, L = L)
-    train_iter_1 = MultipleIntervalsDataset(2600, path, 7000, S = S, L = L)
+    train_iter = MultipleIntervalsDataset(4500, path, 0,  S = S, L = L)
+    train_iter_1 = MultipleIntervalsDataset(500, path, 7000, S = S, L = L)
     eval_iter = MultipleIntervalsDataset(10000, path, 9600, S = S, L = L)
     eval_iter_1 = MultipleIntervalsDataset(4, path, 466, S = S, L = L)
     

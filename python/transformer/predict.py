@@ -117,7 +117,7 @@ def runperson():
     # Define model here
     np.random.seed(0)
     model = Transformer(**args)
-    model_path = "../data/intervalsThree.pt" 
+    model_path = "../data/intervals4500_500.pt" 
     model.load_state_dict(torch.load(model_path))
     model.eval()
     S=10
@@ -135,11 +135,12 @@ def runperson():
                                         filename = '../out/errorsthree.csv')
     print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
     
+    #path = "../data/intervalsTestE28.csv"
+    path = "../data/intervalsE12.csv"
     print("=====================================")
-    print("regular intervals")
+    print(f"regular intervals {path}")
     print("=====================================")
-    path = "../data/intervalsTestE28.csv"
-    eval_iter = IntervalsDataset(100000, path, 1000, S = S, L = L)
+    eval_iter = IntervalsDataset(200000, path, 1000, S = S, L = L)
     eval_iter_1 = IntervalsDataset(4, path, 585, S = S, L = L)
     dataloader_val = DataLoader(eval_iter, batch_size=256)
     val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
