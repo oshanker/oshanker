@@ -77,8 +77,11 @@ class Predict():
         self.model.eval()
     
         for x, y in dataloader:
+            #  def _call_impl(self, *input, **kwargs) in nn.module
+            # https://stephencowchau.medium.com/pytorch-module-call-vs-forward-c4df3ff304b1
+            # If we don't have any hooks, we want to skip the rest of the logic in
+            # this function, and just call forward.
             logits = self.model(x, y)
-            #print(logits[0,0,:].detach().numpy())
             preds = logits.argmax(dim=-1)
             masked_pred = preds  
             accuracy = (masked_pred == y)
