@@ -33,7 +33,8 @@ def runThreesIntervalTrain(train, train_iter, train_iter_1, eval_iter, eval_iter
     print("=== ROUND 1 ===")
     train.run( dataloader_train, dataloader_val, 
               ignore_index=ignore_index,
-        title='First round of training', epochsToRun = epochsToRun)
+        title='First round of training', epochsToRun = epochsToRun,
+        plot_filename='../out/threes.png')
     
     print("=== ROUND 2 ===")
     train.run( dataloader_train_1, dataloader_val, 

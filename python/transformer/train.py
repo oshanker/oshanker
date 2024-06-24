@@ -42,7 +42,8 @@ class Train():
                                           betas=(0.9, 0.98), eps=1e-9)
 
     def run(self, dataloader_train, dataloader_val, 
-            ignore_index, title, filename=None, epochsToRun = 2):
+            ignore_index, title, filename=None, epochsToRun = 2, 
+            plot_filename=None):
         loss_fn = torch.nn.CrossEntropyLoss()
         # Save history to dictionnary
         history = {
@@ -72,7 +73,8 @@ class Train():
         
         functions.plot_multiple_lists(history['train_acc'][5:], history['eval_acc'][5:],
                                       xlabel='Batch Iteration', ylabel='Accuracy', 
-                                    labels=['train_acc','eval_acc'], title=title)
+                                    labels=['train_acc','eval_acc'], title=title,
+                                    plot_filename=plot_filename)
     
 
     def train(self, optimizer, dataloader, loss_fn, epoch, ignore_index):

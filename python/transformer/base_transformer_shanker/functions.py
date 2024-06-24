@@ -63,7 +63,8 @@ def plot_list(data, xlabel='Index', ylabel='Value'):
     plt.show()
     
 def plot_multiple_lists(*lists, xlabel='Index', ylabel='Value', 
-                        labels=None, title='Plot of Multiple Lists'):
+                        labels=None, title='Plot of Multiple Lists', 
+                        plot_filename=None):
     """
     Plot multiple lists on the same graph.
 
@@ -83,7 +84,10 @@ def plot_multiple_lists(*lists, xlabel='Index', ylabel='Value',
     plt.title(title)
     plt.legend()
     plt.grid(True)
-    plt.show()
+    if plot_filename is not None:
+        plt.savefig(plot_filename, dpi = 300)
+    else:
+        plt.show()
 
 def tokens_to_str(tokens):
 	return "".join([chr(x+94) for x in tokens])
