@@ -64,7 +64,24 @@ Machine learning has been used in mathematical applications. An early example is
 
 \section{Background}
 
+To make this more concrete, in Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. The problem we solve is: given a sequence of ten such intervals, predict the zero counts on the next set of ten successive intervals.
+
 what problem? why? simplified view.
+For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. 
+
+\begin{table}
+\centering \(\begin{array}{ccccccccccccccc}
+\hline
+2& 0& 1& 2& 0& 1& 1& 1& 0& 2& 1& 0& 1& 2& 1 \\
+2& 0& 1& 1& 1& 2& 0& 1& 1& 1& 0& 2& 1& 1& 1 \\
+0& 2& 1& 2& 1& 0& 1& 1& 1& 1& 1& 1& 1& 1& 1 \\
+1& 1& 1& 1& 1& 1& 1& 0& 1& 2& 1& 1& 1& 1& 0 \\
+2& 1& 1& 0& 3& 1& 0& 2& 1& 1& 0& 1& 1& 1& 1 \\
+\hline
+\end{array}\)
+\caption{Count of zeros on consecutive Gram intervals (shown on multiple lines for convenience).} 
+\label{tab:sequence}
+\end{table}
 
 \subsection{Theta Equation}
 xxx
@@ -74,7 +91,7 @@ Define
 
 \section{Methodology}
 
-history. start with $10^{12}$. reached 0.998, plateaued. realized problem with 3s. went to $10^{28}$. only 3s enough. covers large orders of magnitude.
+history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. realized problem with 3s. went to $10^{28}$. only 3s enough. covers large orders of magnitude.
 
 
 \section{Analysis}
