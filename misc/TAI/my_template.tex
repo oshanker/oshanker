@@ -146,39 +146,14 @@ Odlyzko&0.17022&0.66143&0.16640&0.00186\\
 theta and counts
 
 
-\section{PyTorch}
-
-We use PyTorch  due to its flexibility, ease of use, and efficient computation capabilities on both CPUs and GPUs.
-
-\begin{itemize}
-    \item The Official PyTorch website is at \url{https://pytorch.org/}
-    \item PyTorch GitHub repository is at \url{https://github.com/pytorch/pytorch}
-    \item PyTorch documentation is at \url{https://pytorch.org/docs/stable/index.html}
-\end{itemize}
-
-\subsection{Key Features}
-
-\begin{enumerate}
-    \item \textbf{Dynamic Computational Graphs:} PyTorch utilizes dynamic computation graphs, allowing for more flexibility in model construction and easier debugging.
-    
-    \item \textbf{Tensor Computation:} PyTorch provides a powerful framework for tensor computations,  with GPU acceleration. Tensors are fundamental data structures used for input data, model parameters, and outputs.
-    
-    \item \textbf{Automatic Differentiation:} PyTorch's \texttt{autograd} package enables automatic differentiation, computing gradients and performing backpropagation through the computational graph, facilitating easier training of complex models.
-    
-    \item \textbf{Support for GPU Acceleration:} PyTorch seamlessly integrates with CUDA, enabling efficient utilization of GPUs for accelerating tensor computations.
-    
-    \item \textbf{Modular and Extensible:} PyTorch is designed to be modular and extensible, allowing easy composition of complex neural network architectures and experimentation with new ideas.
-    
-    \item \textbf{Community and Ecosystem:} PyTorch has a large and active community. Thus, it gets frequent updates, contributions, and a rich ecosystem of libraries for tasks such as computer vision, natural language processing, and reinforcement learning.
-\end{enumerate}
-
-
 \section{Methodology}
 
 
 \subsection{\label{sec3.1} Choosing the Model}
 Typical applications of Transformers involve use of huge amounts of computing resources and data to learn, for example, Natural Language processing. Here, we extend the application to a mathematical domain, the Riemann Zeta function. Since this is a new domain of application, we build a very simple model to study how well the simple model performs. For the Transformer model we build upon the presentation in  Ref~\cite{BenjaminEtienne}. The code for our implementation is available at 
  Ref~\cite{shankergit}.
+We use PyTorch (\url{https://pytorch.org/})  due to its flexibility and ease of use.
+The key features of PyTorch that are usually mentioned are as follows.  It utilizes dynamic computation graphs, allowing for  flexibility in model construction. It provides a powerful framework for tensor computations,  with GPU acceleration. It's \texttt{autograd} package enables automatic differentiation, computing gradients and performing backpropagation through the computational graph.  It is modular and extensible. It enables   composition of complex architectures and experimentation with new ideas. It has a large and active community. It gets frequent updates.
 
 history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. 
 
