@@ -7,15 +7,15 @@
 #get 10 lines der max
 #beginComment
 ######################################################################
-zerosFile ="data/zerosE12.csv"
 ######################################################################
 #endComment
+zerosFile ="data/zerosE12.csv"
 
 #beginComment ##################
+#endComment ##################
 noffset = 2
 signumGram = 1
 baseLimit = 244.02115917156451839965694310614387
-#endComment ##################
 
 #beginComment ##################
 phi = {-0.2, -0.1, 0, 0.1, 0.2}
@@ -79,8 +79,6 @@ baseLimit = 100.36777243017612
 
 #beginComment
 ######################################################################
-######################################################################
-#endComment
 noffset = 2
 signumGram = 1
 baseLimit = 100.36777243017612
@@ -93,4 +91,6 @@ N = 100
 #N = 10000000
 conjecturesOutFile="out/statsE28.csv"
 displacementCount = 1
+######################################################################
+#endComment
 

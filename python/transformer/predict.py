@@ -73,6 +73,38 @@ class Predict():
         length = len(list(dataloader)) 
         return losses / length, acc / length, history_loss, history_acc
     
+    def evaluate1(self, eval_iter, ignore_index: int = -100, collate_fn=None):
+        self.model.eval()
+        acc = 0
+        dataloader = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
+    
+        for x, y in dataloader:
+            print("x --> ", x.size())
+                
+            
+            logits = self.model(x, y)
+            
+            preds = logits.argmax(dim=-1)
+            masked_pred = preds * (y != ignore_index) if ignore_index > -50 else preds
+            accuracy = (masked_pred == y).float().mean()
+            print("masked_pred --> ", masked_pred.size())
+            acc += accuracy.item()
+            print("accuracy --> ", accuracy.detach().numpy())
+            test = np.array([1,1,1,1,0,2,1,1,1,1])
+            for step in range(0, y.size()[0]):
+                input = x[step, :].detach().numpy()
+                if (np.array_equal(test, input)):
+                    actual = y[step, :].detach().numpy()
+                    mypred = masked_pred[step, :].detach().numpy() 
+                    
+                    print("----------", step)
+                    print("input     ", np.array2string(input, separator=","))
+                    print("actual    ", np.array2string(actual, separator=","))
+                    print("prediction", np.array2string(mypred, separator=","))
+            
+        
+    
+    
     def evaluate2(self, dataloader, filename=None):
         self.model.eval()
     
@@ -140,14 +172,15 @@ def runperson():
     print("=====================================")
     print(f"regular intervals {path}")
     print("=====================================")
-    eval_iter = IntervalsDataset(200000, path, 1000, S = S, L = L)
-    eval_iter_1 = IntervalsDataset(4, path, 585, S = S, L = L)
-    dataloader_val = DataLoader(eval_iter, batch_size=256)
-    val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
-                                        filename = '../out/errorsthree.csv')
-    print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
+    # eval_iter = IntervalsDataset(200000, path, 1000, S = S, L = L)
+    # dataloader_val = DataLoader(eval_iter, batch_size=256)
+    # val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
+    #                                     filename = '../out/errorsthree.csv')
+    # print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
 
-        
+    eval_iter_1 = IntervalsDataset(153, path, 0, S = S, L = L)
+    train.evaluate1( eval_iter_1)    
+       
     
     
 if __name__ == "__main__":
