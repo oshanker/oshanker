@@ -27,7 +27,7 @@
 
 
 \author{Placeholder, for double blind review
-\thanks{This paragraph of the first footnote will contain the date on which you submitted your paper for review. It will also contain support information, including sponsor and financial support acknowledgment. For example, ``This work was supported in part by the U.S. Department of Commerce under Grant BS123456.'' }
+\thanks{This paragraph of the first footnote will contain the date on which you submitted your paper for review.  }
 \thanks{Placeholder, for double blind review}
 \thanks{This paragraph will include the Associate Editor who handled your paper.}}
 
@@ -60,13 +60,23 @@ Transformer-XL, described in \cite{dai2019transformerxl}, extends the Transforme
 Transformer-XH, proposed by \cite{zhang2019transformerxh}, addresses multi-hop question answering with explanation capabilities. 
 
 The key concept underlying the advances in NLP is Attention. In Attention when the model is predicting the next word it searches for a set of positions in the source sentence where the most relevant information is concentrated. 
-Consider the sentence "Amidst the cacophony of bustling city streets, where the relentless symphony of car horns blares incessantly, echoing through the labyrinthine alleyways adorned with vibrant graffiti, there lies a quaint cafe nestled in a quiet corner, its cozy interior exuding an inviting warmth that beckons weary souls seeking solace from the frenetic pace of urban life". The "cacophony" and "quaint cafe" are separated in position, however, they are closely related and the relation is important to understand the sentence. The Attention concept brings out this interacton.
+Consider the sentence ``Amidst the cacophony of bustling city streets, where the relentless symphony of car horns blares incessantly, echoing through the labyrinthine alleyways adorned with vibrant graffiti, there lies a quaint cafe nestled in a quiet corner, its cozy interior exuding an inviting warmth that beckons weary souls seeking solace from the frenetic pace of urban life". The ``cacophony" and ``quaint cafe" are separated in position, however, they are closely related and the relation is important to understand the sentence. The Attention concept brings out this interacton.
 
 Earlier models in NLP used for sequence-to-sequence learning relied on Recurrent Neural Networks which are computationnally expensive. They had to process sequences step by step, whereas Transformers only need to look once at the whole sequence, moving the time complexity from O(n) to O(1). The Transformer lends itself to parallelization. 
 
 Given the success of generative AI in extracting patterns in NLP, there is potential to apply similar techniques to challenging problems such as the Riemann zeta function.
 Machine learning has been used in mathematical applications. An early example is  Ref.~\cite{osneural}. This was followed by \cite{he2022sato,HeMLNF,HeStringLandscape,
 Vartziotis2023,Kim2022}. In what follows we apply Generative AI to the Riemann zeta zeros.
+We found three surprising results.
+
+\begin{enumerate}
+    \item With a model trained on just $5000$ zeros, we get $100\%$ accuracy on two sets of samples consisting of $200000$ zeros each.
+    
+    \item The two sets of samples are separated by $16$ orders of magnitude.
+    
+    \item While the first two items might seem to indicate that the pattern of zero counts is regular, we show in the Appendix that in fact the zero counts are not bounded and take on arbitrarily large values, and also long sequences of intervals with no zeros also occur for large enough heights on the critical axis. 
+    
+\end{enumerate}
 
 \section{Background}
 
@@ -121,10 +131,20 @@ For $n \ge 1$, the $n-th$ Gram point $g_n$ is defined as the unique solution $> 
 $\theta (g_n) = n\pi$.
 The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed. They divide the critical axis into Gram intervals. On average, each Gram interval contains one zero of the Riemann zeta function.
 
-\subsection{Zero counts on Gram intervals}
+\subsection{\label{seccounts}Zero counts on Gram intervals}
  Odlyzko~\cite{Odlyzko 1992} made a conjecture regarding the distribution of Gram intervals that contain a given number of zeros. 
 Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for samples at heights  $t=10^{12}$ and $t=10^{28}$, and the  expected values for the counts from Odlyzko's prediction. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
-
+Asymptotically, for the Riemann zeta function the mean number of 
+zeros with height less than $t$ 
+is~\cite{Edwards(1974)}
+\begin{equation}  
+N (t) = (t/2\pi)(ln(t/2\pi)-1)-\frac{7}{8}.
+\label{eq:Rnumber}
+\end{equation}
+Thus, the mean spacing of the zeros at height $t$ is 
+$2\pi(\ln (t/2\pi))^{-1}$. For the range of $t$ values
+studied by us this spacing is essentially constant.
+The error in the approximation $N (t) - \pi^{-1}\theta(t) -1$ is denoted in the literature by $S(t)$. On average, $S(t)$ approaches zero. However, it takes on arbitrarily large positive and negative values for large $t$, i.e., it is not bounded above or below.
 
 \begin{table}
 \centering \(\begin{array}{lllll}\\
@@ -153,7 +173,7 @@ theta and counts
 Typical applications of Transformers involve use of huge amounts of computing resources and data to learn, for example, Natural Language processing. Here, we extend the application to a mathematical domain, the Riemann Zeta function. Since this is a new domain of application, we build a very simple model to study how well the simple model performs. For the Transformer model we build upon the presentation in  Ref~\cite{BenjaminEtienne}. The code for our implementation is available at 
  Ref~\cite{shankergit}.
 We use PyTorch (\url{https://pytorch.org/})  due to its flexibility and ease of use.
-The key features of PyTorch that are usually mentioned are as follows.  It utilizes dynamic computation graphs, allowing for  flexibility in model construction. It provides a powerful framework for tensor computations,  with GPU acceleration. It's \texttt{autograd} package enables automatic differentiation, computing gradients and performing backpropagation through the computational graph.  It is modular and extensible. It enables   composition of complex architectures and experimentation with new ideas. It has a large and active community. It gets frequent updates.
+
 
 history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. 
 
@@ -244,10 +264,13 @@ cannot continue for ever.
 what next.
 
 
+\section*{\label{appendix}Appendix}
+
+In this appendix we show that the $100\%$ accuracy is misleading, and the zero counts are not as predictable as might originally seem. In Section~\ref{seccounts} we mentioned that
+the error $S(t)$ in the approximation $N (t) - \pi^{-1}\theta(t) -1$ is not bounded above or below. $S(t)$ can be expressed in terms of the zero counts on the Gram intervals. The fact that $S(t)$ is not bounded above or below immediately implies that the zero counts on a Gram interval are also not bounded. The possible classes for the transformer model inputs and outputs are unbounded. Since the model has a finite capacity, at some point the model will not be able to predict exactly. 
 
 
 
-\section*{References}
 
 \begin{thebibliography}{34}
 
@@ -308,6 +331,8 @@ Function and 175 Million of its Neighbors", report,
 ``An amortized-complexity method to compute the Riemann zeta function", 
 {\it Mathematics of Computation} {\bf80}, 1785-1796, 2011
 
+\bibitem {Edwards(1974)} H. M. Edwards, ``Riemann's Zeta Function,'' 
+Academic Press,  1974.
 
 \bibitem{BenjaminEtienne} Benjamin Etienne, 
 ``A Complete Guide to Write your own Transformers'',
