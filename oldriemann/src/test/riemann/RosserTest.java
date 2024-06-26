@@ -133,6 +133,7 @@ public class RosserTest {
         System.out.printf("first zero %f ", zero);
         double baseLimit = Rosser.getParamDouble("baseLimit");
         double gramIncr = Rosser.getParamDouble("gramIncr");
+        System.out.printf("gramIncr %f \n", gramIncr);
         System.out.printf("gram %f \n", (baseLimit -zero)/gramIncr);
         int gramOffset = (int) Math.floor((baseLimit - zero) / gramIncr);
         double beginGram = baseLimit - gramOffset*gramIncr;
@@ -142,9 +143,12 @@ public class RosserTest {
             zero = getZeroFromFile(input);
             System.out.printf("next zero %f \n", zero);
         }
+        int count = 1; //244.158907
+        if (count == 1) {
+            return;
+        }
         PrintStream out = getOutputPrintStream();
 
-        int count = 1; //244.158907
         int cumulative = 0;
         double nextGram = beginGram + gramIncr;
         for (int i = 0; i < 220000; i++) {
@@ -183,7 +187,7 @@ public class RosserTest {
 
     private PrintStream getOutputPrintStream() {
         PrintStream out = null;
-        File file = new File("../python/data/intervalsTestE28.csv");
+        File file = new File("../python/out/intervalsTestE28.csv");
         if (!file.exists()) {
             try {
                 file.createNewFile();

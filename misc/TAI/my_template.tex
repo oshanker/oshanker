@@ -176,10 +176,6 @@ Typical applications of Transformers involve use of huge amounts of computing re
  Ref~\cite{shankergit}.
 We use PyTorch (\url{https://pytorch.org/})  due to its flexibility and ease of use.
 
-
-history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. 
-
-
 \begin{table}
 \centering \(\begin{array}{ccc}
 \hline
@@ -198,10 +194,14 @@ set     &accuracy&accuracy\\
 
 \subsection{\label{10E12} $t=10^{12}$}
 
-We began the study with the zeros at $t=10^{12}$.
+We began the study with the zeros at $t=10^{12}$. Our data for the $10^{12}$ data set begins with the zero at $10^{12} + 244.158907$.  The first Gram point is $10^{12} + $. The Gram increment is $0.$. 
 We did two rounds of training and validation. In the first round we use $6400$ samples for training, and $10000$ samples for validation.   The average training and validation accuracies are $0.675$ and $0.716$ respectively (Table~\ref{tab:accuracies12}).
 
 In the second round we use $8400$ samples for training, and $10000$ samples for validation. The average training and validation accuracies are $0.914$ and $0.998$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher. We tried different combinations of parameters, but the overall accuracy plateaued at $0.998$.
+
+
+\section{Analysis}
+
 
 
 \begin{figure}
@@ -210,10 +210,6 @@ In the second round we use $8400$ samples for training, and $10000$ samples for 
 the three epochs of the first round of training.}
 \label{fig:1}
 \end{figure}
-
-
-\section{Analysis}
-
 
 
 \begin{table}
@@ -253,7 +249,7 @@ t     &sample~size&accuracy\\
 
 \subsection{\label{rarefix}Fixing the model for rare events}
 We studied in detail the fraction $0.002$ of samples where the model and the actual values deviated. 
-We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:accuraciesrare}). Fig.~\ref{fig:1}.  Don't need round 2. Why it doesn't overtrain. (Table~\ref{tab:validation}). In the Appendix we show that the $100\%$ accuracy cannot continue for ever, and in fact we expect sequences of zero counts on Gram intervals to have complex behaviour at large enough heights along the critical axis.
+We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. Our data for the $10^{28}$ data set begins with the zero at $10^{28} + 100.506082$. The first Gram point is $10^{28} + 100.468088$. The Gram increment is $0.100315$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:accuraciesrare}). Fig.~\ref{fig:1}.  Don't need round 2. Why it doesn't overtrain. (Table~\ref{tab:validation}). In the Appendix we show that the $100\%$ accuracy cannot continue for ever, and in fact we expect sequences of zero counts on Gram intervals to have complex behaviour at large enough heights along the critical axis.
 
 \section{Conclusion and Future Work}
 
