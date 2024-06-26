@@ -59,6 +59,11 @@ The effectiveness of transfer learning using a unified text-to-text Transformer 
 Transformer-XL, described in \cite{dai2019transformerxl}, extends the Transformer architecture to handle longer contexts in language modeling tasks.
 Transformer-XH, proposed by \cite{zhang2019transformerxh}, addresses multi-hop question answering with explanation capabilities. 
 
+The key concept underlying the advances in NLP is Attention. In Attention when the model is predicting the next word it searches for a set of positions in the source sentence where the most relevant information is concentrated. 
+Consider the sentence "Amidst the cacophony of bustling city streets, where the relentless symphony of car horns blares incessantly, echoing through the labyrinthine alleyways adorned with vibrant graffiti, there lies a quaint cafe nestled in a quiet corner, its cozy interior exuding an inviting warmth that beckons weary souls seeking solace from the frenetic pace of urban life". The "cacophony" and "quaint cafe" are separated in position, however, they are closely related and the relation is important to understand the sentence. The Attention concept brings out this interacton.
+
+Earlier models in NLP used for sequence-to-sequence learning relied on Recurrent Neural Networks which are computationnally expensive. They had to process sequences step by step, whereas Transformers only need to look once at the whole sequence, moving the time complexity from O(n) to O(1). The Transformer lends itself to parallelization. 
+
 Given the success of generative AI in extracting patterns in NLP, there is potential to apply similar techniques to challenging problems such as the Riemann zeta function.
 Machine learning has been used in mathematical applications. An early example is  Ref.~\cite{osneural}. This was followed by \cite{he2022sato,HeMLNF,HeStringLandscape,
 Vartziotis2023,Kim2022}. In what follows we apply Generative AI to the Riemann zeta zeros.
@@ -136,10 +141,44 @@ Odlyzko&0.17022&0.66143&0.16640&0.00186\\
 \end{table}
 
 
+\section{Generating the dataset}
 
+theta and counts
+
+
+\section{PyTorch}
+
+We use PyTorch  due to its flexibility, ease of use, and efficient computation capabilities on both CPUs and GPUs.
+
+\begin{itemize}
+    \item The Official PyTorch website is at \url{https://pytorch.org/}
+    \item PyTorch GitHub repository is at \url{https://github.com/pytorch/pytorch}
+    \item PyTorch documentation is at \url{https://pytorch.org/docs/stable/index.html}
+\end{itemize}
+
+\subsection{Key Features}
+
+\begin{enumerate}
+    \item \textbf{Dynamic Computational Graphs:} PyTorch utilizes dynamic computation graphs, allowing for more flexibility in model construction and easier debugging.
+    
+    \item \textbf{Tensor Computation:} PyTorch provides a powerful framework for tensor computations,  with GPU acceleration. Tensors are fundamental data structures used for input data, model parameters, and outputs.
+    
+    \item \textbf{Automatic Differentiation:} PyTorch's \texttt{autograd} package enables automatic differentiation, computing gradients and performing backpropagation through the computational graph, facilitating easier training of complex models.
+    
+    \item \textbf{Support for GPU Acceleration:} PyTorch seamlessly integrates with CUDA, enabling efficient utilization of GPUs for accelerating tensor computations.
+    
+    \item \textbf{Modular and Extensible:} PyTorch is designed to be modular and extensible, allowing easy composition of complex neural network architectures and experimentation with new ideas.
+    
+    \item \textbf{Community and Ecosystem:} PyTorch has a large and active community. Thus, it gets frequent updates, contributions, and a rich ecosystem of libraries for tasks such as computer vision, natural language processing, and reinforcement learning.
+\end{enumerate}
 
 
 \section{Methodology}
+
+
+\subsection{\label{sec3.1} Choosing the Model}
+Typical applications of Transformers involve use of huge amounts of computing resources and data to learn, for example, Natural Language processing. Here, we extend the application to a mathematical domain, the Riemann Zeta function. Since this is a new domain of application, we build a very simple model to study how well the simple model performs. For the Transformer model we build upon the presentation in  Ref~\cite{BenjaminEtienne}. The code for our implementation is available at 
+ Ref~\cite{shankergit}.
 
 history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. 
 
@@ -172,10 +211,33 @@ In the second round we use $8400$ samples for training, and $10000$ samples for 
 \centerline{\includegraphics[width=18.5pc]{Figure1.png}}
 \caption{Training and validation accuracies for the rare events sample. The data is for 
 the three epochs of the first round of training.}
+\label{fig:1}
 \end{figure}
 
 
 \section{Analysis}
+
+
+
+\begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+\hline
+Training  & Training &Validation  \\
+set     &accuracy&accuracy\\
+\hline
+1, epoch 1  & 0.519 & 0.588 \\
+
+1, epoch 2  & 0.797 & 0.900 \\
+1, epoch 3  & 0.983 & 1.000 \\
+
+2  & 1.000 & 1.000 \\
+\hline
+\end{array}\)
+\caption{Training and validation accuracies for dataset containing rare data. Round 1 
+sample size is 4500, and round 2 sample size is 500.}
+\label{tab:accuraciesrare}
+\end{table}
 
 \begin{table}
 \centering \(\begin{array}{ccc}
@@ -197,7 +259,7 @@ Table of training iter and validation, ranges
 
 \subsection{\label{rarefix}Fixing the model for rare events}
 We studied in detail the $0.002$ samples where the model and the actual values deviated. 
-We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:validation}).
+We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:accuraciesrare}). Fig.~\ref{fig:1}.  Don't need round 2. Why it doesn't overtrain. (Table~\ref{tab:validation}).
 
 cannot continue for ever.
 
@@ -270,6 +332,17 @@ Function and 175 Million of its Neighbors", report,
 \bibitem{hiary 2010} G. A. Hiary,
 ``An amortized-complexity method to compute the Riemann zeta function", 
 {\it Mathematics of Computation} {\bf80}, 1785-1796, 2011
+
+
+\bibitem{BenjaminEtienne} Benjamin Etienne, 
+``A Complete Guide to Write your own Transformers'',
+ \emph{Towards Data Science},
+\url{https://towardsdatascience.com/a-complete-guide-to-write-your-own-transformers-29e23f371ddd}, 
+2024. 
+
+\bibitem{shankergit} placeholder, 
+Source code on github,
+2024. 
 
 
 \end{thebibliography}
