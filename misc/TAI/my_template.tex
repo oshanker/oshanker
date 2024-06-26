@@ -27,7 +27,9 @@
 
 
 \author{Placeholder, for double blind review
-\thanks{This paragraph of the first footnote will contain the date on which you submitted your paper for review.  }
+\thanks{ date. The study was done as an independent researcher. There was no
+external funding.
+ }
 \thanks{Placeholder, for double blind review}
 \thanks{This paragraph will include the Associate Editor who handled your paper.}}
 
@@ -74,13 +76,13 @@ We found three surprising results.
     
     \item The two sets of samples are separated by $16$ orders of magnitude.
     
-    \item While the first two items might seem to indicate that the pattern of zero counts is regular, we show in the Appendix that in fact the zero counts are not bounded and take on arbitrarily large values, and also long sequences of intervals with no zeros also occur for large enough heights on the critical axis. 
+    \item While the first two items might seem to indicate that the pattern of zero counts is regular, we show in the Appendix that in fact the zero counts are not bounded and take on arbitrarily large values, and also long sequences of intervals with no zeros also occur for large enough heights on the critical axis. Thus, the pattern is more complex than is indicated by the $100\%$ accuracy that we find for our samples.
     
 \end{enumerate}
 
 \section{Background}
 
-For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. To make this more concrete, in Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. The problem we solve is: given a sequence of ten such intervals, predict the zero counts on the next set of ten successive intervals.
+In this section we briefly review the theory for the Riemann zeta zeros. For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion in this section. Just understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. To make this more concrete, in Table~\ref{tab:sequence} we show an example sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. The problem we solve is: given a sequence of ten such intervals, predict the zero counts on the next set of ten successive intervals.
 For more detail on Gram intervals, see \cite{Shanker 2018a}.
 
 \subsection{Riemann zeta function}
@@ -142,9 +144,9 @@ N (t) = (t/2\pi)(ln(t/2\pi)-1)-\frac{7}{8}.
 \label{eq:Rnumber}
 \end{equation}
 Thus, the mean spacing of the zeros at height $t$ is 
-$2\pi(\ln (t/2\pi))^{-1}$. For the range of $t$ values
+$2\pi(\ln (t/2\pi))^{-1}$. This spacing is the same as the Gram interval length. For the range of $t$ values
 studied by us this spacing is essentially constant.
-The error in the approximation $N (t) - \pi^{-1}\theta(t) -1$ is denoted in the literature by $S(t)$. On average, $S(t)$ approaches zero. However, it takes on arbitrarily large positive and negative values for large $t$, i.e., it is not bounded above or below.
+The error in the approximation, $N (t) - \pi^{-1}\theta(t) -1$, is denoted in the literature by $S(t)$. On average, $S(t)$ approaches zero. However, it takes on arbitrarily large positive and negative values for large $t$, i.e., it is not bounded above or below \cite{Selberg}.
 
 \begin{table}
 \centering \(\begin{array}{lllll}\\
@@ -152,7 +154,7 @@ The error in the approximation $N (t) - \pi^{-1}\theta(t) -1$ is denoted in the 
  &count = 0&count = 1&count = 2&count = 3\\
 \hline
 t = 10^{12}&0.14880&0.70440&0.14482&0.00199\\
-t = 10^{28}&0.16192&0.67815&0.15795&0.00199\\
+t = 10^{28}&0.16192&0.67815&0.15795&0.00196\\
 Odlyzko&0.17022&0.66143&0.16640&0.00186\\
 \hline
 \end{array}\)
@@ -249,15 +251,9 @@ t     &sample~size&accuracy\\
 \label{tab:validation}
 \end{table}
 
-Use 
-Table of training iter and validation, ranges
-
 \subsection{\label{rarefix}Fixing the model for rare events}
-We studied in detail the $0.002$ samples where the model and the actual values deviated. 
-We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:accuraciesrare}). Fig.~\ref{fig:1}.  Don't need round 2. Why it doesn't overtrain. (Table~\ref{tab:validation}).
-
-cannot continue for ever.
-
+We studied in detail the fraction $0.002$ of samples where the model and the actual values deviated. 
+We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:accuraciesrare}). Fig.~\ref{fig:1}.  Don't need round 2. Why it doesn't overtrain. (Table~\ref{tab:validation}). In the Appendix we show that the $100\%$ accuracy cannot continue for ever, and in fact we expect sequences of zero counts on Gram intervals to have complex behaviour at large enough heights along the critical axis.
 
 \section{Conclusion and Future Work}
 
@@ -267,7 +263,8 @@ what next.
 \section*{\label{appendix}Appendix}
 
 In this appendix we show that the $100\%$ accuracy is misleading, and the zero counts are not as predictable as might originally seem. In Section~\ref{seccounts} we mentioned that
-the error $S(t)$ in the approximation $N (t) - \pi^{-1}\theta(t) -1$ is not bounded above or below. $S(t)$ can be expressed in terms of the zero counts on the Gram intervals. The fact that $S(t)$ is not bounded above or below immediately implies that the zero counts on a Gram interval are also not bounded. The possible classes for the transformer model inputs and outputs are unbounded. Since the model has a finite capacity, at some point the model will not be able to predict exactly. 
+the error $S(t)$ in the approximation, $N (t) - \pi^{-1}\theta(t) -1$, is not bounded above or below. $S(t)$ can be expressed in terms of the zero counts on the Gram intervals. The number of zeros on a Gram interval is $1$ plus the difference in $S(t)$ between the end and beginning points of the Gram interval. The fact that $S(t)$ is not bounded above implies that the zero counts are not bounded and take on arbitrarily large values. The fact that $S(t)$ is not bounded below implies that  long sequences of intervals with no zeros occur for large enough heights on the critical axis. 
+The possible classes for the transformer model inputs and outputs are unbounded. Since the model has a finite capacity, at some point the model will not be able to predict exactly. 
 
 
 
@@ -329,18 +326,22 @@ Function and 175 Million of its Neighbors", report,
 
 \bibitem{hiary 2010} G. A. Hiary,
 ``An amortized-complexity method to compute the Riemann zeta function", 
-{\it Mathematics of Computation} {\bf80}, 1785-1796, 2011
+{\it Mathematics of Computation} vol 80, 1785-1796, 2011
 
 \bibitem {Edwards(1974)} H. M. Edwards, ``Riemann's Zeta Function,'' 
 Academic Press,  1974.
 
+\bibitem{Selberg} A. Selberg,
+``Contributions to the theory of the {R}iemann zeta-function", 
+\emph{Archiv for Mathematik og Naturvidenskab} vol B48, 1946
+
 \bibitem{BenjaminEtienne} Benjamin Etienne, 
 ``A Complete Guide to Write your own Transformers'',
  \emph{Towards Data Science},
-\url{https://towardsdatascience.com/a-complete-guide-to-write-your-own-transformers-29e23f371ddd}, 
+\url{https://towardsdatascience.com/a-complete-guide-to-write-your-own-transformers-29e23f371ddd}, blog,
 2024. 
 
-\bibitem{shankergit} placeholder, 
+\bibitem{shankergit} placeholder for double blind review, 
 Source code on github,
 2024. 
 
