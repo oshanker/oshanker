@@ -60,14 +60,16 @@ Transformer-XL, described in \cite{dai2019transformerxl}, extends the Transforme
 Transformer-XH, proposed by \cite{zhang2019transformerxh}, addresses multi-hop question answering with explanation capabilities. 
 
 Given the success of generative AI in extracting patterns in NLP, there is potential to apply similar techniques to challenging problems such as the Riemann zeta function.
-Machine learning has been used in mathematical applications. An early example is  Ref.~\cite{osneural}. This was followed by \cite{he2022sato}.
+Machine learning has been used in mathematical applications. An early example is  Ref.~\cite{osneural}. This was followed by \cite{he2022sato,HeMLNF,HeStringLandscape,
+Vartziotis2023,Kim2022}. In what follows we apply Generative AI to the Riemann zeta zeros.
 
 \section{Background}
 
-To make this more concrete, in Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. The problem we solve is: given a sequence of ten such intervals, predict the zero counts on the next set of ten successive intervals.
+For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. To make this more concrete, in Table~\ref{tab:sequence} we show a sequence of zero counts on consecutive Gram intervals. The sequence of counts has been broken up into separate rows, merely for convenience in presentation. The problem we solve is: given a sequence of ten such intervals, predict the zero counts on the next set of ten successive intervals.
+For more detail on Gram intervals, see \cite{Shanker 2018a}.
 
-what problem? why? simplified view.
-For those who do not wish to get too deep into Riemann zeta theory, just ignore all the discussion about the theory, and understand that we have a sequence of counts, and we wish to see how well Generative AI does in predicting the pattern underlying the sequence of counts. 
+\subsection{Riemann zeta function}
+
 
 \begin{table}
 \centering \(\begin{array}{ccccccccccccccc}
@@ -83,28 +85,121 @@ For those who do not wish to get too deep into Riemann zeta theory, just ignore 
 \label{tab:sequence}
 \end{table}
 
-\subsection{Theta Equation}
-xxx
 
-Define 
+The Riemann Zeta function is defined for $\mathrm{Re} (s) > 1$ by
+\begin{equation}
+\zeta ( s ) \, = \, \sum^{\infty}_{n = 1} \; n^{-s} \, = \, \prod_{p \in primes} \;
+\left( 1 - p^{-s} \right)^{-1}.
+\label{eqRie}
+\end{equation}
+
+Eq.~(\ref{eqRie})  converges for $\mathrm{Re} (s) > 1$.  
+ $\zeta ( s )$ has a  continuation
+to the complex plane. The zeroes of the Riemann zeta function can be written as $1/2 + i t$. The Riemann Hypothesis  
+is that $t$ is real for the non-trivial zeroes. The line of zeros is called the critical axis.
+
+\subsection{Gram points}
+The critical axis can be divided into Gram intervals. 
+We define
+\begin{equation}
+\theta(t) = arg (\pi^{-it/2} \Gamma(\frac{1}{4} + \frac{it}{2})), 
+\label{eq:theta}
+\end{equation}
+where the argument is defined by continuous variation of $t$ starting with the value $0$ at $t = 0$.
+For large $t$ $\theta$ has the asymptotic expansion
+\begin{equation}
+\theta(t) = \frac{t}{2}\ln (\frac{t}{2\pi}) - \frac{t}{2} - \frac{\pi}{8} + \frac{1}{48t} - \frac{1}{5760t^3}. 
+\label{eq:thetaAsymptotic}
+\end{equation}
+ When $t \ge 7$, the $\theta$ function Eq.(\ref{eq:theta}) is monotonic increasing. 
+For $n \ge 1$, the $n-th$ Gram point $g_n$ is defined as the unique solution $> 7$ to
+$\theta (g_n) = n\pi$.
+The Gram points are as dense as the zeros of $\zeta(s)$ but are much more regularly distributed. They divide the critical axis into Gram intervals. On average, each Gram interval contains one zero of the Riemann zeta function.
+
+\subsection{Zero counts on Gram intervals}
+ Odlyzko~\cite{Odlyzko 1992} made a conjecture regarding the distribution of Gram intervals that contain a given number of zeros. 
+Table~\ref{tab:intervalzeros} shows the counts of Gram intervals that contain $m$ zeros, for samples at heights  $t=10^{12}$ and $t=10^{28}$, and the  expected values for the counts from Odlyzko's prediction. We use the zeros from Ref~\cite{hiary 2010}. The last row is from Table 2.13.3 of Ref.~\cite{Odlyzko 1992}. The agreement with Odlyzko's prediction is very good. 
+
+
+\begin{table}
+\centering \(\begin{array}{lllll}\\
+\hline
+ &count = 0&count = 1&count = 2&count = 3\\
+\hline
+t = 10^{12}&0.14880&0.70440&0.14482&0.00199\\
+t = 10^{28}&0.16192&0.67815&0.15795&0.00199\\
+Odlyzko&0.17022&0.66143&0.16640&0.00186\\
+\hline
+\end{array}\)
+\caption{Distribution of Gram intervals that contain $m$ zeros at  $t=10^{12}$.} 
+\label{tab:intervalzeros}
+\end{table}
+
+
+
 
 
 \section{Methodology}
 
-history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. realized problem with 3s. went to $10^{28}$. only 3s enough. covers large orders of magnitude.
+history. start with $10^{12}$. First zero   at $10^{12} + 244.158907$. reached 0.998, plateaued. 
+
+
+\begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+\hline
+Training  & Training &Validation  \\
+set     &accuracy&accuracy\\
+\hline
+1  & 0.675 & 0.716 \\
+
+2  & 0.914 & 0.998 \\
+\hline
+\end{array}\)
+\caption{Training and validation accuracies $t=10^{12}$}
+\label{tab:accuracies12}
+\end{table}
+
+\subsection{\label{10E12} $t=10^{12}$}
+
+We began the study with the zeros at $t=10^{12}$.
+We did two rounds of training and validation. In the first round we use $6400$ samples for training, and $10000$ samples for validation.   The average training and validation accuracies are $0.675$ and $0.716$ respectively (Table~\ref{tab:accuracies12}).
+
+In the second round we use $8400$ samples for training, and $10000$ samples for validation. The average training and validation accuracies are $0.914$ and $0.998$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher. We tried different combinations of parameters, but the overall accuracy plateaued at $0.998$.
+
+
+\subsection{\label{rarefix}Fixing the model for rare events}
+We studied in detail the $0.002$ samples where the model and the actual values deviated. 
+We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:validation}).
+
+\begin{figure}
+\centerline{\includegraphics[width=18.5pc]{Figure1.png}}
+\caption{Training and validation accuracies for the rare events sample. The data is for 
+the three epochs of the first round of training.}
+\end{figure}
 
 
 \section{Analysis}
 
+\begin{table}
+\centering \(\begin{array}{ccc}
+\hline
+\hline
+t     &sample~size&accuracy\\
+\hline
+10^{12}  & 200000 & 1.000 \\
+
+10^{28}  & 200000 & 1.000 \\
+\hline
+\end{array}\)
+\caption{Validation accuracies using model trained on just  rare samples}
+\label{tab:validation}
+\end{table}
+
 Use 
 Table of training iter and validation, ranges
 
-\begin{figure}
-\centerline{\includegraphics[width=18.5pc]{Figure1.png}}
-\caption{Magnetization as a function of applied field. Note that ``Fig.'' is abbreviated. There is a period after the figure number, followed by two spaces. It is good practice to explain the significance of the figure in the caption.}
-\end{figure}
-
-
+cannot continue for ever.
 
 
 \section{Conclusion and Future Work}
@@ -142,6 +237,41 @@ Y. Zhang, Z. Gan, R. Henao, D. Shen, and L. Carin, ``Transformer-XH: Multi-hop q
 \emph{Advanced Modeling and Optimization}, vol. 14, 717-728, 2012. \url{https://www.researchgate.net/publication/273945970_Neural_Network_prediction_of_Riemann_zeta_zeros}.
 
 \bibitem{he2022sato} Y. H. He, K. H. Lee, and T. Oliver, ``Machine-learning the Sato–Tate conjecture'', \emph{Journal of Symbolic Computation}, vol. 111, 61-72, 2022.
+
+\bibitem{HeMLNF}
+Y. H. He, K. H. Lee, and T. Oliver, 
+``Machine-learning number fields.",
+\emph{arXiv preprint arXiv:2011.08958}, 2020.
+
+\bibitem{HeStringLandscape}
+Y. H. He,
+``From the string landscape to the mathematical landscape: a machine-learning outlook."
+\emph{International Workshop on Lie Theory and Its Applications in Physics}, Singapore, Springer Nature Singapore, 21-31, 2021.
+
+\bibitem{Vartziotis2023}
+D. Vartziotis, G. Dasoulas,  and  F. Pausinger,
+``Learn2Extend: Extending sequences by retaining their statistical properties with mixture models.",
+\emph{arXiv preprint arXiv:2312.01507}, 2023.
+
+\bibitem{Kim2022}
+E. Kim, 
+``Deep learning-based approximation of Goldbach partition function.",
+\emph{Discrete Mathematics, Algorithms and Applications} vol. 14,  2150152, 2022.
+
+\bibitem{Shanker 2018a} O. Shanker, 
+``Good-to-Bad Gram Point Ratio For Riemann Zeta Function",
+\emph{Experimental Mathematics}, vol. 30, 76-85, 
+\url{https://doi.org/10.1080/10586458.2018.1492474}, 2021
+
+\bibitem{Odlyzko 1992}  A. Odlyzko,
+``The $10^{20}$-th Zero of the Riemann Zeta
+Function and 175 Million of its Neighbors", report,
+\url{http://www.dtc.umn.edu/~odlyzko/unpublished/zeta.10to20.1992.pdf}, 1992
+
+\bibitem{hiary 2010} G. A. Hiary,
+``An amortized-complexity method to compute the Riemann zeta function", 
+{\it Mathematics of Computation} {\bf80}, 1785-1796, 2011
+
 
 \end{thebibliography}
 
