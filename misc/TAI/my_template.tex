@@ -168,10 +168,6 @@ We did two rounds of training and validation. In the first round we use $6400$ s
 In the second round we use $8400$ samples for training, and $10000$ samples for validation. The average training and validation accuracies are $0.914$ and $0.998$ respectively. Since the second round of training uses the model trained on the first round, the accuracy is higher. We tried different combinations of parameters, but the overall accuracy plateaued at $0.998$.
 
 
-\subsection{\label{rarefix}Fixing the model for rare events}
-We studied in detail the $0.002$ samples where the model and the actual values deviated. 
-We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:validation}).
-
 \begin{figure}
 \centerline{\includegraphics[width=18.5pc]{Figure1.png}}
 \caption{Training and validation accuracies for the rare events sample. The data is for 
@@ -199,13 +195,16 @@ t     &sample~size&accuracy\\
 Use 
 Table of training iter and validation, ranges
 
+\subsection{\label{rarefix}Fixing the model for rare events}
+We studied in detail the $0.002$ samples where the model and the actual values deviated. 
+We realized that the accuracy plateau of $0.998$ is due to the presence of rare events where the Gram interval contains $3$ or more zeros. went to $10^{28}$. only 3s enough. covers large orders of magnitude. To handle this situation, we cull samples containing such rare events from a set of $10$ million zeros at $t=10^{28}$. From the $10$ million zeros we were able to get a sample of $19616$ rare events. When we pre-train the model with this set, and then train the model on the given dataset, we get essentially completely accurate predictions (Table~\ref{tab:validation}).
+
 cannot continue for ever.
 
 
 \section{Conclusion and Future Work}
 
-A conclusion section is not required. Although a conclusion may review the main points of the paper, do not replicate the abstract as the conclusion. A conclusion might elaborate on the importance of the work or suggest applications and extensions.
-
+what next.
 
 
 
