@@ -73,10 +73,9 @@ class Predict():
         length = len(list(dataloader)) 
         return losses / length, acc / length, history_loss, history_acc
     
-    def evaluate1(self, eval_iter, ignore_index: int = -100, collate_fn=None):
+    def evaluate1(self, dataloader, ignore_index: int = -100):
         self.model.eval()
         acc = 0
-        dataloader = DataLoader(eval_iter, batch_size=256, collate_fn=collate_fn)
     
         for x, y in dataloader:
             print("x --> ", x.size())
@@ -93,7 +92,9 @@ class Predict():
             test = np.array([1,1,1,1,0,2,1,1,1,1])
             for step in range(0, y.size()[0]):
                 input = x[step, :].detach().numpy()
-                if (np.array_equal(test, input)):
+                #do_print = np.array_equal(test, input)
+                do_print = True
+                if (do_print):
                     actual = y[step, :].detach().numpy()
                     mypred = masked_pred[step, :].detach().numpy() 
                     
@@ -141,6 +142,7 @@ class Predict():
             for step in range(0, y.size()[0]):
                 actual = y[step, :].detach().numpy()
                 mypred = masked_pred[step, :].detach().numpy() 
+                print("----------")
                 print("actual    ", actual)
                 print("prediction", mypred)
     
@@ -152,20 +154,19 @@ def runperson():
     model_path = "../data/intervals4500_500.pt" 
     model.load_state_dict(torch.load(model_path))
     model.eval()
-    S=10
     L = 10
-    path = "../data/intervalsTestE28Threes.csv"
-    eval_iter_1 = MultipleIntervalsDataset(4, path, 466, S = S, L = L)
-    dataloader_val_1 = DataLoader(eval_iter_1, batch_size=256)
-    
     train = Predict(model)
-    print("=== TEST ===")
-    train.evaluate2( dataloader_val_1)    
-    eval_iter = MultipleIntervalsDataset(10000, path, 9600, S = S, L = L)
-    dataloader_val = DataLoader(eval_iter, batch_size=256)
-    val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
-                                        filename = '../out/errorsthree.csv')
-    print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
+    # path = "../data/intervalsTestE28Threes.csv"
+    # eval_iter_1 = MultipleIntervalsDataset(4, path, 466, S = S, L = L)
+    # dataloader_val_1 = DataLoader(eval_iter_1, batch_size=256)
+    
+    # print("=== TEST ===")
+    # train.evaluate2( dataloader_val_1)    
+    # eval_iter = MultipleIntervalsDataset(10000, path, 9600, S = S, L = L)
+    # dataloader_val = DataLoader(eval_iter, batch_size=256)
+    # val_loss, val_acc, hist_loss, hist_acc = train.evaluate(dataloader_val, 
+    #                                     filename = '../out/errorsthree.csv')
+    # print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
     
     #path = "../data/intervalsTestE28.csv"
     path = "../data/intervalsE12.csv"
@@ -178,8 +179,10 @@ def runperson():
     #                                     filename = '../out/errorsthree.csv')
     # print((f"  Val loss: {val_loss:.3f}, Val acc: {val_acc:.6f} "))
 
-    eval_iter_1 = IntervalsDataset(153, path, 0, S = S, L = L)
-    train.evaluate1( eval_iter_1)    
+    eval_iter_1 = IntervalsDataset(10, path, 0, S = 0, L = L)
+    dataloader_val_1 = DataLoader(eval_iter_1, batch_size=256)
+    train.evaluate1( dataloader_val_1)    
+    #train.evaluate2( dataloader_val_1)    
        
     
     
