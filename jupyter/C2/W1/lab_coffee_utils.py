@@ -47,13 +47,32 @@ def load_coffee_data_0(n = 400):
             y = -2/(260-175)*t + 21
         else:
             y = -3/(260-175)*t + 21
-        if (t > 175 and t < 260 and d > 12 and d < 15 and d<=y ):
+        if (t > 175 and t < 260 and d > 12 and d < 16 and d<=y ):
             Y[i] = 1
         else:
             Y[i] = 0
         i += 1
 
     return (X, Y.reshape(-1,1))
+
+def plt_roast_0(X,Y):
+    Y = Y.reshape(-1,)
+    colormap = np.array(['r', 'b'])
+    fig, ax = plt.subplots(1,1,)
+    ax.scatter(X[Y==1,0],X[Y==1,1], s=70, marker='x', c='red', label="Good Roast" )
+    ax.scatter(X[Y==0,0],X[Y==0,1], s=100, marker='o', facecolors='none', 
+               edgecolors=dlc["dldarkblue"],linewidth=1,  label="Bad Roast")
+    tr = np.linspace(175,220,50)
+    ax.plot(tr, (-2/85) * tr + 21, color=dlc["dlpurple"],linewidth=1)
+    tr = np.linspace(220,260,50)
+    ax.plot(tr, (-3/85) * tr + 21, color=dlc["dlpurple"],linewidth=1)
+    ax.axhline(y=12,color=dlc["dlpurple"],linewidth=1)
+    ax.axvline(x=175,color=dlc["dlpurple"],linewidth=1)
+    ax.set_title(f"Coffee Roasting", size=16)
+    ax.set_xlabel("Temperature \n(Celsius)",size=12)
+    ax.set_ylabel("Duration \n(minutes)",size=12)
+    ax.legend(loc='upper right')
+    plt.show()
 
 def plt_roast(X,Y):
     Y = Y.reshape(-1,)
