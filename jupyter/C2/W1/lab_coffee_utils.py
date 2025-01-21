@@ -129,8 +129,10 @@ def plt_layer(X,Y,W1,b1,norm_l):
         ax[i].scatter(X[Y==1,0],X[Y==1,1], s=70, marker='x', c='red', label="Good Roast" )
         ax[i].scatter(X[Y==0,0],X[Y==0,1], s=100, marker='o', facecolors='none', 
                    edgecolors=dlc["dldarkblue"],linewidth=1,  label="Bad Roast")
-        tr = np.linspace(175,260,50)
-        ax[i].plot(tr, (-3/85) * tr + 21, color=dlc["dlpurple"],linewidth=2)
+        tr = np.linspace(175,220,50)
+        ax[i].plot(tr, (-2/85) * tr + 21, color=dlc["dlpurple"],linewidth=1)
+        tr = np.linspace(220,260,50)
+        ax[i].plot(tr, (-3/85) * tr + 21, color=dlc["dlpurple"],linewidth=1)
         ax[i].axhline(y= 12, color=dlc["dlpurple"], linewidth=2)
         ax[i].axvline(x=175, color=dlc["dlpurple"], linewidth=2)
         ax[i].set_title(f"Layer 1, unit {i}")
