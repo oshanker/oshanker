@@ -6,6 +6,7 @@ This is a temporary script file.
 """
 
 # https://towardsdatascience.com/simple-and-multiple-linear-regression-in-python-c928425168f9 
+import math
 
 import numpy as np
 import pandas as pd
@@ -41,13 +42,17 @@ def main():
     print(os.getcwd())
     a = 161
     b = 28
+    inverse = inv(a,b)
+    print(inverse)
+
+def inv(a, b):
     q = a//b
     r = a%b
     row = np.array([a,	b,	q,	r,	1,	0,	1,	0,	1,	-q])
     print(row)
     for i in range(100):
         row = bezout(row)
-        print(row)
+        print(i, row)
         if row[3] == 0:
             break
     gcd = row[1]
@@ -58,10 +63,15 @@ def main():
     print(s, t, "s × a + t × b", s * a + t * b)
     if gcd == 1:
         inv = row[8]%a
-        print(inv, (inv*b)%a)
+        print('inv', inv, a, b, (inv*b)%a)
+        return inv
+    else:
+        return math.nan
 
 def bezout(row):
     # see https://extendedeuclideanalgorithm.com/xea.php
+    if row[3] == 0:
+        print("divide by zero", row)
     newrow = np.zeros(10, dtype=int)
     newrow[0] = row[1]
     newrow[1] = row[3]
