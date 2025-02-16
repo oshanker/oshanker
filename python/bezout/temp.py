@@ -40,8 +40,8 @@ def starter():
 
 def main():
     print(os.getcwd())
-    a = 161
-    b = 28
+    a = 1618
+    b = 47
     inverse = inv(a,b)
     print(inverse)
 
@@ -53,6 +53,10 @@ def inv(a, b):
     for i in range(100):
         row = bezout(row)
         print(i, row)
+        t = row[8]
+        s = row[5]
+        check = s * a + t * b
+        print('s', s, ' t', t, " s × a + t × b=", check, check == row[1])
         if row[3] == 0:
             break
     gcd = row[1]
@@ -60,7 +64,7 @@ def inv(a, b):
     
     t = row[8]
     s = row[5]
-    print(s, t, "s × a + t × b", s * a + t * b)
+    print('s', s, ' t', t, " s × a + t × b =", s * a + t * b)
     if gcd == 1:
         inv = row[8]%a
         print('inv', inv, a, b, (inv*b)%a)
