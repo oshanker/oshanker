@@ -199,3 +199,4 @@ if __name__ == "__main__":
     print ("hello" )   
     X,Y = load_coffee_data_0(10)
     print(X, Y)
+    plt_roast(X,Y)
