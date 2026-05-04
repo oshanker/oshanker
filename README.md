@@ -7,4 +7,5 @@ and [Deep learning](http://dx.doi.org/10.13140/RG.2.2.25733.83681)
 [Latest commit](https://github.com/oshanker/oshanker/tree/master/python/cue): correlate Random Matrix theory simulations with Riemann zeta behavior.
 We present code and tex files related to Machine Learning applied to extraction of patterns in data, Riemann zeta, Gram Points and 
 Band Limited Functional Interpolation. 
+[Publications](https://orcid.org/0000-0003-1003-5920)
 
