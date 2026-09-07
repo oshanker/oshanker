@@ -547,7 +547,8 @@ poly 1.4731822664990701
         return zetaEstMid;
     }
     
-    public static void  consolidatedF(  ) throws IOException {
+    //riemann.Interpolate.consolidatedF() method uses the output G series from riemann.Interpolate.readItems()
+	public static void  consolidatedF(  ) throws IOException {
 //        File file = new File(Rosser.getParam("conjecturesOutFile")
 //                .replace("stats", "validateConsolidatedF"));
 //        validateOut = new PrintStream(file);
@@ -674,13 +675,18 @@ poly 1.4731822664990701
     }
 
     private static void storeG(double begin, double incr, double[][] gAtBeta) throws IOException, FileNotFoundException {
-        File file = new File("out/gSeries" + prefix + "/gSeries.dat");
+        // stores output G series from riemann.Interpolate.readItems()
+		File file = new File("out/gSeries" + prefix + "/gSeries.dat");
         storeG(begin, incr, gAtBeta, file);
     }
 
+	/**
+	* store gAtBeta
+	**/
     private static void storeG(double begin, double incr, double[][] gAtBeta, File file)
             throws FileNotFoundException, IOException {
-        DataOutputStream out = outputStream( file);
+        // https://github.com/oshanker/oshanker/blob/d5cd2fc8d5488005f956ac3970e824adf7ea096c/oldriemann/src/main/riemann/Interpolate.java#L271
+		DataOutputStream out = outputStream( file);
         out.writeDouble(begin);
         out.writeDouble(incr);
         out.writeInt(gAtBeta.length);
@@ -789,6 +795,9 @@ poly 1.4731822664990701
         return zeta;
     }
 
+	/**
+	* entry point, readItems
+	**/
     public static void main(String[] args) throws Exception{
         //checkMax();
         readItems();
