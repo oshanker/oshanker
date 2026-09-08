@@ -20,6 +20,9 @@ import java.util.TreeSet;
 import riemann.Rosser.GramBlock.TYPE;
 
 /**
+* Rosser uses Gram and Conjectures.
+* It needs the RosserConfig file and E12 zeros from data
+* Create out dir before running.
  * @author oshanker
  *
  */
