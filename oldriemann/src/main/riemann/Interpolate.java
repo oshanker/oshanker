@@ -25,6 +25,12 @@ import math.GSeries;
 import math.ZeroPoly;
 import riemann.Rosser.ZeroInfo;
 
+/**
+As of Sept 10 2026, options are 
+ polyOption = PolyOption.USE_POLY7;
+  useNewCode = true;
+  
+*/
 public class Interpolate {
     private static boolean useNewCode = true;
     
@@ -390,7 +396,7 @@ poly 1.4731822664990701
     private static final double updateZeroInput (
         double upperLimit, GramOrMid gramOrMid
     		) throws IOException {
-        if(polyOption == PolyOption.USE_POLY7 && useNewCode){
+        if (polyOption == PolyOption.USE_POLY7 && useNewCode) { //l 449
             //logic for PolyOption.USE_POLY7
             //move here
             int desiredSize = 4;
@@ -522,9 +528,9 @@ poly 1.4731822664990701
             
                     default:
                         throw new IllegalStateException("bad poly option");
-                }
-            }
-        }
+                } // switch polyoption
+            } // second nested else
+        } // end else?
         
         double zetaEstMid;
         switch (polyOption) {
@@ -542,10 +548,10 @@ poly 1.4731822664990701
             default:
                 zetaEstMid = poly.eval(upperLimit);
                 break;
-        }
+        } // switch polyoption
         
         return zetaEstMid;
-    }
+    } //updateZeroInput
     
     //riemann.Interpolate.consolidatedF() method uses the output G series from riemann.Interpolate.readItems()
 	public static void  consolidatedF(  ) throws IOException {
