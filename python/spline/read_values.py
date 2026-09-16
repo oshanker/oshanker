@@ -57,6 +57,10 @@ def load_zeta_data(filename):
     zeros = ppoly.roots()
 
     print("The spline crosses zero at x positions:", zeros)
+    slopes = spline(zeros, nu = 1)
+    print("der at zero  positions:", slopes)
+    for x_val, y_val in zip(zeros, slopes):
+        print(f" X: {x_val:<20.14f} | Y: {y_val:.16f}")
 
     return x_scaled, y
 
