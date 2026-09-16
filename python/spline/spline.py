@@ -1,7 +1,9 @@
 import numpy as np
 import scipy.interpolate as interpolate
 
-# pip install numpy scipy matplotlib
+#  python -m pip install --upgrade --force-reinstall numpy scipy matplotlib
+# do not have idle or anything open
+# python 
 
 # 1. Example data crossing the x-axis
 x = np.array([0, 1, 2, 3, 4, 5])
