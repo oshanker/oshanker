@@ -2,6 +2,43 @@
 import scipy.interpolate as interpolate
 import numpy as np
 
+def critical(x, spline):
+    derivative_spline = spline.derivative(nu=1)
+
+    # 4. Convert the derivative to a piecewise polynomial to find exact zeros (where slope = 0)
+    ppoly_deriv = interpolate.PPoly.from_spline(derivative_spline)
+    critical_points = ppoly_deriv.roots()
+
+    # Filter critical points to ensure they stay strictly within your data bounds
+    critical_points = critical_points[
+        (critical_points >= x.min()) & (critical_points <= x.max())
+    ]
+
+    # 5. Separate them into High Peaks (maxima) and Low Valleys (minima)
+    peaks = []
+    valleys = []
+
+    # Get the second derivative to test if it's a max or min
+    second_deriv_spline = spline.derivative(nu=2)
+
+    for pt in critical_points:
+        y_val = float(spline(pt))
+        slope_change = float(second_deriv_spline(pt))
+        
+        if slope_change < 0:
+            peaks.append((pt, y_val))     # Concave down = Peak
+        elif slope_change > 0:
+            valleys.append((pt, y_val))   # Concave up = Valley
+
+    # --- PRINT THE RESULTS ---
+    print(" LOCAL MAXIMA (HIGH PEAKS):")
+    for pt, y_val in peaks:
+        print(f"  x = {pt:.4f}, y = {y_val:.4f}")
+
+    print("\n LOCAL MINIMA (VALLEYS):")
+    for pt, y_val in valleys:
+        print(f"  x = {pt:.4f}, y = {y_val:.4f}")
+
 
 def original():
     data_array = []
@@ -61,6 +98,7 @@ def load_zeta_data(filename):
     print("der at zero  positions:", slopes)
     for x_val, y_val in zip(zeros, slopes):
         print(f" X: {x_val:<20.14f} | Y: {y_val:.16f}")
+    critical(x_scaled, spline)
 
     return x_scaled, y
 
