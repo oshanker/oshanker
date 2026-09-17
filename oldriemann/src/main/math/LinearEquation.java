@@ -8,11 +8,24 @@ public class LinearEquation
     int rowIndex[];
 
     public static void main(String args[]) {
-        LinearEquation linearEquation = new LinearEquation(7);
-        linearEquation.runInvert();
+    	int n = 7;
+        LinearEquation linearEquation = new LinearEquation(n);
+        double[][] saved_coefficients = new double[n][n];
+        for(int row = 0; row < n; row++)
+        {
+            for(int col = 0; col < n; col ++)
+            {
+            	saved_coefficients[row][col ] = linearEquation.coefficients[row][col ];
+            }
+        }
+        double inverted_mat[][] = linearEquation.runInvert();
+        System.out.println("saved: ");
+        printMatrix(saved_coefficients);
+        System.out.println("mult: ");
+        printMatrix(multiply(saved_coefficients, inverted_mat));
     }
 
-    public void runInvert() {
+    public double[][] runInvert() {
         int n = values.length;
         //Matrix representation
         for(int i=0; i<n; i++)
@@ -29,6 +42,8 @@ public class LinearEquation
         double inverted_mat[][] = invert();
         System.out.println("The inverse is: ");
         printMatrix(inverted_mat);
+        return inverted_mat;
+        
         //Multiplication of mat inverse and constants
         //multiplyByInverse(inverted_mat);
 
