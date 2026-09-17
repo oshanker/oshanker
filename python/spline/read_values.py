@@ -85,7 +85,9 @@ def load_zeta_data(filename):
     for x_val, y_val in zip(x_scaled, y):
         n = n + 1
         print(f"n {n} X: {x_val:<20.14f} | Y: {y_val:.16f}")
+    return find_zeros(x_scaled, y)
 
+def find_zeros(x_scaled, y):
     # 2. Fit the spline
     spline = interpolate.make_interp_spline(x_scaled, y, k=3)
 
@@ -109,7 +111,10 @@ if __name__ == "__main__":
 
     try:
         # Call the function and unpack the returned arrays
-        x_array, y_array = load_zeta_data(target_file)
+        # x_array, y_array = load_zeta_data(target_file)
+        x = np.array([-2, -1, 0, 1, 2])
+        y = np.array([-6,  0, 0, 0, 6])
+        x_array, y_array = find_zeros(x, y)
 
         print("--- Data successfully loaded ---")
         print("X Array:", x_array)
