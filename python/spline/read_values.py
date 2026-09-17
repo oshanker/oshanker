@@ -112,8 +112,8 @@ if __name__ == "__main__":
     try:
         # Call the function and unpack the returned arrays
         # x_array, y_array = load_zeta_data(target_file)
-        x = np.array([-2, -1, 0,  0.57735026918963, 2])
-        y = np.array([-6,  0, 0,  -0.38490017945975, 6])
+        x = np.array([-2, -0.57735026918963, 0,  0.57735026918963, 2])
+        y = np.array([-6,  0.38490017945975, 0,  -0.38490017945975, 6])
         x_array, y_array = find_zeros(x, y)
 
         print("--- Data successfully loaded ---")
