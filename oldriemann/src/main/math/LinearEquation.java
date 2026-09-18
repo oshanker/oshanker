@@ -123,7 +123,7 @@ public class LinearEquation
     
     public LinearEquation(int n) {
         coefficients = new double[n][n];
-        values = new double[n][1];
+        values = new double[n][2];
         for(int row = 0; row < n; row++)
         {
             for(int col = 0; col <= row; col ++)
@@ -143,6 +143,13 @@ public class LinearEquation
 
         coefficients[n-1][n-1 ] += 20;
         values[n-1][0] += 41;
+        for(int row = 0; row < n; row++)
+        {
+            for(int col = 0; col < n; col ++)
+            {
+                values[row][1] += coefficients[row][col ] ;
+            }
+        }
     }
 
     public double[][] invert()
