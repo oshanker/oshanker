@@ -208,6 +208,10 @@ public class Poly7 implements Poly {
         return positionMax((a + b) / 2, a, b);
     }
     
+    public double getPositionMax2() {
+        return positionMax((b + c) / 2, b, c);
+    }
+    
     @Override
     public double secondDer(double t) {
         double incr = 0.001*(b-a);
@@ -300,30 +304,38 @@ public class Poly7 implements Poly {
         }
         return next;
     }
+
+    static void testExactNoMax() {
+        Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2);
+            System.out.println("max0 " + poly7.evalMax0());
+            System.out.println("max1 " + poly7.evalMax1());
+            System.out.println("poly7 " + poly7);
+            System.out.println("positionmax " + poly7.getPositionMax( ));
+            double eval = poly7.eval(  1.5773502886295319  );
+            System.out.println("eval " + eval);
+            System.out.println("positionmax " + poly7.getPositionMax2(  ));
+            System.out.println("============= " );
+    	
+    }
+
+    static void testExact() {
+        Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2,
+        		0.38490017945975, -0.38490017945975, 0);
+            System.out.println("max0 " + poly7.evalMax0());
+            System.out.println("max1 " + poly7.evalMax1());
+            System.out.println("poly7 " + poly7);
+            System.out.println("positionmax " + poly7.getPositionMax( ));
+            double eval = poly7.eval(  1.5773502886295319  );
+            System.out.println("eval " + eval);
+            System.out.println("positionmax " + poly7.getPositionMax2(  ));
+            System.out.println("============= " );
+    	
+    }
     
     public static void main(String[] args) {
-    	Poly7 poly7 = new Poly7(
-    			243.8749480149,
-    			244.15890691298068,
-    			244.3675025848634, 17.619276585379914,
-    			-20.007604626096071598,
-    			19.343950349024609636
-        );
-        poly7.setExtrema(     1.9266754104451154,
-        	     -1.232146174810101691,      1.554959200487025184
-
-        );
-        double deviation = poly7.setTermValues();
-        System.out.println("deviation " + deviation + " poly " + poly7);
-        
-        double eval = poly7.eval( 244.02115917156451 );
-        System.out.println("eval " + eval);
-        System.out.println("positionmax " + poly7.positionMax( (poly7.a + poly7.b) / 2, poly7.a, poly7.b));
-        eval = poly7.eval(  244.26475821746848  );
-        System.out.println("eval " + eval);
-        System.out.println("positionmax " + poly7.positionMax( (poly7.b + poly7.c) / 2, poly7.b, poly7.c));
-        System.out.println("============= " );
-
+    	zetaZeroFit(243.8749480149, 244.15890691298068, 244.3675025848634);
+    	//testExactNoMax(); 
+/*
         //B = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
             0.4589742535338246, -0.31082610538567645, 0);
@@ -341,7 +353,36 @@ public class Poly7 implements Poly {
         //y = y0 + (y1-y0)*(x-x0)/(x1-x0)
         //y0*(x1-x0) + (y1-y0)*(x-x0)
         //x = x0-y0*(x1-x0)/(y1-y0)
+        
+         */
     }
+
+	static void zetaZeroFit(double a0, double a1, double a2) {
+		Poly7 poly7 = new Poly7(
+    			a0,
+    			a1,
+    			a2, 17.619276585379914,
+    			-20.007604626096071598,
+    			19.343950349024609636
+        );
+        poly7.setExtrema(     1.9266754104451154,
+        	     -1.232146174810101691,      0
+
+        );
+        /*
+        double deviation = poly7.setTermValues();
+        System.out.println("deviation " + deviation + " poly " + poly7);
+        */
+        
+        double eval = poly7.eval( 244.02115917156451 );
+        System.out.println("eval " + eval);
+        System.out.println("positionmax " + poly7.getPositionMax( ));
+        eval = poly7.eval(  244.26475821746848  );
+        System.out.println("eval " + eval);
+        System.out.println("positionmax " + poly7.getPositionMax2(  ));
+        poly7.tabulate(a0, a2, 10);
+        System.out.println("============= " );
+	}
     
     public void tabulate(double xa, double xb, int steps) {
         double incr = (xb-xa)/(steps-1);
