@@ -314,7 +314,7 @@ public class Poly7 implements Poly {
 
         );
         double deviation = poly7.setTermValues();
-            System.out.println("deviation " + deviation + " Bad " + poly7);
+            System.out.println("deviation " + deviation + " poly " + poly7);
             double eval = poly7.eval( 244.02115917156451 );
             System.out.println("eval " + eval);
             eval = poly7.eval(  244.26475821746848  );
