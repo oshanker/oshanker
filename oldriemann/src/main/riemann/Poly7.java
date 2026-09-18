@@ -314,12 +314,15 @@ public class Poly7 implements Poly {
 
         );
         double deviation = poly7.setTermValues();
-            System.out.println("deviation " + deviation + " poly " + poly7);
-            double eval = poly7.eval( 244.02115917156451 );
-            System.out.println("eval " + eval);
-            eval = poly7.eval(  244.26475821746848  );
-            System.out.println("eval " + eval);
-            System.out.println("============= " );
+        System.out.println("deviation " + deviation + " poly " + poly7);
+        
+        double eval = poly7.eval( 244.02115917156451 );
+        System.out.println("eval " + eval);
+        System.out.println("positionmax " + poly7.positionMax( (poly7.a + poly7.b) / 2, poly7.a, poly7.b));
+        eval = poly7.eval(  244.26475821746848  );
+        System.out.println("eval " + eval);
+        System.out.println("positionmax " + poly7.positionMax( (poly7.b + poly7.c) / 2, poly7.b, poly7.c));
+        System.out.println("============= " );
 
         //B = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
