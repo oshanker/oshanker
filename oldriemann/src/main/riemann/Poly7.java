@@ -307,12 +307,14 @@ public class Poly7 implements Poly {
             0.4589742535338246, -0.31082610538567645, 0);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("poly7 " + poly7);
         System.out.println("============= " );
         //A = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
             0.41689197105413617, -0.2700198241673988, 0);
         System.out.println("max0 " + poly7.evalMax0());
         System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("poly7 " + poly7);
         //tabulate(poly7);
         //y = y0 + (y1-y0)*(x-x0)/(x1-x0)
         //y0*(x1-x0) + (y1-y0)*(x-x0)
