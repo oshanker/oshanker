@@ -148,12 +148,7 @@ public class Rosser {
             out.print(message);
         }
     }
-
-    /**
-    * read zeros from  BufferedReader[] zeroIn until upperLimit.
-    * Create ZeroInfo data structure.
-    * This gives the number of zeros in an interval.
-    **/
+    
     public static ZeroInfo readZeros(double upperLimit, PrintStream out,
                                      BufferedReader[] zeroIn, double[] nextValues)
         throws FileNotFoundException, IOException {
@@ -192,6 +187,11 @@ public class Rosser {
                 }
                 nextValues[0] = zero;
                 for (int i = 1; i < input.length; i++) {
+                	if (  input[i] == null) {
+                        System.out.println(i + " done");
+                        return null;
+              		
+                	}
                     input[i] = input[i].trim();
                     nextValues[i] = Double.parseDouble(input[i]);
                 }
@@ -277,6 +277,21 @@ public class Rosser {
         System.out.println("zerosFile " + zerosFile);
         BufferedReader[] zeroIn =
             {new BufferedReader(new FileReader(zerosFile))};
+//        BufferedReader[] zeroIn = zerosFileAll(zerosFile);
+        return zeroIn;
+    }
+
+    public static BufferedReader[] zerosFileAll(String zerosFile) throws FileNotFoundException {
+        BufferedReader[] zeroIn = new BufferedReader[] {
+                new BufferedReader(new FileReader(zerosFile)),
+                null,
+                null
+                };
+        
+        String derFile = zerosFile + ".der";
+        zeroIn[1] = new BufferedReader(new FileReader(derFile));
+        String maxFile = zerosFile + ".max";
+        zeroIn[2] = new BufferedReader(new FileReader(maxFile));
         return zeroIn;
     }
     
