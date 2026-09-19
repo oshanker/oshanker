@@ -148,7 +148,12 @@ public class Rosser {
             out.print(message);
         }
     }
-    
+
+    /**
+    * read zeros from  BufferedReader[] zeroIn until upperLimit.
+    * Create ZeroInfo data structure.
+    * This gives the number of zeros in an interval.
+    **/
     public static ZeroInfo readZeros(double upperLimit, PrintStream out,
                                      BufferedReader[] zeroIn, double[] nextValues)
         throws FileNotFoundException, IOException {
