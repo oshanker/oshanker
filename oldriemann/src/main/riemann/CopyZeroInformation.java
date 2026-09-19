@@ -123,64 +123,6 @@ public class CopyZeroInformation {
 
 
     public static void main(String[] args) throws Exception {
-        //use 3754 as begin, 1003855 as end
-        File file = new File("out/gSeries" + Interpolate.prefix + "/zeros.dat");
-//        DataOutputStream out = Interpolate.outputStream( file);
-        ZeroInfo zeroInput = null;
-        int N = 1003814;
-        double[] nextValues = null;
-        double max = 70;
-        int run = 0;
-        int beginRun = 0;
-        for (int i = 0; i < N ; i++) {
-            zeroInput = readSingleZero( Interpolate.zeroIn, nextValues);
-            nextValues = zeroInput.nextValues;
-//            if(i>1003800){
-//                if(Math.abs(zeroInput.lastZero[1])>max){
-//                    run = 0;
-//                    beginRun = i;
-//                } else {
-//                    run++;
-//                }
-//            }
-//            if(run>40){
-//                //run at 1003813
-//                System.out.println("run at " + beginRun);
-//                break;
-//            }
-            if(i<3792 ){
-                continue;
-            }
-            final double z0 = zeroInput.lastZero[0];
-            final double z1 = zeroInput.nextValues[0];
-            final double d0 = zeroInput.lastZero[1];
-            final double d1 = zeroInput.nextValues[1];
-            final double maxFromInput = d0>0?zeroInput.lastZero[2]:-zeroInput.lastZero[2];
-            if(i==3792 || i==1003813){
-                //gSeries.begin 476.85026008636953
-                Poly4 poly = new Poly4(z0,z1, d0,d1,maxFromInput);
-                System.out.println(i + ", " + Arrays.toString(zeroInput.lastZero)  +
-                      ", \n"  + "positionMax " + poly.positionMax 
-                      + ", " + poly.eval(poly.positionMax) 
-                      + ", \n"   + Arrays.toString(nextValues));
-            }
-//            for (int j = 0; j < zeroInput.lastZero.length; j++) {
-//                out.writeDouble(zeroInput.lastZero[j]);
-//            }
-//            out.writeDouble(poly.positionMax);
-        }
-//        out.close();
-//        DataInputStream in = Interpolate.dataInputStream( file);
-//        double[] tmin = new double[4];
-//        for (int i = 0; i < N-3792 ; i++) 
-//        {
-//            for (int i1 = 0; i1 < tmin.length; i1++) 
-//            {
-//                tmin[i1] = in.readDouble();
-//            }
-//            System.out.println(Arrays.toString(tmin));
-//        }
-//        in.close();
     }
 
 }
