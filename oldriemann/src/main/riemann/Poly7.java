@@ -5,6 +5,9 @@ import math.LinearEquation;
 import java.text.NumberFormat;
 import java.util.Arrays;
 
+/**
+ * 7th order polynomial, fits zeros and der, and extrema.
+ */
 public class Poly7 implements Poly {
     static NumberFormat nf = NumberFormat.getInstance();
     static {
@@ -24,6 +27,9 @@ public class Poly7 implements Poly {
     public static double epsilon = 1.0E-8;;
     public static double derepsilon = 1.0E-8;
     
+    /**
+     * 5th order polynomial, fits zeros and der.
+     */
     public Poly7(double a, double b, double c,
                  double a1, double b1, double c1) {
         this.a = a;
@@ -60,7 +66,7 @@ public class Poly7 implements Poly {
             ",\n " + d0 +
             ", " + d1 +
             ", " + d2 +
-            "\n " + m0 +
+            ",\n " + m0 +
             "," + m1 +
             ", " + offset + " \n" +
             (poly7term == null?"":poly7term) +
@@ -319,22 +325,26 @@ public class Poly7 implements Poly {
     }
 
     static void testExact() {
-        Poly7 poly7 = new Poly7(0, 1, 2, 2, -1, 2,
-        		0.38490017945975, -0.38490017945975, 0);
-            System.out.println("max0 " + poly7.evalMax0());
-            System.out.println("max1 " + poly7.evalMax1());
-            System.out.println("poly7 " + poly7);
-            System.out.println("positionmax " + poly7.getPositionMax( ));
-            double eval = poly7.eval(  1.5773502886295319  );
-            System.out.println("eval " + eval);
-            System.out.println("positionmax " + poly7.getPositionMax2(  ));
-            System.out.println("============= " );
+        Poly7 poly7 = new Poly7(-1, 0, 1, 6, -1, 6,
+        		0.61973145119955752250415076509478, -0.61973145119955752250415076509478, 0);
+        // 0.72302002639948377625484255927725
+        // 0.61973145119955752250415076509478
+        System.out.println("max0 " + poly7.evalMax0());
+        System.out.println("max1 " + poly7.evalMax1());
+        System.out.println("poly7 " + poly7);
+        double position = poly7.getPositionMax( );
+        System.out.println("positionmax " + position);
+        double eval = poly7.eval( position  );
+        System.out.println("eval " + eval);
+        System.out.println("positionmax " + poly7.getPositionMax2(  ));
+        poly7.tabulate(-1, 1, 10);
+        System.out.println("============= " );
     	
     }
     
     public static void main(String[] args) {
-    	zetaZeroFit(243.8749480149, 244.15890691298068, 244.3675025848634);
-    	//testExactNoMax(); 
+    	//zetaZeroFit(243.8749480149, 244.15890691298068, 244.3675025848634);
+    	testExact(); 
 /*
         //B = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
