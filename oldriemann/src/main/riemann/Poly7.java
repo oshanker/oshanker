@@ -320,6 +320,7 @@ public class Poly7 implements Poly {
             double eval = poly7.eval(  1.5773502886295319  );
             System.out.println("eval " + eval);
             System.out.println("positionmax " + poly7.getPositionMax2(  ));
+            poly7.solveCoefficients(-1, 1, 8);
             System.out.println("============= " );
     	
     }
@@ -344,7 +345,7 @@ public class Poly7 implements Poly {
     
     public static void main(String[] args) {
     	//zetaZeroFit(243.8749480149, 244.15890691298068, 244.3675025848634);
-    	testExact(); 
+    	testExactNoMax(); 
 /*
         //B = 0.5
         poly7 = new Poly7(0, 1, 2, 2, -1, 2,
@@ -428,13 +429,5 @@ public class Poly7 implements Poly {
             );
         }
         
-    }
-    private static void tabulate(Poly7 poly7term) {
-        for (double x = -0.1; x < 2.2; x += 0.05) {
-            System.out.println(nf.format(x) +
-                " " + nf.format(poly7term.eval(x)) +
-                " " + nf.format(poly7term.der(x))
-            );
-        }
     }
 }
