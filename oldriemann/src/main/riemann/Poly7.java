@@ -337,7 +337,7 @@ public class Poly7 implements Poly {
         double eval = poly7.eval( position  );
         System.out.println("eval " + eval);
         System.out.println("positionmax " + poly7.getPositionMax2(  ));
-        poly7.tabulate(-1, 1, 10);
+        poly7.solveCoefficients(-1, 1, 8);
         System.out.println("============= " );
     	
     }
@@ -379,10 +379,10 @@ public class Poly7 implements Poly {
         	     -1.232146174810101691,      0
 
         );
-        /*
+        
         double deviation = poly7.setTermValues();
         System.out.println("deviation " + deviation + " poly " + poly7);
-        */
+        
         
         double eval = poly7.eval( 244.02115917156451 );
         System.out.println("eval " + eval);
@@ -393,7 +393,30 @@ public class Poly7 implements Poly {
         poly7.tabulate(a0, a2, 10);
         System.out.println("============= " );
 	}
+
     
+    public void solveCoefficients(double xa, double xb, int steps) {
+        double incr = (xb-xa)/(steps-1);
+        double[][] coefficients = new double[steps][steps];
+        double[][] values = new double[steps][1];
+
+        
+        for (int row = 0; row < steps; row++) {
+            double x = xa + row*incr;
+            values[row][0] = eval(x);
+            coefficients[row][0] = 1;
+            for (int col = 1; col < steps; col++) {
+                coefficients[row][col] = coefficients[row][col-1] * x;
+
+            }
+        }
+        LinearEquation linearEquation = new LinearEquation(coefficients, values);
+        double inverted_mat[][] = linearEquation.runInvert();
+        System.out.println("inverted_mat: ");
+        LinearEquation.printMatrix(inverted_mat);
+        
+    }
+
     public void tabulate(double xa, double xb, int steps) {
         double incr = (xb-xa)/(steps-1);
         
