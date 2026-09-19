@@ -6,6 +6,7 @@ public class LinearEquation
     double [][] transpose;
     double [][] values;
     int rowIndex[];
+    public static final boolean DEBUG = false;
 
     public static void main(String args[]) {
     	int n = 7;
@@ -28,20 +29,22 @@ public class LinearEquation
     public double[][] runInvert() {
         int n = values.length;
         //Matrix representation
-        for(int i=0; i<n; i++)
-        {
-            for(int j=0; j<n; j++)
-            {
-                System.out.print(" " + coefficients[i][j]);
-            }
-            System.out.print("  =  " + values[i][0]);
-            System.out.println();
-        }
 
         //inverse of matrix mat[][]
         double inverted_mat[][] = invert();
-        System.out.println("The inverse is: ");
-        printMatrix(inverted_mat);
+        if (DEBUG) {
+	        for(int i=0; i<n; i++)
+	        {
+	            for(int j=0; j<n; j++)
+	            {
+	                System.out.print(" " + coefficients[i][j]);
+	            }
+	            System.out.print("  =  " + values[i][0]);
+	            System.out.println();
+	        }
+	        System.out.println("The inverse is: ");
+	        printMatrix(inverted_mat);
+        }
         return inverted_mat;
         
         //Multiplication of mat inverse and constants
