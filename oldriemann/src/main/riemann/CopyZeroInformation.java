@@ -37,6 +37,33 @@ public class CopyZeroInformation {
 
         return lastValue;
     }
+    
+    public static double[] readAndUpdateZero(
+            BufferedReader[] zeroIn)
+            throws IOException {
+    	double[] nextValues = new double[zeroIn.length];
+        String[] input = new String[zeroIn.length];
+        for (int i = 0; i < input.length; i++) {
+            input[i] = zeroIn[i].readLine();
+            System.out.println(i + " " + input[i]);
+        }
+        for (int i = 0; i < input.length; i++) {
+            try {
+                input[i] = input[i].trim();
+                nextValues[i] = Double.parseDouble(input[i]);
+            } catch (Exception e){
+                System.out.println("<" + input[i] + ">");
+                char[] ch = input[i].toCharArray();
+                for(int j = 0; j < ch.length; j++){
+                    System.out.printf("char at %d index is: %d\n" , j, (int)ch[j]);
+                }
+                throw e;
+
+            }
+        }    	
+		return nextValues;
+
+    }
 
     public static ZeroInfo readSingleZero(
             BufferedReader[] zeroIn,  double[] nextValues)
@@ -124,6 +151,11 @@ public class CopyZeroInformation {
 
     public static void main(String[] args) throws Exception {
     	 BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
+    	 double[] nextValues = readAndUpdateZero(in);
+    	 Rosser.update(nextValues);
+    	 System.out.println(Arrays.toString(Rosser.zeros));
+    	 System.out.println(Arrays.toString(Rosser.derivatives));
+    	 System.out.println(Arrays.toString(Rosser.extrema));
     }
 
 }
