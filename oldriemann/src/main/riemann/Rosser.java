@@ -234,7 +234,8 @@ public class Rosser {
             derivatives[2] = nextValues[1];
             extrema[0] = extrema[1];
             extrema[1] = extrema[2];
-            extrema[2] = nextValues[1] > 0 ? nextValues[2] : -nextValues[2];
+            if (nextValues[1] < 0 && nextValues[2] > 0) nextValues[2] = -nextValues[2];
+            extrema[2] =  nextValues[2];
         }
         
     }

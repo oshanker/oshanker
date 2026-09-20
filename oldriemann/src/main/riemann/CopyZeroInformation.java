@@ -38,6 +38,9 @@ public class CopyZeroInformation {
         return lastValue;
     }
     
+    /**
+     * sliding window for roots
+     */
     public static double[] readAndUpdateZero(
             BufferedReader[] zeroIn)
             throws IOException {
@@ -45,7 +48,6 @@ public class CopyZeroInformation {
         String[] input = new String[zeroIn.length];
         for (int i = 0; i < input.length; i++) {
             input[i] = zeroIn[i].readLine();
-            System.out.println(i + " " + input[i]);
         }
         for (int i = 0; i < input.length; i++) {
             try {
@@ -60,7 +62,8 @@ public class CopyZeroInformation {
                 throw e;
 
             }
-        }    	
+        }  
+        Rosser.update(nextValues);
 		return nextValues;
 
     }
@@ -151,11 +154,20 @@ public class CopyZeroInformation {
 
     public static void main(String[] args) throws Exception {
     	 BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
-    	 double[] nextValues = readAndUpdateZero(in);
-    	 Rosser.update(nextValues);
-    	 System.out.println(Arrays.toString(Rosser.zeros));
-    	 System.out.println(Arrays.toString(Rosser.derivatives));
-    	 System.out.println(Arrays.toString(Rosser.extrema));
+    	 for (int i = 0; i < 3; i++) {
+    		 readAndUpdateZero(in);
+		 } 
+    	 showZeros();
+    	 for (int i = 0; i < 2; i++) {
+    		 readAndUpdateZero(in);
+        	 showZeros();
+		 } 
     }
+
+	private static void showZeros() {
+		 System.out.println(Arrays.toString(Rosser.zeros));
+         System.out.println(Arrays.toString(Rosser.derivatives));
+    	 System.out.println(Arrays.toString(Rosser.extrema));
+	}
 
 }
