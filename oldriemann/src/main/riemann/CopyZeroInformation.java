@@ -123,6 +123,7 @@ public class CopyZeroInformation {
 
 
     public static void main(String[] args) throws Exception {
+    	 BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
     }
 
 }

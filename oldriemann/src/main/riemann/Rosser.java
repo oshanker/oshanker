@@ -224,7 +224,7 @@ public class Rosser {
         return new ZeroInfo(countZeros.size(), lastValue, nextValues);
     }
     
-    private static void update(double[] nextValues) {
+    static void update(double[] nextValues) {
         zeros[0] = zeros[1];
         zeros[1] = zeros[2];
         zeros[2] = nextValues[0];
