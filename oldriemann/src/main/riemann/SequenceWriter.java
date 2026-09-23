@@ -10,18 +10,27 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Arrays;
+
+import math.GSeries;
 
 public class SequenceWriter {
 
     public static void main(String[] args) throws Exception {
         //copyZeroInfo();
+    	testReadE12();
+		//testReadGseries();
+    }
+
+	static void testReadGseries() throws IOException {
 		String[] fileName = new String[]{"data/248714.dat",
 		         "data/102555.dat",
 		        "data/243.dat"};
 		for (int i = 0; i < fileName.length; i++) {
 			readGSeries( fileName[i], i);
 		}
-    }
+	}
     
     public static void readGSeries(String fileName, int i) throws IOException {
     	//
@@ -51,7 +60,7 @@ public class SequenceWriter {
         in.close();
         
         /*
-         
+         102566.06733986709 420045
 oldriemann/src/main/riemann/Interpolate.java
 Java
 ·
@@ -116,6 +125,43 @@ import java.io.File;
         return in;
     }
 
+    static void testReadE12() throws Exception{
+        //double t0 = gramE12[sampleIndex][0];
+        int index = 102555;
+        BigDecimal offset = BigDecimal.valueOf(1.0E12);
+        int k0 = 1, k1=398942;
+        File file = new File("data/" + Integer.toString(index) +".dat");
+        InputStream is = new FileInputStream(file);
+        // create buffered input stream.
+        BufferedInputStream bis = new BufferedInputStream(is);
+
+        // create data input stream to read data in form of primitives.
+        DataInputStream in = new DataInputStream(bis);
+        final int initialPadding = 40;
+        int R = 30000+2*initialPadding;
+        double begin = in.readDouble();
+        double incr = in.readDouble();
+        double[][] gBeta = new double[R][2];
+        for (int i = 0; i < gBeta.length; i++) {
+            gBeta[i][0] = in.readDouble();
+            gBeta[i][1] = in.readDouble();
+        }
+        GSeries gAtBeta = new GSeries(k0, k1, offset,  begin,  incr, gBeta);
+        in.close();
+        // line 420043
+        double[] t0 = {
+        		102566.06733986709, 102565.76081397697,
+        		102565.95608967196,102566.06733986709
+        		};
+        for (double t : t0) {
+            double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
+            		t , 4, initialPadding, 1.6E-9, false);
+            double zeta0 = gAtBeta.riemannZeta(gFromBLFI, t);
+            System.out.println("t, " + t + " zeta0 " + zeta0);
+		}
+
+    }
+    
 
 	static void copyZeroInfo() throws FileNotFoundException {
 		String[] fileName = new String[]{"out/6KE12zeros.csv",
