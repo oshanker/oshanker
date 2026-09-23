@@ -1,14 +1,66 @@
 package riemann;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SequenceWriter {
 
     public static void main(String[] args) throws Exception {
-        String[] fileName = new String[]{"out/6KE12zeros.csv",
+        //copyZeroInfo();
+		String[] fileName = new String[]{"data/248714.dat",
+		         "data/102555.dat",
+		        "data/243.dat"};
+		for (int i = 0; i < fileName.length; i++) {
+			readGSeries( fileName[i], i);
+		}
+    }
+    
+    public static void readGSeries(String fileName, int i) throws IOException {
+    	//
+    	File file = new File(fileName);
+    	System.out.println(fileName);
+        DataInputStream in = dataInputStream(file);
+        double begin = in.readDouble();
+        double gincr = in.readDouble();
+        if ( i == 0) {
+	        int R = in.readInt();
+	        System.out.printf("%d begin %f,  gincr %f, R %d\n", i,  begin,  gincr, R);
+        	for (int j = 0; j < 5; j++) {
+        	System.out.println(in.readInt());
+	        System.out.printf("%d begin %f,  gincr %f\n", i,  begin,  gincr);
+        	}
+        } else {
+        	//  getSavedGSeries StaticMethods
+        	for (int j = 0; j < 5; j++) {
+            	double R = in.readDouble();
+    	        System.out.printf("%d begin %f,  gincr %f, double R %f\n", i,  begin,  gincr, R);
+				
+			}
+        }
+    	System.out.println("====================");
+        in.close();
+    }
+
+    public static DataInputStream dataInputStream(File file) throws FileNotFoundException {
+        InputStream is = new FileInputStream(file);
+        // create buffered input stream.
+        BufferedInputStream bis = new BufferedInputStream(is);
+        // create data input stream to read data in form of primitives.
+        DataInputStream in = new DataInputStream(bis);
+        return in;
+    }
+
+
+	static void copyZeroInfo() throws FileNotFoundException {
+		String[] fileName = new String[]{"out/6KE12zeros.csv",
          "out/6KE12slopes.csv",
         "out/6KE12max.csv"};
    	    BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
@@ -49,5 +101,5 @@ public class SequenceWriter {
         } catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
-    }
+	}
 }
