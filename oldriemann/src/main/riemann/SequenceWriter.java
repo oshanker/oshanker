@@ -31,22 +31,80 @@ public class SequenceWriter {
         double begin = in.readDouble();
         double gincr = in.readDouble();
         if ( i == 0) {
-	        int R = in.readInt();
-	        System.out.printf("%d begin %f,  gincr %f, R %d\n", i,  begin,  gincr, R);
-        	for (int j = 0; j < 5; j++) {
-        	System.out.println(in.readInt());
+        	// calculateGSeriesE12 GSeriesTest?
 	        System.out.printf("%d begin %f,  gincr %f\n", i,  begin,  gincr);
+        	System.out.println(" 3rd arg " + in.readDouble());
+        	for (int j = 0; j < 5; j++) {
+        	System.out.println(in.readDouble());
         	}
         } else {
         	//  getSavedGSeries StaticMethods
-        	for (int j = 0; j < 5; j++) {
+	        System.out.printf("%d begin %f,  gincr %f 3rd arg\n", i,  begin,  gincr);
+        	System.out.println(" 3rd arg " + in.readDouble());
+       	    for (int j = 0; j < 5; j++) {
             	double R = in.readDouble();
-    	        System.out.printf("%d begin %f,  gincr %f, double R %f\n", i,  begin,  gincr, R);
+    	        System.out.printf(" double R %f\n",  R);
 				
 			}
         }
     	System.out.println("====================");
         in.close();
+        
+        /*
+         
+oldriemann/src/main/riemann/Interpolate.java
+Java
+·
+5
+ (5)
+import java.io.DataOutputStream;
+		DataOutputStream out = outputStream( file);
+    public static DataOutputStream outputStream(File file) throws FileNotFoundException {
+        DataOutputStream out;
+            out = new DataOutputStream(bos);
+
+
+oldriemann/src/main/riemann/StaticMethods.java
+Java
+·
+1
+ (1)
+        double incr = gSeries.spacing;
+        double[][] gAtBeta = gSeries.gAtBeta;
+         try {
+             DataOutputStream out = outputStream( file);
+             out.writeDouble(begin);
+             out.writeDouble(incr);
+             out.writeInt(gAtBeta.length);
+
+
+oldriemann/src/test/math/GSeriesTest.java
+Java
+·
+5
+ (5)
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+        int k0 = 1, k1=398942;
+        DataOutputStream out = null;
+        File file = new File("out/" + Integer.toString(index) +"E12.dat");
+Show 3 more matches
+
+
+oldriemann/src/test/math/MoreGSeriesTest.java
+Java
+·
+3
+ (3)
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+        int k0 = 1, k1=398942;
+        DataOutputStream out = null;
+        File file = new File("out/" + Integer.toString(index) +"E12.dat");
+                  out = new DataOutputStream(bos);
+         */
     }
 
     public static DataInputStream dataInputStream(File file) throws FileNotFoundException {
