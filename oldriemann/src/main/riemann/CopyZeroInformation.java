@@ -51,14 +51,15 @@ public class CopyZeroInformation {
         }
         for (int i = 0; i < input.length; i++) {
             try {
+                if( input[i] == null) {
+                	System.out.printf("done %d \n", i);
+                	return null;
+                }
                 input[i] = input[i].trim();
                 nextValues[i] = Double.parseDouble(input[i]);
             } catch (Exception e){
                 System.out.println("<" + input[i] + ">");
-                char[] ch = input[i].toCharArray();
-                for(int j = 0; j < ch.length; j++){
-                    System.out.printf("char at %d index is: %d\n" , j, (int)ch[j]);
-                }
+                e.printStackTrace();
                 throw e;
 
             }
