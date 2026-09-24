@@ -106,11 +106,13 @@ public class Poly7 implements Poly {
                 positionMax1 = positionMax(positionMax1, b, c);
                 currentMax1 = eval(positionMax1);
                 deviation = (Math.abs(m0 -currentMax0) + Math.abs(m1 -currentMax1));
+                iter++;
             } catch (IllegalStateException e) {
                 System.out.println(this);
                 throw e;
             }
             if (iter>8) {
+                System.out.println("not converging," + deviation);
                 break;
             }
         }
@@ -343,10 +345,12 @@ public class Poly7 implements Poly {
     }
     
     public static void main(String[] args) {
+    	double offset = 102565;
+    	System.out.println("offset " + offset);
     	zetaZeroFit(
-    			243.8749480149, 244.15890691298068, 244.3675025848634, 
-    			17.619276585379914, -20.007604626096071598, 19.343950349024609636, 
-    			1.9266754104451154, -1.232146174810101691
+    			0.76081397697, 0.95608967196, 1.06733986709, 
+    			4.912105763488216, -4.282347641620942, 6.646666435897174, 
+    			0.29893115306472573, -0.16030690662494185
     			);
     	//testExactNoMax(); 
 /*
