@@ -11,11 +11,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 import math.GSeries;
 
 public class SequenceWriter {
+    static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMinimumFractionDigits(7);
+        nf.setMaximumFractionDigits(7);
+        nf.setGroupingUsed(false);
+    }
 
     public static void main(String[] args) throws Exception {
         //copyZeroInfo();
@@ -153,12 +160,25 @@ import java.io.File;
         		102566.06733986709, 102565.76081397697, 102565.8567540174464339,
         		102565.95608967196, 102566.0173124449511088, 102566.06733986709
         		};
+        int steps = 10;
         for (double t : t0) {
             double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
             		t , 4, initialPadding, 1.6E-9, false);
             double zeta0 = gAtBeta.riemannZeta(gFromBLFI, t);
             System.out.println("t, " + t + " zeta0 " + zeta0);
 		}
+        double zerooffset = 102565;
+		double xa = 0.76081397697 + zerooffset ;
+		double xb = 1.0673399 + zerooffset ;
+        double tabincr = (xb-xa)/(steps-1);
+        
+        for (int i = 0; i < steps; i++) {
+            double x = xa + i*tabincr;
+            System.out.println(nf.format(x) +
+                " " + nf.format(gAtBeta.evaluateZeta(x, initialPadding)) +
+                " der " + nf.format(gAtBeta.evaluateDer(x, initialPadding))
+            );
+        }
 
     }
     
