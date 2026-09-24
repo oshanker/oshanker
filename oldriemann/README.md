@@ -1,3 +1,5 @@
 Not organized to be readable by others.
 
-[Begin with main in Interpolate.java](src/main/riemann/Interpolate.java#L801)
+[For simple run, main in Rosser](src/main/riemann/Rosser.java)
+
+[more: main in Interpolate.java](src/main/riemann/Interpolate.java#L801)
