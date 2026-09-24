@@ -174,7 +174,8 @@ public class CopyZeroInformation {
     		 readAndSkip(in);
 		 } 
     	 for (int i = 0; i < 3; i++) {
-    		 readAndUpdateZero(in);
+    		 double[] val = readAndUpdateZero(in);
+    		 ZerosBuffer.put(val);
         	 showZeros();
 		 } 
     }
@@ -183,6 +184,8 @@ public class CopyZeroInformation {
 		 System.out.println(Arrays.toString(Rosser.zeros));
          System.out.println(Arrays.toString(Rosser.derivatives));
     	 System.out.println(Arrays.toString(Rosser.extrema));
+    	 ZerosBuffer.printAll();
+    	 System.out.println("===========");
 	}
 
 }
