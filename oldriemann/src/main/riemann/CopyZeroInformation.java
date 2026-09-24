@@ -69,6 +69,21 @@ public class CopyZeroInformation {
 
     }
 
+    public static void readAndSkip(
+            BufferedReader[] zeroIn)
+            throws IOException {
+    	String[] input = new String[zeroIn.length];
+        for (int i = 0; i < input.length; i++) {
+            input[i] = zeroIn[i].readLine();
+                if( input[i] == null) {
+                	System.out.printf("done %d \n", i);
+                	return;
+                }
+ 
+        }  
+
+    }
+
     public static ZeroInfo readSingleZero(
             BufferedReader[] zeroIn,  double[] nextValues)
             throws IOException {
@@ -155,11 +170,10 @@ public class CopyZeroInformation {
 
     public static void main(String[] args) throws Exception {
     	 BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
-    	 for (int i = 0; i < 3; i++) {
-    		 readAndUpdateZero(in);
+    	 for (int i = 0; i < 420042; i++) {
+    		 readAndSkip(in);
 		 } 
-    	 showZeros();
-    	 for (int i = 0; i < 2; i++) {
+    	 for (int i = 0; i < 3; i++) {
     		 readAndUpdateZero(in);
         	 showZeros();
 		 } 
