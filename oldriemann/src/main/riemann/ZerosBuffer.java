@@ -19,7 +19,7 @@ public final class ZerosBuffer {
      * @param dest The pre-allocated array to copy data into.
      * @return The number of elements actually copied.
      */
-    public int getAllOrdered(double[][] dest) {
+    public static int getAllOrdered(double[][] dest) {
         if (dest == null) {
             return 0;
         }
@@ -46,8 +46,15 @@ public final class ZerosBuffer {
         }
         
     }
+    
+    public static void reset() {
+    	head = tail = size = 0;
+    }
 
     public static double[] getRow(int index) {
+    	if (index > size -1) {
+    		throw new IllegalArgumentException();
+    	}
         int internalIndex = (head + index) % capacity;
         return buffer[internalIndex];
     	
@@ -63,7 +70,6 @@ public final class ZerosBuffer {
             size++;
         }
     }
-
 
     public static boolean isEmpty() {
         return size == 0;
