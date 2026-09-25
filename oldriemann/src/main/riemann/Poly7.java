@@ -348,9 +348,19 @@ public class Poly7 implements Poly {
     	double offset = 102565;
     	System.out.println("offset " + offset);
     	zetaZeroFit(
+    			243.8749480149,
+    			244.15890691298068,
+    			244.3675025848634, 17.619276585379914,
+    			-20.007604626096071598,
+    			19.343950349024609636,
+    			 1.9266754104451154,
+        	     -1.232146174810101691
+
+    			/*
     			0.76081397697, 0.95608967196, 1.06733986709, 
     			4.912105763488216, -4.282347641620942, 6.646666435897174, 
     			0.29893115306472573, -0.16030690662494185
+    			*/
     			);
     	//testExactNoMax(); 
 /*
@@ -377,6 +387,10 @@ public class Poly7 implements Poly {
 
 	static void zetaZeroFit(double a0, double a1, double a2, 
 			double d0, double d1, double d2, double m0, double m1) {
+		// remove
+		a0 -= 243;
+		a1 -= 243;
+		a2 -= 243;
 		Poly7 poly7 = new Poly7(
     			a0,
     			a1,
@@ -395,10 +409,12 @@ public class Poly7 implements Poly {
         
         double positionMax0 = poly7.getPositionMax( );
         double eval = poly7.eval( positionMax0 );
-        System.out.println("eval " + eval +" positionmax0 " + positionMax0);
+        System.out.println("eval " + eval +
+        		" positionmax0 " + positionMax0 + " " + poly7.der(positionMax0));
         double positionMax1 = poly7.getPositionMax2(  );
         eval = poly7.eval(  positionMax1  );
-        System.out.println("eval " + eval + " positionmax1 " + positionMax1);
+        System.out.println("eval " + eval + 
+        		" positionmax1 " + positionMax1 + " " + poly7.der(positionMax1));
         poly7.tabulate(a0, a2, 10);
         System.out.println("============= " );
 	}
