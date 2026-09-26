@@ -182,15 +182,15 @@ import java.io.File;
 
     }
     
-    static Poly7 getPoly7() {
+    static Poly7 getPoly7(double trans) {
     	double[][] rows = new double[3][];
     	for (int i = 0; i < rows.length; i++) {
 			rows[i] = ZerosBuffer.getRow(i);
 		}
-    	Poly7 poly7 =     	new Poly7(
-    			rows[0][0],
-    			rows[1][0],
-    			rows[2][0], 
+    	Poly7 poly7 = new Poly7(
+    			rows[0][0]-trans,
+    			rows[1][0]-trans,
+    			rows[2][0]-trans, 
     			rows[0][1],
     			rows[1][1],
     			rows[2][1],
@@ -215,28 +215,37 @@ import java.io.File;
             
             writer.write("zero_index,max_pos,zeta");
             writer.newLine(); 
+      		double prev = 0;
         	// Your sequence generation loop
-            for (int seqNum = 1; seqNum <= 4; seqNum++) {
+            for (int loop = 1; loop <= 5; loop++) {
             	double[] nextValues = CopyZeroInformation.readAndUpdateZero(in);
             	if(nextValues == null) {
             		break;
             	}
-                
-       		 ZerosBuffer.put(nextValues);
-       		 if(seqNum==3 || seqNum==4) {
-       			 Poly7 poly7 = getPoly7();
+            	if(loop < 3) {
+            		continue;
+            	}
+                double trans = Math.floor(nextValues[0]);
+      			Poly7 poly7 = getPoly7(trans);
        	        double positionMax0 = poly7.getPositionMax( );
-       	        double eval = poly7.eval( positionMax0 );
-       	        System.out.println("eval " + eval +
-       	        		" positionmax0 " + positionMax0 + " " + poly7.der(positionMax0));
+//       	        double eval = poly7.eval( positionMax0 );
+//       	        System.out.println("eval " + eval +
+//       	        		" positionmax0 " + positionMax0 + " " + poly7.der(positionMax0));
        	        double positionMax1 = poly7.getPositionMax2(  );
-       	        eval = poly7.eval(  positionMax1  );
-       	        System.out.println("eval " + eval + 
-       	        		" positionmax1 " + positionMax1 + " " + poly7.der(positionMax1));
-       		 }
+//       	        eval = poly7.eval(  positionMax1  );
+//       	        System.out.println("eval " + eval + 
+//       	        		" positionmax1 " + positionMax1 + " " + poly7.der(positionMax1));
+       		    int seq_num = loop -2;
+				double d = 0;
+       	        if(loop == 3 ) {
+       	        	d = positionMax0 + trans;
+       		    } else {
+       		    	d = (prev + positionMax0)/2 + trans;
+//       		    	System.out.println(prev + " prev + positionMax0 " + positionMax0);
+       		    }
+				prev = positionMax1;
 
-				double d = nextValues[0];
-                String line = String.format("%d, %.8f", seqNum, d);
+                String line = String.format("%d, %.9f", seq_num, d);
                 writer.write(line);
                 writer.newLine(); 
                 

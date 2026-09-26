@@ -65,6 +65,8 @@ public class CopyZeroInformation {
             }
         }  
         Rosser.update(nextValues);
+		ZerosBuffer.put(nextValues);
+
 		return nextValues;
 
     }
@@ -176,9 +178,7 @@ public class CopyZeroInformation {
     		 readAndSkip(in);
 		 } 
     	 for (int i = 0; i < 3; i++) {
-    		 double[] val = readAndUpdateZero(in);
-    		 ZerosBuffer.put(val);
-        	 showZeros();
+    		 showZeros();
 		 } 
     }
 
