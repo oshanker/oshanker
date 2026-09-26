@@ -182,6 +182,26 @@ import java.io.File;
 
     }
     
+    static Poly7 getPoly7() {
+    	double[][] rows = new double[3][];
+    	for (int i = 0; i < rows.length; i++) {
+			rows[i] = ZerosBuffer.getRow(i);
+		}
+    	Poly7 poly7 =     	new Poly7(
+    			rows[0][0],
+    			rows[1][0],
+    			rows[2][0], 
+    			rows[0][1],
+    			rows[1][1],
+    			rows[2][1],
+    			rows[0][2],
+    			rows[1][2],
+                 0
+    			);
+
+		return poly7;
+    	
+    }
 
 	static void copyMaxPos() throws FileNotFoundException {
 		String fileName = "out/6KE12posmax.csv";
@@ -203,6 +223,17 @@ import java.io.File;
             	}
                 
        		 ZerosBuffer.put(nextValues);
+       		 if(seqNum==3 || seqNum==4) {
+       			 Poly7 poly7 = getPoly7();
+       	        double positionMax0 = poly7.getPositionMax( );
+       	        double eval = poly7.eval( positionMax0 );
+       	        System.out.println("eval " + eval +
+       	        		" positionmax0 " + positionMax0 + " " + poly7.der(positionMax0));
+       	        double positionMax1 = poly7.getPositionMax2(  );
+       	        eval = poly7.eval(  positionMax1  );
+       	        System.out.println("eval " + eval + 
+       	        		" positionmax1 " + positionMax1 + " " + poly7.der(positionMax1));
+       		 }
 
 				double d = nextValues[0];
                 String line = String.format("%d, %.8f", seqNum, d);
