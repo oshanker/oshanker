@@ -25,8 +25,8 @@ public class SequenceWriter {
     }
 
     public static void main(String[] args) throws Exception {
-        //copyZeroInfo();
-    	testReadE12();
+    	copyMaxPos();
+    	//testReadE12();
 		//testReadGseries();
     }
 
@@ -182,6 +182,45 @@ import java.io.File;
 
     }
     
+
+	static void copyMaxPos() throws FileNotFoundException {
+		String fileName = "out/6KE12posmax.csv";
+   	    BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
+
+        // Open the file outside the loop. 
+        // Passing 'false' or omitting the second argument completely means it will OVERWRITE the file.
+        try (
+        		BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false));
+        	) {
+            
+            writer.write("zero_index,max_pos,zeta");
+            writer.newLine(); 
+        	// Your sequence generation loop
+            for (int seqNum = 1; seqNum <= 4; seqNum++) {
+            	double[] nextValues = CopyZeroInformation.readAndUpdateZero(in);
+            	if(nextValues == null) {
+            		break;
+            	}
+                
+       		 ZerosBuffer.put(nextValues);
+
+				double d = nextValues[0];
+                String line = String.format("%d, %.8f", seqNum, d);
+                writer.write(line);
+                writer.newLine(); 
+                
+                
+            }
+
+       	    ZerosBuffer.printAll();
+            
+            System.out.println("Max position written  to " + fileName);
+
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+	}
+
 
 	static void copyZeroInfo() throws FileNotFoundException {
 		String[] fileName = new String[]{"out/6KE12zeros.csv",

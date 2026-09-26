@@ -170,7 +170,9 @@ public class CopyZeroInformation {
 
     public static void main(String[] args) throws Exception {
     	 BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
-    	 for (int i = 0; i < 420042; i++) {
+    	 
+    	 int skipCount = 0; //420042;
+		 for (int i = 0; i < skipCount; i++) {
     		 readAndSkip(in);
 		 } 
     	 for (int i = 0; i < 3; i++) {
