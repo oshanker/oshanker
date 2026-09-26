@@ -217,7 +217,7 @@ import java.io.File;
             writer.newLine(); 
       		double prev = 0;
         	// Your sequence generation loop
-            for (int loop = 1; loop <= 5; loop++) {
+            for (int loop = 1; loop <= 15; loop++) {
             	double[] nextValues = CopyZeroInformation.readAndUpdateZero(in);
             	if(nextValues == null) {
             		break;
@@ -225,13 +225,14 @@ import java.io.File;
             	if(loop < 3) {
             		continue;
             	}
-                double trans = Math.floor(nextValues[0]);
+				double[] row = ZerosBuffer.getRow(0);
+                double trans = Math.floor(row[0]);
       			Poly7 poly7 = getPoly7(trans);
        	        double positionMax0 = poly7.getPositionMax( );
+       	        double positionMax1 = poly7.getPositionMax2(  );
 //       	        double eval = poly7.eval( positionMax0 );
 //       	        System.out.println("eval " + eval +
 //       	        		" positionmax0 " + positionMax0 + " " + poly7.der(positionMax0));
-       	        double positionMax1 = poly7.getPositionMax2(  );
 //       	        eval = poly7.eval(  positionMax1  );
 //       	        System.out.println("eval " + eval + 
 //       	        		" positionmax1 " + positionMax1 + " " + poly7.der(positionMax1));
@@ -240,12 +241,17 @@ import java.io.File;
        	        if(loop == 3 ) {
        	        	d = positionMax0 + trans;
        		    } else {
-       		    	d = (prev + positionMax0)/2 + trans;
-//       		    	System.out.println(prev + " prev + positionMax0 " + positionMax0);
+       		    	double p0 = positionMax0 + trans;
+       		    	d = (prev + p0)/2;
+       		    	if(Math.abs(prev-p0) > 0.1) {
+	       		    	System.out.println(prev + 
+	       		    			" prev + positionMax0 " + p0);
+       		    	}
        		    }
-				prev = positionMax1;
+				prev = positionMax1  + trans;
 
-                String line = String.format("%d, %.9f", seq_num, d);
+                String line = String.format("%d, %.9f, %.9f", 
+                		seq_num, d, row[2]);
                 writer.write(line);
                 writer.newLine(); 
                 
