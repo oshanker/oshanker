@@ -90,7 +90,9 @@ public class Poly7 implements Poly {
         while(deviation> epsilon) {
             try {
                 double[][] coeff = new double[2][2];
+                // idx = 0, change in A
                 populateCoeff(currentMax0, currentMax1, 0, coeff);
+                // idx = 1, change in B
                 populateCoeff(currentMax0, currentMax1, 1, coeff);
                 LinearEquation linearEquation = new LinearEquation(coeff);
                 double[] neededZetaIncrement = {
@@ -129,6 +131,8 @@ public class Poly7 implements Poly {
         double cNextMax0 = eval(pNextMax0);
         double pNextMax1 = positionMax((b + c) / 2, b, c);
         double cNextMax1 = eval(pNextMax1);
+        // idx = 0, change in A
+        // idx = 1, change in B
         coeff[0][idx] = (cNextMax0- currentMax0)/ incr;
         coeff[1][idx] = (cNextMax1- currentMax1)/ incr;
         unsetTerm();
