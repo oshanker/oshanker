@@ -173,7 +173,7 @@ public class CopyZeroInformation {
     public static void main(String[] args) throws Exception {
     	 BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
     	 
-    	 int skipCount = 0; //420042;
+    	 int skipCount = 10; //420042;
 		 for (int i = 0; i < skipCount; i++) {
     		 readAndSkip(in);
 		 } 
@@ -181,6 +181,23 @@ public class CopyZeroInformation {
     		 readAndUpdateZero(in);
     		 showZeros();
 		 } 
+		double[] row = ZerosBuffer.getRow(0);
+        double trans = Math.floor(row[0]);
+		Poly7 poly7 = SequenceWriter.getPoly7(trans);
+        double positionMax0 = poly7.getPositionMax( );
+        double positionMax1 = poly7.getPositionMax2(  );
+        double currentMax0 = poly7.eval( positionMax0 );
+        System.out.println("eval " + currentMax0 +
+        		" positionmax0 " + positionMax0 + " " + poly7.der(positionMax0));
+        double currentMax1 = poly7.eval(  positionMax1  );
+        System.out.println("eval " + currentMax1 + 
+        		" positionmax1 " + positionMax1 + " " 
+        		+ poly7.der(positionMax1));
+        poly7.tabulate(poly7.a, poly7.b, 10);
+        poly7.tabulate(poly7.b, poly7.c, 10);
+        double deviation = (Math.abs(poly7.m0 -currentMax0)
+        		+ Math.abs(poly7.m1 -currentMax1));
+        System.out.println("deviation " + deviation + " poly " + poly7);
     }
 
 	private static void showZeros() {
