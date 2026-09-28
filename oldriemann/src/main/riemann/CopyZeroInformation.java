@@ -178,6 +178,7 @@ public class CopyZeroInformation {
     		 readAndSkip(in);
 		 } 
     	 for (int i = 0; i < 3; i++) {
+    		 readAndUpdateZero(in);
     		 showZeros();
 		 } 
     }
