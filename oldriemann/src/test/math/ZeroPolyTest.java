@@ -11,22 +11,24 @@ import junit.framework.Assert;
 import riemann.Riemann;
 
 public class ZeroPolyTest {
-    @Test @Ignore
+    @Test 
     public void riemann() {
         double delta = 0.001;
         double[] begin = {//244.367502584863394599-delta, 244.367502584863394599+delta,
                 244.920599505825861697-delta, 244.920599505825861697+delta};
         double[] zetaFromRiemann = new double[begin.length];
         long offset = (long) 1.0E12;
+        double der = 0;
         for (int i = 0; i < begin.length; i++) {
             zetaFromRiemann[i] = Riemann.riemann(begin[i], offset);
-            double der = 0;
             if(i%2==1){
                 der = (zetaFromRiemann[i]-zetaFromRiemann[i-1])/(2*delta);
                 System.out.println("der " + der);
             }
             System.out.println("zetaFromRiemann " + zetaFromRiemann[i]);
         }
+        //23.851
+        assertEquals(23.851 , der, 1.0E-3);
     }
     
     @Test  
@@ -50,8 +52,9 @@ public class ZeroPolyTest {
         for (int i = 0; i < 5; i++) {
             double z = zeroPoly.eval(t1);
             double zetaFromRiemann = Riemann.riemann(t1, offset);
-            System.out.println(t1 + " zetaFromRiemann " + zetaFromRiemann + " z "+ z);
-            Assert.assertEquals(zeta[i] , zetaFromRiemann, 1.0E-6);
+            System.out.println(t1 + " zetaFromRiemann " + 
+              zetaFromRiemann + " zeroPoly " + z);
+            assertEquals(zeta[i] , zetaFromRiemann, 1.0E-6);
             t1+=incr;
         }
     }
