@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import riemann.Riemann;
 
 public class ZeroPolyTest {
@@ -34,6 +35,13 @@ public class ZeroPolyTest {
                 244.367502584863394599, 244.588579452072075626, 244.920599505825861697};
         double[] slopes = new double[]{17.618801272842216, -20.007038515089505,
                 19.34333425934199, -27.175254718303503, 23.851008298572186};
+        double[] zeta = {-0.9262701524612887
+        		, 1.926498073039712
+        		, -1.23155062255226
+        		, 1.4730916429533694
+        		, -3.420982082947575
+        		, 1.0355544976192903
+};
         ZeroPoly zeroPoly = new ZeroPoly(roots, slopes);
         double t1 = 243.77756012466052947405878015472510;
         long offset = (long) 1.0E12;
@@ -43,6 +51,7 @@ public class ZeroPolyTest {
             double z = zeroPoly.eval(t1);
             double zetaFromRiemann = Riemann.riemann(t1, offset);
             System.out.println(t1 + " zetaFromRiemann " + zetaFromRiemann + " z "+ z);
+            Assert.assertEquals(zeta[i] , zetaFromRiemann, 1.0E-6);
             t1+=incr;
         }
     }
