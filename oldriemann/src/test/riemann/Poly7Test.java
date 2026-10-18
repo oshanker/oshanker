@@ -52,9 +52,9 @@ public class Poly7Test  {
     @Test
     public void testFit() {
 		Poly7 poly7 = new Poly7(
-    			243.8749480149,
-    			244.15890691298068,
-    			244.3675025848634, 17.619276585379914,
+    			0.8749480149,
+    			1.15890691298068,
+    			1.3675025848634, 17.619276585379914,
     			-20.007604626096071598,
     			19.343950349024609636
         );
@@ -74,7 +74,7 @@ public class Poly7Test  {
         		, -1.23155062255226};
 
         for (int i = 0; i < 2; i++) {
-			double z = poly7.eval(t1);
+			double z = poly7.eval(t1-243);
             System.out.println(t1 + " zetaFromRiemann " + 
               zeta[i] + " poly7 " + z);
             assertEquals("not equal", zeta[i] , z, 1.0E-4);
