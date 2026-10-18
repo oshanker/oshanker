@@ -54,9 +54,13 @@ public class ZeroPolyTest {
             double zetaFromRiemann = Riemann.riemann(t1, offset);
             System.out.println(t1 + " zetaFromRiemann " + 
               zetaFromRiemann + " zeroPoly " + z);
-            assertEquals(zeta[i] , zetaFromRiemann, 1.0E-6);
+            assertEquals("not equal", zeta[i] , zetaFromRiemann, 1.0E-6);
+            if(i == 3) {
+               assertEquals("zero poly not equal", zeta[i] , z, 1.0E-3);
+            }
             t1+=incr;
         }
+        System.out.println("root Test passed ");
     }
     
     @Test //@Ignore
