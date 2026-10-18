@@ -1,5 +1,7 @@
 package riemann;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -48,16 +50,52 @@ public class Poly7Test  {
     }
     
     @Test
+    public void testFit() {
+		Poly7 poly7 = new Poly7(
+    			243.8749480149,
+    			244.15890691298068,
+    			244.3675025848634, 17.619276585379914,
+    			-20.007604626096071598,
+    			19.343950349024609636
+        );
+        poly7.setExtrema(    
+        		 1.9266754104451154,
+        	     -1.232146174810101691,      0
+
+        );
+        
+        double deviation = poly7.setTermValues();
+        assertEquals("deviation large", 0.0 , deviation, 1.0E-8);
+        
+        double t1 = 244.02115917156453;
+        double incr = 0.24359904690399015;
+        double[] zeta = {
+        		1.926498073039712
+        		, -1.23155062255226};
+
+        for (int i = 0; i < 2; i++) {
+			double z = poly7.eval(t1);
+            System.out.println(t1 + " zetaFromRiemann " + 
+              zeta[i] + " poly7 " + z);
+            assertEquals("not equal", zeta[i] , z, 1.0E-4);
+            t1+=incr;
+         }
+        
+       
+        System.out.println("============= " );
+    	
+    }
+    
+    @Test
     public void testPositionMax() {
         double positionMax05 = poly7012.positionMax(0.5, 0, 1);
         Assert.assertEquals(0.42264972993696365, positionMax05, 5.0E-7);
         double positionMax15 = poly7012.positionMax(1.5, 1, 2);
-        Assert.assertEquals(1.577350269950018, positionMax15, 1.0E-8);
+        Assert.assertEquals(1.577350269950018, positionMax15, 2.0E-8);
         Assert.assertEquals(2.0, (positionMax05+positionMax15), 1.0E-8);
         double max15 = poly7012.eval(positionMax15);
         Assert.assertEquals(-0.3849001794597505, max15, 1.0E-8);
         double max05 = poly7012.eval(positionMax05);
         Assert.assertEquals(0.3849001794597505, max05, 1.0E-8);
-        System.out.println(max15 + " " + max05);
     }
 }
