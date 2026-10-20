@@ -21,14 +21,26 @@ public class ZeroPolyTest {
         double der = 0;
         for (int i = 0; i < begin.length; i++) {
             zetaFromRiemann[i] = Riemann.riemann(begin[i], offset);
+            System.out.println("zetaFromRiemann " + zetaFromRiemann[i]);
             if(i%2==1){
                 der = (zetaFromRiemann[i]-zetaFromRiemann[i-1])/(2*delta);
                 System.out.println("der " + der);
             }
-            System.out.println("zetaFromRiemann " + zetaFromRiemann[i]);
         }
         //23.851
         assertEquals(23.851 , der, 1.0E-3);
+        double positionMax0 = 246.5063429621120739;
+        double positionMax1 = 246.7951829823795142;
+        double currentMax0 = Riemann.riemann(positionMax0, offset);
+        //[4.010423055063137, -0.26392412836874457, 0.6927723660831298]
+
+        assertEquals(4.010423 , currentMax0, 1.0E-3);
+        System.out.println("eval " + currentMax0 +
+        		" positionmax0 " + positionMax0 );
+        double currentMax1 = Riemann.riemann(positionMax1, offset);
+        assertEquals(-0.263924128368744 , currentMax1, 1.0E-6);
+        System.out.println("eval " + currentMax1 + 
+        		" positionmax1 " + positionMax1 );
     }
     
     @Test  
