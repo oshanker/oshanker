@@ -70,6 +70,11 @@ t, 102566.01731244495 zeta0 -0.1603069498556976
         		102566.06733986709, 102565.76081397697, 102565.8567540174464339,
         		102565.95608967196, 102566.0173124449511088, 102566.06733986709
         		};
+        double[] expected = {
+        	0, 0, 0.29893115306472573,
+        	0, -0.16030690662494185, 0
+        	
+        };
         int tIndex = 0;
         int steps = 10;
         for (double t : t0) {
@@ -77,6 +82,7 @@ t, 102566.01731244495 zeta0 -0.1603069498556976
             		t , 4, initialPadding, 1.6E-9, false);
             double zeta0 = gAtBeta.riemannZeta(gFromBLFI, t);
             System.out.println(tIndex + " " + nf.format(t) + " gseries " + zeta0);
+            assertEquals("not equal", expected[tIndex] , zeta0, 3.0E-6);
 		    tIndex++;
         }
         double zerooffset = 102565;
