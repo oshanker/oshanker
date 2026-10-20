@@ -70,13 +70,15 @@ t, 102566.01731244495 zeta0 -0.1603069498556976
         		102566.06733986709, 102565.76081397697, 102565.8567540174464339,
         		102565.95608967196, 102566.0173124449511088, 102566.06733986709
         		};
+        int tIndex = 0;
         int steps = 10;
         for (double t : t0) {
             double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
             		t , 4, initialPadding, 1.6E-9, false);
             double zeta0 = gAtBeta.riemannZeta(gFromBLFI, t);
-            System.out.println("t, " + t + " zeta0 " + zeta0);
-		}
+            System.out.println(tIndex + " " + nf.format(t) + " gseries " + zeta0);
+		    tIndex++;
+        }
         double zerooffset = 102565;
 		double xa = 0.76081397697 + zerooffset ;
 		double xb = 1.0673399 + zerooffset ;
