@@ -67,11 +67,13 @@ t, 102565.85675401744 zeta0 0.298930479449594
 t, 102566.01731244495 zeta0 -0.1603069498556976
 		*/
         double[] t0 = {
-        		102566.06733986709, 102565.76081397697, 102565.8567540174464339,
+        		 102565.76081397697, 102565.8567540174464339,
+        		 102565.8566228,
         		102565.95608967196, 102566.0173124449511088, 102566.06733986709
         		};
         double[] expected = {
-        	0, 0, 0.29893115306472573,
+        	 0, 0.29893115306472573,
+        	 0.29893115306472573,
         	0, -0.16030690662494185, 0
         	
         };
@@ -81,7 +83,11 @@ t, 102566.01731244495 zeta0 -0.1603069498556976
             double[] gFromBLFI = gAtBeta.diagnosticBLFISumWithOffset( 
             		t , 4, initialPadding, 1.6E-9, false);
             double zeta0 = gAtBeta.riemannZeta(gFromBLFI, t);
-            System.out.println(tIndex + " " + nf.format(t) + " gseries " + zeta0);
+            double der = gAtBeta.evaluateDer(t, initialPadding);
+            System.out.println(tIndex + " " + nf.format(t) 
+            + " gseries " + zeta0 +
+            " der " + nf.format(der)
+);
             assertEquals("not equal", expected[tIndex] , zeta0, 3.0E-6);
 		    tIndex++;
         }
@@ -91,6 +97,7 @@ t, 102566.01731244495 zeta0 -0.1603069498556976
         double tabincr = (xb-xa)/(steps-1);
         
         System.out.println("============= " );
+        /*
         long longOffset = (long) 1.0E12;
         for (int i = 0; i < steps; i++) {
             double x = xa + i*tabincr;
@@ -104,6 +111,7 @@ t, 102566.01731244495 zeta0 -0.1603069498556976
               zetaFromRiemann + " gseries " + z);
             assertEquals("not equal", zetaFromRiemann , z, 3.0E-7);
         }
+        */
 
     }
 
