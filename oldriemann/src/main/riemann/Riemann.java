@@ -195,6 +195,20 @@ public class Riemann {
 
 	}
 
+    public static double der(double zero, long offset, double delta) {
+        double zetaplus = riemann(zero + delta, offset);
+        double zetaminus = riemann(zero - delta, offset);
+        return (zetaplus-zetaminus)/(2* delta);
+    }
+
+    public static double doubleDer(double zero, long offset, double delta) {
+        double zetaplus = riemann(zero + delta, offset);
+        double zetaminus = riemann(zero - delta, offset);
+        double mid = riemann(zero, offset);
+        double doubleder = (zetaplus + zetaminus - 2 * mid) / (delta * delta);
+        return doubleder;
+    }
+
 	/** calculate zeta function for (t+offset) */
 	public static double riemann(double t, long offset) {
 
