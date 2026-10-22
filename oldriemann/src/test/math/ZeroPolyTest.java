@@ -13,6 +13,9 @@ import riemann.Riemann;
 public class ZeroPolyTest {
     @Test 
     public void riemann() {
+        System.out.println("============= " );
+		System.out.println("riemann");
+        System.out.println("============= " );
         double delta = 0.001;
         double[] begin = {//244.367502584863394599-delta, 244.367502584863394599+delta,
                 244.920599505825861697-delta, 244.920599505825861697+delta};
@@ -29,22 +32,30 @@ public class ZeroPolyTest {
         }
         //23.851
         assertEquals(23.851 , der, 1.0E-3);
-        double positionMax0 = 246.5063429621120739;
-        double positionMax1 = 246.7951829823795142;
+        double positionMax0 = 102566.0173021;
         double currentMax0 = Riemann.riemann(positionMax0, offset);
         //[4.010423055063137, -0.26392412836874457, 0.6927723660831298]
-
-        assertEquals(4.010423 , currentMax0, 1.0E-3);
-        System.out.println("eval " + currentMax0 +
-        		" positionmax0 " + positionMax0 );
+        der = Riemann.der(positionMax0, offset, delta);
+        double doubleder = Riemann.doubleDer(positionMax0, offset, delta);
+        System.out.println(currentMax0 +
+        		" " + positionMax0  +
+        		" der " + der +
+        		" doubleder " + doubleder
+        		);
+        assertEquals(-0.16030690662494185 , currentMax0, 2.0E-10);
+        
+        double positionMax1 = 246.7951829823795142;
         double currentMax1 = Riemann.riemann(positionMax1, offset);
-        assertEquals(-0.263924128368744 , currentMax1, 1.0E-6);
         System.out.println("eval " + currentMax1 + 
         		" positionmax1 " + positionMax1 );
+        assertEquals(-0.263924128368744 , currentMax1, 1.0E-6);
     }
     
     @Test  
     public void root() {
+        System.out.println("============= " );
+		System.out.println("root");
+        System.out.println("============= " );
         double[] roots = new double[]{243.8749480149, 244.158906912980683962,
                 244.367502584863394599, 244.588579452072075626, 244.920599505825861697};
         double[] slopes = new double[]{17.618801272842216, -20.007038515089505,
@@ -72,11 +83,27 @@ public class ZeroPolyTest {
             }
             t1+=incr;
         }
+        double positionMax0 = 244.020370571464061;
+        double positionMax1 = 244.2626335644557756;
+        double currentMax0 = Riemann.riemann(positionMax0, offset);
+        //1.9266754104451154,-1.2321461748101017, 0.0 
+
+
+        assertEquals(1.926675 , currentMax0, 2.0E-5);
+        System.out.println("eval " + currentMax0 +
+        		" positionmax0 " + positionMax0 );
+        double currentMax1 = Riemann.riemann(positionMax1, offset);
+        System.out.println("eval " + currentMax1 + 
+        		" positionmax1 " + positionMax1 );
+        assertEquals(-1.2321461748101017 , currentMax1, 1.0E-7);
         System.out.println("root Test passed ");
     }
     
     @Test //@Ignore
     public void test() {
+        System.out.println("============= " );
+		System.out.println("test");
+        System.out.println("============= " );
         double[] roots = new double[]{-1, 1};
         double[] slopes = new double[]{-4, 4};
         ZeroPoly zeroPoly = new ZeroPoly(roots, slopes);
