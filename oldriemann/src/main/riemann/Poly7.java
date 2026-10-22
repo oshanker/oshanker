@@ -419,7 +419,10 @@ public class Poly7 implements Poly {
         double positionMax1 = poly7.getPositionMax2(  );
         eval = poly7.eval(  positionMax1  );
         System.out.println("eval " + eval + 
-        		" positionmax1 " + positionMax1 + " " + poly7.der(positionMax1));
+        		" positionmax1 " + positionMax1 
+        		+ " " + poly7.der(positionMax1)
+        		+ " " + poly7.secondDer(positionMax1)
+        		);
         poly7.tabulate(a0, a2, 10);
         System.out.println("============= " );
 	}
