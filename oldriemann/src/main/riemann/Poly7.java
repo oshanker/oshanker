@@ -352,6 +352,7 @@ public class Poly7 implements Poly {
     	double offset = 102565;
     	System.out.println("offset " + offset);
     	zetaZeroFit(
+    			/*
     			243.8749480149,
     			244.15890691298068,
     			244.3675025848634, 17.619276585379914,
@@ -359,12 +360,11 @@ public class Poly7 implements Poly {
     			19.343950349024609636,
     			 1.9266754104451154,
         	     -1.232146174810101691
-
-    			/*
-    			0.76081397697, 0.95608967196, 1.06733986709, 
-    			4.912105763488216, -4.282347641620942, 6.646666435897174, 
-    			0.29893115306472573, -0.16030690662494185
     			*/
+
+    			0.76081397697+offset, 0.95608967196+offset, 1.06733986709+offset, 
+    			4.912105763488216, -4.282347641620942, 6.646666435897174, 
+    			0.29893115306472573, -0.16030690662494185, offset
     			);
     	//testExactNoMax(); 
 /*
@@ -390,11 +390,12 @@ public class Poly7 implements Poly {
     }
 
 	static void zetaZeroFit(double a0, double a1, double a2, 
-			double d0, double d1, double d2, double m0, double m1) {
+			double d0, double d1, double d2, double m0, double m1,
+			double offset) {
 		// remove
-		a0 -= 243;
-		a1 -= 243;
-		a2 -= 243;
+		a0 -= offset;
+		a1 -= offset;
+		a2 -= offset;
 		Poly7 poly7 = new Poly7(
     			a0,
     			a1,
