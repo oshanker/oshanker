@@ -329,7 +329,7 @@ poly 1.4731822664990701
             double zeta60 =  Interpolate.evaluateZeta(upperLimit+incr, initialPadding, gSeries11);
             final int nmod2 = n%2;
             if(count < 10) {
-                System.out.println(count + " (upperLimit-baseLimit)/gramIncr " + (upperLimit-baseLimit)/gramIncr);
+                System.out.println(n + " (upperLimit-baseLimit)/gramIncr " + (upperLimit-baseLimit)/gramIncr);
             	
             }
             testSum[nmod2] += zetaTest;
