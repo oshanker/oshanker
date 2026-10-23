@@ -446,13 +446,15 @@ poly 1.4731822664990701
                     throw new IllegalStateException("no convergence");
                 }
             }
-       } else {
+       } else { //449 535
+    	   /* 
+    	    * 
             if (upperLimit <= zeroInput.nextValues[0]) {
                 zeroInput = new ZeroInfo(0, zeroInput);
             } else {
-        /*
-        Reading the next zero
-         */
+        
+        //Reading the next zero
+         
                 zeroInput = Rosser.readZeros(upperLimit, out, zeroIn,
                     zeroInput.nextValues);
                 if (zeroInput == null) {
@@ -530,10 +532,12 @@ poly 1.4731822664990701
                         throw new IllegalStateException("bad poly option");
                 } // switch polyoption
             } // second nested else
+        	     */
         } // end else?
         
         double zetaEstMid;
         switch (polyOption) {
+        /*
 		   case USE_MIXED:
                 switch (gramOrMid) {
                 case GRAM:
@@ -545,6 +549,7 @@ poly 1.4731822664990701
                     break;
                 }
                 break;
+                */
             default:
                 zetaEstMid = poly.eval(upperLimit);
                 break;
