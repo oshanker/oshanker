@@ -45,7 +45,7 @@ phi = { 0 }
 header = "n-3945951431270L,good, S"
 gramIncr = 0.24359904590398668
 bdoffset = "1.0E12"
-N = 1000003
+N = 999003
 displacementCount = 1
 conjecturesOutFile="out/statsE12.csv"
 
