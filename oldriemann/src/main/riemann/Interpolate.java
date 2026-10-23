@@ -319,7 +319,7 @@ poly 1.4731822664990701
         double base = baseLimit + gramIncr/4;
         long sampleSize = N - initialPadding;
         double upperLimit = 0;
-        double testSum = 0;
+        double[] testSum = {0, 0};
         while (count < sampleSize  ) {
             int n = count + noffset+initialPadding/2;
             upperLimit = base + (n-correction-1) * (gramIncr);
@@ -328,14 +328,19 @@ poly 1.4731822664990701
             double zeta =  Interpolate.evaluateZeta(upperLimit, initialPadding, gSeries11);
             double zeta60 =  Interpolate.evaluateZeta(upperLimit+incr, initialPadding, gSeries11);
             final int nmod2 = n%2;
-            testSum += zetaTest;
+            if(count < 10) {
+                System.out.println(count + " (upperLimit-baseLimit)/gramIncr " + (upperLimit-baseLimit)/gramIncr);
+            	
+            }
+            testSum[nmod2] += zetaTest;
             zetaGramMean[nmod2] += zeta;
             zeta60Sum[nmod2] += zeta60;
             count++;
         }
         System.out.println(" N " + N + " gSeries11.gAtBeta.length " + gSeries11.gAtBeta.length);
         System.out.println(" upperLimit " + upperLimit);
-        System.out.println("*** test " + 2*testSum/(2*sampleSize));
+        System.out.println("*** test [1]" + 2*testSum[1]/(sampleSize));
+        System.out.println("*** test [0]" + 2*testSum[0]/(sampleSize));
         System.out.println("*** zetaGram_pi4MeanOdd " + 2*zetaGramMean[1]/sampleSize);
         System.out.println("    zetaGram_pi4MeanEven " + 2*zetaGramMean[0]/sampleSize);
         System.out.println("*** zeta60SumOdd " + 2*zeta60Sum[1]/sampleSize);
