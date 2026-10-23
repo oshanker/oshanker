@@ -436,7 +436,9 @@ poly 1.4731822664990701
             while (upperLimit > zeroInfo.get(2)[0]) {
                 double[] nextValues = CopyZeroInformation.skipUntil(zeroIn, 0);
                 if(nextValues == null) {
-                    break;
+                    System.out.println("out of data " + upperLimit + 
+                    		" last poly7 " + poly7);
+                    throw new IllegalStateException("out of data");
                 }
                 if(nextValues[1]<0){
                     nextValues[2]=-nextValues[2];
