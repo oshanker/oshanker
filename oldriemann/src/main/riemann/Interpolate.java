@@ -399,7 +399,7 @@ poly 1.4731822664990701
         if (polyOption == PolyOption.USE_POLY7 && useNewCode) { //l 449
             //logic for PolyOption.USE_POLY7
             //move here
-            int desiredSize = 4;
+            int desiredSize = 3;
             if(zeroInfo.size()< desiredSize) {
                 int needed = desiredSize - zeroInfo.size();
                 for (int i = 0; i < needed; i++) {
