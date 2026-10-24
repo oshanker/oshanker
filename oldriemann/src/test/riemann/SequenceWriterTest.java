@@ -3,6 +3,7 @@ package riemann;
 import static org.junit.Assert.*;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +30,33 @@ public class SequenceWriterTest {
         System.out.println("============= " );
 		System.out.println("testPoly7ZeroFit");
         System.out.println("============= " );
+   	    BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
+	    Poly7.epsilon *= 0.0001;
+	    Poly7.derepsilon *= 0.0001;
+   	    int skipCount = 10; //420042;
+		for (int i = 0; i < skipCount; i++) {
+			CopyZeroInformation.readAndSkip(in);
+		} 
+   	    for (int i = 0; i < 3; i++) {
+   		    CopyZeroInformation.readAndUpdateZero(in);
+		} 
+		double[] row = ZerosBuffer.getRow(0);
+        double trans = Math.floor(row[0]);
+		Poly7 poly7 = SequenceWriter.getPoly7(trans);
+		double xa = poly7.a + trans;
+		double xb = poly7.c + trans;
+		int steps = 10;
+        double incr = (xb-xa)/(steps-1);
+        long offset = (long) 1.0E12;
+        
+        for (int i = 0; i < steps; i++) {
+            double x = xa + i*incr;
+            double zetaFromRiemann = Riemann.riemann(x, offset);
+            System.out.println(nf.format(x) +
+                " " + nf.format(poly7.eval(x-trans)) +
+                " zetaFromRiemann " + nf.format(zetaFromRiemann)
+            );
+        }
 	}
 	
 	@Test
