@@ -9,7 +9,7 @@ import java.util.Arrays;
  * 7th order polynomial, fits zeros and der, and extrema.
  */
 public class Poly7 implements Poly {
-    static NumberFormat nf = NumberFormat.getInstance();
+	static NumberFormat nf = NumberFormat.getInstance();
     static {
         nf.setMinimumFractionDigits(7);
         nf.setMaximumFractionDigits(7);
@@ -26,6 +26,7 @@ public class Poly7 implements Poly {
     double offset;
     public static double epsilon = 1.0E-8;;
     public static double derepsilon = 1.0E-8;
+    static double positionEpsilon = 0.0000001;
     
     /**
      * 5th order polynomial, fits zeros and der.
@@ -235,7 +236,7 @@ public class Poly7 implements Poly {
         double derx0 = 0;
         double derxb = 0;
         double derxa = 0;
-        while (xb-xa>0.0000001) {
+        while (xb-xa> positionEpsilon ) {
             // causes instability or inaccuracy
 //            if (xb - xa > 0.00001) {
 //                break;
@@ -350,7 +351,6 @@ public class Poly7 implements Poly {
     
     public static void main(String[] args) {
     	double offset = 102565;
-    	System.out.println("offset " + offset);
     	zetaZeroFit(
     			/*
     			243.8749480149,
