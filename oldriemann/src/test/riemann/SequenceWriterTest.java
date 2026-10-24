@@ -33,6 +33,7 @@ public class SequenceWriterTest {
    	    BufferedReader[] in = Rosser.zerosFileAll("data/zerosE12.csv");
 	    Poly7.epsilon *= 0.0001;
 	    Poly7.derepsilon *= 0.0001;
+	    Poly7.positionEpsilon *= 0.0001;
    	    int skipCount = 10; //420042;
 		for (int i = 0; i < skipCount; i++) {
 			CopyZeroInformation.readAndSkip(in);
@@ -57,6 +58,31 @@ public class SequenceWriterTest {
                 " zetaFromRiemann " + nf.format(zetaFromRiemann)
             );
         }
+        double[] currentMax = new double[] {0, 0};
+        double[] positionMax = new double[] {0, 0};
+        positionMax[0] = poly7.getPositionMax( );
+        positionMax[1] = poly7.getPositionMax2(  );
+        currentMax[0] = poly7.eval( positionMax[0] );
+        currentMax[1] = poly7.eval(  positionMax[1]  );
+        for (int i = 0; i < positionMax.length; i++) {
+        	
+            System.out.println("eval " + currentMax[i] +
+            		" positionmax " + positionMax[i] + " " 
+            		+ poly7.der(positionMax[i]));
+        }
+        for (int i = 0; i < positionMax.length; i++) {
+			double d = positionMax[i];
+            double zetaFromRiemann = Riemann.riemann(d+trans, offset);
+            System.out.println(nf.format(d) +
+                " " + nf.format(poly7.eval(d)) +
+                " zetaFromRiemann " + nf.format(zetaFromRiemann)
+            );
+			
+		}
+        double deviation = (Math.abs(poly7.m0 -currentMax[0])
+        		+ Math.abs(poly7.m1 -currentMax[1]));
+        System.out.println("deviation " + deviation + " poly " + poly7);
+
 	}
 	
 	@Test
