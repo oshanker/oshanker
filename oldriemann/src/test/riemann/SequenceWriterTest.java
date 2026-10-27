@@ -34,7 +34,7 @@ public class SequenceWriterTest {
 	    Poly7.epsilon *= 0.0001;
 	    Poly7.derepsilon *= 0.0001;
 	    Poly7.positionEpsilon *= 0.0001;
-   	    int skipCount = 10; //420042;
+   	    int skipCount = 11675; //10, 420042;
 		for (int i = 0; i < skipCount; i++) {
 			CopyZeroInformation.readAndSkip(in);
 		} 
