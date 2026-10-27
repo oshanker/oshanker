@@ -216,8 +216,10 @@ import java.io.File;
             writer.write("zero_index,max_pos,zeta");
             writer.newLine(); 
       		double prev = 0;
+      		double val = 0;
+      		double arg = 0;
         	// Your sequence generation loop
-            for (int loop = 1; loop <= 15; loop++) {
+            for (int loop = 1; loop <= 60001; loop++) {
             	double[] nextValues = CopyZeroInformation.readAndUpdateZero(in);
             	if(nextValues == null) {
             		break;
@@ -225,6 +227,7 @@ import java.io.File;
             	if(loop < 3) {
             		continue;
             	}
+            	String line;
 				double[] row = ZerosBuffer.getRow(0);
                 double trans = Math.floor(row[0]);
       			Poly7 poly7 = getPoly7(trans);
@@ -249,11 +252,21 @@ import java.io.File;
        		    	}
        		    }
 				prev = positionMax1  + trans;
-
-                String line = String.format("%d, %.9f, %.9f", 
+                line = String.format("%d, %.9f, %.9f\n", 
+                		seq_num, row[0], 0.0);
+                writer.write(line);
+                double disp = 0.005;
+ 				arg = row[0]-trans+disp;
+				val = poly7.eval(arg);
+                line = String.format("%d, %.9f, %.9f\n", 
+                		seq_num, arg+trans, val);
+                writer.write(line);
+//                line = String.format("%d, %.9f, %.9f\n", 
+//                		seq_num, arg+trans, row[1]*disp);
+//                writer.write(line);
+                line = String.format("%d, %.9f, %.9f\n", 
                 		seq_num, d, row[2]);
                 writer.write(line);
-                writer.newLine(); 
                 
                 
             }
